@@ -1,5 +1,5 @@
 import { MouseEvent } from 'react'
-import { Link } from '@inertiajs/react'
+import { Link, router } from '@inertiajs/react'
 import { Bath, BedDouble, Heart, MapPin, Maximize, User } from 'lucide-react'
 import { formatArea, formatPrice } from '@/Components/Listings/listingFormat'
 import type { ListingCardProps } from '@/types/listing'
@@ -11,6 +11,7 @@ export default function ListingCard({ listing, translations, propertyTypeLabels 
 
     function handleHeartClick(event: MouseEvent) {
         event.preventDefault()
+        router.post(`/listings/${listing.id}/bookmark`, {}, { preserveScroll: true })
     }
 
     return (
@@ -39,10 +40,13 @@ export default function ListingCard({ listing, translations, propertyTypeLabels 
                 <button
                     type="button"
                     onClick={handleHeartClick}
-                    aria-label={translations.save}
-                    className="absolute right-3 top-3 flex size-8 items-center justify-center rounded-full bg-white/80 text-text-soft transition-colors hover:text-text"
+                    aria-label={listing.isBookmarked ? translations.saved : translations.save}
+                    aria-pressed={listing.isBookmarked}
+                    className={`absolute right-3 top-3 flex size-8 items-center justify-center rounded-full bg-white/80 transition-colors ${
+                        listing.isBookmarked ? 'text-status-rejected' : 'text-text-soft hover:text-text'
+                    }`}
                 >
-                    <Heart className="size-4" />
+                    <Heart className={`size-4 ${listing.isBookmarked ? 'fill-current' : ''}`} />
                 </button>
             </div>
 

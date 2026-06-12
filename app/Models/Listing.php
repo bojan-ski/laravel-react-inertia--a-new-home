@@ -86,7 +86,7 @@ class Listing extends Model
     {
         $query->publiclyVisible()
             ->where(function (Builder $query) {
-                $query->whereNull('user_id')
+                $query->whereNull($query->qualifyColumn('user_id'))
                     ->orWhereHas('owner', function (Builder $query) {
                         $query->where('status', '!=', UserStatus::Suspended->value);
                     });
