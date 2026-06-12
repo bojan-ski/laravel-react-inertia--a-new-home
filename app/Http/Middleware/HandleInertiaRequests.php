@@ -45,6 +45,7 @@ class HandleInertiaRequests extends Middleware
                 'error' => fn () => $request->session()->get('error'),
             ],
             'name' => fn () => __('app.name'),
+            'nav' => fn () => __('app.nav'),
         ];
     }
 }
