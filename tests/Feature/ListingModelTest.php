@@ -235,7 +235,7 @@ class ListingModelTest extends TestCase
         $this->assertSame([
             'id', 'title', 'slug', 'listingType', 'propertyType', 'price',
             'currency', 'city', 'country', 'bedrooms', 'bathrooms',
-            'areaValue', 'areaUnit', 'approvedAt', 'imageUrl',
+            'areaValue', 'areaUnit', 'approvedAt', 'imageUrl', 'ownerName',
         ], array_keys($card));
 
         $this->assertSame($listing->id, $card['id']);
