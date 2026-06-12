@@ -5,8 +5,13 @@ use Inertia\Inertia;
 
 Route::get('/', function () {
     return Inertia::render('Home', [
-        'appName' => config('app.name'),
-        'laravelVersion' => app()->version(),
-        'phpVersion' => PHP_VERSION,
+        'title' => __('app.home.title'),
+        'heading' => __('app.home.heading'),
+        'subheading' => __('app.home.subheading'),
+        'stack' => __('app.home.stack', [
+            'app' => __('app.name'),
+            'laravel' => app()->version(),
+            'php' => PHP_VERSION,
+        ]),
     ]);
 });
