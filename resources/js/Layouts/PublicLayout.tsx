@@ -1,4 +1,5 @@
 import { usePage } from '@inertiajs/react'
+import Navbar from '@/Components/Navbar'
 import type { PublicLayoutProps } from '@/types/layout'
 import type { SharedProps } from '@/types/shared'
 
@@ -7,11 +8,7 @@ export default function PublicLayout({ children }: PublicLayoutProps) {
 
     return (
         <div className="flex min-h-screen flex-col bg-background text-text">
-            <header className="border-b border-border bg-surface">
-                <div className="mx-auto flex h-16 max-w-7xl items-center px-6">
-                    <span className="font-display text-xl font-bold text-text">{name}</span>
-                </div>
-            </header>
+            <Navbar />
 
             <main className="flex-1">{children}</main>
 
