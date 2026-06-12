@@ -30,10 +30,37 @@ export interface RegisterTranslations {
     sign_in: string
 }
 
+export interface ForgotPasswordTranslations {
+    title: string
+    subtitle: string
+    email: string
+    submit: string
+    back_to_login: string
+}
+
+export interface ResetPasswordTranslations {
+    title: string
+    subtitle: string
+    email: string
+    password: string
+    confirm_password: string
+    submit: string
+}
+
 export interface LoginPageProps {
     translations: LoginTranslations
 }
 
 export interface RegisterPageProps {
     translations: RegisterTranslations
+}
+
+export interface ForgotPasswordPageProps {
+    translations: ForgotPasswordTranslations
+}
+
+export interface ResetPasswordPageProps {
+    translations: ResetPasswordTranslations
+    token: string
+    email: string
 }

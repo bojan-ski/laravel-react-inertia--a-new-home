@@ -72,6 +72,23 @@ return [
             'have_account' => 'Already have an account?',
             'sign_in' => 'Sign in',
         ],
+
+        'forgot_password' => [
+            'title' => 'Forgot Password',
+            'subtitle' => "Enter your email address and we'll send you a link to reset your password.",
+            'email' => 'Email Address',
+            'submit' => 'Send Reset Link',
+            'back_to_login' => '← Back to sign in',
+        ],
+
+        'reset_password' => [
+            'title' => 'Reset Password',
+            'subtitle' => 'Choose a new password for your account.',
+            'email' => 'Email Address',
+            'password' => 'New Password',
+            'confirm_password' => 'Confirm New Password',
+            'submit' => 'Reset Password',
+        ],
     ],
 
     'landing' => [
