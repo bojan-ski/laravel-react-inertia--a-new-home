@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Enums\UserRole;
+use App\Enums\UserStatus;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -40,6 +42,47 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is a regular user.
+     */
+    public function regularUser(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => UserRole::RegularUser,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is an agency account.
+     */
+    public function agency(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => UserRole::Agency,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is an administrator.
+     */
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => UserRole::Admin,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is suspended.
+     */
+    public function suspended(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => UserStatus::Suspended,
+            'suspended_at' => now(),
         ]);
     }
 }
