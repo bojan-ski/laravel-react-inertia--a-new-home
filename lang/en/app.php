@@ -40,10 +40,48 @@ return [
         'cookies' => 'Cookies',
     ],
 
-    'home' => [
+    'landing' => [
         'title' => 'Home',
-        'heading' => 'Find a Place Worth Calling Home',
-        'subheading' => 'Browse quality homes, apartments, land, and commercial spaces on a moderated, premium property marketplace.',
-        'stack' => ':app · Laravel :laravel · PHP :php · React 19 · Inertia 3',
+
+        'hero' => [
+            'headline_line1' => 'Find Your Perfect',
+            'headline_line2' => 'New Beginning',
+            'subheading' => 'Discover verified properties for sale and rent. Connect directly with trusted owners on a moderated, premium marketplace.',
+            'cta' => 'Browse Properties',
+            'stats' => [
+                ['value' => '10K+', 'label' => 'Listings'],
+                ['value' => '5K+', 'label' => 'Agencies'],
+                ['value' => '25K+', 'label' => 'Users'],
+            ],
+        ],
+
+        'features' => [
+            'eyebrow' => 'Features',
+            'items' => [
+                ['title' => 'Smart Search', 'description' => 'Find exactly what you need with powerful filters.'],
+                ['title' => 'Verified Listings', 'description' => 'Every property is reviewed and approved before going live.'],
+                ['title' => 'Direct Chat', 'description' => 'Message property owners and agencies in real time.'],
+                ['title' => 'Save Favorites', 'description' => 'Bookmark the homes you love and revisit them anytime.'],
+            ],
+        ],
+
+        'how_it_works' => [
+            'eyebrow' => 'How It Works',
+            'heading_line1' => 'Four simple steps',
+            'heading_line2' => 'to your new home',
+            'steps' => [
+                ['number' => '01', 'title' => 'Create Account', 'description' => 'Sign up as a buyer, seller, or agency in seconds.'],
+                ['number' => '02', 'title' => 'Explore', 'description' => 'Browse verified listings with smart filters.'],
+                ['number' => '03', 'title' => 'Connect', 'description' => 'Chat directly with property owners.'],
+                ['number' => '04', 'title' => 'Move In', 'description' => 'Find your perfect space and begin.'],
+            ],
+        ],
+
+        'cta' => [
+            'heading' => 'Ready to find your new beginning?',
+            'paragraph' => 'Join thousands who found their perfect property through our marketplace.',
+            'browse' => 'Browse Listings',
+            'list_property' => 'List Property',
+        ],
     ],
 ];
