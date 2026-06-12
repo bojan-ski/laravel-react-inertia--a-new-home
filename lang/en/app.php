@@ -135,4 +135,76 @@ return [
             'list_property' => 'List Property',
         ],
     ],
+
+    'listings' => [
+        'title' => 'Listings',
+        'count_prefix' => 'Showing',
+        'count_suffix' => 'properties',
+
+        'nav' => [
+            'back' => 'Back',
+            'brand' => 'New Beginning',
+            'listings' => 'Listings',
+            'agencies' => 'Agencies',
+            'favorites' => 'Favorites',
+            'login' => 'Log in',
+            'sign_up' => 'Sign Up',
+            'dashboard' => 'Dashboard',
+            'sign_out' => 'Sign Out',
+            'open_menu' => 'Open menu',
+            'close_menu' => 'Close menu',
+        ],
+
+        'filters' => [
+            'search_placeholder' => 'Search by location, title…',
+            'all' => 'All',
+            'buy' => 'Buy',
+            'rent' => 'Rent',
+            'all_types' => 'All Types',
+            'search' => 'Search',
+            'reset' => 'Reset',
+            'more_filters' => 'More filters',
+            'city_placeholder' => 'City',
+            'min_price' => 'Min price',
+            'max_price' => 'Max price',
+            'property_types' => [
+                'house' => 'House',
+                'flat' => 'Flat',
+                'apartment' => 'Apartment',
+                'cottage' => 'Cottage',
+                'villa' => 'Villa',
+                'condo' => 'Condo',
+                'land' => 'Land',
+                'commercial' => 'Commercial',
+                'other' => 'Other',
+            ],
+            'sorts' => [
+                'newest' => 'Newest First',
+                'oldest' => 'Oldest First',
+                'price_low_high' => 'Price: Low to High',
+                'price_high_low' => 'Price: High to Low',
+            ],
+        ],
+
+        'card' => [
+            'for_sale' => 'For Sale',
+            'for_rent' => 'For Rent',
+            'per_month' => '/mo',
+            'beds' => 'beds',
+            'baths' => 'baths',
+            'save' => 'Save listing',
+        ],
+
+        'empty' => [
+            'headline' => 'No listings found.',
+            'hint' => 'Try adjusting your search or filters.',
+            'reset' => 'Reset filters',
+        ],
+
+        'pagination' => [
+            'page_of' => 'Page :current of :last',
+            'previous' => 'Previous',
+            'next' => 'Next',
+        ],
+    ],
 ];

@@ -170,6 +170,19 @@ class Listing extends Model
         return $this->status === ListingStatus::Approved;
     }
 
+    public function ownerName(): ?string
+    {
+        if ($this->relationLoaded('owner') && $this->owner !== null) {
+            return $this->owner->name;
+        }
+
+        if ($this->relationLoaded('agency') && $this->agency !== null) {
+            return $this->agency->name;
+        }
+
+        return null;
+    }
+
     /**
      * @return array<string, mixed>
      */
@@ -195,6 +208,7 @@ class Listing extends Model
             'imageUrl' => $image?->small_webp_path
                 ? Storage::disk('public')->url($image->small_webp_path)
                 : null,
+            'ownerName' => $this->ownerName(),
         ];
     }
 
