@@ -1,30 +1,8 @@
 import { MouseEvent } from 'react'
 import { Link } from '@inertiajs/react'
 import { Bath, BedDouble, Heart, MapPin, Maximize, User } from 'lucide-react'
+import { formatArea, formatPrice } from '@/Components/Listings/listingFormat'
 import type { ListingCardProps } from '@/types/listing'
-
-const currencySymbols: Record<string, string> = {
-    EUR: '€',
-    USD: '$',
-    GBP: '£',
-}
-
-function formatPrice(price: string, currency: string): string {
-    const amount = Number(price)
-    const formatted = Number.isNaN(amount)
-        ? price
-        : amount.toLocaleString('en-US', { maximumFractionDigits: 0 })
-    const symbol = currencySymbols[currency]
-
-    return symbol ? `${symbol}${formatted}` : `${currency} ${formatted}`
-}
-
-function formatArea(value: string, unit: string | null): string {
-    const amount = Number(value)
-    const formatted = Number.isNaN(amount) ? value : amount.toLocaleString('en-US')
-
-    return unit ? `${formatted} ${unit}` : formatted
-}
 
 export default function ListingCard({ listing, translations, propertyTypeLabels }: ListingCardProps) {
     const isRental = listing.listingType === 'rent'

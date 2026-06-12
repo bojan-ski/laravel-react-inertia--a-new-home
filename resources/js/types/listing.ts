@@ -80,6 +80,29 @@ export interface ListingsEmptyTranslations {
     reset: string
 }
 
+export interface ListingsShowTranslations {
+    back: string
+    for_sale: string
+    for_rent: string
+    bed: string
+    beds: string
+    bath: string
+    baths: string
+    built: string
+    description_heading: string
+    details_heading: string
+    detail_address: string
+    detail_property_type: string
+    detail_listing_type: string
+    detail_year_built: string
+    detail_listed: string
+    per_month: string
+    save_listing: string
+    saved: string
+    start_chat: string
+    contact_heading: string
+}
+
 export interface ListingsTranslations {
     title: string
     count_prefix: string
@@ -89,6 +112,7 @@ export interface ListingsTranslations {
     card: ListingsCardTranslations
     empty: ListingsEmptyTranslations
     pagination: PaginationLabels
+    show: ListingsShowTranslations
 }
 
 export interface ListingsIndexPageProps {
@@ -96,6 +120,67 @@ export interface ListingsIndexPageProps {
     filters: ListingFilters
     translations: ListingsTranslations
     [key: string]: unknown
+}
+
+export interface ListingImageData {
+    id: number
+    url: string
+    altText: string
+    sortOrder: number
+}
+
+export interface ListingShowData {
+    id: number
+    title: string
+    slug: string
+    listingType: string
+    propertyType: string
+    price: string
+    currency: string
+    description: string
+    country: string
+    city: string
+    addressLine: string | null
+    postalCode: string | null
+    bedrooms: number | null
+    bathrooms: number | null
+    areaValue: string | null
+    areaUnit: string | null
+    yearBuilt: number | null
+    contactName: string | null
+    contactEmail: string | null
+    contactPhone: string | null
+    approvedAt: string | null
+    images: ListingImageData[]
+}
+
+export interface ListingShowPageProps {
+    listing: ListingShowData
+    isBookmarked: boolean
+    canStartChat: boolean
+    translations: ListingsTranslations
+    [key: string]: unknown
+}
+
+export interface ListingGalleryProps {
+    images: ListingImageData[]
+}
+
+export interface ListingFactsProps {
+    listing: ListingShowData
+    translations: ListingsShowTranslations
+}
+
+export interface ListingSidebarProps {
+    listing: ListingShowData
+    isBookmarked: boolean
+    canStartChat: boolean
+    translations: ListingsShowTranslations
+}
+
+export interface ListingDetailRowProps {
+    label: string
+    value: string
 }
 
 export interface ListingsLayoutProps {
