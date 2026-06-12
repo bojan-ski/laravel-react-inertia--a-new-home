@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\ListingController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -10,6 +9,5 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::get('/listings', [ListingController::class, 'index'])->name('listings.index');
-
+require __DIR__.'/listings.php';
 require __DIR__.'/auth.php';
