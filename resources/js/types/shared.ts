@@ -1,8 +1,9 @@
-import type { NavTranslations } from '@/types/navigation'
+import type { FooterTranslations, NavTranslations } from '@/types/navigation'
 
 export interface SharedProps {
     name: string
     nav: NavTranslations
+    footer: FooterTranslations
     auth: {
         user: AuthUser | null
     }

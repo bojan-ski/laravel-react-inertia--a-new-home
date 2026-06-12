@@ -17,6 +17,41 @@ export interface NavLink {
     internal: boolean
 }
 
+export interface FooterTranslations {
+    brand: string
+    tagline: string
+    company: string
+    legal: string
+    connect: string
+    about: string
+    careers: string
+    press: string
+    contact: string
+    privacy_policy: string
+    terms_of_service: string
+    cookie_policy: string
+    gdpr: string
+    twitter: string
+    linkedin: string
+    facebook: string
+    instagram: string
+    copyright: string
+    privacy: string
+    terms: string
+    cookies: string
+}
+
+export interface FooterLink {
+    label: string
+    href: string
+    external: boolean
+}
+
+export interface FooterLinkColumnProps {
+    heading: string
+    links: FooterLink[]
+}
+
 export interface NavbarAuthActionsProps {
     onNavigate?: () => void
 }
