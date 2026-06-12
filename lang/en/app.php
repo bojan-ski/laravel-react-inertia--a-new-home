@@ -40,6 +40,40 @@ return [
         'cookies' => 'Cookies',
     ],
 
+    'auth' => [
+        'login' => [
+            'title' => 'Sign In',
+            'subtitle' => 'Welcome back.',
+            'email' => 'Email Address',
+            'password' => 'Password',
+            'forgot' => 'Forgot your password?',
+            'submit' => 'Sign In',
+            'no_account' => "Don't have an account?",
+            'create_one' => 'Create one',
+        ],
+
+        'register' => [
+            'title' => 'Create Account',
+            'subtitle' => 'Join the marketplace in a few steps.',
+            'account_type' => 'Account Type',
+            'regular_label' => 'Regular User',
+            'regular_description' => 'Browse, save, and create personal listings.',
+            'agency_label' => 'Agency',
+            'agency_description' => 'Manage an agency account and agency listings.',
+            'name' => 'Name',
+            'email' => 'Email Address',
+            'password' => 'Password',
+            'confirm_password' => 'Confirm Password',
+            'terms_prefix' => 'I accept the',
+            'terms_link' => 'Terms & Conditions',
+            'privacy_prefix' => 'I accept the',
+            'privacy_link' => 'Privacy Policy',
+            'submit' => 'Create Account',
+            'have_account' => 'Already have an account?',
+            'sign_in' => 'Sign in',
+        ],
+    ],
+
     'landing' => [
         'title' => 'Home',
 

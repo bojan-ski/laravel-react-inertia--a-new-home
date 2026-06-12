@@ -8,3 +8,5 @@ Route::get('/', function () {
         'landing' => __('app.landing'),
     ]);
 })->name('home');
+
+require __DIR__.'/auth.php';
