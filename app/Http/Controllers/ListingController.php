@@ -19,11 +19,8 @@ class ListingController extends Controller
 
     public function index(ListingIndexRequest $request): Response
     {
-        $listings = $this->listingService->getPublicListings($request)
-            ->through(fn (Listing $listing) => $listing->toCardArray());
-
         return Inertia::render('Listings/Index', [
-            'listings' => $listings,
+            'listings' => $this->listingService->getPublicListings($request),
             'filters' => $request->filters(),
             'translations' => __('app.listings'),
         ]);
@@ -39,7 +36,7 @@ class ListingController extends Controller
 
         return Inertia::render('Listings/Show', [
             'listing' => $listing->toShowArray(),
-            'isBookmarked' => method_exists($user, 'hasBookmarked') && $user->hasBookmarked($listing),
+            'isBookmarked' => $user->hasBookmarked($listing),
             'canStartChat' => Gate::allows('start', [Conversation::class, $listing]),
             'translations' => __('app.listings'),
         ]);

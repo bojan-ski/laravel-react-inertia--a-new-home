@@ -4,8 +4,10 @@ namespace App\Services;
 
 use App\Http\Requests\ListingIndexRequest;
 use App\Models\Listing;
+use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
 class ListingService
 {
@@ -52,6 +54,28 @@ class ListingService
             default => $query->orderByDesc('approved_at'),
         };
 
-        return $query->paginate(self::PER_PAGE)->withQueryString();
+        $paginator = $query->paginate(self::PER_PAGE)->withQueryString();
+
+        $bookmarkedIds = $this->bookmarkedListingIds($request->user(), $paginator->getCollection());
+
+        return $paginator->through(fn (Listing $listing): array => [
+            ...$listing->toCardArray(),
+            'isBookmarked' => $bookmarkedIds->contains($listing->id),
+        ]);
+    }
+
+    /**
+     * @param  Collection<int, Listing>  $listings
+     * @return Collection<int, int>
+     */
+    private function bookmarkedListingIds(?User $user, Collection $listings): Collection
+    {
+        if ($user === null) {
+            return collect();
+        }
+
+        return $user->bookmarks()
+            ->whereIn('listing_id', $listings->pluck('id'))
+            ->pluck('listing_id');
     }
 }

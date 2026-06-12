@@ -18,6 +18,7 @@ export interface ListingCardData {
     approvedAt: string | null
     imageUrl: string | null
     ownerName: string | null
+    isBookmarked: boolean
 }
 
 export interface ListingFilters {
@@ -72,6 +73,7 @@ export interface ListingsCardTranslations {
     beds: string
     baths: string
     save: string
+    saved: string
 }
 
 export interface ListingsEmptyTranslations {

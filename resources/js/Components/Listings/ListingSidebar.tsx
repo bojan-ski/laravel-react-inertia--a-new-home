@@ -1,10 +1,25 @@
+import { router } from '@inertiajs/react'
 import { Heart, Mail, MessageCircle, Phone, User } from 'lucide-react'
+import { useState } from 'react'
 import { formatPrice } from '@/Components/Listings/listingFormat'
 import type { ListingSidebarProps } from '@/types/listing'
 
 export default function ListingSidebar({ listing, isBookmarked, canStartChat, translations }: ListingSidebarProps) {
     const isRental = listing.listingType === 'rent'
     const hasContact = Boolean(listing.contactName || listing.contactEmail || listing.contactPhone)
+    const [isToggling, setIsToggling] = useState(false)
+
+    function toggleBookmark() {
+        router.post(
+            `/listings/${listing.id}/bookmark`,
+            {},
+            {
+                preserveScroll: true,
+                onStart: () => setIsToggling(true),
+                onFinish: () => setIsToggling(false),
+            }
+        )
+    }
 
     return (
         <aside className="lg:sticky lg:top-8">
@@ -19,7 +34,9 @@ export default function ListingSidebar({ listing, isBookmarked, canStartChat, tr
                 <div className="mt-6 flex flex-col gap-3 border-t border-border pt-6">
                     <button
                         type="button"
-                        className={`flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium transition-colors ${
+                        onClick={toggleBookmark}
+                        disabled={isToggling}
+                        className={`flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
                             isBookmarked
                                 ? 'bg-brand-soft text-brand'
                                 : 'border border-border bg-surface text-text hover:bg-surface-muted'

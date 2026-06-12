@@ -12,7 +12,7 @@ export default function ListingsNavbar({ nav }: ListingsNavbarProps) {
     const centerLinks: ListingsNavLink[] = [
         { label: nav.listings, href: '/listings' },
         { label: nav.agencies, href: '/agencies' },
-        { label: nav.favorites, href: '/favorites' },
+        { label: nav.favorites, href: '/bookmarks' },
     ]
 
     return (

@@ -193,6 +193,7 @@ return [
             'beds' => 'beds',
             'baths' => 'baths',
             'save' => 'Save listing',
+            'saved' => 'Saved',
         ],
 
         'empty' => [
@@ -228,6 +229,20 @@ return [
             'saved' => 'Saved',
             'start_chat' => 'Start Chat',
             'contact_heading' => 'Contact',
+        ],
+    ],
+
+    'bookmarks' => [
+        'title' => 'My Bookmarks',
+        'subtitle' => 'Saved listings you want to revisit.',
+        'count_prefix' => 'Showing',
+        'count_one' => 'saved listing',
+        'count_other' => 'saved listings',
+        'flash_added' => 'Listing saved to bookmarks.',
+        'flash_removed' => 'Listing removed from bookmarks.',
+        'empty' => [
+            'headline' => "You haven't bookmarked any listings yet.",
+            'cta' => 'Browse Listings',
         ],
     ],
 ];
