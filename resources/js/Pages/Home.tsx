@@ -1,22 +1,20 @@
 import { Head } from '@inertiajs/react'
+import ClosingCta from '@/Components/Landing/ClosingCta'
+import Features from '@/Components/Landing/Features'
+import Hero from '@/Components/Landing/Hero'
+import HowItWorks from '@/Components/Landing/HowItWorks'
 import PublicLayout from '@/Layouts/PublicLayout'
-import SectionDivider from '@/Components/UI/SectionDivider'
 import type { HomePageProps } from '@/types/home'
 
-export default function Home({ title, heading, subheading, stack }: HomePageProps) {
+export default function Home({ landing }: HomePageProps) {
     return (
         <PublicLayout>
-            <Head title={title} />
+            <Head title={landing.title} />
 
-            <section className="mx-auto max-w-3xl px-6 py-24 text-center">
-                <h1 className="font-display text-5xl font-bold text-text">{heading}</h1>
-
-                <p className="mt-6 text-lg text-text-soft">{subheading}</p>
-
-                <SectionDivider className="my-12" />
-
-                <p className="text-sm text-text-muted">{stack}</p>
-            </section>
+            <Hero content={landing.hero} />
+            <Features content={landing.features} />
+            <HowItWorks content={landing.how_it_works} />
+            <ClosingCta content={landing.cta} />
         </PublicLayout>
     )
 }
