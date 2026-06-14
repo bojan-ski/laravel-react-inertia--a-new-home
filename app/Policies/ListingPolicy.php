@@ -8,6 +8,14 @@ use App\Models\User;
 class ListingPolicy
 {
     /**
+     * Determine whether the user can create a listing.
+     */
+    public function create(User $user): bool
+    {
+        return $user->isRegularUser() && $user->isActive();
+    }
+
+    /**
      * Determine whether the user can bookmark the listing.
      */
     public function bookmark(User $user, Listing $listing): bool

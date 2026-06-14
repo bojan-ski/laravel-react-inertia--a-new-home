@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import type { FormEvent, ReactNode } from 'react'
 import type { Paginator, PaginationLabels } from '@/types/pagination'
 
 export type ListingStatusValue = 'pending_review' | 'approved' | 'rejected' | 'hidden'
@@ -222,4 +222,87 @@ export interface ListingCardProps {
 export interface ListingsEmptyStateProps {
     translations: ListingsEmptyTranslations
     hasActiveFilters: boolean
+}
+
+export type ListingFormData = {
+    title: string
+    listing_type: string
+    property_type: string
+    price: string
+    currency: string
+    description: string
+    country: string
+    city: string
+    address_line: string
+    postal_code: string
+    bedrooms: string
+    bathrooms: string
+    area_value: string
+    area_unit: string
+    year_built: string
+    contact_name: string
+    contact_email: string
+    contact_phone: string
+}
+
+export interface ListingFormFieldLabels {
+    title: string
+    listing_type: string
+    property_type: string
+    price: string
+    currency: string
+    description: string
+    country: string
+    city: string
+    address_line: string
+    postal_code: string
+    bedrooms: string
+    bathrooms: string
+    area: string
+    year_built: string
+    contact_name: string
+    contact_email: string
+    contact_phone: string
+}
+
+export interface ListingFormTranslations {
+    cancel: string
+    submit_note: string
+    contact_note: string
+    sections: {
+        basic: string
+        location: string
+        specs: string
+        contact: string
+    }
+    listing_types: {
+        sale: string
+        rent: string
+    }
+    fields: ListingFormFieldLabels
+}
+
+export interface CreateListingTranslations extends ListingFormTranslations {
+    title: string
+    subtitle: string
+    back: string
+    submit: string
+}
+
+export interface CreateListingPageProps {
+    translations: CreateListingTranslations
+    propertyTypeLabels: Record<string, string>
+    [key: string]: unknown
+}
+
+export interface ListingFormProps {
+    data: ListingFormData
+    setData: <K extends keyof ListingFormData>(key: K, value: ListingFormData[K]) => void
+    errors: Partial<Record<keyof ListingFormData, string>>
+    processing: boolean
+    submitLabel: string
+    onSubmit: (event: FormEvent<HTMLFormElement>) => void
+    translations: ListingFormTranslations
+    propertyTypeLabels: Record<string, string>
+    headerSlot?: ReactNode
 }

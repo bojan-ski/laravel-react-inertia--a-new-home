@@ -2,16 +2,57 @@
 
 namespace App\Services;
 
+use App\Enums\ListingStatus;
 use App\Http\Requests\ListingIndexRequest;
 use App\Models\Listing;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class ListingService
 {
     private const PER_PAGE = 12;
+
+    /**
+     * Create a listing owned by a regular user.
+     *
+     * The owner type, moderation status, and moderation timestamps are forced
+     * server-side regardless of the incoming data (defense in depth).
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function create(User $owner, array $data): Listing
+    {
+        $listing = new Listing(Arr::only($data, (new Listing)->getFillable()));
+
+        $listing->slug = $this->generateUniqueSlug($data['title']);
+        $listing->agency_id = null;
+        $listing->status = ListingStatus::PendingReview;
+        $listing->approved_at = null;
+        $listing->rejected_at = null;
+        $listing->rejection_reason = null;
+
+        $owner->listings()->save($listing);
+
+        return $listing;
+    }
+
+    private function generateUniqueSlug(string $base): string
+    {
+        $slug = Str::slug($base);
+        $candidate = $slug;
+        $suffix = 2;
+
+        while (Listing::withTrashed()->where('slug', $candidate)->exists()) {
+            $candidate = "{$slug}-{$suffix}";
+            $suffix++;
+        }
+
+        return $candidate;
+    }
 
     public function getPublicListings(ListingIndexRequest $request): LengthAwarePaginator
     {
