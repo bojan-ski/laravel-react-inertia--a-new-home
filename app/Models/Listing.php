@@ -292,6 +292,27 @@ class Listing extends Model
     }
 
     /**
+     * @return array<string, mixed>
+     */
+    public function toModerationArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'slug' => $this->slug,
+            'listingType' => $this->listing_type,
+            'propertyType' => $this->property_type,
+            'price' => $this->price,
+            'currency' => $this->currency,
+            'city' => $this->city,
+            'country' => $this->country,
+            'ownerName' => $this->owner?->name,
+            'ownerEmail' => $this->owner?->email,
+            'createdAt' => $this->created_at?->toIso8601String(),
+        ];
+    }
+
+    /**
      * @return array<string, string>
      */
     protected function casts(): array

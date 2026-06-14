@@ -53,4 +53,20 @@ class ListingPolicy
             && ! $user->isAdmin()
             && $user->isActive();
     }
+
+    /**
+     * Determine whether the user can approve the listing.
+     */
+    public function approve(User $user, Listing $listing): bool
+    {
+        return $user->isAdmin() && $listing->canBeModerated();
+    }
+
+    /**
+     * Determine whether the user can reject the listing.
+     */
+    public function reject(User $user, Listing $listing): bool
+    {
+        return $user->isAdmin() && $listing->canBeModerated();
+    }
 }
