@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react'
 import type { Paginator, PaginationLabels } from '@/types/pagination'
 
+export type ListingStatusValue = 'pending_review' | 'approved' | 'rejected' | 'hidden'
+
 export interface ListingCardData {
     id: number
     title: string
