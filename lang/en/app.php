@@ -391,6 +391,35 @@ return [
         ],
     ],
 
+    'agency_setup' => [
+        'title' => 'Complete Your Agency Profile',
+        'subtitle' => 'Provide your agency details to submit for verification.',
+        'helper' => 'Your agency profile must be approved by an admin before it becomes publicly visible or can accept listings. The contact details you provide here will be shown on all agency listings.',
+        'submit' => 'Submit for Verification',
+        'back' => 'Back to Home',
+        'submit_note' => 'Submission is final until an admin reviews your profile. You\'ll be able to edit it once approved.',
+        'flash' => 'Agency profile submitted for verification.',
+        'sections' => [
+            'identity' => 'Agency Identity',
+            'contact' => 'Contact',
+        ],
+        'fields' => [
+            'name' => 'Name',
+            'description' => 'Description',
+            'email' => 'Email',
+            'email_note' => 'Public contact email shown on all your listings.',
+            'phone' => 'Phone',
+            'website' => 'Website',
+            'address' => 'Address',
+        ],
+    ],
+
+    'agency_dashboard' => [
+        'title' => 'Agency Dashboard',
+        'subtitle' => 'Manage your agency profile and listings.',
+        'pending_notice' => 'Your agency profile is pending verification. Full management will be available once an admin approves it.',
+    ],
+
     'admin' => [
         'nav' => [
             'eyebrow' => 'Admin',

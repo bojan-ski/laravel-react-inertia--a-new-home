@@ -11,5 +11,6 @@ Route::get('/', function () {
 
 require __DIR__.'/listings.php';
 require __DIR__.'/profile.php';
+require __DIR__.'/agency.php';
 require __DIR__.'/admin.php';
 require __DIR__.'/auth.php';
