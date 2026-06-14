@@ -390,4 +390,56 @@ return [
             'contact_phone' => 'Contact Phone',
         ],
     ],
+
+    'admin' => [
+        'nav' => [
+            'eyebrow' => 'Admin',
+            'dashboard' => 'Dashboard',
+            'listings' => 'Listings',
+            'agencies' => 'Agencies',
+            'users' => 'Users',
+            'reported_messages' => 'Reported Messages',
+        ],
+        'dashboard' => [
+            'title' => 'Admin Dashboard',
+            'subtitle' => 'Monitor listings, agencies, users, and moderation activity.',
+            'sections' => [
+                'listings' => 'Listings',
+                'users' => 'Users',
+                'moderation' => 'Moderation',
+            ],
+            'stats' => [
+                'total_listings' => [
+                    'label' => 'Total Listings',
+                ],
+                'pending_listings' => [
+                    'label' => 'Pending Review',
+                    'description' => 'Awaiting moderation',
+                ],
+                'approved_listings' => [
+                    'label' => 'Approved',
+                ],
+                'rejected_listings' => [
+                    'label' => 'Rejected',
+                ],
+                'regular_users' => [
+                    'label' => 'Regular Users',
+                ],
+                'agency_users' => [
+                    'label' => 'Agencies',
+                ],
+                'admins' => [
+                    'label' => 'Admins',
+                ],
+                'pending_agencies' => [
+                    'label' => 'Pending Agencies',
+                    'description' => 'Awaiting verification',
+                ],
+                'reported_messages' => [
+                    'label' => 'Reported Messages',
+                    'description' => 'Unresolved reports',
+                ],
+            ],
+        ],
+    ],
 ];

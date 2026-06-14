@@ -54,6 +54,7 @@ class HandleInertiaRequests extends Middleware
             'name' => fn () => __('app.name'),
             'nav' => fn () => __('app.nav'),
             'footer' => fn () => __('app.footer'),
+            'adminNav' => fn () => __('app.admin.nav'),
         ];
     }
 }
