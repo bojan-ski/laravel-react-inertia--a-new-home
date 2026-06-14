@@ -1,0 +1,142 @@
+import { useCallback, useEffect, useRef } from 'react'
+import { useForm } from '@inertiajs/react'
+import type { FormEvent } from 'react'
+import type { RejectListingDialogProps } from '@/types/admin'
+
+export default function RejectListingDialog({
+    open,
+    onClose,
+    listingId,
+    listingTitle,
+    translations,
+}: RejectListingDialogProps) {
+    const panelRef = useRef<HTMLDivElement>(null)
+    const textareaRef = useRef<HTMLTextAreaElement>(null)
+    const { data, setData, post, processing, errors, reset, clearErrors } = useForm({ reason: '' })
+
+    const handleClose = useCallback(() => {
+        reset()
+        clearErrors()
+        onClose()
+    }, [reset, clearErrors, onClose])
+
+    useEffect(() => {
+        if (!open) {
+            return
+        }
+
+        textareaRef.current?.focus()
+
+        function handleKeyDown(event: KeyboardEvent) {
+            if (event.key === 'Escape') {
+                handleClose()
+                return
+            }
+
+            if (event.key !== 'Tab' || !panelRef.current) {
+                return
+            }
+
+            const focusable = panelRef.current.querySelectorAll<HTMLElement>(
+                'button:not([disabled]), [href], textarea, input, [tabindex]:not([tabindex="-1"])',
+            )
+
+            if (focusable.length === 0) {
+                return
+            }
+
+            const first = focusable[0]
+            const last = focusable[focusable.length - 1]
+
+            if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault()
+                last.focus()
+            } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault()
+                first.focus()
+            }
+        }
+
+        document.addEventListener('keydown', handleKeyDown)
+
+        return () => document.removeEventListener('keydown', handleKeyDown)
+    }, [open, handleClose])
+
+    if (!open) {
+        return null
+    }
+
+    function handleSubmit(event: FormEvent) {
+        event.preventDefault()
+
+        post(`/admin/listings/${listingId}/reject`, {
+            preserveScroll: true,
+            onSuccess: () => {
+                reset()
+                onClose()
+            },
+        })
+    }
+
+    const submitDisabled = processing || data.reason.trim() === ''
+
+    return (
+        <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+            onClick={handleClose}
+        >
+            <div
+                ref={panelRef}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="reject-dialog-title"
+                className="w-full max-w-lg rounded-xl border border-border bg-surface p-6 shadow-xl"
+                onClick={(event) => event.stopPropagation()}
+            >
+                <h2 id="reject-dialog-title" className="font-display text-2xl font-semibold text-text">
+                    {translations.dialog.title}
+                </h2>
+                <p className="mt-2 text-sm text-text-soft">
+                    <span className="font-semibold text-text">{listingTitle}</span>
+                </p>
+
+                <form onSubmit={handleSubmit} className="mt-5">
+                    <label htmlFor="reject-reason" className="block text-sm font-medium text-text">
+                        {translations.dialog.reason_label}
+                    </label>
+                    <textarea
+                        id="reject-reason"
+                        ref={textareaRef}
+                        value={data.reason}
+                        onChange={(event) => setData('reason', event.target.value)}
+                        placeholder={translations.dialog.reason_placeholder}
+                        rows={4}
+                        className="mt-1.5 w-full resize-y rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text outline-none transition-colors focus:border-brand"
+                    />
+                    {errors.reason && (
+                        <p className="mt-1.5 text-sm text-status-rejected">{errors.reason}</p>
+                    )}
+                    <p className="mt-1.5 text-xs text-text-soft">{translations.dialog.reason_helper}</p>
+
+                    <div className="mt-6 flex justify-end gap-3">
+                        <button
+                            type="button"
+                            onClick={handleClose}
+                            disabled={processing}
+                            className="rounded-lg border border-border-strong px-4 py-2 text-sm font-medium text-text-soft transition-colors hover:border-text hover:text-text disabled:opacity-50"
+                        >
+                            {translations.dialog.cancel}
+                        </button>
+                        <button
+                            type="submit"
+                            disabled={submitDisabled}
+                            className="rounded-lg bg-status-rejected px-4 py-2 text-sm font-semibold text-text-inverse transition-colors hover:opacity-90 disabled:opacity-50"
+                        >
+                            {translations.dialog.reject}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    )
+}

@@ -168,3 +168,71 @@ export interface ConfirmDeleteUserDialogProps {
     userEmail: string
     translations: AdminUsersTranslations
 }
+
+export type ListingTypeValue = 'sale' | 'rent'
+
+export interface AdminListingModerationItem {
+    id: number
+    title: string
+    slug: string
+    listingType: ListingTypeValue
+    propertyType: string
+    price: string
+    currency: string
+    city: string
+    country: string
+    ownerName: string | null
+    ownerEmail: string | null
+    createdAt: string | null
+}
+
+export interface AdminListingsTranslations {
+    title: string
+    subtitle: string
+    listing_types: Record<ListingTypeValue, string>
+    per_month: string
+    owner: string
+    submitted: string
+    actions: {
+        approve: string
+        reject: string
+    }
+    dialog: {
+        title: string
+        reason_label: string
+        reason_placeholder: string
+        reason_helper: string
+        cancel: string
+        reject: string
+    }
+    empty: {
+        title: string
+        subtitle: string
+    }
+    flash: {
+        approved: string
+        rejected: string
+        approve_failed: string
+        reject_failed: string
+    }
+}
+
+export interface AdminListingsPageProps {
+    listings: AdminListingModerationItem[]
+    translations: AdminListingsTranslations
+    propertyTypeLabels: Record<string, string>
+}
+
+export interface AdminListingModerationRowProps {
+    listing: AdminListingModerationItem
+    translations: AdminListingsTranslations
+    propertyTypeLabels: Record<string, string>
+}
+
+export interface RejectListingDialogProps {
+    open: boolean
+    onClose: () => void
+    listingId: number
+    listingTitle: string
+    translations: AdminListingsTranslations
+}

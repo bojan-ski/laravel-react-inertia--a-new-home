@@ -72,12 +72,47 @@ class ListingService
         return $listing;
     }
 
-    /**
-     * Soft-delete a listing owned by a regular user.
-     */
     public function delete(Listing $listing): void
     {
         $listing->delete();
+    }
+
+    /**
+     * @throws InvalidListingStatusTransitionException
+     */
+    public function approve(Listing $listing): Listing
+    {
+        if (! $listing->canBeModerated()) {
+            throw new InvalidListingStatusTransitionException('This listing cannot be approved.');
+        }
+
+        $listing->status = ListingStatus::Approved;
+        $listing->approved_at = now();
+        $listing->rejection_reason = null;
+        $listing->rejected_at = null;
+        $listing->save();
+
+        return $listing->refresh();
+    }
+
+    /**
+     * @throws InvalidListingStatusTransitionException
+     */
+    public function reject(Listing $listing, string $reason): Listing
+    {
+        if (! $listing->canBeModerated()) {
+            throw new InvalidListingStatusTransitionException('This listing cannot be rejected.');
+        }
+
+        $listing->status = ListingStatus::Rejected;
+        $listing->rejection_reason = $reason;
+        $listing->rejected_at = now();
+        $listing->approved_at = null;
+        $listing->save();
+
+        $listing->delete();
+
+        return $listing;
     }
 
     private function generateUniqueSlug(string $base, ?int $ignoreId = null): string

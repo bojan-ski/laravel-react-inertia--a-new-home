@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ListingModerationController;
 use App\Http\Controllers\Admin\UserManagementController;
 use Illuminate\Support\Facades\Route;
 
@@ -9,6 +10,10 @@ Route::middleware(['auth', 'role:admin'])
     ->name('admin.')
     ->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+        Route::get('/listings', [ListingModerationController::class, 'index'])->name('listings.index');
+        Route::post('/listings/{listing}/approve', [ListingModerationController::class, 'approve'])->name('listings.approve');
+        Route::post('/listings/{listing}/reject', [ListingModerationController::class, 'reject'])->name('listings.reject');
 
         Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
         Route::post('/users/{user}/suspend', [UserManagementController::class, 'suspend'])->name('users.suspend');

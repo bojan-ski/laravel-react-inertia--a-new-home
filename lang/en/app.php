@@ -441,6 +441,39 @@ return [
                 ],
             ],
         ],
+        'listings' => [
+            'title' => 'Pending Listings',
+            'subtitle' => 'Review newly submitted or edited listings.',
+            'listing_types' => [
+                'sale' => 'Sale',
+                'rent' => 'Rent',
+            ],
+            'per_month' => '/mo',
+            'owner' => 'Owner: :name • :email',
+            'submitted' => 'Submitted :date',
+            'actions' => [
+                'approve' => 'Approve',
+                'reject' => 'Reject',
+            ],
+            'dialog' => [
+                'title' => 'Reject Listing',
+                'reason_label' => 'Reason',
+                'reason_placeholder' => 'Explain why this listing was rejected…',
+                'reason_helper' => "This message will be shown to the listing's owner.",
+                'cancel' => 'Cancel',
+                'reject' => 'Reject',
+            ],
+            'empty' => [
+                'title' => 'No listings pending review.',
+                'subtitle' => "You're all caught up.",
+            ],
+            'flash' => [
+                'approved' => 'Listing approved.',
+                'rejected' => 'Listing rejected.',
+                'approve_failed' => 'That listing is no longer eligible for approval.',
+                'reject_failed' => 'That listing is no longer eligible for rejection.',
+            ],
+        ],
         'users' => [
             'title' => 'Users',
             'subtitle' => 'Manage regular users and agency account holders.',
@@ -503,6 +536,19 @@ return [
             'greeting' => 'Hello :name,',
             'intro' => 'Your account on New Beginning has been permanently deleted, along with your listings and saved properties.',
             'outro' => 'Thank you for being part of our community.',
+        ],
+        'listing_approved' => [
+            'subject' => 'Your listing has been approved',
+            'greeting' => 'Good news!',
+            'intro' => 'Your listing ":title" has been approved and is now publicly visible on New Beginning.',
+            'outro' => 'Thank you for listing with us.',
+        ],
+        'listing_rejected' => [
+            'subject' => 'Your listing was not approved',
+            'greeting' => 'Listing update',
+            'intro' => 'Your listing ":title" was reviewed and could not be approved.',
+            'reason' => 'Reason: :reason',
+            'outro' => 'You are welcome to submit a new listing that addresses the issue above.',
         ],
     ],
 ];
