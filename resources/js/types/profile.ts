@@ -62,3 +62,42 @@ export interface ProfileListingRowProps {
     translations: ProfileTranslations
     propertyTypeLabels: Record<string, string>
 }
+
+export interface ProfileSettingsUser {
+    id: number
+    name: string
+    email: string
+}
+
+export interface ProfileSettingsAccountTranslations {
+    heading: string
+    note: string
+    name: string
+    email: string
+    submit: string
+    flash: string
+}
+
+export interface ProfileSettingsPasswordTranslations {
+    heading: string
+    note: string
+    current: string
+    new: string
+    confirm: string
+    submit: string
+    flash: string
+}
+
+export interface ProfileSettingsTranslations {
+    title: string
+    subtitle: string
+    back: string
+    account: ProfileSettingsAccountTranslations
+    password: ProfileSettingsPasswordTranslations
+}
+
+export interface ProfileSettingsPageProps {
+    user: ProfileSettingsUser
+    translations: ProfileSettingsTranslations
+    [key: string]: unknown
+}
