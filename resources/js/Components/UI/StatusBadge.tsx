@@ -1,11 +1,12 @@
-import type { ListingStatusValue } from '@/types/listing'
-import type { StatusBadgeProps } from '@/types/ui'
+import type { BadgeStatusValue, StatusBadgeProps } from '@/types/ui'
 
-const statusStyles: Record<ListingStatusValue, string> = {
+const statusStyles: Record<BadgeStatusValue, string> = {
     pending_review: 'bg-status-pending-review/10 text-status-pending-review',
     approved: 'bg-status-approved/10 text-status-approved',
     rejected: 'bg-status-rejected/10 text-status-rejected',
     hidden: 'bg-status-hidden/10 text-status-hidden',
+    active: 'bg-status-approved/10 text-status-approved',
+    suspended: 'bg-status-suspended/10 text-status-suspended',
 }
 
 export default function StatusBadge({ status, label }: StatusBadgeProps) {

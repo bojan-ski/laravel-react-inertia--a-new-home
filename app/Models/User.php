@@ -77,6 +77,28 @@ class User extends Authenticatable
     }
 
     /**
+     * @return array<string, mixed>
+     */
+    public function toAdminListArray(self $actor): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'role' => $this->role->value,
+            'status' => $this->status->value,
+            'suspendedAt' => $this->suspended_at?->toIso8601String(),
+            'createdAt' => $this->created_at->toIso8601String(),
+            'agency' => null,
+            'can' => [
+                'canSuspend' => $actor->can('suspend', $this),
+                'canReactivate' => $actor->can('reactivate', $this),
+                'canDelete' => $actor->can('delete', $this),
+            ],
+        ];
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

@@ -1,3 +1,5 @@
+import type { Paginator, PaginationLabels } from '@/types/pagination'
+
 export interface AdminStats {
     totalListings: number
     pendingListings: number
@@ -60,4 +62,109 @@ export interface StatCardProps {
 export interface AdminStatSectionProps {
     heading: string
     cards: StatCardProps[]
+}
+
+export type UserStatusValue = 'active' | 'suspended'
+
+export type AdminUserRole = 'regular_user' | 'agency'
+
+export interface AdminUserAgency {
+    id: number
+    name: string
+    status: string
+}
+
+export interface AdminUserCan {
+    canSuspend: boolean
+    canReactivate: boolean
+    canDelete: boolean
+}
+
+export interface AdminUserListItem {
+    id: number
+    name: string
+    email: string
+    role: AdminUserRole
+    status: UserStatusValue
+    suspendedAt: string | null
+    createdAt: string
+    agency: AdminUserAgency | null
+    can: AdminUserCan
+}
+
+export interface AdminUsersFilters {
+    role: string | null
+    status: string | null
+    search: string | null
+}
+
+export interface AdminUsersTranslations {
+    title: string
+    subtitle: string
+    search_placeholder: string
+    filters: {
+        all_roles: string
+        all_statuses: string
+        reset: string
+        search: string
+    }
+    roles: Record<AdminUserRole, string>
+    statuses: Record<UserStatusValue, string>
+    count: string
+    joined: string
+    suspended_on: string
+    agency_line: string
+    actions: {
+        suspend: string
+        reactivate: string
+        delete: string
+    }
+    confirm: {
+        title: string
+        description: string
+        confirm: string
+        cancel: string
+    }
+    empty: {
+        title: string
+        filtered: string
+        reset: string
+    }
+    flash: {
+        suspended: string
+        reactivated: string
+        deleted: string
+    }
+    pagination: PaginationLabels
+}
+
+export interface AdminUsersPageProps {
+    users: Paginator<AdminUserListItem>
+    filters: AdminUsersFilters
+    translations: AdminUsersTranslations
+}
+
+export interface AdminUserFilterForm {
+    role: string
+    status: string
+    search: string
+}
+
+export interface AdminUserFilterBarProps {
+    filters: AdminUsersFilters
+    translations: AdminUsersTranslations
+}
+
+export interface AdminUserRowProps {
+    user: AdminUserListItem
+    translations: AdminUsersTranslations
+}
+
+export interface ConfirmDeleteUserDialogProps {
+    open: boolean
+    onClose: () => void
+    userId: number
+    userName: string
+    userEmail: string
+    translations: AdminUsersTranslations
 }
