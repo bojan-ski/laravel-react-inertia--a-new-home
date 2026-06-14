@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\AgencyStatus;
+use App\Exceptions\InvalidAgencyStatusTransitionException;
 use App\Models\Agency;
 use App\Models\User;
 use Illuminate\Support\Arr;
@@ -10,6 +11,8 @@ use Illuminate\Support\Str;
 
 class AgencyService
 {
+    public function __construct(private MailNotificationService $mail) {}
+
     /**
      * @param  array<string, mixed>  $data
      *
@@ -31,6 +34,46 @@ class AgencyService
         $agency->logo_path = null;
 
         $agency->save();
+
+        return $agency;
+    }
+
+    /**
+     * @throws InvalidAgencyStatusTransitionException
+     */
+    public function approve(Agency $agency): Agency
+    {
+        if (! $agency->canBeModerated()) {
+            throw new InvalidAgencyStatusTransitionException('This agency cannot be approved.');
+        }
+
+        $agency->status = AgencyStatus::Approved;
+        $agency->approved_at = now();
+        $agency->rejection_reason = null;
+        $agency->save();
+
+        $this->mail->sendAgencyApproved($agency);
+
+        return $agency->refresh();
+    }
+
+    /**
+     * @throws InvalidAgencyStatusTransitionException
+     */
+    public function reject(Agency $agency, string $reason): Agency
+    {
+        if (! $agency->canBeModerated()) {
+            throw new InvalidAgencyStatusTransitionException('This agency cannot be rejected.');
+        }
+
+        $agency->status = AgencyStatus::Rejected;
+        $agency->rejection_reason = $reason;
+        $agency->approved_at = null;
+        $agency->save();
+
+        $this->mail->sendAgencyRejected($agency);
+
+        $agency->delete();
 
         return $agency;
     }

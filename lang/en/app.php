@@ -503,6 +503,37 @@ return [
                 'reject_failed' => 'That listing is no longer eligible for rejection.',
             ],
         ],
+        'agencies' => [
+            'title' => 'Pending Agencies',
+            'subtitle' => 'Review agency accounts before they become public.',
+            'owner' => 'Owner: :name • :email',
+            'contact' => 'Contact: :contact',
+            'website' => 'Website: :website',
+            'address' => 'Address: :address',
+            'submitted' => 'Submitted :date',
+            'actions' => [
+                'approve' => 'Approve',
+                'reject' => 'Reject',
+            ],
+            'dialog' => [
+                'title' => 'Reject Agency',
+                'reason_label' => 'Reason',
+                'reason_placeholder' => 'Explain why this agency was rejected…',
+                'reason_helper' => "This message will be included in the rejection email sent to the agency's owner. The agency record will be permanently removed after rejection.",
+                'cancel' => 'Cancel',
+                'reject' => 'Reject',
+            ],
+            'empty' => [
+                'title' => 'No agencies pending review.',
+                'subtitle' => "You're all caught up.",
+            ],
+            'flash' => [
+                'approved' => 'Agency approved.',
+                'rejected' => 'Agency rejected and removed.',
+                'approve_failed' => 'That agency is no longer eligible for approval.',
+                'reject_failed' => 'That agency is no longer eligible for rejection.',
+            ],
+        ],
         'users' => [
             'title' => 'Users',
             'subtitle' => 'Manage regular users and agency account holders.',
@@ -578,6 +609,19 @@ return [
             'intro' => 'Your listing ":title" was reviewed and could not be approved.',
             'reason' => 'Reason: :reason',
             'outro' => 'You are welcome to submit a new listing that addresses the issue above.',
+        ],
+        'agency_approved' => [
+            'subject' => 'Your agency has been approved',
+            'greeting' => 'Good news!',
+            'intro' => 'Your agency ":name" has been approved and is now publicly visible on New Beginning.',
+            'outro' => 'You can now manage your agency profile and create listings.',
+        ],
+        'agency_rejected' => [
+            'subject' => 'Your agency was not approved',
+            'greeting' => 'Agency update',
+            'intro' => 'Your agency ":name" was reviewed and could not be approved. The agency record has been removed.',
+            'reason' => 'Reason: :reason',
+            'outro' => 'You are welcome to register again with details that address the issue above.',
         ],
     ],
 ];
