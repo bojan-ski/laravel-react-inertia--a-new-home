@@ -24,6 +24,8 @@ export default function ListingForm({
     translations,
     propertyTypeLabels,
     headerSlot,
+    hideContactSection = false,
+    cancelHref = '/profile',
 }: ListingFormProps) {
     const { sections, fields, listing_types } = translations
 
@@ -237,43 +239,45 @@ export default function ListingForm({
                 </div>
             </section>
 
-            <section className="space-y-5 border-t border-border pt-12">
-                <h2 className="font-display text-xl font-semibold text-text">{sections.contact}</h2>
-                <p className="text-sm text-text-soft">{translations.contact_note}</p>
+            {!hideContactSection && (
+                <section className="space-y-5 border-t border-border pt-12">
+                    <h2 className="font-display text-xl font-semibold text-text">{sections.contact}</h2>
+                    <p className="text-sm text-text-soft">{translations.contact_note}</p>
 
-                <TextField
-                    id="contact_name"
-                    type="text"
-                    label={fields.contact_name}
-                    value={data.contact_name}
-                    onChange={(e) => setData('contact_name', e.target.value)}
-                    error={errors.contact_name}
-                />
-
-                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                     <TextField
-                        id="contact_email"
-                        type="email"
-                        label={fields.contact_email}
-                        value={data.contact_email}
-                        onChange={(e) => setData('contact_email', e.target.value)}
-                        error={errors.contact_email}
-                    />
-                    <TextField
-                        id="contact_phone"
+                        id="contact_name"
                         type="text"
-                        label={fields.contact_phone}
-                        value={data.contact_phone}
-                        onChange={(e) => setData('contact_phone', e.target.value)}
-                        error={errors.contact_phone}
+                        label={fields.contact_name}
+                        value={data.contact_name}
+                        onChange={(e) => setData('contact_name', e.target.value)}
+                        error={errors.contact_name}
                     />
-                </div>
-            </section>
+
+                    <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                        <TextField
+                            id="contact_email"
+                            type="email"
+                            label={fields.contact_email}
+                            value={data.contact_email}
+                            onChange={(e) => setData('contact_email', e.target.value)}
+                            error={errors.contact_email}
+                        />
+                        <TextField
+                            id="contact_phone"
+                            type="text"
+                            label={fields.contact_phone}
+                            value={data.contact_phone}
+                            onChange={(e) => setData('contact_phone', e.target.value)}
+                            error={errors.contact_phone}
+                        />
+                    </div>
+                </section>
+            )}
 
             <div className="border-t border-border pt-8">
                 <div className="flex flex-col-reverse items-stretch gap-3 sm:flex-row sm:items-center sm:justify-end">
                     <Link
-                        href="/profile"
+                        href={cancelHref}
                         className="inline-flex items-center justify-center px-5 py-3 text-sm font-medium text-text-soft transition-colors hover:text-text"
                     >
                         {translations.cancel}

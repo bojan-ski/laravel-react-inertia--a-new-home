@@ -1,9 +1,15 @@
-import { Link } from '@inertiajs/react'
+import { useState } from 'react'
+import { Link, router } from '@inertiajs/react'
+import { Trash2 } from 'lucide-react'
 import { formatPrice } from '@/Components/Listings/listingFormat'
+import ConfirmDialog from '@/Components/UI/ConfirmDialog'
 import StatusBadge from '@/Components/UI/StatusBadge'
 import type { AgencyListingRowProps } from '@/types/agency'
 
 export default function AgencyListingRow({ listing, translations, propertyTypeLabels }: AgencyListingRowProps) {
+    const [confirmOpen, setConfirmOpen] = useState(false)
+    const [processing, setProcessing] = useState(false)
+
     const isRental = listing.listingType === 'rent'
     const typeLabel = translations.listing_types[listing.listingType] ?? listing.listingType
     const propertyLabel = propertyTypeLabels[listing.propertyType] ?? listing.propertyType
@@ -15,12 +21,23 @@ export default function AgencyListingRow({ listing, translations, propertyTypeLa
           })
         : null
 
+    function handleDelete() {
+        router.delete(`/agency/listings/${listing.id}`, {
+            preserveScroll: true,
+            onStart: () => setProcessing(true),
+            onFinish: () => {
+                setProcessing(false)
+                setConfirmOpen(false)
+            },
+        })
+    }
+
     return (
         <div className="rounded-xl border border-border bg-surface p-4 sm:p-5">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div className="min-w-0">
                     <Link
-                        href={`/listings/${listing.slug}`}
+                        href={`/agency/listings/${listing.id}/edit`}
                         className="font-semibold text-text transition-colors hover:text-brand"
                     >
                         {listing.title}
@@ -41,8 +58,16 @@ export default function AgencyListingRow({ listing, translations, propertyTypeLa
                     )}
                 </div>
 
-                <div className="shrink-0">
+                <div className="flex items-center justify-between gap-3 sm:flex-col sm:items-end">
                     <StatusBadge status={listing.status} label={translations.status[listing.status]} />
+                    <button
+                        type="button"
+                        onClick={() => setConfirmOpen(true)}
+                        aria-label={translations.delete}
+                        className="rounded-lg p-2 text-text-muted transition-colors hover:bg-status-rejected/10 hover:text-status-rejected"
+                    >
+                        <Trash2 className="size-4" />
+                    </button>
                 </div>
             </div>
 
@@ -54,6 +79,17 @@ export default function AgencyListingRow({ listing, translations, propertyTypeLa
                     <p className="mt-1 text-sm leading-relaxed text-text-soft">{listing.rejectionReason}</p>
                 </div>
             )}
+
+            <ConfirmDialog
+                open={confirmOpen}
+                title={translations.confirm.title}
+                description={translations.confirm.description.replace(':title', listing.title)}
+                confirmLabel={translations.confirm.confirm}
+                cancelLabel={translations.confirm.cancel}
+                processing={processing}
+                onConfirm={handleDelete}
+                onCancel={() => setConfirmOpen(false)}
+            />
         </div>
     )
 }

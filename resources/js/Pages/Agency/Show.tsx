@@ -43,6 +43,7 @@ export default function Show({ agency, listings, translations, propertyTypeLabel
                     listings={listings}
                     translations={translations.listings}
                     propertyTypeLabels={propertyTypeLabels}
+                    agencyStatus={agency.status}
                 />
             </div>
         </PublicLayout>
