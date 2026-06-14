@@ -253,6 +253,45 @@ class Listing extends Model
     }
 
     /**
+     * @return array<string, mixed>
+     */
+    public function toFormArray(): array
+    {
+        $images = $this->relationLoaded('images')
+            ? $this->images->map(fn (ListingImage $image): array => [
+                'id' => $image->id,
+                'url' => Storage::disk('public')->url($image->large_webp_path),
+                'altText' => $this->title,
+                'sortOrder' => $image->sort_order,
+            ])->all()
+            : [];
+
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'listingType' => $this->listing_type,
+            'propertyType' => $this->property_type,
+            'status' => $this->status->value,
+            'price' => $this->price,
+            'currency' => $this->currency,
+            'description' => $this->description,
+            'country' => $this->country,
+            'city' => $this->city,
+            'addressLine' => $this->address_line,
+            'postalCode' => $this->postal_code,
+            'bedrooms' => $this->bedrooms,
+            'bathrooms' => $this->bathrooms,
+            'areaValue' => $this->area_value,
+            'areaUnit' => $this->area_unit,
+            'yearBuilt' => $this->year_built,
+            'contactName' => $this->contact_name,
+            'contactEmail' => $this->contact_email,
+            'contactPhone' => $this->contact_phone,
+            'images' => $images,
+        ];
+    }
+
+    /**
      * @return array<string, string>
      */
     protected function casts(): array

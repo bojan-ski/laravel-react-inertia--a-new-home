@@ -252,6 +252,24 @@ class ListingModelTest extends TestCase
         $this->assertNull($card['approvedAt']);
     }
 
+    public function test_to_form_array_returns_documented_shape(): void
+    {
+        $listing = Listing::factory()->approved()->create();
+
+        $form = $listing->toFormArray();
+
+        $this->assertSame([
+            'id', 'title', 'listingType', 'propertyType', 'status', 'price',
+            'currency', 'description', 'country', 'city', 'addressLine',
+            'postalCode', 'bedrooms', 'bathrooms', 'areaValue', 'areaUnit',
+            'yearBuilt', 'contactName', 'contactEmail', 'contactPhone', 'images',
+        ], array_keys($form));
+
+        $this->assertSame($listing->id, $form['id']);
+        $this->assertSame($listing->status->value, $form['status']);
+        $this->assertSame([], $form['images']);
+    }
+
     public function test_model_uses_soft_deletes(): void
     {
         $listing = Listing::factory()->create();

@@ -295,6 +295,45 @@ export interface CreateListingPageProps {
     [key: string]: unknown
 }
 
+export interface EditListingData {
+    id: number
+    title: string
+    listingType: string
+    propertyType: string
+    status: ListingStatusValue
+    price: string
+    currency: string
+    description: string
+    country: string
+    city: string
+    addressLine: string | null
+    postalCode: string | null
+    bedrooms: number | null
+    bathrooms: number | null
+    areaValue: string | null
+    areaUnit: string | null
+    yearBuilt: number | null
+    contactName: string | null
+    contactEmail: string | null
+    contactPhone: string | null
+    images: ListingImageData[]
+}
+
+export interface EditListingTranslations extends ListingFormTranslations {
+    title: string
+    subtitle: string
+    back: string
+    submit: string
+    approved_notice: string
+}
+
+export interface EditListingPageProps {
+    listing: EditListingData
+    translations: EditListingTranslations
+    propertyTypeLabels: Record<string, string>
+    [key: string]: unknown
+}
+
 export interface ListingFormProps {
     data: ListingFormData
     setData: <K extends keyof ListingFormData>(key: K, value: ListingFormData[K]) => void

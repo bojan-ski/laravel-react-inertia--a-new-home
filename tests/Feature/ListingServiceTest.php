@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Enums\ListingStatus;
+use App\Exceptions\InvalidListingStatusTransitionException;
+use App\Models\Listing;
 use App\Models\User;
 use App\Services\ListingService;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
@@ -81,5 +83,52 @@ class ListingServiceTest extends TestCase
         $this->assertNull($listing->rejected_at);
         $this->assertNull($listing->rejection_reason);
         $this->assertSame($owner->id, $listing->user_id);
+    }
+
+    public function test_update_throws_for_a_non_editable_status(): void
+    {
+        $owner = User::factory()->regularUser()->create();
+        $listing = Listing::factory()->rejected()->for($owner, 'owner')->create();
+
+        $this->expectException(InvalidListingStatusTransitionException::class);
+
+        $this->service->update($listing, $this->validData());
+    }
+
+    public function test_update_preserves_user_id(): void
+    {
+        $owner = User::factory()->regularUser()->create();
+        $listing = Listing::factory()->pendingReview()->for($owner, 'owner')->create();
+
+        $updated = $this->service->update($listing, $this->validData());
+
+        $this->assertSame($owner->id, $updated->user_id);
+    }
+
+    public function test_update_forces_agency_id_to_null(): void
+    {
+        $owner = User::factory()->regularUser()->create();
+        $listing = Listing::factory()->pendingReview()->for($owner, 'owner')->create();
+
+        $updated = $this->service->update($listing, $this->validData(['agency_id' => 999]));
+
+        $this->assertNull($updated->agency_id);
+    }
+
+    public function test_update_does_not_touch_rejected_at_or_rejection_reason(): void
+    {
+        $owner = User::factory()->regularUser()->create();
+        $listing = Listing::factory()->hidden()->for($owner, 'owner')->create([
+            'rejected_at' => now(),
+            'rejection_reason' => 'Stale reason.',
+        ]);
+
+        $updated = $this->service->update($listing, $this->validData([
+            'rejected_at' => null,
+            'rejection_reason' => 'Spoofed reason.',
+        ]));
+
+        $this->assertNotNull($updated->rejected_at);
+        $this->assertSame('Stale reason.', $updated->rejection_reason);
     }
 }

@@ -16,6 +16,22 @@ class ListingPolicy
     }
 
     /**
+     * Determine whether the user can edit the listing.
+     */
+    public function update(User $user, Listing $listing): bool
+    {
+        if ($user->isSuspended()) {
+            return false;
+        }
+
+        if ($listing->user_id !== $user->id) {
+            return false;
+        }
+
+        return $listing->canBeEditedByOwner();
+    }
+
+    /**
      * Determine whether the user can bookmark the listing.
      */
     public function bookmark(User $user, Listing $listing): bool
