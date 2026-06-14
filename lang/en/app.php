@@ -268,6 +268,31 @@ return [
         ],
     ],
 
+    'profile_settings' => [
+        'title' => 'Account Settings',
+        'subtitle' => 'Update your personal account details and password.',
+        'back' => 'Back to My Listings',
+
+        'account' => [
+            'heading' => 'Account Details',
+            'note' => 'Update your name and email address.',
+            'name' => 'Name',
+            'email' => 'Email Address',
+            'submit' => 'Save Changes',
+            'flash' => 'Account details updated.',
+        ],
+
+        'password' => [
+            'heading' => 'Password',
+            'note' => 'Change your password by confirming your current one.',
+            'current' => 'Current Password',
+            'new' => 'New Password',
+            'confirm' => 'Confirm New Password',
+            'submit' => 'Update Password',
+            'flash' => 'Password updated.',
+        ],
+    ],
+
     'bookmarks' => [
         'title' => 'My Bookmarks',
         'subtitle' => 'Saved listings you want to revisit.',
