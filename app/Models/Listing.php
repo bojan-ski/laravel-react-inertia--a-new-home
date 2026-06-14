@@ -140,7 +140,7 @@ class Listing extends Model
         }
 
         if ($this->agency_id !== null) {
-            return (bool) $this->agency?->owner?->isSuspended();
+            return (bool) $this->agency?->user?->isSuspended();
         }
 
         return false;
