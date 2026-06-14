@@ -441,5 +441,68 @@ return [
                 ],
             ],
         ],
+        'users' => [
+            'title' => 'Users',
+            'subtitle' => 'Manage regular users and agency account holders.',
+            'search_placeholder' => 'Search by name or email…',
+            'filters' => [
+                'all_roles' => 'All Roles',
+                'all_statuses' => 'All Statuses',
+                'reset' => 'Reset',
+                'search' => 'Search',
+            ],
+            'roles' => [
+                'regular_user' => 'Regular User',
+                'agency' => 'Agency',
+            ],
+            'statuses' => [
+                'active' => 'Active',
+                'suspended' => 'Suspended',
+            ],
+            'count' => 'Showing :count users',
+            'joined' => 'Joined :date',
+            'suspended_on' => 'Suspended :date',
+            'agency_line' => 'Agency: :name (:status)',
+            'actions' => [
+                'suspend' => 'Suspend',
+                'reactivate' => 'Reactivate',
+                'delete' => 'Delete',
+            ],
+            'confirm' => [
+                'title' => 'Delete account',
+                'description' => 'This will permanently remove :name (:email) and their associated data. This action cannot be undone.',
+                'confirm' => 'Delete',
+                'cancel' => 'Cancel',
+            ],
+            'empty' => [
+                'title' => 'No users found.',
+                'filtered' => 'Try adjusting your filters.',
+                'reset' => 'Reset filters',
+            ],
+            'flash' => [
+                'suspended' => 'User suspended.',
+                'reactivated' => 'User reactivated.',
+                'deleted' => 'User deleted.',
+            ],
+            'pagination' => [
+                'page_of' => 'Page :current of :last',
+                'previous' => 'Previous',
+                'next' => 'Next',
+            ],
+        ],
+    ],
+    'emails' => [
+        'user_suspended' => [
+            'subject' => 'Your account has been suspended',
+            'greeting' => 'Account suspended',
+            'intro' => 'Your account on New Beginning has been suspended by an administrator.',
+            'outro' => 'If you believe this was a mistake, please contact our support team.',
+        ],
+        'account_deleted' => [
+            'subject' => 'Your account has been deleted',
+            'greeting' => 'Hello :name,',
+            'intro' => 'Your account on New Beginning has been permanently deleted, along with your listings and saved properties.',
+            'outro' => 'Thank you for being part of our community.',
+        ],
     ],
 ];
