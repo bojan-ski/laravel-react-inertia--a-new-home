@@ -60,4 +60,13 @@ class MyListingController extends Controller
 
         return redirect()->route('profile.index')->with('success', $flash);
     }
+
+    public function destroy(Listing $listing, ListingService $listingService): RedirectResponse
+    {
+        Gate::authorize('delete', $listing);
+
+        $listingService->delete($listing);
+
+        return redirect()->route('profile.index')->with('success', __('app.profile.flash_deleted'));
+    }
 }

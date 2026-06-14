@@ -72,6 +72,14 @@ class ListingService
         return $listing;
     }
 
+    /**
+     * Soft-delete a listing owned by a regular user.
+     */
+    public function delete(Listing $listing): void
+    {
+        $listing->delete();
+    }
+
     private function generateUniqueSlug(string $base, ?int $ignoreId = null): string
     {
         $slug = Str::slug($base);
