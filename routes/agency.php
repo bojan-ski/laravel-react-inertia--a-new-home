@@ -10,6 +10,7 @@ Route::middleware(['auth', 'role:agency'])
         Route::get('/setup', [AgencyProfileController::class, 'create'])->name('setup');
         Route::post('/setup', [AgencyProfileController::class, 'store'])->name('setup.store');
 
-        Route::get('/', [AgencyProfileController::class, 'show'])->name('show');
+        Route::get('/', [AgencyProfileController::class, 'show'])->name('index');
         Route::get('/edit', [AgencyProfileController::class, 'edit'])->name('edit');
+        Route::put('/', [AgencyProfileController::class, 'update'])->name('update');
     });

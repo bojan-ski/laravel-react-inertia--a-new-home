@@ -215,6 +215,19 @@ class Listing extends Model
     /**
      * @return array<string, mixed>
      */
+    public function toOwnerDashboardArray(): array
+    {
+        return [
+            ...$this->toCardArray(),
+            'status' => $this->status->value,
+            'createdAt' => $this->created_at?->toIso8601String(),
+            'rejectionReason' => $this->rejection_reason,
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
     public function toShowArray(): array
     {
         $images = $this->relationLoaded('images')

@@ -129,6 +129,43 @@ class Agency extends Model
     }
 
     /**
+     * @return array<string, mixed>
+     */
+    public function toShowArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'slug' => $this->slug,
+            'description' => $this->description,
+            'phone' => $this->phone,
+            'email' => $this->email,
+            'website' => $this->website,
+            'address' => $this->address,
+            'status' => $this->status->value,
+            'rejectionReason' => $this->rejection_reason,
+            'approvedAt' => $this->approved_at?->toIso8601String(),
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function toFormArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'phone' => $this->phone,
+            'email' => $this->email,
+            'website' => $this->website,
+            'address' => $this->address,
+            'status' => $this->status->value,
+        ];
+    }
+
+    /**
      * @return array<string, string>
      */
     protected function casts(): array

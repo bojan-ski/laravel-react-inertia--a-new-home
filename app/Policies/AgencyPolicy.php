@@ -7,6 +7,24 @@ use App\Models\User;
 
 class AgencyPolicy
 {
+    public function view(User $user, Agency $agency): bool
+    {
+        if ($user->isSuspended()) {
+            return false;
+        }
+
+        return $user->isAgency() && $agency->user_id === $user->id;
+    }
+
+    public function update(User $user, Agency $agency): bool
+    {
+        if ($user->isSuspended()) {
+            return false;
+        }
+
+        return $user->isAgency() && $agency->user_id === $user->id;
+    }
+
     /**
      * Determine whether the user can approve the agency.
      */
