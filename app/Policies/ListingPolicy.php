@@ -7,21 +7,32 @@ use App\Models\User;
 
 class ListingPolicy
 {
-    /**
-     * Determine whether the user can create a listing.
-     */
     public function create(User $user): bool
     {
-        return $user->isRegularUser() && $user->isActive();
+        if (! $user->isActive()) {
+            return false;
+        }
+
+        if ($user->isRegularUser()) {
+            return true;
+        }
+
+        if ($user->isAgency()) {
+            return $user->agency !== null && $user->agency->isApproved();
+        }
+
+        return false;
     }
 
-    /**
-     * Determine whether the user can edit the listing.
-     */
     public function update(User $user, Listing $listing): bool
     {
         if ($user->isSuspended()) {
             return false;
+        }
+
+        if ($listing->agency_id !== null) {
+            return $this->ownsApprovedAgency($user, $listing)
+                && $listing->canBeEditedByOwner();
         }
 
         if ($listing->user_id !== $user->id) {
@@ -31,16 +42,26 @@ class ListingPolicy
         return $listing->canBeEditedByOwner();
     }
 
-    /**
-     * Determine whether the user can delete the listing.
-     */
     public function delete(User $user, Listing $listing): bool
     {
         if ($user->isSuspended()) {
             return false;
         }
 
+        if ($listing->agency_id !== null) {
+            return $this->ownsApprovedAgency($user, $listing);
+        }
+
         return $listing->user_id === $user->id;
+    }
+
+    private function ownsApprovedAgency(User $user, Listing $listing): bool
+    {
+        $agency = $user->agency;
+
+        return $agency !== null
+            && $listing->agency_id === $agency->id
+            && $agency->isApproved();
     }
 
     /**

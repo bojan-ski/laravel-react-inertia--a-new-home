@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enums\ListingStatus;
 use App\Exceptions\InvalidListingStatusTransitionException;
 use App\Http\Requests\ListingIndexRequest;
+use App\Models\Agency;
 use App\Models\Listing;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -61,6 +62,62 @@ class ListingService
         $listing->fill(Arr::only($data, $listing->getFillable()));
         $listing->slug = $slug;
         $listing->agency_id = null;
+
+        if ($shouldRevertToPending) {
+            $listing->status = ListingStatus::PendingReview;
+            $listing->approved_at = null;
+        }
+
+        $listing->save();
+
+        return $listing;
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    public function createForAgency(Agency $agency, array $data): Listing
+    {
+        $listing = new Listing(Arr::only($data, (new Listing)->getFillable()));
+
+        $listing->slug = $this->generateUniqueSlug($data['title']);
+        $listing->user_id = null;
+        $listing->status = ListingStatus::PendingReview;
+        $listing->approved_at = null;
+        $listing->rejected_at = null;
+        $listing->rejection_reason = null;
+        $listing->contact_name = null;
+        $listing->contact_email = null;
+        $listing->contact_phone = null;
+
+        $agency->listings()->save($listing);
+
+        return $listing;
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     *
+     * @throws InvalidListingStatusTransitionException
+     */
+    public function updateForAgency(Listing $listing, array $data): Listing
+    {
+        if (! $listing->canBeEditedByOwner()) {
+            throw new InvalidListingStatusTransitionException('This listing cannot be edited.');
+        }
+
+        $shouldRevertToPending = $listing->shouldReturnToPendingReviewOnEdit();
+
+        $slug = Str::slug($data['title']) === Str::slug($listing->title)
+            ? $listing->slug
+            : $this->generateUniqueSlug($data['title'], $listing->id);
+
+        $listing->fill(Arr::only($data, $listing->getFillable()));
+        $listing->slug = $slug;
+        $listing->user_id = null;
+        $listing->contact_name = null;
+        $listing->contact_email = null;
+        $listing->contact_phone = null;
 
         if ($shouldRevertToPending) {
             $listing->status = ListingStatus::PendingReview;

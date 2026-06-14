@@ -106,6 +106,13 @@ export interface AgencyShowProfileTranslations {
     address: string
 }
 
+export interface AgencyListingsConfirmTranslations {
+    title: string
+    description: string
+    cancel: string
+    confirm: string
+}
+
 export interface AgencyShowListingsTranslations {
     heading: string
     count: string
@@ -114,10 +121,17 @@ export interface AgencyShowListingsTranslations {
     approved: string
     per_month: string
     rejection_reason_label: string
+    new_listing: string
+    new_listing_disabled_help: string
+    create_listing: string
+    delete: string
     empty_headline: string
     empty_subline: string
+    empty_headline_approved: string
+    empty_subline_approved: string
     listing_types: Record<string, string>
     status: Record<ListingStatusValue, string>
+    confirm: AgencyListingsConfirmTranslations
 }
 
 export interface AgencyShowTranslations {
@@ -150,6 +164,7 @@ export interface AgencyListingsSectionProps {
     listings: AgencyDashboardListing[]
     translations: AgencyShowListingsTranslations
     propertyTypeLabels: Record<string, string>
+    agencyStatus: AgencyStatusValue
 }
 
 export interface AgencyListingRowProps {

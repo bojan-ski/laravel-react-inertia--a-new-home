@@ -344,4 +344,36 @@ export interface ListingFormProps {
     translations: ListingFormTranslations
     propertyTypeLabels: Record<string, string>
     headerSlot?: ReactNode
+    hideContactSection?: boolean
+    cancelHref?: string
+}
+
+export interface CreateAgencyListingTranslations extends ListingFormTranslations {
+    title: string
+    subtitle: string
+    back: string
+    submit: string
+    contact_inheritance_note: string
+}
+
+export interface CreateAgencyListingPageProps {
+    translations: CreateAgencyListingTranslations
+    propertyTypeLabels: Record<string, string>
+    [key: string]: unknown
+}
+
+export interface EditAgencyListingTranslations extends ListingFormTranslations {
+    title: string
+    subtitle: string
+    back: string
+    submit: string
+    approved_notice: string
+    contact_inheritance_note: string
+}
+
+export interface EditAgencyListingPageProps {
+    listing: EditListingData
+    translations: EditAgencyListingTranslations
+    propertyTypeLabels: Record<string, string>
+    [key: string]: unknown
 }
