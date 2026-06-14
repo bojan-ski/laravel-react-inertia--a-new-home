@@ -241,6 +241,7 @@ return [
         'rejection_reason_label' => 'Rejection reason',
         'per_month' => '/mo',
         'delete' => 'Delete listing',
+        'flash_deleted' => 'Listing deleted.',
 
         'listing_types' => [
             'sale' => 'Sale',

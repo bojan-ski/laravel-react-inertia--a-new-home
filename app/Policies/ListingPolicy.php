@@ -32,6 +32,18 @@ class ListingPolicy
     }
 
     /**
+     * Determine whether the user can delete the listing.
+     */
+    public function delete(User $user, Listing $listing): bool
+    {
+        if ($user->isSuspended()) {
+            return false;
+        }
+
+        return $listing->user_id === $user->id;
+    }
+
+    /**
      * Determine whether the user can bookmark the listing.
      */
     public function bookmark(User $user, Listing $listing): bool
