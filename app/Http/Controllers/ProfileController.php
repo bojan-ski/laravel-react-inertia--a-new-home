@@ -15,12 +15,7 @@ class ProfileController extends Controller
             ->with('images')
             ->latest()
             ->get()
-            ->map(fn (Listing $listing): array => [
-                ...$listing->toCardArray(),
-                'status' => $listing->status->value,
-                'createdAt' => $listing->created_at->toIso8601String(),
-                'rejectionReason' => $listing->rejection_reason,
-            ]);
+            ->map(fn (Listing $listing): array => $listing->toOwnerDashboardArray());
 
         return Inertia::render('Profile/Index', [
             'listings' => $listings,

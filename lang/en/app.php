@@ -414,10 +414,84 @@ return [
         ],
     ],
 
-    'agency_dashboard' => [
-        'title' => 'Agency Dashboard',
-        'subtitle' => 'Manage your agency profile and listings.',
-        'pending_notice' => 'Your agency profile is pending verification. Full management will be available once an admin approves it.',
+    'agency_show' => [
+        'title' => 'Agency Profile',
+        'subtitle' => 'Manage your agency details and public contact information.',
+        'edit' => 'Edit Profile',
+        'status' => [
+            'pending_verification' => [
+                'heading' => 'Pending Verification',
+                'body' => 'Your agency profile has been submitted for review and is not yet publicly visible.',
+                'note' => 'We\'ll email you when an admin completes the review.',
+            ],
+            'approved' => [
+                'heading' => 'Approved',
+                'body' => 'Your agency is approved and publicly visible. You can manage your listings and update your profile.',
+                'approved_on' => 'Approved on :date',
+            ],
+            'rejected' => [
+                'heading' => 'Rejected',
+                'body' => 'Your agency profile was not approved.',
+            ],
+            'hidden' => [
+                'heading' => 'Hidden',
+                'body' => 'Your agency is currently hidden from public view. This usually happens when an account is suspended.',
+            ],
+        ],
+        'profile' => [
+            'heading' => 'Agency Details',
+            'note' => 'These details are used as the contact information for your agency listings.',
+            'name' => 'Name',
+            'description' => 'Description',
+            'email' => 'Email',
+            'phone' => 'Phone',
+            'website' => 'Website',
+            'address' => 'Address',
+        ],
+        'listings' => [
+            'heading' => 'Listings',
+            'count' => ':count listings',
+            'count_one' => ':count listing',
+            'created' => 'Created :date',
+            'approved' => 'Approved :date',
+            'per_month' => '/mo',
+            'rejection_reason_label' => 'Rejection reason',
+            'empty_headline' => 'No listings yet.',
+            'empty_subline' => 'Once your agency is approved, you can create listings.',
+            'listing_types' => [
+                'sale' => 'For Sale',
+                'rent' => 'For Rent',
+            ],
+            'status' => [
+                'pending_review' => 'Pending Review',
+                'approved' => 'Approved',
+                'rejected' => 'Rejected',
+                'hidden' => 'Hidden',
+            ],
+        ],
+    ],
+
+    'agency_edit' => [
+        'title' => 'Edit Agency Profile',
+        'subtitle' => 'Update your agency\'s information.',
+        'back' => 'Back',
+        'submit' => 'Save Changes',
+        'cancel' => 'Cancel',
+        'status_note' => 'Note: editing your profile does not change your moderation status.',
+        'flash' => 'Agency profile updated.',
+        'sections' => [
+            'identity' => 'Agency Identity',
+            'contact' => 'Contact',
+        ],
+        'fields' => [
+            'name' => 'Name',
+            'description' => 'Description',
+            'email' => 'Email',
+            'email_note' => 'Public contact email shown on all your listings.',
+            'phone' => 'Phone',
+            'website' => 'Website',
+            'address' => 'Address',
+        ],
     ],
 
     'admin' => [

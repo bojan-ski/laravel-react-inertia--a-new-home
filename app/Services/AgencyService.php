@@ -39,6 +39,25 @@ class AgencyService
     }
 
     /**
+     * @param  array<string, mixed>  $data
+     */
+    public function update(Agency $agency, array $data): Agency
+    {
+        $agency->fill(Arr::only($data, [
+            'name',
+            'email',
+            'phone',
+            'website',
+            'address',
+            'description',
+        ]));
+
+        $agency->save();
+
+        return $agency->refresh();
+    }
+
+    /**
      * @throws InvalidAgencyStatusTransitionException
      */
     public function approve(Agency $agency): Agency

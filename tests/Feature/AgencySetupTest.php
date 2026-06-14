@@ -210,7 +210,7 @@ class AgencySetupTest extends TestCase
         $this->actingAs($user)
             ->get('/agency')
             ->assertOk()
-            ->assertInertia(fn (Assert $page) => $page->component('Agency/Dashboard'));
+            ->assertInertia(fn (Assert $page) => $page->component('Agency/Show'));
     }
 
     public function test_validation_fails_for_missing_required_fields(): void
