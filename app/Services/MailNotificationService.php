@@ -2,9 +2,12 @@
 
 namespace App\Services;
 
+use App\Models\Agency;
 use App\Models\Listing;
 use App\Models\User;
 use App\Notifications\AccountDeletedNotification;
+use App\Notifications\AgencyApprovedNotification;
+use App\Notifications\AgencyRejectedNotification;
 use App\Notifications\ListingApprovedNotification;
 use App\Notifications\ListingRejectedNotification;
 use App\Notifications\UserSuspendedNotification;
@@ -30,5 +33,15 @@ class MailNotificationService
     public function sendListingRejected(Listing $listing): void
     {
         $listing->owner?->notify(new ListingRejectedNotification($listing->title, (string) $listing->rejection_reason));
+    }
+
+    public function sendAgencyApproved(Agency $agency): void
+    {
+        $agency->user?->notify(new AgencyApprovedNotification($agency->name));
+    }
+
+    public function sendAgencyRejected(Agency $agency): void
+    {
+        $agency->user?->notify(new AgencyRejectedNotification($agency->name, (string) $agency->rejection_reason));
     }
 }

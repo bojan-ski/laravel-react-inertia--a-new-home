@@ -236,3 +236,67 @@ export interface RejectListingDialogProps {
     listingTitle: string
     translations: AdminListingsTranslations
 }
+
+export interface AdminAgencyModerationItem {
+    id: number
+    name: string
+    slug: string
+    email: string | null
+    phone: string | null
+    website: string | null
+    address: string | null
+    description: string | null
+    ownerName: string | null
+    ownerEmail: string | null
+    createdAt: string | null
+}
+
+export interface AdminAgenciesTranslations {
+    title: string
+    subtitle: string
+    owner: string
+    contact: string
+    website: string
+    address: string
+    submitted: string
+    actions: {
+        approve: string
+        reject: string
+    }
+    dialog: {
+        title: string
+        reason_label: string
+        reason_placeholder: string
+        reason_helper: string
+        cancel: string
+        reject: string
+    }
+    empty: {
+        title: string
+        subtitle: string
+    }
+    flash: {
+        approved: string
+        rejected: string
+        approve_failed: string
+        reject_failed: string
+    }
+}
+
+export interface AdminAgenciesPageProps {
+    agencies: AdminAgencyModerationItem[]
+    translations: AdminAgenciesTranslations
+}
+
+export interface AdminAgencyModerationRowProps {
+    agency: AdminAgencyModerationItem
+    translations: AdminAgenciesTranslations
+}
+
+export interface RejectAgencyDialogProps {
+    open: boolean
+    onClose: () => void
+    agencyId: number
+    agencyName: string
+    translations: AdminAgenciesTranslations
+}

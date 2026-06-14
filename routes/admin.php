@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AgencyModerationController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ListingModerationController;
 use App\Http\Controllers\Admin\UserManagementController;
@@ -14,6 +15,10 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/listings', [ListingModerationController::class, 'index'])->name('listings.index');
         Route::post('/listings/{listing}/approve', [ListingModerationController::class, 'approve'])->name('listings.approve');
         Route::post('/listings/{listing}/reject', [ListingModerationController::class, 'reject'])->name('listings.reject');
+
+        Route::get('/agencies', [AgencyModerationController::class, 'index'])->name('agencies.index');
+        Route::post('/agencies/{agency}/approve', [AgencyModerationController::class, 'approve'])->name('agencies.approve');
+        Route::post('/agencies/{agency}/reject', [AgencyModerationController::class, 'reject'])->name('agencies.reject');
 
         Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
         Route::post('/users/{user}/suspend', [UserManagementController::class, 'suspend'])->name('users.suspend');
