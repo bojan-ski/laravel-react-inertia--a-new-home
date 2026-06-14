@@ -1,9 +1,11 @@
+import type { AdminNavTranslations } from '@/types/admin'
 import type { FooterTranslations, NavTranslations } from '@/types/navigation'
 
 export interface SharedProps {
     name: string
     nav: NavTranslations
     footer: FooterTranslations
+    adminNav: AdminNavTranslations
     auth: {
         user: AuthUser | null
     }
