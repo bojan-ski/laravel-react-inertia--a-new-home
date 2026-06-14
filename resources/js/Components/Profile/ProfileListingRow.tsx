@@ -1,0 +1,103 @@
+import { useState } from 'react'
+import { Link, router } from '@inertiajs/react'
+import { ImageIcon, Trash2 } from 'lucide-react'
+import { formatPrice } from '@/Components/Listings/listingFormat'
+import ConfirmDialog from '@/Components/UI/ConfirmDialog'
+import StatusBadge from '@/Components/UI/StatusBadge'
+import type { ProfileListingRowProps } from '@/types/profile'
+
+export default function ProfileListingRow({ listing, translations, propertyTypeLabels }: ProfileListingRowProps) {
+    const [confirmOpen, setConfirmOpen] = useState(false)
+    const [processing, setProcessing] = useState(false)
+
+    const isRental = listing.listingType === 'rent'
+    const typeLabel = translations.listing_types[listing.listingType] ?? listing.listingType
+    const propertyLabel = propertyTypeLabels[listing.propertyType] ?? listing.propertyType
+    const createdDate = new Date(listing.createdAt).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+    })
+
+    function handleDelete() {
+        router.delete(`/my-listings/${listing.id}`, {
+            preserveScroll: true,
+            onStart: () => setProcessing(true),
+            onFinish: () => {
+                setProcessing(false)
+                setConfirmOpen(false)
+            },
+        })
+    }
+
+    return (
+        <div className="rounded-xl border border-border bg-surface p-4 sm:p-5">
+            <div className="flex gap-4">
+                <div className="size-20 shrink-0 overflow-hidden rounded-lg bg-surface-muted">
+                    {listing.imageUrl ? (
+                        <img src={listing.imageUrl} alt={listing.title} className="size-full object-cover" />
+                    ) : (
+                        <div className="flex size-full items-center justify-center text-text-muted">
+                            <ImageIcon className="size-6" />
+                        </div>
+                    )}
+                </div>
+
+                <div className="flex min-w-0 flex-1 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
+                        <Link
+                            href={`/my-listings/${listing.id}/edit`}
+                            className="font-semibold text-text transition-colors hover:text-brand"
+                        >
+                            {listing.title}
+                        </Link>
+                        <p className="mt-1 text-sm text-text-muted">
+                            {typeLabel} • {propertyLabel} • {listing.city}, {listing.country}
+                        </p>
+                        <p className="mt-1 font-bold text-text">
+                            {formatPrice(listing.price, listing.currency)}
+                            {isRental && (
+                                <span className="text-sm font-normal text-text-muted">{translations.per_month}</span>
+                            )}
+                        </p>
+                        <p className="mt-1 text-xs text-text-muted">
+                            {translations.created.replace(':date', createdDate)}
+                        </p>
+                    </div>
+
+                    <div className="flex items-center justify-between gap-3 sm:flex-col sm:items-end">
+                        <StatusBadge status={listing.status} label={translations.status[listing.status]} />
+                        <button
+                            type="button"
+                            onClick={() => setConfirmOpen(true)}
+                            aria-label={translations.delete}
+                            className="rounded-lg p-2 text-text-muted transition-colors hover:bg-status-rejected/10 hover:text-status-rejected"
+                        >
+                            <Trash2 className="size-4" />
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {listing.status === 'rejected' && listing.rejectionReason && (
+                <div className="mt-4 border-t border-border pt-3">
+                    <p className="text-xs font-medium uppercase tracking-wide text-text-muted">
+                        {translations.rejection_reason_label}
+                    </p>
+                    <p className="mt-1 text-sm leading-relaxed text-text-soft">{listing.rejectionReason}</p>
+                </div>
+            )}
+
+            <ConfirmDialog
+                open={confirmOpen}
+                title={translations.confirm.title}
+                description={translations.confirm.description.replace(':title', listing.title)}
+                confirmLabel={translations.confirm.confirm}
+                cancelLabel={translations.confirm.cancel}
+                processing={processing}
+                onConfirm={handleDelete}
+                onCancel={() => setConfirmOpen(false)}
+            />
+        </div>
+    )
+}

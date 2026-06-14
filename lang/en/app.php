@@ -232,6 +232,42 @@ return [
         ],
     ],
 
+    'profile' => [
+        'title' => 'My Listings',
+        'subtitle' => 'Manage your personal property listings.',
+        'account_settings' => 'Account Settings',
+        'new_listing' => 'New Listing',
+        'created' => 'Created :date',
+        'rejection_reason_label' => 'Rejection reason',
+        'per_month' => '/mo',
+        'delete' => 'Delete listing',
+
+        'listing_types' => [
+            'sale' => 'Sale',
+            'rent' => 'Rent',
+        ],
+
+        'status' => [
+            'pending_review' => 'Pending Review',
+            'approved' => 'Approved',
+            'rejected' => 'Rejected',
+            'hidden' => 'Hidden',
+        ],
+
+        'empty' => [
+            'headline' => "You haven't created any listings yet.",
+            'subline' => 'Create your first property listing to start sharing it on the marketplace.',
+            'cta' => 'Create Listing',
+        ],
+
+        'confirm' => [
+            'title' => 'Delete listing?',
+            'description' => "Are you sure you want to delete ':title'? This cannot be undone.",
+            'cancel' => 'Cancel',
+            'confirm' => 'Delete',
+        ],
+    ],
+
     'bookmarks' => [
         'title' => 'My Bookmarks',
         'subtitle' => 'Saved listings you want to revisit.',
