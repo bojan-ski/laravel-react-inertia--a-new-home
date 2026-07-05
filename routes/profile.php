@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ListingImageController;
 use App\Http\Controllers\MyListingController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProfileSettingsController;
@@ -17,4 +18,7 @@ Route::middleware(['auth', 'role:regular_user'])->group(function () {
     Route::get('/my-listings/{listing}/edit', [MyListingController::class, 'edit'])->name('my-listings.edit');
     Route::put('/my-listings/{listing}', [MyListingController::class, 'update'])->name('my-listings.update');
     Route::delete('/my-listings/{listing}', [MyListingController::class, 'destroy'])->name('my-listings.destroy');
+
+    Route::post('/my-listings/{listing}/images', [ListingImageController::class, 'store'])->name('my-listings.images.store');
+    Route::delete('/my-listings/{listing}/images/{image}', [ListingImageController::class, 'destroy'])->name('my-listings.images.destroy');
 });

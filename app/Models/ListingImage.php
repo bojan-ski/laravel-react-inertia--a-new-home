@@ -9,9 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Fillable([
-    'original_path',
-    'small_webp_path',
-    'large_webp_path',
+    'listing_id',
+    'disk',
+    'small_path',
+    'large_path',
+    'alt_text',
     'sort_order',
 ])]
 class ListingImage extends Model
@@ -22,15 +24,5 @@ class ListingImage extends Model
     public function listing(): BelongsTo
     {
         return $this->belongsTo(Listing::class);
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'sort_order' => 'integer',
-        ];
     }
 }

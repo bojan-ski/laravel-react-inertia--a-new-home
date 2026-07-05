@@ -14,12 +14,14 @@ return new class extends Migration
         Schema::create('listing_images', function (Blueprint $table) {
             $table->id();
             $table->foreignId('listing_id')->constrained()->cascadeOnDelete();
-            $table->string('original_path');
-            $table->string('small_webp_path');
-            $table->string('large_webp_path');
+            $table->string('disk')->default('public');
+            $table->string('small_path');
+            $table->string('large_path');
+            $table->string('alt_text')->nullable();
             $table->unsignedInteger('sort_order')->default(0);
             $table->timestamps();
 
+            $table->index('listing_id');
             $table->index(['listing_id', 'sort_order']);
         });
     }

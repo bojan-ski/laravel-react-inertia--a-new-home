@@ -18,13 +18,14 @@ class ListingImageFactory extends Factory
      */
     public function definition(): array
     {
-        $name = $this->faker->unique()->slug(2);
+        $token = $this->faker->unique()->bothify('????????????????');
 
         return [
             'listing_id' => Listing::factory(),
-            'original_path' => "listings/{$name}.jpg",
-            'small_webp_path' => "listings/{$name}-small.webp",
-            'large_webp_path' => "listings/{$name}-large.webp",
+            'disk' => 'public',
+            'small_path' => "listings/small/{$token}.webp",
+            'large_path' => "listings/large/{$token}.webp",
+            'alt_text' => null,
             'sort_order' => 0,
         ];
     }
