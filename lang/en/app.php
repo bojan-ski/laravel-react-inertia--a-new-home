@@ -418,6 +418,11 @@ return [
         ],
     ],
 
+    'listing_images' => [
+        'uploaded' => 'Image uploaded.',
+        'deleted' => 'Image deleted.',
+    ],
+
     'create_agency_listing' => [
         'title' => 'Create Agency Listing',
         'subtitle' => 'Add a property listing for your agency. It will be reviewed before becoming public.',

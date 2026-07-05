@@ -205,8 +205,8 @@ class Listing extends Model
             'areaValue' => $this->area_value,
             'areaUnit' => $this->area_unit,
             'approvedAt' => $this->approved_at?->toIso8601String(),
-            'imageUrl' => $image?->small_webp_path
-                ? Storage::disk('public')->url($image->small_webp_path)
+            'imageUrl' => $image?->small_path
+                ? Storage::disk($image->disk)->url($image->small_path)
                 : null,
             'ownerName' => $this->ownerName(),
         ];
@@ -233,8 +233,8 @@ class Listing extends Model
         $images = $this->relationLoaded('images')
             ? $this->images->map(fn (ListingImage $image): array => [
                 'id' => $image->id,
-                'url' => Storage::disk('public')->url($image->large_webp_path),
-                'altText' => $this->title,
+                'url' => Storage::disk($image->disk)->url($image->large_path),
+                'altText' => $image->alt_text ?: $this->title,
                 'sortOrder' => $image->sort_order,
             ])->all()
             : [];
@@ -273,8 +273,8 @@ class Listing extends Model
         $images = $this->relationLoaded('images')
             ? $this->images->map(fn (ListingImage $image): array => [
                 'id' => $image->id,
-                'url' => Storage::disk('public')->url($image->large_webp_path),
-                'altText' => $this->title,
+                'url' => Storage::disk($image->disk)->url($image->large_path),
+                'altText' => $image->alt_text ?: $this->title,
                 'sortOrder' => $image->sort_order,
             ])->all()
             : [];
