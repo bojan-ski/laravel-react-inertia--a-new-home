@@ -4,6 +4,7 @@ import { ChevronLeft } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import MessageBubble from '@/Components/Conversations/MessageBubble'
 import MessageComposer from '@/Components/Conversations/MessageComposer'
+import ReportMessageDialog from '@/Components/Conversations/ReportMessageDialog'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { ChatMessageBroadcast, ChatMessageData, ConversationShowPageProps } from '@/types/conversation'
 import type { SharedProps } from '@/types/shared'
@@ -14,6 +15,7 @@ export default function Show({ conversation, translations }: ConversationShowPag
     const thread = translations.thread
 
     const [liveMessages, setLiveMessages] = useState<ChatMessageData[]>([])
+    const [reportMessage, setReportMessage] = useState<ChatMessageData | null>(null)
 
     const messages = useMemo(() => {
         const seen = new Set(conversation.messages.map((message) => message.id))
@@ -87,6 +89,8 @@ export default function Show({ conversation, translations }: ConversationShowPag
                                         message={message}
                                         isOwn={message.senderId === currentUserId}
                                         showName={showName}
+                                        reportLabel={translations.report.action}
+                                        onReport={() => setReportMessage(message)}
                                     />
                                 )
                             })
@@ -97,6 +101,14 @@ export default function Show({ conversation, translations }: ConversationShowPag
                     <MessageComposer conversationId={conversation.id} translations={thread} />
                 </div>
             </div>
+
+            <ReportMessageDialog
+                open={reportMessage !== null}
+                onClose={() => setReportMessage(null)}
+                messageId={reportMessage?.id ?? 0}
+                preview={reportMessage?.body.slice(0, 100) ?? ''}
+                translations={translations.report}
+            />
         </PublicLayout>
     )
 }

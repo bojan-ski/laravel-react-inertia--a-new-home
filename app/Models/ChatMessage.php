@@ -27,6 +27,6 @@ class ChatMessage extends Model
 
     public function reports(): HasMany
     {
-        return $this->hasMany(ReportedMessage::class);
+        return $this->hasMany(ReportedChatMessage::class);
     }
 }

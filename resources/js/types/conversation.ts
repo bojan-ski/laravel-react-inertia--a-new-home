@@ -1,3 +1,5 @@
+import type { ReportMessageTranslations } from '@/types/reported-message'
+
 export interface ConversationListingSummary {
     id: number
     title: string
@@ -65,6 +67,7 @@ export interface ConversationsTranslations {
     view_listing: string
     empty: ConversationsEmptyTranslations
     thread: ConversationsThreadTranslations
+    report: ReportMessageTranslations
 }
 
 export interface ConversationsIndexPageProps {
@@ -88,6 +91,8 @@ export interface MessageBubbleProps {
     message: ChatMessageData
     isOwn: boolean
     showName: boolean
+    reportLabel?: string
+    onReport?: () => void
 }
 
 export interface MessageComposerProps {
