@@ -168,6 +168,37 @@ export interface ListingShowPageProps {
 
 export interface ListingGalleryProps {
     images: ListingImageData[]
+    title: string
+}
+
+export interface ListingImagePlaceholderProps {
+    className?: string
+}
+
+export interface ImageManagementTranslations {
+    heading: string
+    helper: string
+    helper_empty: string
+    delete: string
+    choose_image: string
+    no_file: string
+    alt_label: string
+    alt_placeholder: string
+    upload: string
+    uploading: string
+    format_note: string
+}
+
+export interface ImageUploaderProps {
+    listingId: number
+    images: ListingImageData[]
+    translations: ImageManagementTranslations
+    canManage?: boolean
+}
+
+export type ImageUploadFormData = {
+    image: File | null
+    alt_text: string
 }
 
 export interface ListingFactsProps {
@@ -325,6 +356,7 @@ export interface EditListingTranslations extends ListingFormTranslations {
     back: string
     submit: string
     approved_notice: string
+    images: ImageManagementTranslations
 }
 
 export interface EditListingPageProps {

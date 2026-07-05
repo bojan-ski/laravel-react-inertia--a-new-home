@@ -416,6 +416,19 @@ return [
             'contact_email' => 'Contact Email',
             'contact_phone' => 'Contact Phone',
         ],
+        'images' => [
+            'heading' => 'Listing Images',
+            'helper' => 'Upload images for your listing. Images are processed automatically.',
+            'helper_empty' => 'Upload your first image to get started.',
+            'delete' => 'Delete image',
+            'choose_image' => 'Choose Image',
+            'no_file' => 'No file chosen',
+            'alt_label' => 'Alt text (optional)',
+            'alt_placeholder' => 'A short description of the image',
+            'upload' => 'Upload Image',
+            'uploading' => 'Uploading…',
+            'format_note' => 'Supported formats: JPG, PNG, WebP. Max 10 MB.',
+        ],
     ],
 
     'listing_images' => [

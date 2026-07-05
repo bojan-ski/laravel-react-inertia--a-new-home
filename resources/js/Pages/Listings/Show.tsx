@@ -50,7 +50,7 @@ export default function Show({ listing, isBookmarked, canStartChat, translations
 
                 {listing.images.length > 0 && (
                     <div className="mt-8">
-                        <ListingGallery images={listing.images} />
+                        <ListingGallery images={listing.images} title={listing.title} />
                     </div>
                 )}
 
