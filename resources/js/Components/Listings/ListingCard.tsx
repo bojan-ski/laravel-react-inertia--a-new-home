@@ -2,6 +2,7 @@ import { MouseEvent } from 'react'
 import { Link, router } from '@inertiajs/react'
 import { Bath, BedDouble, Heart, MapPin, Maximize, User } from 'lucide-react'
 import { formatArea, formatPrice } from '@/Components/Listings/listingFormat'
+import ListingImagePlaceholder from '@/Components/Listings/ListingImagePlaceholder'
 import type { ListingCardProps } from '@/types/listing'
 
 export default function ListingCard({ listing, translations, propertyTypeLabels }: ListingCardProps) {
@@ -20,12 +21,14 @@ export default function ListingCard({ listing, translations, propertyTypeLabels 
             className="group flex flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-sm transition-shadow hover:shadow-md"
         >
             <div className="relative aspect-[4/3] overflow-hidden bg-surface-muted">
-                {listing.imageUrl && (
+                {listing.imageUrl ? (
                     <img
                         src={listing.imageUrl}
                         alt={listing.title}
                         className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
+                ) : (
+                    <ListingImagePlaceholder />
                 )}
 
                 <div className="absolute left-3 top-3 flex gap-2">

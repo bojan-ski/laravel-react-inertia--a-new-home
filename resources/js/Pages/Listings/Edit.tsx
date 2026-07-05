@@ -1,6 +1,7 @@
 import { Head, Link, useForm, usePage } from '@inertiajs/react'
 import { ChevronLeft, Info } from 'lucide-react'
 import type { FormEvent } from 'react'
+import ImageUploader from '@/Components/Listings/ImageUploader'
 import ListingForm from '@/Components/Listings/ListingForm'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { EditListingPageProps, ListingFormData } from '@/types/listing'
@@ -84,6 +85,15 @@ export default function Edit({ listing, translations, propertyTypeLabels }: Edit
                     propertyTypeLabels={propertyTypeLabels}
                     headerSlot={approvedNotice}
                 />
+
+                <div className="mt-12 border-t border-border pt-10">
+                    <ImageUploader
+                        listingId={listing.id}
+                        images={listing.images}
+                        translations={translations.images}
+                        canManage
+                    />
+                </div>
             </div>
         </PublicLayout>
     )
