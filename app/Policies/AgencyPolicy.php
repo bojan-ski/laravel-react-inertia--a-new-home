@@ -26,6 +26,15 @@ class AgencyPolicy
     }
 
     /**
+     * Determine whether anyone (including guests) can view the agency on the
+     * public directory. Nullable user because guests reach this surface.
+     */
+    public function viewPublic(?User $user, Agency $agency): bool
+    {
+        return $agency->isPubliclyVisible();
+    }
+
+    /**
      * Determine whether the user can approve the agency.
      */
     public function approve(User $user, Agency $agency): bool
