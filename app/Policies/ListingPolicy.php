@@ -7,6 +7,15 @@ use App\Models\User;
 
 class ListingPolicy
 {
+    public function view(User $user, Listing $listing): bool
+    {
+        if ($user->isSuspended()) {
+            return false;
+        }
+
+        return $listing->isPubliclyVisible();
+    }
+
     public function create(User $user): bool
     {
         if (! $user->isActive()) {
