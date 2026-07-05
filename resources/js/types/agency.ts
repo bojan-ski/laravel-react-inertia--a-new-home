@@ -1,5 +1,6 @@
 import type { FormEvent, ReactNode } from 'react'
 import type { ListingStatusValue } from '@/types/listing'
+import type { PaginationLabels, Paginator } from '@/types/pagination'
 
 export interface AgencyFormSections {
     identity: string
@@ -197,4 +198,64 @@ export interface AgencyEditTranslations extends AgencyFormTranslations {
 export interface AgencyEditPageProps {
     agency: AgencyEditData
     translations: AgencyEditTranslations
+}
+
+export interface AgencyCardData {
+    id: number
+    name: string
+    slug: string
+    email: string
+    phone: string | null
+    website: string | null
+    address: string | null
+    description: string | null
+    approvedAt: string | null
+}
+
+export interface AgenciesFilters {
+    search: string | null
+}
+
+export interface AgenciesSearchTranslations {
+    placeholder: string
+    submit: string
+    reset: string
+}
+
+export interface AgenciesEmptyTranslations {
+    headline: string
+    hint: string
+    reset: string
+    none: string
+}
+
+export interface AgenciesDirectoryTranslations {
+    title: string
+    heading: string
+    subtitle: string
+    count_prefix: string
+    count_suffix: string
+    search: AgenciesSearchTranslations
+    empty: AgenciesEmptyTranslations
+    pagination: PaginationLabels
+}
+
+export interface AgenciesIndexPageProps {
+    agencies: Paginator<AgencyCardData>
+    filters: AgenciesFilters
+    translations: AgenciesDirectoryTranslations
+}
+
+export interface AgencyCardProps {
+    agency: AgencyCardData
+}
+
+export interface AgencyDirectorySearchBarProps {
+    filters: AgenciesFilters
+    translations: AgenciesSearchTranslations
+}
+
+export interface AgenciesEmptyStateProps {
+    translations: AgenciesEmptyTranslations
+    hasActiveSearch: boolean
 }
