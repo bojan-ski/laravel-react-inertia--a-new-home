@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Models\Agency;
+use App\Models\Conversation;
 use App\Models\Listing;
 use App\Models\User;
 use App\Policies\AgencyPolicy;
+use App\Policies\ConversationPolicy;
 use App\Policies\ListingPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
@@ -29,5 +31,6 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Listing::class, ListingPolicy::class);
         Gate::policy(Agency::class, AgencyPolicy::class);
         Gate::policy(User::class, UserPolicy::class);
+        Gate::policy(Conversation::class, ConversationPolicy::class);
     }
 }

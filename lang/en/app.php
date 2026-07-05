@@ -335,6 +335,25 @@ return [
         ],
     ],
 
+    'conversations' => [
+        'title' => 'Conversations',
+        'subtitle' => 'Your messages with listing owners and buyers.',
+        'view_listing' => 'View listing',
+        'empty' => [
+            'headline' => 'No conversations yet.',
+            'subtitle' => "Start a conversation from a listing's detail page.",
+        ],
+        'thread' => [
+            'back' => 'Back to Conversations',
+            'with' => 'with',
+            'empty' => 'No messages yet. Start the conversation.',
+            'placeholder' => 'Write a message…',
+            'send' => 'Send',
+            'sending' => 'Sending…',
+            'hint' => 'Press Ctrl + Enter to send',
+        ],
+    ],
+
     'create_listing' => [
         'title' => 'Create Listing',
         'subtitle' => 'Add your property details for admin review.',
