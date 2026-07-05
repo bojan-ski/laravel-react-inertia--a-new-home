@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AgencyDirectoryController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -8,6 +9,8 @@ Route::get('/', function () {
         'landing' => __('app.landing'),
     ]);
 })->name('home');
+
+Route::get('/agencies', [AgencyDirectoryController::class, 'index'])->name('agencies.index');
 
 require __DIR__.'/listings.php';
 require __DIR__.'/profile.php';

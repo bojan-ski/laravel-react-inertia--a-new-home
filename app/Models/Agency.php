@@ -111,6 +111,24 @@ class Agency extends Model
     /**
      * @return array<string, mixed>
      */
+    public function toCardArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'slug' => $this->slug,
+            'email' => $this->email,
+            'phone' => $this->phone,
+            'website' => $this->website,
+            'address' => $this->address,
+            'description' => $this->description,
+            'approvedAt' => $this->approved_at?->toIso8601String(),
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
     public function toModerationArray(): array
     {
         return [

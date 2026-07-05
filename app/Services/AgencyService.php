@@ -4,14 +4,38 @@ namespace App\Services;
 
 use App\Enums\AgencyStatus;
 use App\Exceptions\InvalidAgencyStatusTransitionException;
+use App\Http\Requests\AgencyIndexRequest;
 use App\Models\Agency;
 use App\Models\User;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class AgencyService
 {
+    private const PER_PAGE = 12;
+
     public function __construct(private MailNotificationService $mail) {}
+
+    public function getPublicAgencies(AgencyIndexRequest $request): LengthAwarePaginator
+    {
+        $search = $request->filters()['search'];
+
+        $query = Agency::actuallyPubliclyVisible();
+
+        if ($search !== '') {
+            $query->where(function (Builder $query) use ($search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%")
+                    ->orWhere('address', 'like', "%{$search}%");
+            });
+        }
+
+        return $query->orderByDesc('approved_at')
+            ->paginate(self::PER_PAGE)
+            ->withQueryString();
+    }
 
     /**
      * @param  array<string, mixed>  $data

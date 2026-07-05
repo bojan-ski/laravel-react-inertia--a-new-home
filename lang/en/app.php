@@ -232,6 +232,33 @@ return [
         ],
     ],
 
+    'agencies' => [
+        'title' => 'Agencies',
+        'heading' => 'Browse Agencies',
+        'subtitle' => 'Explore approved agencies offering properties on the marketplace.',
+        'count_prefix' => 'Showing',
+        'count_suffix' => 'agencies',
+
+        'search' => [
+            'placeholder' => 'Search by name, description, or location…',
+            'submit' => 'Search',
+            'reset' => 'Reset',
+        ],
+
+        'empty' => [
+            'headline' => 'No agencies found.',
+            'hint' => 'Try adjusting your search.',
+            'reset' => 'Reset search',
+            'none' => 'No agencies are publicly listed yet.',
+        ],
+
+        'pagination' => [
+            'page_of' => 'Page :current of :last',
+            'previous' => 'Previous',
+            'next' => 'Next',
+        ],
+    ],
+
     'profile' => [
         'title' => 'My Listings',
         'subtitle' => 'Manage your personal property listings.',
