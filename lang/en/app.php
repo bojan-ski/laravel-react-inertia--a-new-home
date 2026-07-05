@@ -352,6 +352,26 @@ return [
             'sending' => 'Sending…',
             'hint' => 'Press Ctrl + Enter to send',
         ],
+        'report' => [
+            'action' => 'Report',
+            'title' => 'Report Message',
+            'prompt' => 'Why are you reporting this?',
+            'placeholder' => "Explain why you're reporting this message…",
+            'cancel' => 'Cancel',
+            'submit' => 'Report',
+        ],
+    ],
+
+    'reports' => [
+        'flash' => [
+            'reported' => 'Message reported.',
+        ],
+        'errors' => [
+            'suspended' => 'Your account is suspended and cannot report messages.',
+            'not_participant' => 'You can only report messages in conversations you participate in.',
+            'self_report' => 'You cannot report your own message.',
+            'duplicate' => 'You have already reported this message.',
+        ],
     ],
 
     'create_listing' => [
@@ -817,6 +837,34 @@ return [
                 'page_of' => 'Page :current of :last',
                 'previous' => 'Previous',
                 'next' => 'Next',
+            ],
+        ],
+        'reported_messages' => [
+            'title' => 'Reported Messages',
+            'subtitle' => 'Review chat messages reported by participants.',
+            'listing_context' => 'Listing context',
+            'conversation' => 'Conversation #:id',
+            'reported_message' => 'Reported message',
+            'sent_by' => 'Sent by :name',
+            'reason_label' => 'Reason',
+            'reported_by' => 'Reported by :name • :date',
+            'actions' => [
+                'resolve' => 'Resolve',
+                'suspend' => 'Suspend User',
+            ],
+            'confirm' => [
+                'title' => 'Suspend :name?',
+                'description' => 'This will suspend the user from the platform. The report will be marked resolved.',
+                'confirm' => 'Suspend User',
+                'cancel' => 'Cancel',
+            ],
+            'empty' => [
+                'title' => 'No reported messages.',
+                'subtitle' => "You're all caught up.",
+            ],
+            'flash' => [
+                'resolved' => 'Report resolved.',
+                'suspended' => 'User suspended and report resolved.',
             ],
         ],
     ],

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AgencyModerationController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ListingModerationController;
+use App\Http\Controllers\Admin\ReportedMessageModerationController;
 use App\Http\Controllers\Admin\UserManagementController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,4 +25,8 @@ Route::middleware(['auth', 'role:admin'])
         Route::post('/users/{user}/suspend', [UserManagementController::class, 'suspend'])->name('users.suspend');
         Route::post('/users/{user}/reactivate', [UserManagementController::class, 'reactivate'])->name('users.reactivate');
         Route::delete('/users/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy');
+
+        Route::get('/reported-messages', [ReportedMessageModerationController::class, 'index'])->name('reported-messages.index');
+        Route::post('/reported-messages/{report}/resolve', [ReportedMessageModerationController::class, 'resolve'])->name('reported-messages.resolve');
+        Route::post('/reported-messages/{report}/suspend', [ReportedMessageModerationController::class, 'suspend'])->name('reported-messages.suspend');
     });
