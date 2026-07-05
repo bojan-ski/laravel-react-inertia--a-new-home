@@ -153,7 +153,7 @@ class SelectedListingPageTest extends TestCase
             ->get("/listings/{$listing->slug}")
             ->assertInertia(fn (Assert $page) => $page
                 ->where('isBookmarked', false)
-                ->where('canStartChat', false)
+                ->where('canStartChat', true)
             );
     }
 }

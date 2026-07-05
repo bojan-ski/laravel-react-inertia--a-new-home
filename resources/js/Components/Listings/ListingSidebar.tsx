@@ -8,6 +8,7 @@ export default function ListingSidebar({ listing, isBookmarked, canStartChat, tr
     const isRental = listing.listingType === 'rent'
     const hasContact = Boolean(listing.contactName || listing.contactEmail || listing.contactPhone)
     const [isToggling, setIsToggling] = useState(false)
+    const [isStartingChat, setIsStartingChat] = useState(false)
 
     function toggleBookmark() {
         router.post(
@@ -17,6 +18,17 @@ export default function ListingSidebar({ listing, isBookmarked, canStartChat, tr
                 preserveScroll: true,
                 onStart: () => setIsToggling(true),
                 onFinish: () => setIsToggling(false),
+            }
+        )
+    }
+
+    function startChat() {
+        router.post(
+            `/listings/${listing.id}/conversations`,
+            {},
+            {
+                onStart: () => setIsStartingChat(true),
+                onFinish: () => setIsStartingChat(false),
             }
         )
     }
@@ -46,14 +58,17 @@ export default function ListingSidebar({ listing, isBookmarked, canStartChat, tr
                         {isBookmarked ? translations.saved : translations.save_listing}
                     </button>
 
-                    <button
-                        type="button"
-                        disabled={!canStartChat}
-                        className="flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-surface px-4 py-3 text-sm font-medium text-text transition-colors hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-surface"
-                    >
-                        <MessageCircle className="size-4" />
-                        {translations.start_chat}
-                    </button>
+                    {canStartChat && (
+                        <button
+                            type="button"
+                            onClick={startChat}
+                            disabled={isStartingChat}
+                            className="flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-surface px-4 py-3 text-sm font-medium text-text transition-colors hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                            <MessageCircle className="size-4" />
+                            {translations.start_chat}
+                        </button>
+                    )}
                 </div>
 
                 {hasContact && (

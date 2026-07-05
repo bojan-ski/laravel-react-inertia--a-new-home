@@ -13,6 +13,7 @@ Route::get('/', function () {
 Route::get('/agencies', [AgencyDirectoryController::class, 'index'])->name('agencies.index');
 
 require __DIR__.'/listings.php';
+require __DIR__.'/conversations.php';
 require __DIR__.'/profile.php';
 require __DIR__.'/agency.php';
 require __DIR__.'/admin.php';
