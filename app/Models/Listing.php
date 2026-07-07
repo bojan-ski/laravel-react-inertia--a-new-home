@@ -85,11 +85,11 @@ class Listing extends Model
     protected function actuallyPubliclyVisible(Builder $query): void
     {
         $query->publiclyVisible()
-            ->where(function (Builder $query) {
-                $query->whereNull($query->qualifyColumn('user_id'))
-                    ->orWhereHas('owner', function (Builder $query) {
-                        $query->where('status', '!=', UserStatus::Suspended->value);
-                    });
+            ->whereDoesntHave('owner', function (Builder $query) {
+                $query->where('status', UserStatus::Suspended->value);
+            })
+            ->whereDoesntHave('agency.user', function (Builder $query) {
+                $query->where('status', UserStatus::Suspended->value);
             });
     }
 
