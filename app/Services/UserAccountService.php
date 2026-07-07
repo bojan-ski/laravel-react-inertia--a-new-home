@@ -16,6 +16,10 @@ class UserAccountService
 
     public function suspend(User $user): User
     {
+        if ($user->isSuspended()) {
+            return $user;
+        }
+
         $user->forceFill([
             'status' => UserStatus::Suspended,
             'suspended_at' => now(),
@@ -23,7 +27,7 @@ class UserAccountService
 
         $this->mail->sendUserSuspended($user);
 
-        return $user->fresh();
+        return $user->refresh();
     }
 
     public function reactivate(User $user): User
