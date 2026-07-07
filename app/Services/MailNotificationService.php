@@ -27,12 +27,16 @@ class MailNotificationService
 
     public function sendListingApproved(Listing $listing): void
     {
-        $listing->owner?->notify(new ListingApprovedNotification($listing->title));
+        $this->resolveListingRecipient($listing)?->notify(
+            new ListingApprovedNotification($listing->title)
+        );
     }
 
     public function sendListingRejected(Listing $listing): void
     {
-        $listing->owner?->notify(new ListingRejectedNotification($listing->title, (string) $listing->rejection_reason));
+        $this->resolveListingRecipient($listing)?->notify(
+            new ListingRejectedNotification($listing->title, (string) $listing->rejection_reason)
+        );
     }
 
     public function sendAgencyApproved(Agency $agency): void
@@ -43,5 +47,12 @@ class MailNotificationService
     public function sendAgencyRejected(Agency $agency): void
     {
         $agency->user?->notify(new AgencyRejectedNotification($agency->name, (string) $agency->rejection_reason));
+    }
+
+    private function resolveListingRecipient(Listing $listing): ?User
+    {
+        $listing->loadMissing(['owner', 'agency.user']);
+
+        return $listing->owner ?? $listing->agency?->user;
     }
 }
