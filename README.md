@@ -41,6 +41,14 @@ php artisan boost:install
 
 Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
 
+## Quality Assurance
+
+Cross-feature integration tests and sanity checks live under `tests/Feature/System`.
+Run them with `php artisan test tests/Feature/System`.
+
+Before deploying a release, also walk the manual regression pass in
+[`docs/qa/marketplace-regression-checklist.md`](docs/qa/marketplace-regression-checklist.md).
+
 ## Contributing
 
 Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
