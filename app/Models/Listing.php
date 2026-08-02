@@ -319,8 +319,8 @@ class Listing extends Model
             'currency' => $this->currency,
             'city' => $this->city,
             'country' => $this->country,
-            'ownerName' => $this->owner?->name,
-            'ownerEmail' => $this->owner?->email,
+            'ownerName' => $this->owner?->name ?? $this->agency?->name,
+            'ownerEmail' => $this->owner?->email ?? $this->agency?->email,
             'createdAt' => $this->created_at?->toIso8601String(),
         ];
     }

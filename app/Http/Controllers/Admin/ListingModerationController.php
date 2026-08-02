@@ -24,7 +24,7 @@ class ListingModerationController extends Controller
     public function index(): Response
     {
         $listings = Listing::byStatus(ListingStatus::PendingReview)
-            ->with('owner:id,name,email')
+            ->with(['owner:id,name,email', 'agency:id,name,email'])
             ->latest()
             ->get()
             ->map(fn (Listing $listing): array => $listing->toModerationArray());
