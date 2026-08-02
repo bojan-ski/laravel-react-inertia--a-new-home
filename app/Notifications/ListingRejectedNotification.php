@@ -2,23 +2,11 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Notification;
 
-class ListingRejectedNotification extends Notification
+class ListingRejectedNotification extends MailOnlyNotification
 {
-    use Queueable;
-
     public function __construct(public string $listingTitle, public string $reason) {}
-
-    /**
-     * @return array<int, string>
-     */
-    public function via(object $notifiable): array
-    {
-        return ['mail'];
-    }
 
     public function toMail(object $notifiable): MailMessage
     {

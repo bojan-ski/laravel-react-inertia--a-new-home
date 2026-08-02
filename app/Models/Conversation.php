@@ -54,6 +54,29 @@ class Conversation extends Model
     /**
      * @return array<string, mixed>
      */
+    private function listingSummary(): array
+    {
+        return [
+            'id' => $this->listing->id,
+            'title' => $this->listing->title,
+            'slug' => $this->listing->slug,
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function participantSummary(User $other): array
+    {
+        return [
+            'id' => $other->id,
+            'name' => $other->name,
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
     public function toInboxArray(User $actor): array
     {
         $other = $this->otherParticipant($actor);
@@ -61,15 +84,8 @@ class Conversation extends Model
 
         return [
             'id' => $this->id,
-            'listing' => [
-                'id' => $this->listing->id,
-                'title' => $this->listing->title,
-                'slug' => $this->listing->slug,
-            ],
-            'otherParticipant' => [
-                'id' => $other->id,
-                'name' => $other->name,
-            ],
+            'listing' => $this->listingSummary(),
+            'otherParticipant' => $this->participantSummary($other),
             'lastMessage' => $lastMessage !== null ? [
                 'body' => $lastMessage->body,
                 'createdAt' => $lastMessage->created_at->toIso8601String(),
@@ -87,15 +103,8 @@ class Conversation extends Model
 
         return [
             'id' => $this->id,
-            'listing' => [
-                'id' => $this->listing->id,
-                'title' => $this->listing->title,
-                'slug' => $this->listing->slug,
-            ],
-            'otherParticipant' => [
-                'id' => $other->id,
-                'name' => $other->name,
-            ],
+            'listing' => $this->listingSummary(),
+            'otherParticipant' => $this->participantSummary($other),
             'messages' => $this->messages->map(fn (ChatMessage $message): array => [
                 'id' => $message->id,
                 'senderId' => $message->sender_id,

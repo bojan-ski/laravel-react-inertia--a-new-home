@@ -102,6 +102,17 @@ class AgencyListingManagementTest extends TestCase
         $this->actingAs($user)->get('/agency/listings/create')->assertRedirect('/agency/setup');
     }
 
+    public function test_agency_user_without_agency_is_redirected_to_setup_on_store(): void
+    {
+        $user = User::factory()->agency()->create();
+
+        $this->actingAs($user)
+            ->post('/agency/listings', $this->validPayload())
+            ->assertRedirect('/agency/setup');
+
+        $this->assertDatabaseCount('listings', 0);
+    }
+
     public function test_guest_is_redirected_to_login(): void
     {
         $this->get('/agency/listings/create')->assertRedirect('/login');
