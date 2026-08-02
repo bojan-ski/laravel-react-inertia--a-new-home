@@ -2,21 +2,8 @@ import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import { Building2 } from 'lucide-react'
 import RejectAgencyDialog from '@/Components/Admin/RejectAgencyDialog'
+import { formatDateTime } from '@/Components/Listings/listingFormat'
 import type { AdminAgencyModerationRowProps } from '@/types/admin'
-
-function formatSubmitted(value: string | null): string {
-    if (!value) {
-        return ''
-    }
-
-    return new Date(value).toLocaleString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-    })
-}
 
 function truncate(value: string, length: number): string {
     return value.length > length ? `${value.slice(0, length)}…` : value
@@ -83,7 +70,7 @@ export default function AgencyModerationRow({ agency, translations }: AdminAgenc
                     )}
 
                     <p className="mt-2 text-sm text-text-muted">
-                        {translations.submitted.replace(':date', formatSubmitted(agency.createdAt))}
+                        {translations.submitted.replace(':date', formatDateTime(agency.createdAt))}
                     </p>
                 </div>
 

@@ -1,12 +1,7 @@
 import { Link, usePage } from '@inertiajs/react'
-import type { SharedProps, UserRole } from '@/types/shared'
+import type { SharedProps } from '@/types/shared'
+import { dashboardPaths } from '@/types/navigation'
 import type { ListingsNavbarAuthActionsProps } from '@/types/listing'
-
-const dashboardPaths: Record<UserRole, string> = {
-    regular_user: '/profile',
-    agency: '/agency',
-    admin: '/admin',
-}
 
 export default function ListingsNavbarAuthActions({ nav, onNavigate }: ListingsNavbarAuthActionsProps) {
     const { auth } = usePage<SharedProps>().props

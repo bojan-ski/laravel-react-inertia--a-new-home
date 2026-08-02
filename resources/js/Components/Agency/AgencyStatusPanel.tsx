@@ -1,5 +1,6 @@
 import { AlertCircle, CheckCircle2, EyeOff, Info } from 'lucide-react'
 import type { ComponentType } from 'react'
+import { formatDate } from '@/Components/Listings/listingFormat'
 import type { AgencyStatusPanelProps, AgencyStatusValue } from '@/types/agency'
 
 const statusStyles: Record<AgencyStatusValue, { container: string; icon: ComponentType<{ className?: string }>; iconColor: string }> = {
@@ -30,13 +31,7 @@ export default function AgencyStatusPanel({ agency, translations }: AgencyStatus
     const style = statusStyles[agency.status]
     const Icon = style.icon
 
-    const approvedDate = agency.approvedAt
-        ? new Date(agency.approvedAt).toLocaleDateString('en-US', {
-              month: 'long',
-              day: 'numeric',
-              year: 'numeric',
-          })
-        : null
+    const approvedDate = agency.approvedAt ? formatDate(agency.approvedAt, 'long') : null
 
     return (
         <div className={`flex items-start gap-4 rounded-xl border px-5 py-5 ${style.container}`}>

@@ -1,5 +1,6 @@
 import { Head, useForm, usePage } from '@inertiajs/react'
 import type { FormEvent } from 'react'
+import FlashBanner from '@/Components/UI/FlashBanner'
 import TextField from '@/Components/UI/TextField'
 import AuthLayout from '@/Layouts/AuthLayout'
 import type { ResetPasswordPageProps } from '@/types/auth'
@@ -23,17 +24,13 @@ export default function ResetPassword({ translations, token, email }: ResetPassw
         <AuthLayout>
             <Head title={translations.title} />
 
-            {flash.error && (
-                <div className="mb-6 rounded-lg border border-status-rejected/30 bg-status-rejected/10 px-4 py-3 text-sm text-status-rejected">
-                    {flash.error}
-                </div>
-            )}
+            {flash.error && <FlashBanner message={flash.error} variant="error" coloredText />}
 
             <h1 className="font-display text-3xl font-semibold text-text">{translations.title}</h1>
             <p className="mt-2 text-sm text-text-soft">{translations.subtitle}</p>
 
             <form onSubmit={submit} className="mt-8 flex flex-col gap-5">
-                <input type="hidden" value={data.token} />
+                <input type="hidden" value={data.token} readOnly />
 
                 <TextField
                     id="email"

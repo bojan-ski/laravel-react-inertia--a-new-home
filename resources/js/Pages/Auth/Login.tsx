@@ -1,5 +1,6 @@
 import { Head, Link, useForm, usePage } from '@inertiajs/react'
 import type { FormEvent } from 'react'
+import FlashBanner from '@/Components/UI/FlashBanner'
 import TextField from '@/Components/UI/TextField'
 import AuthLayout from '@/Layouts/AuthLayout'
 import type { LoginPageProps } from '@/types/auth'
@@ -7,25 +8,21 @@ import type { SharedProps } from '@/types/shared'
 
 export default function Login({ translations }: LoginPageProps) {
     const { flash } = usePage<SharedProps>().props
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
     })
 
     function submit(e: FormEvent) {
         e.preventDefault()
-        post('/login')
+        post('/login', { onError: () => reset('password') })
     }
 
     return (
         <AuthLayout>
             <Head title={translations.title} />
 
-            {flash.error && (
-                <div className="mb-6 rounded-lg border border-status-rejected/30 bg-status-rejected/10 px-4 py-3 text-sm text-status-rejected">
-                    {flash.error}
-                </div>
-            )}
+            {flash.error && <FlashBanner message={flash.error} variant="error" coloredText />}
 
             <h1 className="font-display text-3xl font-semibold text-text">{translations.title}</h1>
             <p className="mt-2 text-sm text-text-soft">{translations.subtitle}</p>

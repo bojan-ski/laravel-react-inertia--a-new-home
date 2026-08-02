@@ -2,16 +2,9 @@ import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import { Trash2 } from 'lucide-react'
 import ConfirmDeleteUserDialog from '@/Components/Admin/ConfirmDeleteUserDialog'
+import { formatDate } from '@/Components/Listings/listingFormat'
 import StatusBadge from '@/Components/UI/StatusBadge'
 import type { AdminUserRowProps } from '@/types/admin'
-
-function formatDate(value: string): string {
-    return new Date(value).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-    })
-}
 
 export default function AdminUserRow({ user, translations }: AdminUserRowProps) {
     const [confirmOpen, setConfirmOpen] = useState(false)

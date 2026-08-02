@@ -1,3 +1,11 @@
+import type { UserRole } from '@/types/shared'
+
+export const dashboardPaths: Record<UserRole, string> = {
+    regular_user: '/profile',
+    agency: '/agency',
+    admin: '/admin',
+}
+
 export interface NavTranslations {
     brand: string
     features: string

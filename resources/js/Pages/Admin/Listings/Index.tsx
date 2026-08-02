@@ -1,6 +1,7 @@
 import { Head, usePage } from '@inertiajs/react'
 import { CheckCircle2 } from 'lucide-react'
 import ListingModerationRow from '@/Components/Admin/ListingModerationRow'
+import FlashBanner from '@/Components/UI/FlashBanner'
 import Pagination from '@/Components/UI/Pagination'
 import AdminLayout from '@/Layouts/AdminLayout'
 import type { AdminListingsPageProps } from '@/types/admin'
@@ -13,16 +14,8 @@ export default function Index({ listings, translations, propertyTypeLabels }: Ad
         <AdminLayout>
             <Head title={translations.title} />
 
-            {flash.success && (
-                <div className="mb-6 rounded-lg border border-status-approved/30 bg-status-approved/10 px-4 py-3 text-sm text-text">
-                    {flash.success}
-                </div>
-            )}
-            {flash.error && (
-                <div className="mb-6 rounded-lg border border-status-rejected/30 bg-status-rejected/10 px-4 py-3 text-sm text-text">
-                    {flash.error}
-                </div>
-            )}
+            {flash.success && <FlashBanner message={flash.success} variant="success" />}
+            {flash.error && <FlashBanner message={flash.error} variant="error" />}
 
             <header>
                 <h1 className="font-display text-3xl font-semibold text-text sm:text-4xl">

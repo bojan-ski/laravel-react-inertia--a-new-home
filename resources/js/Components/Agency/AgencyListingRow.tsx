@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, router } from '@inertiajs/react'
 import { Trash2 } from 'lucide-react'
-import { formatPrice } from '@/Components/Listings/listingFormat'
+import { formatDate, formatPrice } from '@/Components/Listings/listingFormat'
 import ConfirmDialog from '@/Components/UI/ConfirmDialog'
 import StatusBadge from '@/Components/UI/StatusBadge'
 import type { AgencyListingRowProps } from '@/types/agency'
@@ -13,13 +13,7 @@ export default function AgencyListingRow({ listing, translations, propertyTypeLa
     const isRental = listing.listingType === 'rent'
     const typeLabel = translations.listing_types[listing.listingType] ?? listing.listingType
     const propertyLabel = propertyTypeLabels[listing.propertyType] ?? listing.propertyType
-    const createdDate = listing.createdAt
-        ? new Date(listing.createdAt).toLocaleDateString('en-US', {
-              month: 'short',
-              day: 'numeric',
-              year: 'numeric',
-          })
-        : null
+    const createdDate = formatDate(listing.createdAt)
 
     function handleDelete() {
         router.delete(`/agency/listings/${listing.id}`, {

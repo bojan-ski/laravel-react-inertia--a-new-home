@@ -1,22 +1,8 @@
 import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import RejectListingDialog from '@/Components/Admin/RejectListingDialog'
-import { formatPrice } from '@/Components/Listings/listingFormat'
+import { formatDateTime, formatPrice } from '@/Components/Listings/listingFormat'
 import type { AdminListingModerationRowProps } from '@/types/admin'
-
-function formatSubmitted(value: string | null): string {
-    if (!value) {
-        return ''
-    }
-
-    return new Date(value).toLocaleString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-    })
-}
 
 export default function ListingModerationRow({
     listing,
@@ -66,7 +52,7 @@ export default function ListingModerationRow({
                         {ownerAfter}
                     </p>
                     <p className="mt-0.5 text-sm text-text-muted">
-                        {translations.submitted.replace(':date', formatSubmitted(listing.createdAt))}
+                        {translations.submitted.replace(':date', formatDateTime(listing.createdAt))}
                     </p>
                 </div>
 
