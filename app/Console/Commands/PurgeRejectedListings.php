@@ -19,6 +19,7 @@ class PurgeRejectedListings extends Command
             ->where('status', ListingStatus::Rejected)
             ->whereNotNull('rejected_at')
             ->where('rejected_at', '<=', now()->subDays(7))
+            ->with('images')
             ->get();
 
         foreach ($listings as $listing) {

@@ -28,7 +28,7 @@ class AgencyProfileRequest extends FormRequest
             'phone' => ['nullable', 'string', 'max:50'],
             'website' => ['nullable', 'url', 'max:255'],
             'address' => ['nullable', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
+            'description' => ['nullable', 'string', 'max:10000'],
         ];
     }
 }

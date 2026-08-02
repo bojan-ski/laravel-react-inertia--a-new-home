@@ -30,7 +30,7 @@ class StoreAgencyListingRequest extends FormRequest
             'property_type' => ['required', 'string', Rule::in(self::PROPERTY_TYPES)],
             'price' => ['required', 'numeric', 'min:0'],
             'currency' => ['required', 'string', 'max:10'],
-            'description' => ['required', 'string'],
+            'description' => ['required', 'string', 'max:10000'],
             'country' => ['required', 'string', 'max:255'],
             'city' => ['required', 'string', 'max:255'],
             'address_line' => ['nullable', 'string', 'max:255'],
