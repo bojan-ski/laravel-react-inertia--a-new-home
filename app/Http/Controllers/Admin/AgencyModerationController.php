@@ -19,6 +19,8 @@ class AgencyModerationController extends Controller
 
     public function index(): Response
     {
+        Gate::authorize('viewAny', Agency::class);
+
         $agencies = Agency::byStatus(AgencyStatus::PendingVerification)
             ->with('user:id,name,email')
             ->latest()

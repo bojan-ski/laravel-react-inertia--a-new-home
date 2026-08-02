@@ -7,6 +7,11 @@ use App\Models\User;
 
 class ListingPolicy
 {
+    public function viewAny(User $user): bool
+    {
+        return $user->isAdmin();
+    }
+
     public function view(User $user, Listing $listing): bool
     {
         if ($user->isSuspended()) {

@@ -53,6 +53,7 @@ return new class extends Migration
             $table->index('listing_type');
             $table->index('property_type');
             $table->index(['status', 'listing_type', 'property_type', 'city']);
+            $table->index(['status', 'price']);
         });
     }
 

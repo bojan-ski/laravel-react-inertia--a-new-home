@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('body');
             $table->timestamps();
 
-            $table->index('created_at');
+            $table->index(['conversation_id', 'created_at']);
         });
     }
 

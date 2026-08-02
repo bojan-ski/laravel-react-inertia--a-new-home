@@ -86,6 +86,19 @@ class AuthHardeningTest extends TestCase
         $this->assertAuthenticated();
     }
 
+    public function test_login_regenerates_the_session(): void
+    {
+        $user = User::factory()->regularUser()->create();
+
+        $this->get('/login');
+        $originalSessionId = session()->getId();
+
+        $this->post('/login', ['email' => $user->email, 'password' => 'password']);
+
+        $this->assertNotSame($originalSessionId, session()->getId());
+        $this->assertAuthenticatedAs($user);
+    }
+
     // ---- Suspension on plain-auth read routes ---------------------------
 
     public function test_suspended_user_is_booted_from_listing_detail(): void
