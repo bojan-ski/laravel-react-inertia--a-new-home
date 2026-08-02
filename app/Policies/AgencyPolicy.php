@@ -7,6 +7,11 @@ use App\Models\User;
 
 class AgencyPolicy
 {
+    public function viewAny(User $user): bool
+    {
+        return $user->isAdmin();
+    }
+
     public function view(User $user, Agency $agency): bool
     {
         if ($user->isSuspended()) {

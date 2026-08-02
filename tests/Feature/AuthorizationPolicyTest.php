@@ -420,4 +420,18 @@ class AuthorizationPolicyTest extends TestCase
 
         $this->assertFalse($actor->can('suspend', $target));
     }
+
+    public function test_only_admins_can_view_moderation_listings(): void
+    {
+        $this->assertTrue(User::factory()->admin()->create()->can('viewAny', Listing::class));
+        $this->assertFalse(User::factory()->regularUser()->create()->can('viewAny', Listing::class));
+        $this->assertFalse(User::factory()->agency()->create()->can('viewAny', Listing::class));
+    }
+
+    public function test_only_admins_can_view_moderation_agencies(): void
+    {
+        $this->assertTrue(User::factory()->admin()->create()->can('viewAny', Agency::class));
+        $this->assertFalse(User::factory()->regularUser()->create()->can('viewAny', Agency::class));
+        $this->assertFalse(User::factory()->agency()->create()->can('viewAny', Agency::class));
+    }
 }

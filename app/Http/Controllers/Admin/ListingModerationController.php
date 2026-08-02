@@ -23,6 +23,8 @@ class ListingModerationController extends Controller
 
     public function index(): Response
     {
+        Gate::authorize('viewAny', Listing::class);
+
         $listings = Listing::byStatus(ListingStatus::PendingReview)
             ->with(['owner:id,name,email', 'agency:id,name,email'])
             ->latest()
