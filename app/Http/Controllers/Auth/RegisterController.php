@@ -35,6 +35,7 @@ class RegisterController extends Controller
         $user->save();
 
         Auth::login($user);
+        $request->session()->regenerate();
 
         return redirect($this->redirectPathForRole($role));
     }
