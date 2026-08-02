@@ -124,9 +124,9 @@ class AuditFollowupTest extends TestCase
         $this->actingAs(User::factory()->admin()->create())
             ->get('/admin/listings')
             ->assertInertia(fn (Assert $page) => $page
-                ->where('listings.0.id', $listing->id)
-                ->where('listings.0.ownerName', 'Premier Properties')
-                ->where('listings.0.ownerEmail', 'contact@premier.test'));
+                ->where('listings.data.0.id', $listing->id)
+                ->where('listings.data.0.ownerName', 'Premier Properties')
+                ->where('listings.data.0.ownerEmail', 'contact@premier.test'));
     }
 
     public function test_public_card_shows_agency_name_for_agency_listings(): void

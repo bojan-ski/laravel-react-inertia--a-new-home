@@ -758,6 +758,11 @@ return [
                 'approve_failed' => 'That listing is no longer eligible for approval.',
                 'reject_failed' => 'That listing is no longer eligible for rejection.',
             ],
+            'pagination' => [
+                'page_of' => 'Page :current of :last',
+                'previous' => 'Previous',
+                'next' => 'Next',
+            ],
         ],
         'agencies' => [
             'title' => 'Pending Agencies',
@@ -788,6 +793,11 @@ return [
                 'rejected' => 'Agency rejected and removed.',
                 'approve_failed' => 'That agency is no longer eligible for approval.',
                 'reject_failed' => 'That agency is no longer eligible for rejection.',
+            ],
+            'pagination' => [
+                'page_of' => 'Page :current of :last',
+                'previous' => 'Previous',
+                'next' => 'Next',
             ],
         ],
         'users' => [
@@ -865,6 +875,11 @@ return [
             'flash' => [
                 'resolved' => 'Report resolved.',
                 'suspended' => 'User suspended and report resolved.',
+            ],
+            'pagination' => [
+                'page_of' => 'Page :current of :last',
+                'previous' => 'Previous',
+                'next' => 'Next',
             ],
         ],
     ],

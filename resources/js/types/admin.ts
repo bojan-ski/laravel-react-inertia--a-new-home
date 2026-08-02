@@ -215,10 +215,11 @@ export interface AdminListingsTranslations {
         approve_failed: string
         reject_failed: string
     }
+    pagination: PaginationLabels
 }
 
 export interface AdminListingsPageProps {
-    listings: AdminListingModerationItem[]
+    listings: Paginator<AdminListingModerationItem>
     translations: AdminListingsTranslations
     propertyTypeLabels: Record<string, string>
 }
@@ -281,10 +282,11 @@ export interface AdminAgenciesTranslations {
         approve_failed: string
         reject_failed: string
     }
+    pagination: PaginationLabels
 }
 
 export interface AdminAgenciesPageProps {
-    agencies: AdminAgencyModerationItem[]
+    agencies: Paginator<AdminAgencyModerationItem>
     translations: AdminAgenciesTranslations
 }
 

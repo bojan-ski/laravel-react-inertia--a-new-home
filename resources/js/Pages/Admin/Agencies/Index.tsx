@@ -1,6 +1,7 @@
 import { Head, usePage } from '@inertiajs/react'
 import { CheckCircle2 } from 'lucide-react'
 import AgencyModerationRow from '@/Components/Admin/AgencyModerationRow'
+import Pagination from '@/Components/UI/Pagination'
 import AdminLayout from '@/Layouts/AdminLayout'
 import type { AdminAgenciesPageProps } from '@/types/admin'
 import type { SharedProps } from '@/types/shared'
@@ -30,9 +31,9 @@ export default function Index({ agencies, translations }: AdminAgenciesPageProps
                 <p className="mt-2 text-text-soft">{translations.subtitle}</p>
             </header>
 
-            {agencies.length > 0 ? (
+            {agencies.data.length > 0 ? (
                 <div className="mt-8 flex flex-col gap-4">
-                    {agencies.map((agency) => (
+                    {agencies.data.map((agency) => (
                         <AgencyModerationRow
                             key={agency.id}
                             agency={agency}
@@ -49,6 +50,8 @@ export default function Index({ agencies, translations }: AdminAgenciesPageProps
                     <p className="text-text-soft">{translations.empty.subtitle}</p>
                 </div>
             )}
+
+            <Pagination paginator={agencies} labels={translations.pagination} />
         </AdminLayout>
     )
 }

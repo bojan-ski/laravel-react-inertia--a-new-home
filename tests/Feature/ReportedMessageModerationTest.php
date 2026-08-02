@@ -212,8 +212,8 @@ class ReportedMessageModerationTest extends TestCase
         $this->actingAs(User::factory()->admin()->create())
             ->get('/admin/reported-messages')
             ->assertInertia(fn (Assert $page) => $page
-                ->has('reports', 1)
-                ->where('reports.0.id', $unresolved->id)
+                ->has('reports.data', 1)
+                ->where('reports.data.0.id', $unresolved->id)
             );
     }
 
@@ -225,8 +225,8 @@ class ReportedMessageModerationTest extends TestCase
         $this->actingAs(User::factory()->admin()->create())
             ->get('/admin/reported-messages')
             ->assertInertia(fn (Assert $page) => $page
-                ->where('reports.0.id', $newer->id)
-                ->where('reports.1.id', $older->id)
+                ->where('reports.data.0.id', $newer->id)
+                ->where('reports.data.1.id', $older->id)
             );
     }
 
@@ -247,14 +247,14 @@ class ReportedMessageModerationTest extends TestCase
         $this->actingAs(User::factory()->admin()->create())
             ->get('/admin/reported-messages')
             ->assertInertia(fn (Assert $page) => $page
-                ->where('reports.0.id', $report->id)
-                ->where('reports.0.reason', 'Because reasons')
-                ->where('reports.0.listingTitle', $conversation->listing->title)
-                ->where('reports.0.conversationId', $conversation->id)
-                ->where('reports.0.messageBody', 'The reported body')
-                ->where('reports.0.messageSenderName', 'Olivia Owner')
-                ->where('reports.0.reportedByName', 'Bruno Buyer')
-                ->where('reports.0.offendingUserName', 'Olivia Owner')
+                ->where('reports.data.0.id', $report->id)
+                ->where('reports.data.0.reason', 'Because reasons')
+                ->where('reports.data.0.listingTitle', $conversation->listing->title)
+                ->where('reports.data.0.conversationId', $conversation->id)
+                ->where('reports.data.0.messageBody', 'The reported body')
+                ->where('reports.data.0.messageSenderName', 'Olivia Owner')
+                ->where('reports.data.0.reportedByName', 'Bruno Buyer')
+                ->where('reports.data.0.offendingUserName', 'Olivia Owner')
             );
     }
 

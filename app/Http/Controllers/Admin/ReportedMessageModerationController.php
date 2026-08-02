@@ -23,8 +23,9 @@ class ReportedMessageModerationController extends Controller
             ->whereNull('resolved_at')
             ->with(['message.conversation.listing:id,title', 'reportedBy:id,name', 'offendingUser:id,name'])
             ->latest()
-            ->get()
-            ->map(fn (ReportedChatMessage $report): array => $report->toModerationArray());
+            ->paginate(20)
+            ->withQueryString()
+            ->through(fn (ReportedChatMessage $report): array => $report->toModerationArray());
 
         return Inertia::render('Admin/ReportedMessages/Index', [
             'reports' => $reports,

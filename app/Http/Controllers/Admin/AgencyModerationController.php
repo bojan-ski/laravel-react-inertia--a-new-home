@@ -24,8 +24,9 @@ class AgencyModerationController extends Controller
         $agencies = Agency::byStatus(AgencyStatus::PendingVerification)
             ->with('user:id,name,email')
             ->latest()
-            ->get()
-            ->map->toModerationArray();
+            ->paginate(20)
+            ->withQueryString()
+            ->through(fn (Agency $agency): array => $agency->toModerationArray());
 
         return Inertia::render('Admin/Agencies/Index', [
             'agencies' => $agencies,

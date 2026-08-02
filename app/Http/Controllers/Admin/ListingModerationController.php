@@ -28,8 +28,9 @@ class ListingModerationController extends Controller
         $listings = Listing::byStatus(ListingStatus::PendingReview)
             ->with(['owner:id,name,email', 'agency:id,name,email'])
             ->latest()
-            ->get()
-            ->map(fn (Listing $listing): array => $listing->toModerationArray());
+            ->paginate(20)
+            ->withQueryString()
+            ->through(fn (Listing $listing): array => $listing->toModerationArray());
 
         return Inertia::render('Admin/Listings/Index', [
             'listings' => $listings,

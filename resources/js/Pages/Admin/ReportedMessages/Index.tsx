@@ -1,6 +1,7 @@
 import { Head, usePage } from '@inertiajs/react'
 import { CheckCircle2 } from 'lucide-react'
 import ReportedMessageModerationRow from '@/Components/Admin/ReportedMessageModerationRow'
+import Pagination from '@/Components/UI/Pagination'
 import AdminLayout from '@/Layouts/AdminLayout'
 import type { AdminReportedMessagesPageProps } from '@/types/reported-message'
 import type { SharedProps } from '@/types/shared'
@@ -30,9 +31,9 @@ export default function Index({ reports, translations }: AdminReportedMessagesPa
                 <p className="mt-2 text-text-soft">{translations.subtitle}</p>
             </header>
 
-            {reports.length > 0 ? (
+            {reports.data.length > 0 ? (
                 <div className="mt-8 flex flex-col gap-4">
-                    {reports.map((report) => (
+                    {reports.data.map((report) => (
                         <ReportedMessageModerationRow
                             key={report.id}
                             report={report}
@@ -49,6 +50,8 @@ export default function Index({ reports, translations }: AdminReportedMessagesPa
                     <p className="text-text-soft">{translations.empty.subtitle}</p>
                 </div>
             )}
+
+            <Pagination paginator={reports} labels={translations.pagination} />
         </AdminLayout>
     )
 }

@@ -62,8 +62,8 @@ class ApproveRejectAgencyTest extends TestCase
         $this->actingAs(User::factory()->admin()->create())
             ->get('/admin/agencies')
             ->assertInertia(fn (Assert $page) => $page
-                ->has('agencies', 1)
-                ->where('agencies.0.id', $pending->id)
+                ->has('agencies.data', 1)
+                ->where('agencies.data.0.id', $pending->id)
             );
     }
 
@@ -78,9 +78,9 @@ class ApproveRejectAgencyTest extends TestCase
         $this->actingAs(User::factory()->admin()->create())
             ->get('/admin/agencies')
             ->assertInertia(fn (Assert $page) => $page
-                ->has('agencies', 2)
-                ->where('agencies.0.id', $newer->id)
-                ->where('agencies.1.id', $older->id)
+                ->has('agencies.data', 2)
+                ->where('agencies.data.0.id', $newer->id)
+                ->where('agencies.data.1.id', $older->id)
             );
     }
 
@@ -92,9 +92,9 @@ class ApproveRejectAgencyTest extends TestCase
         $this->actingAs(User::factory()->admin()->create())
             ->get('/admin/agencies')
             ->assertInertia(fn (Assert $page) => $page
-                ->where('agencies.0.id', $agency->id)
-                ->where('agencies.0.ownerName', 'Acme Owner')
-                ->where('agencies.0.ownerEmail', 'acme@example.test')
+                ->where('agencies.data.0.id', $agency->id)
+                ->where('agencies.data.0.ownerName', 'Acme Owner')
+                ->where('agencies.data.0.ownerEmail', 'acme@example.test')
             );
     }
 
@@ -168,7 +168,7 @@ class ApproveRejectAgencyTest extends TestCase
 
         $this->actingAs($admin)
             ->get('/admin/agencies')
-            ->assertInertia(fn (Assert $page) => $page->has('agencies', 0));
+            ->assertInertia(fn (Assert $page) => $page->has('agencies.data', 0));
     }
 
     public function test_approving_a_non_pending_agency_returns_403(): void
