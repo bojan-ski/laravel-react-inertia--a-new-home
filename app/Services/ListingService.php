@@ -193,7 +193,7 @@ class ListingService
     {
         $filters = $request->filters();
 
-        $query = Listing::actuallyPubliclyVisible()->with(['owner', 'images']);
+        $query = Listing::actuallyPubliclyVisible()->with(['owner', 'images', 'agency']);
 
         if ($filters['search'] !== '') {
             $query->where(function (Builder $query) use ($filters) {
