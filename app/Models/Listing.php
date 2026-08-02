@@ -226,11 +226,11 @@ class Listing extends Model
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<int, array<string, mixed>>
      */
-    public function toShowArray(): array
+    private function imagesForShow(): array
     {
-        $images = $this->relationLoaded('images')
+        return $this->relationLoaded('images')
             ? $this->images->map(fn (ListingImage $image): array => [
                 'id' => $image->id,
                 'url' => Storage::disk($image->disk)->url($image->large_path),
@@ -238,6 +238,14 @@ class Listing extends Model
                 'sortOrder' => $image->sort_order,
             ])->all()
             : [];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function toShowArray(): array
+    {
+        $images = $this->imagesForShow();
 
         return [
             'id' => $this->id,
@@ -270,14 +278,7 @@ class Listing extends Model
      */
     public function toFormArray(): array
     {
-        $images = $this->relationLoaded('images')
-            ? $this->images->map(fn (ListingImage $image): array => [
-                'id' => $image->id,
-                'url' => Storage::disk($image->disk)->url($image->large_path),
-                'altText' => $image->alt_text ?: $this->title,
-                'sortOrder' => $image->sort_order,
-            ])->all()
-            : [];
+        $images = $this->imagesForShow();
 
         return [
             'id' => $this->id,

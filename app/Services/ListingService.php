@@ -8,6 +8,7 @@ use App\Http\Requests\ListingIndexRequest;
 use App\Models\Agency;
 use App\Models\Listing;
 use App\Models\User;
+use App\Services\Concerns\AppliesLikeSearch;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
@@ -16,6 +17,8 @@ use Illuminate\Support\Str;
 
 class ListingService
 {
+    use AppliesLikeSearch;
+
     private const PER_PAGE = 12;
 
     /**
@@ -196,13 +199,7 @@ class ListingService
         $query = Listing::actuallyPubliclyVisible()->with(['owner', 'images', 'agency']);
 
         if ($filters['search'] !== '') {
-            $search = addcslashes($filters['search'], '%_\\');
-
-            $query->where(function (Builder $query) use ($search) {
-                $query->where('title', 'like', "%{$search}%")
-                    ->orWhere('city', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%");
-            });
+            $this->applyLikeSearch($query, $filters['search'], ['title', 'city', 'description']);
         }
 
         if ($filters['listingType'] !== '') {

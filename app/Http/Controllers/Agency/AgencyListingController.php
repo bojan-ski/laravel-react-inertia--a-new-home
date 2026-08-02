@@ -9,19 +9,14 @@ use App\Http\Requests\UpdateAgencyListingRequest;
 use App\Models\Listing;
 use App\Services\ListingService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class AgencyListingController extends Controller
 {
-    public function create(Request $request): Response|RedirectResponse
+    public function create(): Response
     {
-        if ($request->user()->agency === null) {
-            return redirect()->route('agency.setup');
-        }
-
         Gate::authorize('create', Listing::class);
 
         return Inertia::render('Agency/Listings/Create', [
@@ -32,10 +27,6 @@ class AgencyListingController extends Controller
 
     public function store(StoreAgencyListingRequest $request, ListingService $listingService): RedirectResponse
     {
-        if ($request->user()->agency === null) {
-            return redirect()->route('agency.setup');
-        }
-
         Gate::authorize('create', Listing::class);
 
         $listingService->createForAgency($request->user()->agency, $request->validated());
@@ -43,12 +34,8 @@ class AgencyListingController extends Controller
         return redirect()->route('agency.index')->with('success', __('app.create_agency_listing.flash'));
     }
 
-    public function edit(Request $request, Listing $listing): Response|RedirectResponse
+    public function edit(Listing $listing): Response
     {
-        if ($request->user()->agency === null) {
-            return redirect()->route('agency.setup');
-        }
-
         Gate::authorize('update', $listing);
 
         $listing->load('images');
@@ -62,10 +49,6 @@ class AgencyListingController extends Controller
 
     public function update(UpdateAgencyListingRequest $request, Listing $listing, ListingService $listingService): RedirectResponse
     {
-        if ($request->user()->agency === null) {
-            return redirect()->route('agency.setup');
-        }
-
         Gate::authorize('update', $listing);
 
         $wasApproved = $listing->isApproved();
@@ -83,12 +66,8 @@ class AgencyListingController extends Controller
         return redirect()->route('agency.index')->with('success', $flash);
     }
 
-    public function destroy(Request $request, Listing $listing, ListingService $listingService): RedirectResponse
+    public function destroy(Listing $listing, ListingService $listingService): RedirectResponse
     {
-        if ($request->user()->agency === null) {
-            return redirect()->route('agency.setup');
-        }
-
         Gate::authorize('delete', $listing);
 
         $listingService->delete($listing);

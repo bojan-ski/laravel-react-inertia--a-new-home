@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureAgencyProfileExists;
 use App\Http\Middleware\EnsureUserHasRole;
 use App\Http\Middleware\EnsureUserIsNotSuspended;
 use App\Http\Middleware\HandleInertiaRequests;
@@ -23,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => EnsureUserHasRole::class,
             'not-suspended' => EnsureUserIsNotSuspended::class,
+            'agency.exists' => EnsureAgencyProfileExists::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

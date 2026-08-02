@@ -7,11 +7,13 @@ use App\Enums\UserStatus;
 use App\Models\Listing;
 use App\Models\ListingImage;
 use App\Models\User;
+use App\Services\Concerns\AppliesLikeSearch;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
 
 class UserAccountService
 {
+    use AppliesLikeSearch;
+
     private const PER_PAGE = 20;
 
     public function __construct(
@@ -98,12 +100,7 @@ class UserAccountService
         }
 
         if (! empty($filters['search'])) {
-            $search = addcslashes($filters['search'], '%_\\');
-
-            $query->where(function (Builder $query) use ($search) {
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
-            });
+            $this->applyLikeSearch($query, $filters['search'], ['name', 'email']);
         }
 
         return $query->orderByDesc('created_at')

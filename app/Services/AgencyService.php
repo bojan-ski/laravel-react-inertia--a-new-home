@@ -7,13 +7,15 @@ use App\Exceptions\InvalidAgencyStatusTransitionException;
 use App\Http\Requests\AgencyIndexRequest;
 use App\Models\Agency;
 use App\Models\User;
+use App\Services\Concerns\AppliesLikeSearch;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class AgencyService
 {
+    use AppliesLikeSearch;
+
     private const PER_PAGE = 12;
 
     public function __construct(private MailNotificationService $mail) {}
@@ -25,13 +27,7 @@ class AgencyService
         $query = Agency::actuallyPubliclyVisible();
 
         if ($search !== '') {
-            $escaped = addcslashes($search, '%_\\');
-
-            $query->where(function (Builder $query) use ($escaped) {
-                $query->where('name', 'like', "%{$escaped}%")
-                    ->orWhere('description', 'like', "%{$escaped}%")
-                    ->orWhere('address', 'like', "%{$escaped}%");
-            });
+            $this->applyLikeSearch($query, $search, ['name', 'description', 'address']);
         }
 
         return $query->orderByDesc('approved_at')

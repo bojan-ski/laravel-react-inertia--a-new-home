@@ -36,12 +36,8 @@ class AgencyProfileController extends Controller
         return redirect()->route('agency.index')->with('success', __('app.agency_setup.flash'));
     }
 
-    public function show(Request $request): Response|RedirectResponse
+    public function show(Request $request): Response
     {
-        if ($request->user()->agency === null) {
-            return redirect()->route('agency.setup');
-        }
-
         $agency = $request->user()->agency;
         Gate::authorize('view', $agency);
 
@@ -59,12 +55,8 @@ class AgencyProfileController extends Controller
         ]);
     }
 
-    public function edit(Request $request): Response|RedirectResponse
+    public function edit(Request $request): Response
     {
-        if ($request->user()->agency === null) {
-            return redirect()->route('agency.setup');
-        }
-
         $agency = $request->user()->agency;
         Gate::authorize('update', $agency);
 
@@ -76,10 +68,6 @@ class AgencyProfileController extends Controller
 
     public function update(AgencyProfileRequest $request, AgencyService $agencyService): RedirectResponse
     {
-        if ($request->user()->agency === null) {
-            return redirect()->route('agency.setup');
-        }
-
         $agency = $request->user()->agency;
         Gate::authorize('update', $agency);
 
