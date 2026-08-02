@@ -338,7 +338,7 @@ class MarketplaceIntegrationTest extends TestCase
 
         $this->actingAs($admin)
             ->get('/admin/reported-messages')
-            ->assertInertia(fn (Assert $page) => $page->where('reports.0.id', $report->id));
+            ->assertInertia(fn (Assert $page) => $page->where('reports.data.0.id', $report->id));
 
         $this->actingAs($admin)
             ->post("/admin/reported-messages/{$report->id}/suspend")

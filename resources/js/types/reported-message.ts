@@ -1,3 +1,5 @@
+import type { Paginator, PaginationLabels } from '@/types/pagination'
+
 export interface ReportedMessageModerationItem {
     id: number
     reason: string
@@ -37,10 +39,11 @@ export interface ReportedMessagesTranslations {
         resolved: string
         suspended: string
     }
+    pagination: PaginationLabels
 }
 
 export interface AdminReportedMessagesPageProps {
-    reports: ReportedMessageModerationItem[]
+    reports: Paginator<ReportedMessageModerationItem>
     translations: ReportedMessagesTranslations
     [key: string]: unknown
 }

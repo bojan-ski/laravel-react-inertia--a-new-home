@@ -1,6 +1,7 @@
 import { Head, usePage } from '@inertiajs/react'
 import { CheckCircle2 } from 'lucide-react'
 import ListingModerationRow from '@/Components/Admin/ListingModerationRow'
+import Pagination from '@/Components/UI/Pagination'
 import AdminLayout from '@/Layouts/AdminLayout'
 import type { AdminListingsPageProps } from '@/types/admin'
 import type { SharedProps } from '@/types/shared'
@@ -30,9 +31,9 @@ export default function Index({ listings, translations, propertyTypeLabels }: Ad
                 <p className="mt-2 text-text-soft">{translations.subtitle}</p>
             </header>
 
-            {listings.length > 0 ? (
+            {listings.data.length > 0 ? (
                 <div className="mt-8 flex flex-col gap-4">
-                    {listings.map((listing) => (
+                    {listings.data.map((listing) => (
                         <ListingModerationRow
                             key={listing.id}
                             listing={listing}
@@ -50,6 +51,8 @@ export default function Index({ listings, translations, propertyTypeLabels }: Ad
                     <p className="text-text-soft">{translations.empty.subtitle}</p>
                 </div>
             )}
+
+            <Pagination paginator={listings} labels={translations.pagination} />
         </AdminLayout>
     )
 }

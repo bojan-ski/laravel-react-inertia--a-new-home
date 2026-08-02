@@ -62,8 +62,8 @@ class ApproveRejectListingTest extends TestCase
         $this->actingAs(User::factory()->admin()->create())
             ->get('/admin/listings')
             ->assertInertia(fn (Assert $page) => $page
-                ->has('listings', 1)
-                ->where('listings.0.id', $pending->id)
+                ->has('listings.data', 1)
+                ->where('listings.data.0.id', $pending->id)
             );
     }
 
@@ -74,7 +74,7 @@ class ApproveRejectListingTest extends TestCase
 
         $this->actingAs(User::factory()->admin()->create())
             ->get('/admin/listings')
-            ->assertInertia(fn (Assert $page) => $page->has('listings', 0));
+            ->assertInertia(fn (Assert $page) => $page->has('listings.data', 0));
     }
 
     public function test_queue_is_ordered_newest_first(): void
@@ -88,10 +88,27 @@ class ApproveRejectListingTest extends TestCase
         $this->actingAs(User::factory()->admin()->create())
             ->get('/admin/listings')
             ->assertInertia(fn (Assert $page) => $page
-                ->has('listings', 2)
-                ->where('listings.0.id', $newer->id)
-                ->where('listings.1.id', $older->id)
+                ->has('listings.data', 2)
+                ->where('listings.data.0.id', $newer->id)
+                ->where('listings.data.1.id', $older->id)
             );
+    }
+
+    public function test_queue_is_paginated_at_twenty_per_page(): void
+    {
+        Listing::factory()->count(25)->pendingReview()->create();
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)
+            ->get('/admin/listings')
+            ->assertInertia(fn (Assert $page) => $page
+                ->has('listings.data', 20)
+                ->where('listings.total', 25)
+            );
+
+        $this->actingAs($admin)
+            ->get('/admin/listings?page=2')
+            ->assertInertia(fn (Assert $page) => $page->has('listings.data', 5));
     }
 
     public function test_moderation_payload_includes_owner_data(): void
@@ -102,9 +119,9 @@ class ApproveRejectListingTest extends TestCase
         $this->actingAs(User::factory()->admin()->create())
             ->get('/admin/listings')
             ->assertInertia(fn (Assert $page) => $page
-                ->where('listings.0.ownerName', 'Jane Doe')
-                ->where('listings.0.ownerEmail', 'jane@example.test')
-                ->where('listings.0.id', $listing->id)
+                ->where('listings.data.0.ownerName', 'Jane Doe')
+                ->where('listings.data.0.ownerEmail', 'jane@example.test')
+                ->where('listings.data.0.id', $listing->id)
             );
     }
 
@@ -165,7 +182,7 @@ class ApproveRejectListingTest extends TestCase
 
         $this->actingAs($admin)
             ->get('/admin/listings')
-            ->assertInertia(fn (Assert $page) => $page->has('listings', 0));
+            ->assertInertia(fn (Assert $page) => $page->has('listings.data', 0));
     }
 
     public function test_approving_a_non_pending_listing_returns_403(): void
