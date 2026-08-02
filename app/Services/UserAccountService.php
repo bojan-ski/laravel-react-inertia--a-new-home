@@ -98,7 +98,7 @@ class UserAccountService
         }
 
         if (! empty($filters['search'])) {
-            $search = $filters['search'];
+            $search = addcslashes($filters['search'], '%_\\');
 
             $query->where(function (Builder $query) use ($search) {
                 $query->where('name', 'like', "%{$search}%")

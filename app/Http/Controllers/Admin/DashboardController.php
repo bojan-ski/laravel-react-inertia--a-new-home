@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\AgencyStatus;
 use App\Enums\ListingStatus;
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
+use App\Models\Agency;
 use App\Models\Listing;
+use App\Models\ReportedChatMessage;
 use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -30,9 +33,9 @@ class DashboardController extends Controller
             'totalRegularUsers' => (int) $userCounts->get(UserRole::RegularUser->value, 0),
             'totalAgencyUsers' => (int) $userCounts->get(UserRole::Agency->value, 0),
             'totalAdmins' => (int) $userCounts->get(UserRole::Admin->value, 0),
-            'pendingAgencies' => 0,
-            'approvedAgencies' => 0,
-            'reportedMessages' => 0,
+            'pendingAgencies' => Agency::byStatus(AgencyStatus::PendingVerification)->count(),
+            'approvedAgencies' => Agency::byStatus(AgencyStatus::Approved)->count(),
+            'reportedMessages' => ReportedChatMessage::whereNull('resolved_at')->count(),
         ];
 
         return Inertia::render('Admin/Dashboard', [

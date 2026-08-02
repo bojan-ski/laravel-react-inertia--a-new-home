@@ -25,10 +25,12 @@ class AgencyService
         $query = Agency::actuallyPubliclyVisible();
 
         if ($search !== '') {
-            $query->where(function (Builder $query) use ($search) {
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%")
-                    ->orWhere('address', 'like', "%{$search}%");
+            $escaped = addcslashes($search, '%_\\');
+
+            $query->where(function (Builder $query) use ($escaped) {
+                $query->where('name', 'like', "%{$escaped}%")
+                    ->orWhere('description', 'like', "%{$escaped}%")
+                    ->orWhere('address', 'like', "%{$escaped}%");
             });
         }
 

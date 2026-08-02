@@ -153,6 +153,15 @@ class CreateListingTest extends TestCase
             ->assertSessionHasErrors('year_built');
     }
 
+    public function test_validation_rejects_description_over_max_length(): void
+    {
+        $user = User::factory()->regularUser()->create();
+
+        $this->actingAs($user)
+            ->post('/my-listings', $this->validPayload(['description' => str_repeat('a', 10001)]))
+            ->assertSessionHasErrors('description');
+    }
+
     public function test_server_controlled_fields_cannot_be_set_by_request_payload(): void
     {
         $user = User::factory()->regularUser()->create();

@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\Agency;
 use App\Models\Listing;
+use App\Models\ReportedChatMessage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -72,6 +74,24 @@ class AdminDashboardTest extends TestCase
                 ->where('stats.totalRegularUsers', 4)
                 ->where('stats.totalAgencyUsers', 2)
                 ->where('stats.totalAdmins', 2)
+            );
+    }
+
+    public function test_agency_and_report_counts_reflect_data(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        Agency::factory()->count(2)->pendingVerification()->create();
+        Agency::factory()->count(3)->approved()->create();
+        ReportedChatMessage::factory()->count(4)->create();
+        ReportedChatMessage::factory()->resolved()->create();
+
+        $this->actingAs($admin)
+            ->get('/admin')
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('stats.pendingAgencies', 2)
+                ->where('stats.approvedAgencies', 3)
+                ->where('stats.reportedMessages', 4)
             );
     }
 

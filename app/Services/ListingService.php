@@ -196,10 +196,12 @@ class ListingService
         $query = Listing::actuallyPubliclyVisible()->with(['owner', 'images', 'agency']);
 
         if ($filters['search'] !== '') {
-            $query->where(function (Builder $query) use ($filters) {
-                $query->where('title', 'like', "%{$filters['search']}%")
-                    ->orWhere('city', 'like', "%{$filters['search']}%")
-                    ->orWhere('description', 'like', "%{$filters['search']}%");
+            $search = addcslashes($filters['search'], '%_\\');
+
+            $query->where(function (Builder $query) use ($search) {
+                $query->where('title', 'like', "%{$search}%")
+                    ->orWhere('city', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
             });
         }
 
