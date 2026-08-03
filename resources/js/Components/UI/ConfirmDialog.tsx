@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
+import { useFocusTrap } from '@/Components/UI/useFocusTrap'
 import type { ConfirmDialogProps } from '@/types/ui'
 
 export default function ConfirmDialog({
@@ -11,50 +12,8 @@ export default function ConfirmDialog({
     onConfirm,
     onCancel,
 }: ConfirmDialogProps) {
-    const panelRef = useRef<HTMLDivElement>(null)
     const cancelRef = useRef<HTMLButtonElement>(null)
-
-    useEffect(() => {
-        if (!open) {
-            return
-        }
-
-        cancelRef.current?.focus()
-
-        function handleKeyDown(event: KeyboardEvent) {
-            if (event.key === 'Escape') {
-                onCancel()
-                return
-            }
-
-            if (event.key !== 'Tab' || !panelRef.current) {
-                return
-            }
-
-            const focusable = panelRef.current.querySelectorAll<HTMLElement>(
-                'button:not([disabled]), [href], input, [tabindex]:not([tabindex="-1"])',
-            )
-
-            if (focusable.length === 0) {
-                return
-            }
-
-            const first = focusable[0]
-            const last = focusable[focusable.length - 1]
-
-            if (event.shiftKey && document.activeElement === first) {
-                event.preventDefault()
-                last.focus()
-            } else if (!event.shiftKey && document.activeElement === last) {
-                event.preventDefault()
-                first.focus()
-            }
-        }
-
-        document.addEventListener('keydown', handleKeyDown)
-
-        return () => document.removeEventListener('keydown', handleKeyDown)
-    }, [open, onCancel])
+    const panelRef = useFocusTrap(open, onCancel, cancelRef)
 
     if (!open) {
         return null

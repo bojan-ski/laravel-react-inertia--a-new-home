@@ -1,17 +1,8 @@
 import { useState } from 'react'
 import { router } from '@inertiajs/react'
+import { formatDateTime } from '@/Components/Listings/listingFormat'
 import ConfirmDialog from '@/Components/UI/ConfirmDialog'
 import type { ReportedMessageModerationRowProps } from '@/types/reported-message'
-
-function formatReportedAt(value: string): string {
-    return new Date(value).toLocaleString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-    })
-}
 
 export default function ReportedMessageModerationRow({
     report,
@@ -74,7 +65,7 @@ export default function ReportedMessageModerationRow({
                     <p className="mt-1.5 text-sm text-text-muted">
                         {translations.reported_by
                             .replace(':name', report.reportedByName ?? '')
-                            .replace(':date', formatReportedAt(report.createdAt))}
+                            .replace(':date', formatDateTime(report.createdAt))}
                     </p>
                 </div>
 

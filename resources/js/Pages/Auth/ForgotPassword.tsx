@@ -1,5 +1,6 @@
 import { Head, Link, useForm, usePage } from '@inertiajs/react'
 import type { FormEvent } from 'react'
+import FlashBanner from '@/Components/UI/FlashBanner'
 import TextField from '@/Components/UI/TextField'
 import AuthLayout from '@/Layouts/AuthLayout'
 import type { ForgotPasswordPageProps } from '@/types/auth'
@@ -20,11 +21,7 @@ export default function ForgotPassword({ translations }: ForgotPasswordPageProps
         <AuthLayout>
             <Head title={translations.title} />
 
-            {flash.success && (
-                <div className="mb-6 rounded-lg border border-status-approved/30 bg-status-approved/10 px-4 py-3 text-sm text-text">
-                    {flash.success}
-                </div>
-            )}
+            {flash.success && <FlashBanner message={flash.success} variant="success" />}
 
             <h1 className="font-display text-3xl font-semibold text-text">{translations.title}</h1>
             <p className="mt-2 text-sm text-text-soft">{translations.subtitle}</p>

@@ -1,5 +1,6 @@
 import type { FormEvent, ReactNode } from 'react'
 import type { ListingStatusValue } from '@/types/listing'
+import type { ConfirmActionTranslations } from '@/types/moderation'
 import type { PaginationLabels, Paginator } from '@/types/pagination'
 
 export interface AgencyFormSections {
@@ -107,12 +108,7 @@ export interface AgencyShowProfileTranslations {
     address: string
 }
 
-export interface AgencyListingsConfirmTranslations {
-    title: string
-    description: string
-    cancel: string
-    confirm: string
-}
+export type AgencyListingsConfirmTranslations = ConfirmActionTranslations
 
 export interface AgencyShowListingsTranslations {
     heading: string

@@ -20,3 +20,29 @@ export function formatArea(value: string, unit: string | null): string {
 
     return unit ? `${formatted} ${unit}` : formatted
 }
+
+export function formatDate(iso: string | null, style: 'short' | 'long' = 'short'): string {
+    if (!iso) {
+        return ''
+    }
+
+    return new Date(iso).toLocaleDateString('en-US', {
+        month: style,
+        day: 'numeric',
+        year: 'numeric',
+    })
+}
+
+export function formatDateTime(iso: string | null): string {
+    if (!iso) {
+        return ''
+    }
+
+    return new Date(iso).toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+    })
+}

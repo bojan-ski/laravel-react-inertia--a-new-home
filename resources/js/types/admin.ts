@@ -1,3 +1,4 @@
+import type { ConfirmActionTranslations, ModerationFlashTranslations, RejectDialogTranslations } from '@/types/moderation'
 import type { Paginator, PaginationLabels } from '@/types/pagination'
 
 export interface AdminStats {
@@ -119,12 +120,7 @@ export interface AdminUsersTranslations {
         reactivate: string
         delete: string
     }
-    confirm: {
-        title: string
-        description: string
-        confirm: string
-        cancel: string
-    }
+    confirm: ConfirmActionTranslations
     empty: {
         title: string
         filtered: string
@@ -197,24 +193,12 @@ export interface AdminListingsTranslations {
         approve: string
         reject: string
     }
-    dialog: {
-        title: string
-        reason_label: string
-        reason_placeholder: string
-        reason_helper: string
-        cancel: string
-        reject: string
-    }
+    dialog: RejectDialogTranslations
     empty: {
         title: string
         subtitle: string
     }
-    flash: {
-        approved: string
-        rejected: string
-        approve_failed: string
-        reject_failed: string
-    }
+    flash: ModerationFlashTranslations
     pagination: PaginationLabels
 }
 
@@ -264,24 +248,12 @@ export interface AdminAgenciesTranslations {
         approve: string
         reject: string
     }
-    dialog: {
-        title: string
-        reason_label: string
-        reason_placeholder: string
-        reason_helper: string
-        cancel: string
-        reject: string
-    }
+    dialog: RejectDialogTranslations
     empty: {
         title: string
         subtitle: string
     }
-    flash: {
-        approved: string
-        rejected: string
-        approve_failed: string
-        reject_failed: string
-    }
+    flash: ModerationFlashTranslations
     pagination: PaginationLabels
 }
 

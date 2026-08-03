@@ -8,6 +8,14 @@ export interface StatusBadgeProps {
     label: string
 }
 
+export interface FlashBannerProps {
+    message: string
+    variant: 'success' | 'error'
+    coloredText?: boolean
+    className?: string
+    onDismiss?: () => void
+}
+
 export interface ConfirmDialogProps {
     open: boolean
     title: string

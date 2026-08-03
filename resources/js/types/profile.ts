@@ -1,4 +1,5 @@
 import type { ListingStatusValue } from '@/types/listing'
+import type { ConfirmActionTranslations } from '@/types/moderation'
 
 export interface ProfileListingData {
     id: number
@@ -28,12 +29,7 @@ export interface ProfileEmptyTranslations {
     cta: string
 }
 
-export interface ProfileConfirmTranslations {
-    title: string
-    description: string
-    cancel: string
-    confirm: string
-}
+export type ProfileConfirmTranslations = ConfirmActionTranslations
 
 export interface ProfileTranslations {
     title: string

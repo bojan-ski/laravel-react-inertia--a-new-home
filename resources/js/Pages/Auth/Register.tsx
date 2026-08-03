@@ -7,7 +7,7 @@ import AuthLayout from '@/Layouts/AuthLayout'
 import type { RegisterPageProps } from '@/types/auth'
 
 export default function Register({ translations }: RegisterPageProps) {
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm({
         account_type: 'regular_user',
         name: '',
         email: '',
@@ -32,7 +32,7 @@ export default function Register({ translations }: RegisterPageProps) {
 
     function submit(e: FormEvent) {
         e.preventDefault()
-        post('/register')
+        post('/register', { onError: () => reset('password', 'password_confirmation') })
     }
 
     return (
@@ -88,6 +88,7 @@ export default function Register({ translations }: RegisterPageProps) {
                     autoComplete="new-password"
                     value={data.password_confirmation}
                     onChange={(e) => setData('password_confirmation', e.target.value)}
+                    error={errors.password_confirmation}
                 />
 
                 <div className="flex flex-col gap-3">

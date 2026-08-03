@@ -2,6 +2,7 @@ import { Head, Link, useForm, usePage } from '@inertiajs/react'
 import { ChevronLeft, Info } from 'lucide-react'
 import type { FormEvent } from 'react'
 import ListingForm from '@/Components/Listings/ListingForm'
+import FlashBanner from '@/Components/UI/FlashBanner'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { EditAgencyListingPageProps, ListingFormData } from '@/types/listing'
 import type { SharedProps } from '@/types/shared'
@@ -71,11 +72,7 @@ export default function Edit({ listing, translations, propertyTypeLabels }: Edit
             </div>
 
             <div className="mx-auto max-w-3xl px-6 py-10">
-                {flash.error && (
-                    <div className="mb-8 rounded-lg border border-status-rejected/30 bg-status-rejected/10 px-4 py-3 text-sm text-status-rejected">
-                        {flash.error}
-                    </div>
-                )}
+                {flash.error && <FlashBanner message={flash.error} variant="error" coloredText className="mb-8" />}
 
                 <ListingForm
                     data={data}

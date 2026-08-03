@@ -1,3 +1,4 @@
+import type { ConfirmActionTranslations } from '@/types/moderation'
 import type { Paginator, PaginationLabels } from '@/types/pagination'
 
 export interface ReportedMessageModerationItem {
@@ -25,12 +26,7 @@ export interface ReportedMessagesTranslations {
         resolve: string
         suspend: string
     }
-    confirm: {
-        title: string
-        description: string
-        confirm: string
-        cancel: string
-    }
+    confirm: ConfirmActionTranslations
     empty: {
         title: string
         subtitle: string

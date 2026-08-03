@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useRef } from 'react'
 import { useForm } from '@inertiajs/react'
 import type { FormEvent } from 'react'
+import { useFocusTrap } from '@/Components/UI/useFocusTrap'
 import type { RejectListingDialogProps } from '@/types/admin'
 
 export default function RejectListingDialog({
@@ -10,7 +11,6 @@ export default function RejectListingDialog({
     listingTitle,
     translations,
 }: RejectListingDialogProps) {
-    const panelRef = useRef<HTMLDivElement>(null)
     const textareaRef = useRef<HTMLTextAreaElement>(null)
     const { data, setData, post, processing, errors, reset, clearErrors } = useForm({ reason: '' })
 
@@ -20,47 +20,7 @@ export default function RejectListingDialog({
         onClose()
     }, [reset, clearErrors, onClose])
 
-    useEffect(() => {
-        if (!open) {
-            return
-        }
-
-        textareaRef.current?.focus()
-
-        function handleKeyDown(event: KeyboardEvent) {
-            if (event.key === 'Escape') {
-                handleClose()
-                return
-            }
-
-            if (event.key !== 'Tab' || !panelRef.current) {
-                return
-            }
-
-            const focusable = panelRef.current.querySelectorAll<HTMLElement>(
-                'button:not([disabled]), [href], textarea, input, [tabindex]:not([tabindex="-1"])',
-            )
-
-            if (focusable.length === 0) {
-                return
-            }
-
-            const first = focusable[0]
-            const last = focusable[focusable.length - 1]
-
-            if (event.shiftKey && document.activeElement === first) {
-                event.preventDefault()
-                last.focus()
-            } else if (!event.shiftKey && document.activeElement === last) {
-                event.preventDefault()
-                first.focus()
-            }
-        }
-
-        document.addEventListener('keydown', handleKeyDown)
-
-        return () => document.removeEventListener('keydown', handleKeyDown)
-    }, [open, handleClose])
+    const panelRef = useFocusTrap(open, handleClose, textareaRef)
 
     if (!open) {
         return null

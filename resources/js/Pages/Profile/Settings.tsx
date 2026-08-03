@@ -1,6 +1,7 @@
 import { Head, Link, useForm, usePage } from '@inertiajs/react'
-import { ChevronLeft, X } from 'lucide-react'
+import { ChevronLeft } from 'lucide-react'
 import { type FormEvent, useEffect, useState } from 'react'
+import FlashBanner from '@/Components/UI/FlashBanner'
 import TextField from '@/Components/UI/TextField'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { ProfileSettingsPageProps } from '@/types/profile'
@@ -63,17 +64,7 @@ export default function Settings({ user, translations }: ProfileSettingsPageProp
 
             <div className="mx-auto max-w-2xl px-6 py-10">
                 {banner && (
-                    <div className="mb-8 flex items-start justify-between gap-4 rounded-lg border border-status-approved/30 bg-status-approved/10 px-4 py-3 text-sm text-text">
-                        <span>{banner}</span>
-                        <button
-                            type="button"
-                            onClick={() => setBanner(null)}
-                            className="text-text-soft transition-colors hover:text-text"
-                            aria-label="Dismiss"
-                        >
-                            <X className="size-4" />
-                        </button>
-                    </div>
+                    <FlashBanner message={banner} variant="success" className="mb-8" onDismiss={() => setBanner(null)} />
                 )}
 
                 <div className="space-y-12">
