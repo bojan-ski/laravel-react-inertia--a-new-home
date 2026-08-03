@@ -8,7 +8,7 @@ import type { SharedProps } from '@/types/shared'
 
 export default function ResetPassword({ translations, token, email }: ResetPasswordPageProps) {
     const { flash } = usePage<SharedProps>().props
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm({
         token,
         email,
         password: '',
@@ -17,7 +17,7 @@ export default function ResetPassword({ translations, token, email }: ResetPassw
 
     function submit(e: FormEvent) {
         e.preventDefault()
-        post('/reset-password')
+        post('/reset-password', { onError: () => reset('password', 'password_confirmation') })
     }
 
     return (

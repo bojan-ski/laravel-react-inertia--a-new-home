@@ -17,7 +17,8 @@ class DashboardController extends Controller
 {
     public function index(): Response
     {
-        $listingCounts = Listing::selectRaw('status, count(*) as total')
+        $listingCounts = Listing::withTrashed()
+            ->selectRaw('status, count(*) as total')
             ->groupBy('status')
             ->pluck('total', 'status');
 

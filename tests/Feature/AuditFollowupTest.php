@@ -8,6 +8,7 @@ use App\Models\Listing;
 use App\Models\ListingImage;
 use App\Models\User;
 use App\Services\ListingImageService;
+use App\Services\ListingService;
 use Illuminate\Contracts\Broadcasting\Factory as BroadcastFactory;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Http\Request;
@@ -106,6 +107,27 @@ class AuditFollowupTest extends TestCase
         $this->actingAs($admin)->delete("/admin/users/{$owner->id}")->assertRedirect();
 
         $this->assertDatabaseMissing('users', ['id' => $owner->id]);
+    }
+
+    public function test_deleting_a_user_removes_image_files_for_rejected_soft_deleted_listings(): void
+    {
+        Storage::fake('public');
+
+        $admin = User::factory()->admin()->create();
+        $owner = User::factory()->regularUser()->create();
+        $listing = Listing::factory()->pendingReview()->for($owner, 'owner')->create();
+        $image = $this->attachImage($listing);
+
+        app(ListingService::class)->reject($listing, 'Rejected.');
+
+        Storage::disk('public')->assertExists($image->small_path);
+
+        $this->actingAs($admin)->delete("/admin/users/{$owner->id}")->assertRedirect();
+
+        $this->assertDatabaseMissing('users', ['id' => $owner->id]);
+        $this->assertDatabaseMissing('listing_images', ['id' => $image->id]);
+        Storage::disk('public')->assertMissing($image->small_path);
+        Storage::disk('public')->assertMissing($image->large_path);
     }
 
     // ---- #2 — agency attribution in payloads ----------------------------
