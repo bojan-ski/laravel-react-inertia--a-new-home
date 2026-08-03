@@ -6,6 +6,7 @@ use App\Models\Agency;
 use App\Models\Listing;
 use App\Models\ReportedChatMessage;
 use App\Models\User;
+use App\Services\ListingService;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
@@ -92,6 +93,22 @@ class AdminDashboardTest extends TestCase
                 ->where('stats.pendingAgencies', 2)
                 ->where('stats.approvedAgencies', 3)
                 ->where('stats.reportedMessages', 4)
+            );
+    }
+
+    public function test_rejected_count_includes_soft_deleted_rejected_listings(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        Listing::factory()->approved()->count(2)->create();
+        $pending = Listing::factory()->pendingReview()->create();
+        app(ListingService::class)->reject($pending, 'Not acceptable.');
+
+        $this->actingAs($admin)
+            ->get('/admin')
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('stats.rejectedListings', 1)
+                ->where('stats.totalListings', 3)
             );
     }
 
