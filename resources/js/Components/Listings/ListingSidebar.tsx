@@ -4,7 +4,13 @@ import { useState } from 'react'
 import { formatPrice } from '@/Components/Listings/listingFormat'
 import type { ListingSidebarProps } from '@/types/listing'
 
-export default function ListingSidebar({ listing, isBookmarked, canStartChat, translations }: ListingSidebarProps) {
+export default function ListingSidebar({
+    listing,
+    isBookmarked,
+    canBookmark,
+    canStartChat,
+    translations,
+}: ListingSidebarProps) {
     const isRental = listing.listingType === 'rent'
     const hasContact = Boolean(listing.contactName || listing.contactEmail || listing.contactPhone)
     const [isToggling, setIsToggling] = useState(false)
@@ -43,33 +49,37 @@ export default function ListingSidebar({ listing, isBookmarked, canStartChat, tr
                     {isRental && <span className="text-sm text-text-muted">{translations.per_month}</span>}
                 </div>
 
-                <div className="mt-6 flex flex-col gap-3 border-t border-border pt-6">
-                    <button
-                        type="button"
-                        onClick={toggleBookmark}
-                        disabled={isToggling}
-                        className={`flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
-                            isBookmarked
-                                ? 'bg-brand-soft text-brand'
-                                : 'border border-border bg-surface text-text hover:bg-surface-muted'
-                        }`}
-                    >
-                        <Heart className={`size-4 ${isBookmarked ? 'fill-current' : ''}`} />
-                        {isBookmarked ? translations.saved : translations.save_listing}
-                    </button>
+                {(canBookmark || canStartChat) && (
+                    <div className="mt-6 flex flex-col gap-3 border-t border-border pt-6">
+                        {canBookmark && (
+                            <button
+                                type="button"
+                                onClick={toggleBookmark}
+                                disabled={isToggling}
+                                className={`flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
+                                    isBookmarked
+                                        ? 'bg-brand-soft text-brand'
+                                        : 'border border-border bg-surface text-text hover:bg-surface-muted'
+                                }`}
+                            >
+                                <Heart className={`size-4 ${isBookmarked ? 'fill-current' : ''}`} />
+                                {isBookmarked ? translations.saved : translations.save_listing}
+                            </button>
+                        )}
 
-                    {canStartChat && (
-                        <button
-                            type="button"
-                            onClick={startChat}
-                            disabled={isStartingChat}
-                            className="flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-surface px-4 py-3 text-sm font-medium text-text transition-colors hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                            <MessageCircle className="size-4" />
-                            {translations.start_chat}
-                        </button>
-                    )}
-                </div>
+                        {canStartChat && (
+                            <button
+                                type="button"
+                                onClick={startChat}
+                                disabled={isStartingChat}
+                                className="flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-surface px-4 py-3 text-sm font-medium text-text transition-colors hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
+                            >
+                                <MessageCircle className="size-4" />
+                                {translations.start_chat}
+                            </button>
+                        )}
+                    </div>
+                )}
 
                 {hasContact && (
                     <div className="mt-6 border-t border-border pt-6">

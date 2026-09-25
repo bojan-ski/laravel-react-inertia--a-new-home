@@ -30,7 +30,7 @@ class BookmarkService
     {
         return $user->bookmarkedListings()
             ->actuallyPubliclyVisible()
-            ->with(['owner', 'images'])
+            ->with(['owner', 'images', 'agency.user'])
             ->orderByPivot('created_at', 'desc')
             ->get();
     }

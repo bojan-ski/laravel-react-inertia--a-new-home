@@ -21,6 +21,7 @@ export interface ListingCardData {
     imageUrl: string | null
     ownerName: string | null
     isBookmarked: boolean
+    canBookmark: boolean
 }
 
 export interface ListingFilters {
@@ -161,6 +162,7 @@ export interface ListingShowData {
 export interface ListingShowPageProps {
     listing: ListingShowData
     isBookmarked: boolean
+    canBookmark: boolean
     canStartChat: boolean
     translations: ListingsTranslations
     [key: string]: unknown
@@ -209,6 +211,7 @@ export interface ListingFactsProps {
 export interface ListingSidebarProps {
     listing: ListingShowData
     isBookmarked: boolean
+    canBookmark: boolean
     canStartChat: boolean
     translations: ListingsShowTranslations
 }

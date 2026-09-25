@@ -18,7 +18,8 @@ class BookmarkController extends Controller
 
     public function toggle(Request $request, Listing $listing): RedirectResponse
     {
-        abort_unless(Gate::allows('bookmark', $listing), 404);
+        abort_unless($listing->isActuallyPubliclyVisible(), 404);
+        Gate::authorize('bookmark', $listing);
 
         $bookmarked = $this->bookmarkService->toggle($request->user(), $listing);
 
@@ -27,8 +28,14 @@ class BookmarkController extends Controller
 
     public function index(Request $request): Response
     {
-        $listings = $this->bookmarkService->getBookmarkedListings($request->user())
-            ->map(fn (Listing $listing) => [...$listing->toCardArray(), 'isBookmarked' => true]);
+        $user = $request->user();
+
+        $listings = $this->bookmarkService->getBookmarkedListings($user)
+            ->map(fn (Listing $listing) => [
+                ...$listing->toCardArray(),
+                'isBookmarked' => true,
+                'canBookmark' => $user->can('bookmark', $listing),
+            ]);
 
         return Inertia::render('Bookmarks/Index', [
             'listings' => $listings,

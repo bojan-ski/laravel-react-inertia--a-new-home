@@ -40,17 +40,19 @@ export default function ListingCard({ listing, translations, propertyTypeLabels 
                     </span>
                 </div>
 
-                <button
-                    type="button"
-                    onClick={handleHeartClick}
-                    aria-label={listing.isBookmarked ? translations.saved : translations.save}
-                    aria-pressed={listing.isBookmarked}
-                    className={`absolute right-3 top-3 flex size-8 items-center justify-center rounded-full bg-white/80 transition-colors ${
-                        listing.isBookmarked ? 'text-status-rejected' : 'text-text-soft hover:text-text'
-                    }`}
-                >
-                    <Heart className={`size-4 ${listing.isBookmarked ? 'fill-current' : ''}`} />
-                </button>
+                {listing.canBookmark && (
+                    <button
+                        type="button"
+                        onClick={handleHeartClick}
+                        aria-label={listing.isBookmarked ? translations.saved : translations.save}
+                        aria-pressed={listing.isBookmarked}
+                        className={`absolute right-3 top-3 flex size-8 items-center justify-center rounded-full bg-white/80 transition-colors ${
+                            listing.isBookmarked ? 'text-status-rejected' : 'text-text-soft hover:text-text'
+                        }`}
+                    >
+                        <Heart className={`size-4 ${listing.isBookmarked ? 'fill-current' : ''}`} />
+                    </button>
+                )}
             </div>
 
             <div className="flex flex-1 flex-col gap-2 p-4">

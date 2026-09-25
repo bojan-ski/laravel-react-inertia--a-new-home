@@ -6,7 +6,7 @@ import ListingSidebar from '@/Components/Listings/ListingSidebar'
 import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { ListingDetailRowProps, ListingShowPageProps } from '@/types/listing'
 
-export default function Show({ listing, isBookmarked, canStartChat, translations }: ListingShowPageProps) {
+export default function Show({ listing, isBookmarked, canBookmark, canStartChat, translations }: ListingShowPageProps) {
     const show = translations.show
     const propertyLabel = translations.filters.property_types[listing.propertyType] ?? listing.propertyType
     const typeLabel = listing.listingType === 'rent' ? show.for_rent : show.for_sale
@@ -87,6 +87,7 @@ export default function Show({ listing, isBookmarked, canStartChat, translations
                         <ListingSidebar
                             listing={listing}
                             isBookmarked={isBookmarked}
+                            canBookmark={canBookmark}
                             canStartChat={canStartChat}
                             translations={show}
                         />

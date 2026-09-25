@@ -196,7 +196,7 @@ class ListingService
     {
         $filters = $request->filters();
 
-        $query = Listing::actuallyPubliclyVisible()->with(['owner', 'images', 'agency']);
+        $query = Listing::actuallyPubliclyVisible()->with(['owner', 'images', 'agency.user']);
 
         if ($filters['search'] !== '') {
             $this->applyLikeSearch($query, $filters['search'], ['title', 'city', 'description']);
@@ -231,11 +231,13 @@ class ListingService
 
         $paginator = $query->paginate(self::PER_PAGE)->withQueryString();
 
-        $bookmarkedIds = $this->bookmarkedListingIds($request->user(), $paginator->getCollection());
+        $user = $request->user();
+        $bookmarkedIds = $this->bookmarkedListingIds($user, $paginator->getCollection());
 
         return $paginator->through(fn (Listing $listing): array => [
             ...$listing->toCardArray(),
             'isBookmarked' => $bookmarkedIds->contains($listing->id),
+            'canBookmark' => $user === null || $user->can('bookmark', $listing),
         ]);
     }
 
