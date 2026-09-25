@@ -21,9 +21,9 @@ return new class extends Migration
             $table->unsignedBigInteger('agency_id')->nullable();
 
             $table->string('title');
-            $table->string('listing_type');
-            $table->string('property_type');
-            $table->string('status')->default(ListingStatus::PendingReview->value)->index();
+            $table->string('listing_type', 20);
+            $table->string('property_type', 20);
+            $table->string('status', 20)->default(ListingStatus::PendingReview->value)->index();
             $table->text('rejection_reason')->nullable();
 
             $table->decimal('price', 12, 2);
