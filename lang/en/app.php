@@ -23,8 +23,6 @@ return [
         'legal' => 'Legal',
         'connect' => 'Connect',
         'about' => 'About Us',
-        'careers' => 'Careers',
-        'press' => 'Press',
         'contact' => 'Contact',
         'privacy_policy' => 'Privacy Policy',
         'terms_of_service' => 'Terms of Service',

@@ -9,8 +9,6 @@ export default function Footer() {
 
     const company: FooterLink[] = [
         { label: footer.about, href: '#', external: false },
-        { label: footer.careers, href: '#', external: false },
-        { label: footer.press, href: '#', external: false },
         { label: footer.contact, href: '#', external: false },
     ]
 
@@ -18,14 +16,14 @@ export default function Footer() {
         { label: footer.privacy_policy, href: '#', external: false },
         { label: footer.terms_of_service, href: '#', external: false },
         { label: footer.cookie_policy, href: '#', external: false },
-        { label: footer.gdpr, href: '#', external: false },
+        { label: footer.gdpr, href: 'https://eur-lex.europa.eu/eli/reg/2016/679/oj', external: true },
     ]
 
     const connect: FooterLink[] = [
-        { label: footer.twitter, href: '#', external: true },
-        { label: footer.linkedin, href: '#', external: true },
-        { label: footer.facebook, href: '#', external: true },
-        { label: footer.instagram, href: '#', external: true },
+        { label: footer.twitter, href: 'https://x.com', external: true },
+        { label: footer.linkedin, href: 'https://www.linkedin.com', external: true },
+        { label: footer.facebook, href: 'https://www.facebook.com', external: true },
+        { label: footer.instagram, href: 'https://www.instagram.com', external: true },
     ]
 
     const bottomLinks: FooterLink[] = [
