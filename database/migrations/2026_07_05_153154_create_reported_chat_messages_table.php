@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreignId('resolved_by_user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
 
-            $table->unique(['chat_message_id', 'reported_by_user_id']);
+            $table->unique(['chat_message_id', 'reported_by_user_id'], 'reported_chat_messages_message_reporter_unique');
             $table->index('resolved_at');
         });
     }
