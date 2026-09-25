@@ -99,7 +99,12 @@ export default function Register({ translations }: RegisterPageProps) {
                         onChange={(checked) => setData('terms_accepted', checked)}
                     >
                         {translations.terms_prefix}{' '}
-                        <a href="#" className="font-medium text-brand transition-colors hover:text-brand-dark">
+                        <a
+                            href="/terms"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-medium text-brand transition-colors hover:text-brand-dark"
+                        >
                             {translations.terms_link}
                         </a>
                     </AcceptanceCheckbox>
@@ -111,7 +116,12 @@ export default function Register({ translations }: RegisterPageProps) {
                         onChange={(checked) => setData('privacy_accepted', checked)}
                     >
                         {translations.privacy_prefix}{' '}
-                        <a href="#" className="font-medium text-brand transition-colors hover:text-brand-dark">
+                        <a
+                            href="/privacy-policy"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-medium text-brand transition-colors hover:text-brand-dark"
+                        >
                             {translations.privacy_link}
                         </a>
                     </AcceptanceCheckbox>
