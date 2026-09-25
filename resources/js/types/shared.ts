@@ -13,7 +13,19 @@ export interface SharedProps {
         success: string | null
         error: string | null
     }
+    cookieConsent: CookieConsent | null
+    cookieBanner: CookieBannerTranslations
     [key: string]: unknown
+}
+
+export type CookieConsent = 'accepted' | 'rejected'
+
+export interface CookieBannerTranslations {
+    title: string
+    body: string
+    policy_link: string
+    accept: string
+    reject: string
 }
 
 export type UserRole = 'regular_user' | 'agency' | 'admin'

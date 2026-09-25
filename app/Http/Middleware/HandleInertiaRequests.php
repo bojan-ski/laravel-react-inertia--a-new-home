@@ -7,6 +7,10 @@ use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
 {
+    public const COOKIE_CONSENT = 'cookie_consent';
+
+    private const CONSENT_VALUES = ['accepted', 'rejected'];
+
     /**
      * The root template that's loaded on the first page visit.
      *
@@ -55,6 +59,15 @@ class HandleInertiaRequests extends Middleware
             'nav' => fn () => __('app.nav'),
             'footer' => fn () => __('app.footer'),
             'adminNav' => fn () => __('app.admin.nav'),
+            'cookieConsent' => fn () => $this->cookieConsent($request),
+            'cookieBanner' => fn () => __('app.cookie_banner'),
         ];
+    }
+
+    private function cookieConsent(Request $request): ?string
+    {
+        $consent = $request->cookie(self::COOKIE_CONSENT);
+
+        return in_array($consent, self::CONSENT_VALUES, true) ? $consent : null;
     }
 }

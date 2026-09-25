@@ -932,6 +932,14 @@ return [
         ],
     ],
 
+    'cookie_banner' => [
+        'title' => 'We value your privacy',
+        'body' => 'We use essential cookies to keep you signed in and the site secure. With your permission we may also use optional cookies to understand how the platform is used.',
+        'policy_link' => 'Read our Cookie Policy',
+        'accept' => 'Accept',
+        'reject' => 'Reject',
+    ],
+
     'contact' => [
         'eyebrow' => 'Company',
         'title' => 'Contact Us',

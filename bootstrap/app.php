@@ -21,6 +21,10 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleInertiaRequests::class,
         ]);
 
+        $middleware->encryptCookies(except: [
+            HandleInertiaRequests::COOKIE_CONSENT,
+        ]);
+
         $middleware->alias([
             'role' => EnsureUserHasRole::class,
             'not-suspended' => EnsureUserIsNotSuspended::class,
