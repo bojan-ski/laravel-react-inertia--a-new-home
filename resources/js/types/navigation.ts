@@ -32,8 +32,6 @@ export interface FooterTranslations {
     legal: string
     connect: string
     about: string
-    careers: string
-    press: string
     contact: string
     privacy_policy: string
     terms_of_service: string
