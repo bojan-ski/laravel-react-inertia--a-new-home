@@ -3,14 +3,14 @@ import AgenciesEmptyState from '@/Components/Agencies/AgenciesEmptyState'
 import AgencyCard from '@/Components/Agencies/AgencyCard'
 import AgencyDirectorySearchBar from '@/Components/Agencies/AgencyDirectorySearchBar'
 import Pagination from '@/Components/UI/Pagination'
-import PublicLayout from '@/Layouts/PublicLayout'
+import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { AgenciesIndexPageProps } from '@/types/agency'
 
-export default function Index({ agencies, filters, translations }: AgenciesIndexPageProps) {
+export default function Index({ agencies, filters, translations, listingsNav }: AgenciesIndexPageProps) {
     const hasActiveSearch = Boolean(filters.search)
 
     return (
-        <PublicLayout>
+        <ListingsLayout nav={listingsNav}>
             <Head title={translations.title} />
 
             <div className="border-b border-border bg-surface">
@@ -44,6 +44,6 @@ export default function Index({ agencies, filters, translations }: AgenciesIndex
                     </>
                 )}
             </div>
-        </PublicLayout>
+        </ListingsLayout>
     )
 }

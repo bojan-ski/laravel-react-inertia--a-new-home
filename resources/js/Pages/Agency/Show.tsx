@@ -3,12 +3,12 @@ import { Pencil } from 'lucide-react'
 import AgencyListingsSection from '@/Components/Agency/AgencyListingsSection'
 import AgencyProfileSection from '@/Components/Agency/AgencyProfileSection'
 import AgencyStatusPanel from '@/Components/Agency/AgencyStatusPanel'
-import PublicLayout from '@/Layouts/PublicLayout'
+import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { AgencyShowPageProps } from '@/types/agency'
 
-export default function Show({ agency, listings, translations, propertyTypeLabels }: AgencyShowPageProps) {
+export default function Show({ agency, listings, translations, propertyTypeLabels, listingsNav }: AgencyShowPageProps) {
     return (
-        <PublicLayout>
+        <ListingsLayout nav={listingsNav}>
             <Head title={agency.name} />
 
             <div className="border-b border-border bg-surface">
@@ -46,6 +46,6 @@ export default function Show({ agency, listings, translations, propertyTypeLabel
                     agencyStatus={agency.status}
                 />
             </div>
-        </PublicLayout>
+        </ListingsLayout>
     )
 }

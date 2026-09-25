@@ -52,6 +52,17 @@ class AgencyProfileTest extends TestCase
                 ->has('listings'));
     }
 
+    public function test_dashboard_receives_listings_navbar_translations(): void
+    {
+        $user = User::factory()->agency()->create();
+        Agency::factory()->approved()->create(['user_id' => $user->id]);
+
+        $this->actingAs($user)
+            ->get('/agency')
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('listingsNav', __('app.listings.nav')));
+    }
+
     public function test_dashboard_lists_agency_listings_newest_first(): void
     {
         $user = User::factory()->agency()->create();
