@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AgencyModerationController;
+use App\Http\Controllers\Admin\ContactMessageController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ListingModerationController;
 use App\Http\Controllers\Admin\ReportedMessageModerationController;
@@ -29,4 +30,8 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/reported-messages', [ReportedMessageModerationController::class, 'index'])->name('reported-messages.index');
         Route::post('/reported-messages/{report}/resolve', [ReportedMessageModerationController::class, 'resolve'])->name('reported-messages.resolve');
         Route::post('/reported-messages/{report}/suspend', [ReportedMessageModerationController::class, 'suspend'])->name('reported-messages.suspend');
+
+        Route::get('/contact-messages', [ContactMessageController::class, 'index'])->name('contact-messages.index');
+        Route::post('/contact-messages/{contactMessage}/handled', [ContactMessageController::class, 'markHandled'])->name('contact-messages.handled');
+        Route::delete('/contact-messages/{contactMessage}', [ContactMessageController::class, 'destroy'])->name('contact-messages.destroy');
     });

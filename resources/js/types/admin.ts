@@ -12,6 +12,7 @@ export interface AdminStats {
     pendingAgencies: number
     approvedAgencies: number
     reportedMessages: number
+    newContactMessages: number
 }
 
 export interface AdminNavTranslations {
@@ -21,6 +22,7 @@ export interface AdminNavTranslations {
     agencies: string
     users: string
     reported_messages: string
+    contact_messages: string
 }
 
 export interface AdminStatLabel {
@@ -46,6 +48,7 @@ export interface AdminDashboardTranslations {
         admins: AdminStatLabel
         pending_agencies: AdminStatLabel
         reported_messages: AdminStatLabel
+        contact_messages: AdminStatLabel
     }
 }
 
