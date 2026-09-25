@@ -32,3 +32,6 @@ CLAUDE.md
 boost.json
 .mcp.json
 CLAUDE.local.md
+docs
+/.playwright
+/.playwright-mcp
