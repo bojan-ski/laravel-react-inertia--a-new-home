@@ -8,14 +8,14 @@ export default function Footer() {
     const year = new Date().getFullYear()
 
     const company: FooterLink[] = [
-        { label: footer.about, href: '#', external: false },
+        { label: footer.about, href: '/about', external: false },
         { label: footer.contact, href: '#', external: false },
     ]
 
     const legal: FooterLink[] = [
-        { label: footer.privacy_policy, href: '#', external: false },
-        { label: footer.terms_of_service, href: '#', external: false },
-        { label: footer.cookie_policy, href: '#', external: false },
+        { label: footer.privacy_policy, href: '/privacy-policy', external: false },
+        { label: footer.terms_of_service, href: '/terms', external: false },
+        { label: footer.cookie_policy, href: '/cookie-policy', external: false },
         { label: footer.gdpr, href: 'https://eur-lex.europa.eu/eli/reg/2016/679/oj', external: true },
     ]
 
@@ -27,9 +27,9 @@ export default function Footer() {
     ]
 
     const bottomLinks: FooterLink[] = [
-        { label: footer.privacy, href: '#', external: false },
-        { label: footer.terms, href: '#', external: false },
-        { label: footer.cookies, href: '#', external: false },
+        { label: footer.privacy, href: '/privacy-policy', external: false },
+        { label: footer.terms, href: '/terms', external: false },
+        { label: footer.cookies, href: '/cookie-policy', external: false },
     ]
 
     return (
