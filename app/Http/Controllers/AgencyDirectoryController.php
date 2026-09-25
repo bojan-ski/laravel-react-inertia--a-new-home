@@ -23,6 +23,7 @@ class AgencyDirectoryController extends Controller
             'agencies' => $agencies,
             'filters' => $request->filters(),
             'translations' => __('app.agencies'),
+            'listingsNav' => __('app.listings.nav'),
         ]);
     }
 }

@@ -1,5 +1,5 @@
 import type { FormEvent, ReactNode } from 'react'
-import type { ListingStatusValue } from '@/types/listing'
+import type { ListingStatusValue, ListingsNavTranslations } from '@/types/listing'
 import type { ConfirmActionTranslations } from '@/types/moderation'
 import type { PaginationLabels, Paginator } from '@/types/pagination'
 
@@ -145,6 +145,7 @@ export interface AgencyShowPageProps {
     listings: AgencyDashboardListing[]
     translations: AgencyShowTranslations
     propertyTypeLabels: Record<string, string>
+    listingsNav: ListingsNavTranslations
 }
 
 export interface AgencyStatusPanelProps {
@@ -240,6 +241,7 @@ export interface AgenciesIndexPageProps {
     agencies: Paginator<AgencyCardData>
     filters: AgenciesFilters
     translations: AgenciesDirectoryTranslations
+    listingsNav: ListingsNavTranslations
 }
 
 export interface AgencyCardProps {
