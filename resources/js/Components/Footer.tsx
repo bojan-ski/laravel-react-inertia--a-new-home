@@ -9,7 +9,7 @@ export default function Footer() {
 
     const company: FooterLink[] = [
         { label: footer.about, href: '/about', external: false },
-        { label: footer.contact, href: '#', external: false },
+        { label: footer.contact, href: '/contact', external: false },
     ]
 
     const legal: FooterLink[] = [

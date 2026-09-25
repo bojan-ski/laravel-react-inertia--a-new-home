@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Agency;
+use App\Models\ContactMessage;
 use App\Models\Listing;
 use App\Models\ReportedChatMessage;
 use App\Models\User;
@@ -128,7 +129,18 @@ class AdminDashboardTest extends TestCase
                     ->where('pendingAgencies', 0)
                     ->where('approvedAgencies', 0)
                     ->where('reportedMessages', 0)
+                    ->where('newContactMessages', 0)
                 )
             );
+    }
+
+    public function test_new_contact_messages_count_excludes_handled_ones(): void
+    {
+        ContactMessage::factory()->count(3)->create();
+        ContactMessage::factory()->handled()->create();
+
+        $this->actingAs(User::factory()->admin()->create())
+            ->get('/admin')
+            ->assertInertia(fn (Assert $page) => $page->where('stats.newContactMessages', 3));
     }
 }

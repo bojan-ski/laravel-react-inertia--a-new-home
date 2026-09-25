@@ -1,7 +1,11 @@
 <?php
 
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\StaticPageController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/contact', [ContactController::class, 'show'])->name('contact.show');
+Route::post('/contact', [ContactController::class, 'store'])->middleware('throttle:contact')->name('contact.store');
 
 Route::controller(StaticPageController::class)->name('pages.')->group(function () {
     Route::get('/about', 'about')->name('about');

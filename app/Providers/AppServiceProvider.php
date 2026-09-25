@@ -3,11 +3,13 @@
 namespace App\Providers;
 
 use App\Models\Agency;
+use App\Models\ContactMessage;
 use App\Models\Conversation;
 use App\Models\Listing;
 use App\Models\ReportedChatMessage;
 use App\Models\User;
 use App\Policies\AgencyPolicy;
+use App\Policies\ContactMessagePolicy;
 use App\Policies\ConversationPolicy;
 use App\Policies\ListingPolicy;
 use App\Policies\ReportedChatMessagePolicy;
@@ -39,6 +41,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(Conversation::class, ConversationPolicy::class);
         Gate::policy(ReportedChatMessage::class, ReportedChatMessagePolicy::class);
+        Gate::policy(ContactMessage::class, ContactMessagePolicy::class);
 
         $this->configureRateLimiters();
     }
@@ -58,6 +61,10 @@ class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('password', function (Request $request): Limit {
             return Limit::perMinute(5)->by((string) $request->ip());
+        });
+
+        RateLimiter::for('contact', function (Request $request): Limit {
+            return Limit::perMinute(3)->by((string) $request->ip());
         });
     }
 }

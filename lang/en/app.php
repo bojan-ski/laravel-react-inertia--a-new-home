@@ -682,6 +682,7 @@ return [
             'agencies' => 'Agencies',
             'users' => 'Users',
             'reported_messages' => 'Reported Messages',
+            'contact_messages' => 'Contact Messages',
         ],
         'dashboard' => [
             'title' => 'Admin Dashboard',
@@ -721,6 +722,10 @@ return [
                 'reported_messages' => [
                     'label' => 'Reported Messages',
                     'description' => 'Unresolved reports',
+                ],
+                'contact_messages' => [
+                    'label' => 'Contact Messages',
+                    'description' => 'Not yet handled',
                 ],
             ],
         ],
@@ -880,6 +885,70 @@ return [
                 'next' => 'Next',
             ],
         ],
+        'contact_messages' => [
+            'title' => 'Contact Messages',
+            'subtitle' => 'Messages sent through the public contact form.',
+            'tabs' => [
+                'new' => 'New',
+                'handled' => 'Handled',
+            ],
+            'from' => 'From :email',
+            'account' => 'Account: :name',
+            'guest' => 'Not signed in',
+            'received' => 'Received :date',
+            'handled_by' => 'Handled by :name • :date',
+            'handled_badge' => 'Handled',
+            'reply_subject' => 'Re: :subject',
+            'actions' => [
+                'reply' => 'Reply by Email',
+                'mark_handled' => 'Mark Handled',
+                'delete' => 'Delete',
+            ],
+            'confirm' => [
+                'title' => 'Delete this message?',
+                'description' => 'The message will be permanently deleted. This cannot be undone.',
+                'confirm' => 'Delete',
+                'cancel' => 'Cancel',
+            ],
+            'empty' => [
+                'new' => [
+                    'title' => 'No new messages.',
+                    'subtitle' => "You're all caught up.",
+                ],
+                'handled' => [
+                    'title' => 'No handled messages yet.',
+                    'subtitle' => 'Messages you mark as handled will appear here.',
+                ],
+            ],
+            'flash' => [
+                'handled' => 'Message marked as handled.',
+                'deleted' => 'Message deleted.',
+            ],
+            'pagination' => [
+                'page_of' => 'Page :current of :last',
+                'previous' => 'Previous',
+                'next' => 'Next',
+            ],
+        ],
+    ],
+
+    'contact' => [
+        'eyebrow' => 'Company',
+        'title' => 'Contact Us',
+        'lead' => 'Questions about a listing, your account, or partnering with us? Send us a message and our team will get back to you.',
+        'details_heading' => 'Other ways to reach us',
+        'details' => [
+            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. We usually reply within two business days.',
+            'For questions about a specific property, the fastest route is the chat on the listing itself.',
+        ],
+        'fields' => [
+            'email' => 'Email Address',
+            'subject' => 'Subject',
+            'message' => 'Message',
+        ],
+        'submit' => 'Send Message',
+        'sending' => 'Sending…',
+        'flash' => 'Thanks — your message has been sent.',
     ],
     'emails' => [
         'user_suspended' => [

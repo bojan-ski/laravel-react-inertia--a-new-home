@@ -23,6 +23,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         { label: adminNav.agencies, href: '/admin/agencies' },
         { label: adminNav.users, href: '/admin/users' },
         { label: adminNav.reported_messages, href: '/admin/reported-messages' },
+        { label: adminNav.contact_messages, href: '/admin/contact-messages' },
     ]
 
     return (
