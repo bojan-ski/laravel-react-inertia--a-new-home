@@ -1,5 +1,9 @@
 import type { ReactNode } from 'react'
 
+export interface AppShellProps {
+    children: ReactNode
+}
+
 export interface PublicLayoutProps {
     children: ReactNode
 }
