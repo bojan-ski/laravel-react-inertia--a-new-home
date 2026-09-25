@@ -37,6 +37,7 @@ class ListingController extends Controller
         return Inertia::render('Listings/Show', [
             'listing' => $listing->toShowArray(),
             'isBookmarked' => $user->hasBookmarked($listing),
+            'canBookmark' => $user->can('bookmark', $listing),
             'canStartChat' => Gate::allows('start', [Conversation::class, $listing]),
             'translations' => __('app.listings'),
         ]);
