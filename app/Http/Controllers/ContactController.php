@@ -23,7 +23,7 @@ class ContactController extends Controller
 
     public function store(StoreContactMessageRequest $request): RedirectResponse
     {
-        $this->service->create($request->validated(), $request->user());
+        $this->service->create($request->safe()->except('website'), $request->user());
 
         return redirect()->route('contact.show')->with('success', __('app.contact.flash'));
     }

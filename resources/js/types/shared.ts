@@ -14,6 +14,7 @@ export interface SharedProps {
     flash: {
         success: string | null
         error: string | null
+        throttled: string | null
     }
     unreadMessages: number
     messageNotifications: MessageNotificationTranslations | null
