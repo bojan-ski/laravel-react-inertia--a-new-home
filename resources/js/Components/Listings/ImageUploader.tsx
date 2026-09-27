@@ -49,7 +49,7 @@ export default function ImageUploader({ baseUrl, images, translations, canManage
                     {images.map((image) => (
                         <div
                             key={image.id}
-                            className="relative aspect-[4/3] overflow-hidden rounded-lg border border-border bg-surface-muted"
+                            className="relative aspect-4/3 overflow-hidden rounded-lg border border-border bg-surface-muted"
                         >
                             <img src={image.url} alt={image.altText} className="size-full object-cover" />
 

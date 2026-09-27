@@ -20,7 +20,7 @@ export default function ListingCard({ listing, translations, propertyTypeLabels 
             href={`/listings/${listing.slug}`}
             className="group flex flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-sm transition-shadow hover:shadow-md"
         >
-            <div className="relative aspect-[4/3] overflow-hidden bg-surface-muted">
+            <div className="relative aspect-4/3 overflow-hidden bg-surface-muted">
                 {listing.imageUrl ? (
                     <img
                         src={listing.imageUrl}
