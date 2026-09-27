@@ -2,7 +2,7 @@ import { Head, Link, useForm } from '@inertiajs/react'
 import { ChevronLeft } from 'lucide-react'
 import type { FormEvent } from 'react'
 import AgencyForm from '@/Components/Agency/AgencyForm'
-import PublicLayout from '@/Layouts/PublicLayout'
+import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { AgencyEditPageProps, AgencyFormData } from '@/types/agency'
 
 export default function Edit({ agency, translations }: AgencyEditPageProps) {
@@ -21,7 +21,7 @@ export default function Edit({ agency, translations }: AgencyEditPageProps) {
     }
 
     return (
-        <PublicLayout>
+        <ListingsLayout>
             <Head title={translations.title} />
 
             <div className="border-b border-border bg-surface">
@@ -63,6 +63,6 @@ export default function Edit({ agency, translations }: AgencyEditPageProps) {
                     }
                 />
             </div>
-        </PublicLayout>
+        </ListingsLayout>
     )
 }

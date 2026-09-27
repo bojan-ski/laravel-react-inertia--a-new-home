@@ -2,7 +2,7 @@ import { Head, Link, useForm } from '@inertiajs/react'
 import { ChevronLeft } from 'lucide-react'
 import type { FormEvent } from 'react'
 import ListingForm from '@/Components/Listings/ListingForm'
-import PublicLayout from '@/Layouts/PublicLayout'
+import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { CreateAgencyListingPageProps, ListingFormData } from '@/types/listing'
 
 export default function Create({ translations, propertyTypeLabels }: CreateAgencyListingPageProps) {
@@ -33,7 +33,7 @@ export default function Create({ translations, propertyTypeLabels }: CreateAgenc
     }
 
     return (
-        <PublicLayout>
+        <ListingsLayout>
             <Head title={translations.title} />
 
             <div className="border-b border-border bg-surface">
@@ -71,6 +71,6 @@ export default function Create({ translations, propertyTypeLabels }: CreateAgenc
                     cancelHref="/agency"
                 />
             </div>
-        </PublicLayout>
+        </ListingsLayout>
     )
 }

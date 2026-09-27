@@ -52,7 +52,6 @@ class AgencyProfileController extends Controller
             'listings' => $listings,
             'translations' => __('app.agency_show'),
             'propertyTypeLabels' => __('app.listings.filters.property_types'),
-            'listingsNav' => __('app.listings.nav'),
         ]);
     }
 

@@ -13,8 +13,8 @@ export default function Navbar() {
     const [open, setOpen] = useState(false)
 
     const links: NavLink[] = [
-        { label: nav.features, href: '#features', internal: false },
-        { label: nav.how_it_works, href: '#how-it-works', internal: false },
+        { label: nav.features, href: '/#features', internal: false },
+        { label: nav.how_it_works, href: '/#how-it-works', internal: false },
         { label: nav.listings, href: '/listings', internal: true },
     ]
 

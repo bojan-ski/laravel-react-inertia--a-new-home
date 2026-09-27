@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import MessageBubble from '@/Components/Conversations/MessageBubble'
 import MessageComposer from '@/Components/Conversations/MessageComposer'
 import ReportMessageDialog from '@/Components/Conversations/ReportMessageDialog'
-import PublicLayout from '@/Layouts/PublicLayout'
+import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { ChatMessageBroadcast, ChatMessageData, ConversationShowPageProps } from '@/types/conversation'
 import type { SharedProps } from '@/types/shared'
 
@@ -49,7 +49,7 @@ export default function Show({ conversation, translations }: ConversationShowPag
     }, [messages.length])
 
     return (
-        <PublicLayout>
+        <ListingsLayout>
             <Head title={conversation.listing.title} />
 
             <div className="mx-auto flex max-w-4xl flex-col px-6 py-6">
@@ -109,6 +109,6 @@ export default function Show({ conversation, translations }: ConversationShowPag
                 preview={reportMessage?.body.slice(0, 100) ?? ''}
                 translations={translations.report}
             />
-        </PublicLayout>
+        </ListingsLayout>
     )
 }
