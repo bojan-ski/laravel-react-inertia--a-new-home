@@ -15,6 +15,8 @@ export interface NavTranslations {
     get_started: string
     dashboard: string
     sign_out: string
+    messages: string
+    unread: string
     open_menu: string
     close_menu: string
 }

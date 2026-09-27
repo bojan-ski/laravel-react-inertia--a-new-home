@@ -27,6 +27,7 @@ export interface ConversationInboxItem {
         body: string
         createdAt: string
     } | null
+    unreadCount: number
     updatedAt: string
 }
 
@@ -44,6 +45,23 @@ export interface ChatMessageBroadcast {
     senderName: string
     body: string
     createdAt: string
+}
+
+export interface ChatMessageReceivedBroadcast {
+    conversationId: number
+    senderName: string
+    preview: string
+    listingTitle: string | null
+}
+
+export interface MessageNotifierProps {
+    userId: number
+}
+
+export interface MessagesNavLinkProps {
+    label: string
+    unreadLabel: string
+    onNavigate?: () => void
 }
 
 export interface ConversationsEmptyTranslations {
@@ -68,6 +86,7 @@ export interface ConversationsTranslations {
     view_listing: string
     deleted_user: string
     listing_removed: string
+    unread: string
     empty: ConversationsEmptyTranslations
     thread: ConversationsThreadTranslations
     report: ReportMessageTranslations

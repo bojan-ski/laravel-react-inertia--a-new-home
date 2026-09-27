@@ -44,6 +44,8 @@ export interface ListingsNavTranslations {
     sign_up: string
     dashboard: string
     sign_out: string
+    messages: string
+    unread: string
     open_menu: string
     close_menu: string
 }

@@ -31,6 +31,8 @@ class ConversationController extends Controller
     {
         Gate::authorize('view', $conversation);
 
+        $this->conversationService->markRead($conversation, $request->user());
+
         $conversation->load([
             'listing:id,title,slug',
             'buyer:id,name',

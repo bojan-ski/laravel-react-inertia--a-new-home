@@ -15,12 +15,20 @@ export interface SharedProps {
         success: string | null
         error: string | null
     }
+    unreadMessages: number
+    messageNotifications: MessageNotificationTranslations | null
     cookieConsent: CookieConsent | null
     cookieBanner: CookieBannerTranslations
     [key: string]: unknown
 }
 
 export type CookieConsent = 'accepted' | 'rejected'
+
+export interface MessageNotificationTranslations {
+    title: string
+    view: string
+    dismiss: string
+}
 
 export interface CookieBannerTranslations {
     title: string

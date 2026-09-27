@@ -12,6 +12,8 @@ return [
         'get_started' => 'Get Started',
         'dashboard' => 'Dashboard',
         'sign_out' => 'Sign Out',
+        'messages' => 'Messages',
+        'unread' => ':count unread',
         'open_menu' => 'Open menu',
         'close_menu' => 'Close menu',
     ],
@@ -149,6 +151,8 @@ return [
             'sign_up' => 'Sign Up',
             'dashboard' => 'Dashboard',
             'sign_out' => 'Sign Out',
+            'messages' => 'Messages',
+            'unread' => ':count unread',
             'open_menu' => 'Open menu',
             'close_menu' => 'Close menu',
         ],
@@ -356,6 +360,7 @@ return [
         'view_listing' => 'View listing',
         'deleted_user' => 'Deleted user',
         'listing_removed' => 'Listing no longer available',
+        'unread' => ':count new',
         'empty' => [
             'headline' => 'No conversations yet.',
             'subtitle' => "Start a conversation from a listing's detail page.",
@@ -951,6 +956,12 @@ return [
                 'next' => 'Next',
             ],
         ],
+    ],
+
+    'message_notifications' => [
+        'title' => 'New message from :name',
+        'view' => 'View',
+        'dismiss' => 'Dismiss',
     ],
 
     'cookie_banner' => [

@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Enums\UserStatus;
+use App\Events\ChatMessageReceived;
 use App\Events\ChatMessageSent;
 use App\Models\ChatMessage;
 use App\Models\Conversation;
@@ -44,7 +46,28 @@ class ConversationService
 
         ChatMessageSent::dispatch($message);
 
+        $recipientId = $conversation->otherParticipantId($sender);
+
+        if ($recipientId !== null) {
+            ChatMessageReceived::dispatch($message, $recipientId);
+        }
+
         return $message;
+    }
+
+    public function markRead(Conversation $conversation, User $user): void
+    {
+        Conversation::withoutTimestamps(
+            fn () => $conversation->forceFill([$conversation->lastReadColumnFor($user) => now()])->save()
+        );
+    }
+
+    public function unreadCountFor(User $user): int
+    {
+        $query = ChatMessage::query()
+            ->join('conversations', 'conversations.id', '=', 'chat_messages.conversation_id');
+
+        return $this->whereUnreadFor($query, $user)->count();
     }
 
     /**
@@ -62,10 +85,36 @@ class ConversationService
                     ->orWhere('owner_id', $user->id);
             })
             ->with(['listing:id,title,slug', 'buyer:id,name,status', 'owner:id,name,status', 'latestMessage'])
+            ->withCount(['messages as unread_count' => fn (Builder $query) => $this->whereUnreadFor($query, $user)])
             ->orderByDesc('updated_at')
             ->get()
             ->reject(fn (Conversation $conversation): bool => (bool) $conversation->otherParticipant($user)?->isSuspended())
             ->map(fn (Conversation $conversation): array => $conversation->toInboxArray($user))
             ->values();
+    }
+
+    private function whereUnreadFor(Builder $messages, User $user): Builder
+    {
+        return $messages
+            ->where(function (Builder $query) use ($user) {
+                $query->whereNull('chat_messages.sender_id')
+                    ->orWhere('chat_messages.sender_id', '!=', $user->id);
+            })
+            ->whereDoesntHave('sender', fn (Builder $query) => $query->where('status', UserStatus::Suspended->value))
+            ->where(function (Builder $query) use ($user) {
+                $query->where(function (Builder $query) use ($user) {
+                    $query->where('conversations.buyer_id', $user->id)
+                        ->where(function (Builder $query) {
+                            $query->whereNull('conversations.buyer_last_read_at')
+                                ->orWhereColumn('chat_messages.created_at', '>', 'conversations.buyer_last_read_at');
+                        });
+                })->orWhere(function (Builder $query) use ($user) {
+                    $query->where('conversations.owner_id', $user->id)
+                        ->where(function (Builder $query) {
+                            $query->whereNull('conversations.owner_last_read_at')
+                                ->orWhereColumn('chat_messages.created_at', '>', 'conversations.owner_last_read_at');
+                        });
+                });
+            });
     }
 }
