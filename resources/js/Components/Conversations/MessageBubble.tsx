@@ -12,13 +12,13 @@ export default function MessageBubble({ message, isOwn, showName, reportLabel, o
                 <span className="mb-1 px-1 text-xs font-medium text-text-muted">{message.senderName}</span>
             )}
 
-            <div className="flex items-center gap-2">
+            <div className="flex max-w-[85%] items-center gap-2 sm:max-w-[75%]">
                 <div
-                    className={`max-w-[75%] rounded-2xl px-4 py-2 text-sm sm:max-w-[65%] ${
+                    className={`min-w-0 rounded-2xl px-4 py-2 text-sm ${
                         isOwn ? 'bg-brand text-text-inverse' : 'bg-surface-muted text-text'
                     }`}
                 >
-                    <p className="whitespace-pre-wrap break-words">{message.body}</p>
+                    <p className="whitespace-pre-wrap wrap-break-word">{message.body}</p>
                 </div>
 
                 {!isOwn && onReport && (
@@ -26,7 +26,7 @@ export default function MessageBubble({ message, isOwn, showName, reportLabel, o
                         type="button"
                         onClick={onReport}
                         aria-label={reportLabel}
-                        className="inline-flex items-center gap-1 text-xs text-text-muted opacity-100 transition-colors hover:text-status-rejected md:opacity-0 md:group-hover:opacity-100"
+                        className="inline-flex shrink-0 items-center gap-1 text-xs text-text-muted opacity-100 transition-colors hover:text-status-rejected md:opacity-0 md:group-hover:opacity-100"
                     >
                         <Flag className="size-3.5" />
                         <span className="sr-only sm:not-sr-only">{reportLabel}</span>
