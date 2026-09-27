@@ -11,6 +11,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/agencies', [AgencyDirectoryController::class, 'index'])->name('agencies.index');
+Route::get('/agencies/{agency:slug}', [AgencyDirectoryController::class, 'show'])->name('agencies.show');
 
 require __DIR__.'/pages.php';
 require __DIR__.'/listings.php';
