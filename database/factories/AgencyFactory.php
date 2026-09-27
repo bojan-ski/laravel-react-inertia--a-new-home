@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Enums\AgencyStatus;
+use App\Enums\UsState;
 use App\Models\Agency;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -23,6 +24,10 @@ class AgencyFactory extends Factory
         return [
             'user_id' => User::factory()->agency(),
             'name' => $name,
+            'legal_name' => $name.' LLC',
+            'ein' => fake()->numerify('##-#######'),
+            'license_number' => fake()->bothify('#######'),
+            'license_state' => fake()->randomElement(UsState::cases()),
             'slug' => Str::slug($name).'-'.fake()->unique()->numerify('######'),
             'description' => fake()->paragraphs(2, true),
             'phone' => fake()->phoneNumber(),

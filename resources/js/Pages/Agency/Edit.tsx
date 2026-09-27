@@ -5,9 +5,13 @@ import AgencyForm from '@/Components/Agency/AgencyForm'
 import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { AgencyEditPageProps, AgencyFormData } from '@/types/agency'
 
-export default function Edit({ agency, translations }: AgencyEditPageProps) {
+export default function Edit({ agency, translations, usStates }: AgencyEditPageProps) {
     const { data, setData, put, processing, errors } = useForm<AgencyFormData>({
         name: agency.name,
+        legal_name: agency.legalName ?? '',
+        ein: agency.ein ?? '',
+        license_number: agency.licenseNumber ?? '',
+        license_state: agency.licenseState ?? '',
         email: agency.email,
         phone: agency.phone ?? '',
         website: agency.website ?? '',
@@ -52,6 +56,7 @@ export default function Edit({ agency, translations }: AgencyEditPageProps) {
                     submitLabel={translations.submit}
                     onSubmit={submit}
                     translations={translations}
+                    usStates={usStates}
                     note={<p className="text-sm text-text-soft">{translations.status_note}</p>}
                     cancelSlot={
                         <Link

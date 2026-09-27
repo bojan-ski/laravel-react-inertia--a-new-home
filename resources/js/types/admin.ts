@@ -1,3 +1,4 @@
+import type { AgencyBusinessDetails } from '@/types/agency'
 import type { ConfirmActionTranslations, ModerationFlashTranslations, RejectDialogTranslations } from '@/types/moderation'
 import type { Paginator, PaginationLabels } from '@/types/pagination'
 
@@ -225,7 +226,7 @@ export interface RejectListingDialogProps {
     translations: AdminListingsTranslations
 }
 
-export interface AdminAgencyModerationItem {
+export interface AdminAgencyModerationItem extends AgencyBusinessDetails {
     id: number
     name: string
     slug: string
@@ -246,6 +247,10 @@ export interface AdminAgenciesTranslations {
     contact: string
     website: string
     address: string
+    legal: string
+    license: string
+    license_value: string
+    not_provided: string
     submitted: string
     actions: {
         approve: string

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import { Building2 } from 'lucide-react'
 import RejectAgencyDialog from '@/Components/Admin/RejectAgencyDialog'
+import { formatLicense } from '@/Components/Agencies/agencyFormat'
 import { formatDateTime } from '@/Components/Listings/listingFormat'
 import type { AdminAgencyModerationRowProps } from '@/types/admin'
 
@@ -68,6 +69,19 @@ export default function AgencyModerationRow({ agency, translations }: AdminAgenc
                             {translations.address.replace(':address', agency.address)}
                         </p>
                     )}
+
+                    <p className="mt-2 text-sm text-text-muted">
+                        {translations.legal
+                            .replace(':name', agency.legalName ?? translations.not_provided)
+                            .replace(':ein', agency.ein ?? translations.not_provided)}
+                    </p>
+                    <p className="mt-0.5 text-sm text-text-muted">
+                        {translations.license.replace(
+                            ':license',
+                            formatLicense(translations.license_value, agency.licenseNumber, agency.licenseState) ??
+                                translations.not_provided,
+                        )}
+                    </p>
 
                     <p className="mt-2 text-sm text-text-muted">
                         {translations.submitted.replace(':date', formatDateTime(agency.createdAt))}
