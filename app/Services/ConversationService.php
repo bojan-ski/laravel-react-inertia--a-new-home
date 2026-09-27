@@ -23,7 +23,7 @@ class ConversationService
     {
         $conversation = Conversation::firstOrCreate(
             ['listing_id' => $listing->id, 'buyer_id' => $buyer->id],
-            ['owner_id' => $listing->user_id],
+            ['owner_id' => $listing->user_id, 'listing_title' => $listing->title],
         );
 
         if ($conversation->wasRecentlyCreated && filled($message)) {
@@ -64,7 +64,7 @@ class ConversationService
             ->with(['listing:id,title,slug', 'buyer:id,name,status', 'owner:id,name,status', 'latestMessage'])
             ->orderByDesc('updated_at')
             ->get()
-            ->reject(fn (Conversation $conversation): bool => $conversation->otherParticipant($user)->isSuspended())
+            ->reject(fn (Conversation $conversation): bool => (bool) $conversation->otherParticipant($user)?->isSuspended())
             ->map(fn (Conversation $conversation): array => $conversation->toInboxArray($user))
             ->values();
     }

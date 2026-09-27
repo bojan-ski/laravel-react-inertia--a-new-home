@@ -1,19 +1,19 @@
 import type { ReportMessageTranslations } from '@/types/reported-message'
 
 export interface ConversationListingSummary {
-    id: number
+    id: number | null
     title: string
-    slug: string
+    slug: string | null
 }
 
 export interface ConversationParticipant {
-    id: number
+    id: number | null
     name: string
 }
 
 export interface ChatMessageData {
     id: number
-    senderId: number
+    senderId: number | null
     senderName: string
     body: string
     createdAt: string
@@ -59,12 +59,15 @@ export interface ConversationsThreadTranslations {
     send: string
     sending: string
     hint: string
+    read_only: string
 }
 
 export interface ConversationsTranslations {
     title: string
     subtitle: string
     view_listing: string
+    deleted_user: string
+    listing_removed: string
     empty: ConversationsEmptyTranslations
     thread: ConversationsThreadTranslations
     report: ReportMessageTranslations
@@ -78,6 +81,7 @@ export interface ConversationsIndexPageProps {
 
 export interface ConversationShowPageProps {
     conversation: ConversationShowData
+    canReply: boolean
     translations: ConversationsTranslations
     [key: string]: unknown
 }

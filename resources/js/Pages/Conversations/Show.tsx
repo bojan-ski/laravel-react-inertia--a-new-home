@@ -9,7 +9,7 @@ import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { ChatMessageBroadcast, ChatMessageData, ConversationShowPageProps } from '@/types/conversation'
 import type { SharedProps } from '@/types/shared'
 
-export default function Show({ conversation, translations }: ConversationShowPageProps) {
+export default function Show({ conversation, canReply, translations }: ConversationShowPageProps) {
     const page = usePage<SharedProps>()
     const currentUserId = page.props.auth.user?.id ?? null
     const thread = translations.thread
@@ -63,12 +63,16 @@ export default function Show({ conversation, translations }: ConversationShowPag
 
                 <div className="mt-4 rounded-2xl border border-border bg-surface">
                     <div className="border-b border-border px-6 py-4">
-                        <Link
-                            href={`/listings/${conversation.listing.slug}`}
-                            className="font-semibold text-text transition-colors hover:text-brand"
-                        >
-                            {conversation.listing.title}
-                        </Link>
+                        {conversation.listing.slug ? (
+                            <Link
+                                href={`/listings/${conversation.listing.slug}`}
+                                className="font-semibold text-text transition-colors hover:text-brand"
+                            >
+                                {conversation.listing.title}
+                            </Link>
+                        ) : (
+                            <p className="font-semibold text-text">{conversation.listing.title}</p>
+                        )}
                         <p className="text-sm text-text-muted">
                             {thread.with}{' '}
                             <span className="font-medium text-text">{conversation.otherParticipant.name}</span>
@@ -90,7 +94,7 @@ export default function Show({ conversation, translations }: ConversationShowPag
                                         isOwn={message.senderId === currentUserId}
                                         showName={showName}
                                         reportLabel={translations.report.action}
-                                        onReport={() => setReportMessage(message)}
+                                        onReport={message.senderId !== null ? () => setReportMessage(message) : undefined}
                                     />
                                 )
                             })
@@ -98,7 +102,13 @@ export default function Show({ conversation, translations }: ConversationShowPag
                         <div ref={bottomRef} />
                     </div>
 
-                    <MessageComposer conversationId={conversation.id} translations={thread} />
+                    {canReply ? (
+                        <MessageComposer conversationId={conversation.id} translations={thread} />
+                    ) : (
+                        <p className="border-t border-border bg-surface-muted px-6 py-4 text-sm text-text-soft">
+                            {thread.read_only}
+                        </p>
+                    )}
                 </div>
             </div>
 

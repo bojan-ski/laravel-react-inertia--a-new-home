@@ -40,6 +40,7 @@ class ConversationController extends Controller
 
         return Inertia::render('Conversations/Show', [
             'conversation' => $conversation->toShowArray($request->user()),
+            'canReply' => Gate::allows('sendMessage', $conversation),
             'translations' => __('app.conversations'),
         ]);
     }

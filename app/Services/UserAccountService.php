@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\UserRole;
 use App\Enums\UserStatus;
+use App\Models\Conversation;
 use App\Models\Listing;
 use App\Models\ListingImage;
 use App\Models\User;
@@ -55,6 +56,8 @@ class UserAccountService
         $this->deleteImageFilesForOwnedListings($user);
 
         $user->delete();
+
+        Conversation::whereNull('buyer_id')->whereNull('owner_id')->delete();
 
         $this->mail->sendAccountDeleted($name, $email);
     }

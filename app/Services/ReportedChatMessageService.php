@@ -23,6 +23,10 @@ class ReportedChatMessageService
             throw new InvalidMessageReportException(__('app.reports.errors.not_participant'));
         }
 
+        if ($message->sender_id === null) {
+            throw new InvalidMessageReportException(__('app.reports.errors.sender_deleted'));
+        }
+
         if ($message->sender_id === $reporter->id) {
             throw new InvalidMessageReportException(__('app.reports.errors.self_report'));
         }
