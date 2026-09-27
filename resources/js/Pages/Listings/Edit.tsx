@@ -85,7 +85,7 @@ export default function Edit({ listing, translations, propertyTypeLabels }: Edit
 
                 <div className="mt-12 border-t border-border pt-10">
                     <ImageUploader
-                        listingId={listing.id}
+                        baseUrl={`/my-listings/${listing.id}/images`}
                         images={listing.images}
                         translations={translations.images}
                         canManage

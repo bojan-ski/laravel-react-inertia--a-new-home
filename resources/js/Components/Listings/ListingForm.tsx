@@ -24,6 +24,7 @@ export default function ListingForm({
     translations,
     propertyTypeLabels,
     headerSlot,
+    footerSlot,
     hideContactSection = false,
     cancelHref = '/profile',
 }: ListingFormProps) {
@@ -273,6 +274,8 @@ export default function ListingForm({
                     </div>
                 </section>
             )}
+
+            {footerSlot && <div className="border-t border-border pt-8">{footerSlot}</div>}
 
             <div className="border-t border-border pt-8">
                 <div className="flex flex-col-reverse items-stretch gap-3 sm:flex-row sm:items-center sm:justify-end">

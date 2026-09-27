@@ -21,6 +21,9 @@ class StoreAgencyListingRequest extends FormRequest
      */
     public function rules(): array
     {
-        return $this->sharedListingRules();
+        return [
+            ...$this->sharedListingRules(),
+            ...$this->newImageRules(),
+        ];
     }
 }

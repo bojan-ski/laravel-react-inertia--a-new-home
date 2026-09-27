@@ -194,7 +194,7 @@ export interface ImageManagementTranslations {
 }
 
 export interface ImageUploaderProps {
-    listingId: number
+    baseUrl: string
     images: ListingImageData[]
     translations: ImageManagementTranslations
     canManage?: boolean
@@ -317,11 +317,32 @@ export interface ListingFormTranslations {
     fields: ListingFormFieldLabels
 }
 
+export interface NewListingImagesTranslations {
+    heading: string
+    helper: string
+    choose: string
+    remove: string
+    count: string
+    format_note: string
+}
+
+export type CreateListingFormData = ListingFormData & {
+    images: File[]
+}
+
+export interface NewListingImagePickerProps {
+    files: File[]
+    onChange: (files: File[]) => void
+    errors: Partial<Record<string, string>>
+    translations: NewListingImagesTranslations
+}
+
 export interface CreateListingTranslations extends ListingFormTranslations {
     title: string
     subtitle: string
     back: string
     submit: string
+    new_images: NewListingImagesTranslations
 }
 
 export interface CreateListingPageProps {
@@ -380,6 +401,7 @@ export interface ListingFormProps {
     translations: ListingFormTranslations
     propertyTypeLabels: Record<string, string>
     headerSlot?: ReactNode
+    footerSlot?: ReactNode
     hideContactSection?: boolean
     cancelHref?: string
 }
@@ -390,6 +412,7 @@ export interface CreateAgencyListingTranslations extends ListingFormTranslations
     back: string
     submit: string
     contact_inheritance_note: string
+    new_images: NewListingImagesTranslations
 }
 
 export interface CreateAgencyListingPageProps {
@@ -405,6 +428,7 @@ export interface EditAgencyListingTranslations extends ListingFormTranslations {
     submit: string
     approved_notice: string
     contact_inheritance_note: string
+    images: ImageManagementTranslations
 }
 
 export interface EditAgencyListingPageProps {

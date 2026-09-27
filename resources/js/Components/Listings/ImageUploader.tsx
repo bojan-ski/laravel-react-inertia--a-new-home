@@ -4,7 +4,7 @@ import { router, useForm } from '@inertiajs/react'
 import { Loader2, Trash2, Upload } from 'lucide-react'
 import type { ImageUploaderProps, ImageUploadFormData } from '@/types/listing'
 
-export default function ImageUploader({ listingId, images, translations, canManage = true }: ImageUploaderProps) {
+export default function ImageUploader({ baseUrl, images, translations, canManage = true }: ImageUploaderProps) {
     const [deletingId, setDeletingId] = useState<number | null>(null)
     const [fileInputKey, setFileInputKey] = useState(0)
 
@@ -19,7 +19,7 @@ export default function ImageUploader({ listingId, images, translations, canMana
 
     function submit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault()
-        post(`/my-listings/${listingId}/images`, {
+        post(baseUrl, {
             forceFormData: true,
             preserveScroll: true,
             onSuccess: () => {
@@ -31,7 +31,7 @@ export default function ImageUploader({ listingId, images, translations, canMana
 
     function deleteImage(imageId: number) {
         setDeletingId(imageId)
-        router.delete(`/my-listings/${listingId}/images/${imageId}`, {
+        router.delete(`${baseUrl}/${imageId}`, {
             preserveScroll: true,
             onFinish: () => setDeletingId(null),
         })

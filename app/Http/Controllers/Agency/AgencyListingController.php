@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAgencyListingRequest;
 use App\Http\Requests\UpdateAgencyListingRequest;
 use App\Models\Listing;
+use App\Services\ListingImageService;
 use App\Services\ListingService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
@@ -25,11 +26,13 @@ class AgencyListingController extends Controller
         ]);
     }
 
-    public function store(StoreAgencyListingRequest $request, ListingService $listingService): RedirectResponse
+    public function store(StoreAgencyListingRequest $request, ListingService $listingService, ListingImageService $imageService): RedirectResponse
     {
         Gate::authorize('create', Listing::class);
 
-        $listingService->createForAgency($request->user()->agency, $request->validated());
+        $listing = $listingService->createForAgency($request->user()->agency, $request->validated());
+
+        $imageService->uploadMany($listing, $request->file('images', []));
 
         return redirect()->route('agency.index')->with('success', __('app.create_agency_listing.flash'));
     }

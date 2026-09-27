@@ -29,6 +29,16 @@ class ListingImageService
      * Process an uploaded image into small and large WebP variants, store them,
      * and record the resulting ListingImage.
      */
+    /**
+     * @param  array<int, UploadedFile>  $files
+     */
+    public function uploadMany(Listing $listing, array $files): void
+    {
+        foreach ($files as $file) {
+            $this->upload($listing, $file);
+        }
+    }
+
     public function upload(Listing $listing, UploadedFile $file, ?string $altText = null): ListingImage
     {
         $token = Str::random(16);

@@ -1,6 +1,7 @@
 import { Head, Link, useForm, usePage } from '@inertiajs/react'
 import { ChevronLeft, Info } from 'lucide-react'
 import type { FormEvent } from 'react'
+import ImageUploader from '@/Components/Listings/ImageUploader'
 import ListingForm from '@/Components/Listings/ListingForm'
 import FlashBanner from '@/Components/UI/FlashBanner'
 import ListingsLayout from '@/Layouts/ListingsLayout'
@@ -87,6 +88,15 @@ export default function Edit({ listing, translations, propertyTypeLabels }: Edit
                     hideContactSection
                     cancelHref="/agency"
                 />
+
+                <div className="mt-12 border-t border-border pt-10">
+                    <ImageUploader
+                        baseUrl={`/agency/listings/${listing.id}/images`}
+                        images={listing.images}
+                        translations={translations.images}
+                        canManage
+                    />
+                </div>
             </div>
         </ListingsLayout>
     )

@@ -6,6 +6,7 @@ use App\Exceptions\InvalidListingStatusTransitionException;
 use App\Http\Requests\StoreListingRequest;
 use App\Http\Requests\UpdateListingRequest;
 use App\Models\Listing;
+use App\Services\ListingImageService;
 use App\Services\ListingService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
@@ -24,9 +25,11 @@ class MyListingController extends Controller
         ]);
     }
 
-    public function store(StoreListingRequest $request, ListingService $listingService): RedirectResponse
+    public function store(StoreListingRequest $request, ListingService $listingService, ListingImageService $imageService): RedirectResponse
     {
-        $listingService->create($request->user(), $request->validated());
+        $listing = $listingService->create($request->user(), $request->validated());
+
+        $imageService->uploadMany($listing, $request->file('images', []));
 
         return redirect()->route('profile.index')->with('success', __('app.create_listing.flash'));
     }
