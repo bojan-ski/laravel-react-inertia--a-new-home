@@ -2,11 +2,12 @@ import { Head, Link, useForm } from '@inertiajs/react'
 import { ChevronLeft } from 'lucide-react'
 import type { FormEvent } from 'react'
 import ListingForm from '@/Components/Listings/ListingForm'
+import NewListingImagePicker from '@/Components/Listings/NewListingImagePicker'
 import ListingsLayout from '@/Layouts/ListingsLayout'
-import type { CreateListingPageProps, ListingFormData } from '@/types/listing'
+import type { CreateListingFormData, CreateListingPageProps } from '@/types/listing'
 
 export default function Create({ translations, propertyTypeLabels }: CreateListingPageProps) {
-    const { data, setData, post, processing, errors } = useForm<ListingFormData>({
+    const { data, setData, post, processing, errors } = useForm<CreateListingFormData>({
         title: '',
         listing_type: 'sale',
         property_type: 'apartment',
@@ -25,11 +26,12 @@ export default function Create({ translations, propertyTypeLabels }: CreateListi
         contact_name: '',
         contact_email: '',
         contact_phone: '',
+        images: [],
     })
 
     function submit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
-        post('/my-listings')
+        post('/my-listings', { forceFormData: true })
     }
 
     return (
@@ -65,6 +67,14 @@ export default function Create({ translations, propertyTypeLabels }: CreateListi
                     onSubmit={submit}
                     translations={translations}
                     propertyTypeLabels={propertyTypeLabels}
+                    footerSlot={
+                        <NewListingImagePicker
+                            files={data.images}
+                            onChange={(files) => setData('images', files)}
+                            errors={errors}
+                            translations={translations.new_images}
+                        />
+                    }
                 />
             </div>
         </ListingsLayout>

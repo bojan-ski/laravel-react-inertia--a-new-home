@@ -28,6 +28,7 @@ class StoreListingRequest extends FormRequest
     {
         return [
             ...$this->sharedListingRules(),
+            ...$this->newImageRules(),
             'contact_name' => ['nullable', 'string', 'max:255'],
             'contact_email' => ['nullable', 'email', 'max:255'],
             'contact_phone' => ['nullable', 'string', 'max:50'],

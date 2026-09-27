@@ -12,6 +12,8 @@ trait ValidatesListingFields
         'condo', 'land', 'commercial', 'other',
     ];
 
+    private const MAX_NEW_IMAGES = 10;
+
     /**
      * @return array<string, ValidationRule|array<mixed>|string>
      */
@@ -33,6 +35,17 @@ trait ValidatesListingFields
             'area_value' => ['nullable', 'numeric', 'min:0'],
             'area_unit' => ['nullable', 'string', 'max:50'],
             'year_built' => ['nullable', 'integer', 'min:1800', 'max:2100'],
+        ];
+    }
+
+    /**
+     * @return array<string, ValidationRule|array<mixed>|string>
+     */
+    protected function newImageRules(): array
+    {
+        return [
+            'images' => ['nullable', 'array', 'max:'.self::MAX_NEW_IMAGES],
+            'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
         ];
     }
 }
