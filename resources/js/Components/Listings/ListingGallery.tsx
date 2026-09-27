@@ -12,7 +12,7 @@ export default function ListingGallery({ images, title }: ListingGalleryProps) {
 
     return (
         <div className="flex flex-col gap-4">
-            <div className="aspect-[16/9] w-full overflow-hidden rounded-2xl border border-border bg-surface-muted">
+            <div className="aspect-video w-full overflow-hidden rounded-2xl border border-border bg-surface-muted">
                 <img src={active.url} alt={active.altText || title} className="size-full object-cover" />
             </div>
 
@@ -24,7 +24,7 @@ export default function ListingGallery({ images, title }: ListingGalleryProps) {
                             type="button"
                             onClick={() => setActiveIndex(index)}
                             aria-current={index === activeIndex}
-                            className={`aspect-[4/3] h-20 shrink-0 overflow-hidden rounded-lg border transition-colors ${
+                            className={`aspect-4/3 h-20 shrink-0 overflow-hidden rounded-lg border transition-colors ${
                                 index === activeIndex
                                     ? 'border-brand ring-2 ring-brand/30'
                                     : 'border-border hover:border-border-strong'

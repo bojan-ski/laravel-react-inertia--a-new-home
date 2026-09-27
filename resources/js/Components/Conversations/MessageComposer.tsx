@@ -35,12 +35,12 @@ export default function MessageComposer({ conversationId, translations }: Messag
                     onKeyDown={handleKeyDown}
                     placeholder={translations.placeholder}
                     rows={1}
-                    className="max-h-40 min-h-[44px] flex-1 resize-none rounded-lg border border-border bg-surface px-4 py-2.5 text-sm text-text outline-none transition-colors focus:border-brand"
+                    className="max-h-40 min-h-11 flex-1 resize-none rounded-lg border border-border bg-surface px-4 py-2.5 text-sm text-text outline-none transition-colors focus:border-brand"
                 />
                 <button
                     type="submit"
                     disabled={processing || data.body.trim() === ''}
-                    className="flex h-[44px] items-center gap-2 rounded-lg bg-brand px-4 text-sm font-medium text-text-inverse transition-colors hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex h-11 items-center gap-2 rounded-lg bg-brand px-4 text-sm font-medium text-text-inverse transition-colors hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-50"
                 >
                     <Send className="size-4" />
                     <span className="hidden sm:inline">{processing ? translations.sending : translations.send}</span>
