@@ -12,6 +12,7 @@ export interface AdminStats {
     totalAdmins: number
     pendingAgencies: number
     approvedAgencies: number
+    pendingAgencyChanges: number
     reportedMessages: number
     newContactMessages: number
 }
@@ -48,6 +49,7 @@ export interface AdminDashboardTranslations {
         agency_users: AdminStatLabel
         admins: AdminStatLabel
         pending_agencies: AdminStatLabel
+        agency_changes: AdminStatLabel
         reported_messages: AdminStatLabel
         contact_messages: AdminStatLabel
     }
@@ -252,6 +254,8 @@ export interface AdminAgenciesTranslations {
     license_value: string
     not_provided: string
     submitted: string
+    verification_heading: string
+    changes: AdminAgencyChangesTranslations
     actions: {
         approve: string
         reject: string
@@ -265,9 +269,43 @@ export interface AdminAgenciesTranslations {
     pagination: PaginationLabels
 }
 
+export interface AdminAgencyChangesTranslations {
+    heading: string
+    subtitle: string
+    submitted: string
+    field: string
+    current: string
+    proposed: string
+    empty_value: string
+    view_public: string
+    actions: {
+        approve: string
+        reject: string
+    }
+    dialog: RejectDialogTranslations
+}
+
+export interface AgencyProfileChangeDiff {
+    field: string
+    current: string | null
+    proposed: string | null
+}
+
+export interface AgencyProfileChangeItem {
+    agencyId: number
+    agencyName: string | null
+    agencySlug: string | null
+    ownerName: string | null
+    ownerEmail: string | null
+    submittedAt: string
+    changes: AgencyProfileChangeDiff[]
+}
+
 export interface AdminAgenciesPageProps {
     agencies: Paginator<AdminAgencyModerationItem>
+    profileChanges: AgencyProfileChangeItem[]
     translations: AdminAgenciesTranslations
+    fieldLabels: Record<string, string>
 }
 
 export interface AdminAgencyModerationRowProps {
@@ -275,10 +313,17 @@ export interface AdminAgencyModerationRowProps {
     translations: AdminAgenciesTranslations
 }
 
+export interface AgencyChangeRequestRowProps {
+    change: AgencyProfileChangeItem
+    translations: AdminAgencyChangesTranslations
+    ownerTemplate: string
+    fieldLabels: Record<string, string>
+}
+
 export interface RejectAgencyDialogProps {
     open: boolean
     onClose: () => void
-    agencyId: number
-    agencyName: string
-    translations: AdminAgenciesTranslations
+    actionUrl: string
+    subjectName: string
+    dialog: RejectDialogTranslations
 }

@@ -7,6 +7,7 @@ use App\Exceptions\InvalidAgencyStatusTransitionException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\RejectAgencyRequest;
 use App\Models\Agency;
+use App\Models\AgencyProfileChange;
 use App\Services\AgencyService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
@@ -28,9 +29,17 @@ class AgencyModerationController extends Controller
             ->withQueryString()
             ->through(fn (Agency $agency): array => $agency->toModerationArray());
 
+        $profileChanges = AgencyProfileChange::query()
+            ->with('agency.user:id,name,email')
+            ->latest('updated_at')
+            ->get()
+            ->map(fn (AgencyProfileChange $change): array => $change->toModerationArray());
+
         return Inertia::render('Admin/Agencies/Index', [
             'agencies' => $agencies,
+            'profileChanges' => $profileChanges,
             'translations' => __('app.admin.agencies'),
+            'fieldLabels' => __('app.agency_edit.fields'),
         ]);
     }
 

@@ -111,9 +111,9 @@ export default function AgencyModerationRow({ agency, translations }: AdminAgenc
             <RejectAgencyDialog
                 open={rejectOpen}
                 onClose={() => setRejectOpen(false)}
-                agencyId={agency.id}
-                agencyName={agency.name}
-                translations={translations}
+                actionUrl={`/admin/agencies/${agency.id}/reject`}
+                subjectName={agency.name}
+                dialog={translations.dialog}
             />
         </div>
     )

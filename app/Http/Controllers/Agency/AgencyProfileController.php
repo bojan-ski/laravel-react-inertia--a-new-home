@@ -50,6 +50,7 @@ class AgencyProfileController extends Controller
 
         return Inertia::render('Agency/Show', [
             'agency' => $agency->toShowArray(),
+            'pendingChange' => $agency->pendingChange?->toOwnerArray(),
             'listings' => $listings,
             'translations' => __('app.agency_show'),
             'propertyTypeLabels' => __('app.listings.filters.property_types'),
@@ -63,6 +64,7 @@ class AgencyProfileController extends Controller
 
         return Inertia::render('Agency/Edit', [
             'agency' => $agency->toFormArray(),
+            'pendingChange' => $agency->pendingChange?->toOwnerArray(),
             'translations' => __('app.agency_edit'),
             'usStates' => __('app.us_states'),
         ]);
@@ -73,8 +75,15 @@ class AgencyProfileController extends Controller
         $agency = $request->user()->agency;
         Gate::authorize('update', $agency);
 
-        $agencyService->update($agency, $request->validated());
+        if (! $agency->isApproved()) {
+            $agencyService->update($agency, $request->validated());
 
-        return redirect()->route('agency.index')->with('success', __('app.agency_edit.flash'));
+            return redirect()->route('agency.index')->with('success', __('app.agency_edit.flash'));
+        }
+
+        $submitted = $agencyService->submitChanges($agency, $request->validated());
+
+        return redirect()->route('agency.index')
+            ->with('success', __($submitted ? 'app.agency_edit.flash_submitted' : 'app.agency_edit.flash_unchanged'));
     }
 }

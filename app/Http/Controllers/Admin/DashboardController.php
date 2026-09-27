@@ -7,6 +7,7 @@ use App\Enums\ListingStatus;
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Models\Agency;
+use App\Models\AgencyProfileChange;
 use App\Models\ContactMessage;
 use App\Models\Listing;
 use App\Models\ReportedChatMessage;
@@ -37,6 +38,7 @@ class DashboardController extends Controller
             'totalAdmins' => (int) $userCounts->get(UserRole::Admin->value, 0),
             'pendingAgencies' => Agency::byStatus(AgencyStatus::PendingVerification)->count(),
             'approvedAgencies' => Agency::byStatus(AgencyStatus::Approved)->count(),
+            'pendingAgencyChanges' => AgencyProfileChange::count(),
             'reportedMessages' => ReportedChatMessage::whereNull('resolved_at')->count(),
             'newContactMessages' => ContactMessage::whereNull('handled_at')->count(),
         ];

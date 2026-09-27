@@ -1,11 +1,15 @@
 import { Head, Link, useForm } from '@inertiajs/react'
-import { ChevronLeft } from 'lucide-react'
+import { ChevronLeft, Clock } from 'lucide-react'
 import type { FormEvent } from 'react'
 import AgencyForm from '@/Components/Agency/AgencyForm'
 import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { AgencyEditPageProps, AgencyFormData } from '@/types/agency'
 
-export default function Edit({ agency, translations, usStates }: AgencyEditPageProps) {
+export default function Edit({ agency, pendingChange, translations, usStates }: AgencyEditPageProps) {
+    const pendingValues = Object.fromEntries(
+        Object.entries(pendingChange?.changes ?? {}).map(([field, value]) => [field, value ?? '']),
+    ) as Partial<AgencyFormData>
+
     const { data, setData, put, processing, errors } = useForm<AgencyFormData>({
         name: agency.name,
         legal_name: agency.legalName ?? '',
@@ -17,7 +21,11 @@ export default function Edit({ agency, translations, usStates }: AgencyEditPageP
         website: agency.website ?? '',
         address: agency.address ?? '',
         description: agency.description ?? '',
+        ...pendingValues,
     })
+
+    const isApproved = agency.status === 'approved'
+    const submittedOn = pendingChange ? new Date(pendingChange.submittedAt).toLocaleDateString() : null
 
     function submit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
@@ -48,6 +56,13 @@ export default function Edit({ agency, translations, usStates }: AgencyEditPageP
             </div>
 
             <div className="mx-auto max-w-2xl px-6 py-10">
+                {submittedOn && (
+                    <div className="mb-8 flex items-start gap-3 rounded-lg border border-accent bg-accent-soft px-5 py-4 text-text">
+                        <Clock className="mt-0.5 size-5 shrink-0 text-accent" />
+                        <p className="text-sm">{translations.pending_notice.replace(':date', submittedOn)}</p>
+                    </div>
+                )}
+
                 <AgencyForm
                     data={data}
                     setData={setData}
@@ -57,7 +72,11 @@ export default function Edit({ agency, translations, usStates }: AgencyEditPageP
                     onSubmit={submit}
                     translations={translations}
                     usStates={usStates}
-                    note={<p className="text-sm text-text-soft">{translations.status_note}</p>}
+                    note={
+                        <p className="text-sm text-text-soft">
+                            {isApproved ? translations.review_note : translations.status_note}
+                        </p>
+                    }
                     cancelSlot={
                         <Link
                             href="/agency"

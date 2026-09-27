@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AgencyChangeModerationController;
 use App\Http\Controllers\Admin\AgencyModerationController;
 use App\Http\Controllers\Admin\ContactMessageController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -21,6 +22,8 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/agencies', [AgencyModerationController::class, 'index'])->name('agencies.index');
         Route::post('/agencies/{agency}/approve', [AgencyModerationController::class, 'approve'])->name('agencies.approve');
         Route::post('/agencies/{agency}/reject', [AgencyModerationController::class, 'reject'])->name('agencies.reject');
+        Route::post('/agencies/{agency}/changes/approve', [AgencyChangeModerationController::class, 'approve'])->name('agencies.changes.approve');
+        Route::post('/agencies/{agency}/changes/reject', [AgencyChangeModerationController::class, 'reject'])->name('agencies.changes.reject');
 
         Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
         Route::post('/users/{user}/suspend', [UserManagementController::class, 'suspend'])->name('users.suspend');
