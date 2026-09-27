@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UpdateAccountRequest;
+use App\Http\Requests\DeleteAccountRequest;
 use App\Http\Requests\UpdatePasswordRequest;
 use App\Services\ProfileSettingsService;
+use App\Services\UserAccountService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -16,25 +17,11 @@ class ProfileSettingsController extends Controller
         private ProfileSettingsService $profileSettings,
     ) {}
 
-    public function edit(Request $request): Response
+    public function edit(): Response
     {
-        $user = $request->user();
-
         return Inertia::render('Profile/Settings', [
-            'user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-            ],
             'translations' => __('app.profile_settings'),
         ]);
-    }
-
-    public function updateAccount(UpdateAccountRequest $request): RedirectResponse
-    {
-        $this->profileSettings->updateAccount($request->user(), $request->validated());
-
-        return redirect()->route('profile.settings.edit')->with('success', __('app.profile_settings.account.flash'));
     }
 
     public function updatePassword(UpdatePasswordRequest $request): RedirectResponse
@@ -42,5 +29,19 @@ class ProfileSettingsController extends Controller
         $this->profileSettings->updatePassword($request->user(), $request->validated('password'));
 
         return redirect()->route('profile.settings.edit')->with('success', __('app.profile_settings.password.flash'));
+    }
+
+    public function destroy(DeleteAccountRequest $request, UserAccountService $accounts): RedirectResponse
+    {
+        $user = $request->user();
+
+        Auth::guard('web')->logout();
+
+        $accounts->delete($user);
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('home')->with('success', __('app.profile_settings.delete.flash'));
     }
 }

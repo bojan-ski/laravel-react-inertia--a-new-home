@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-#[Fillable(['listing_id', 'buyer_id', 'owner_id'])]
+#[Fillable(['listing_id', 'listing_title', 'buyer_id', 'owner_id'])]
 class Conversation extends Model
 {
     /** @use HasFactory<ConversationFactory> */
@@ -46,7 +46,7 @@ class Conversation extends Model
         return $this->buyer_id === $user->id || $this->owner_id === $user->id;
     }
 
-    public function otherParticipant(User $actor): User
+    public function otherParticipant(User $actor): ?User
     {
         return $this->buyer_id === $actor->id ? $this->owner : $this->buyer;
     }
@@ -57,20 +57,20 @@ class Conversation extends Model
     private function listingSummary(): array
     {
         return [
-            'id' => $this->listing->id,
-            'title' => $this->listing->title,
-            'slug' => $this->listing->slug,
+            'id' => $this->listing?->id,
+            'title' => $this->listing?->title ?? $this->listing_title ?? __('app.conversations.listing_removed'),
+            'slug' => $this->listing?->slug,
         ];
     }
 
     /**
      * @return array<string, mixed>
      */
-    private function participantSummary(User $other): array
+    private function participantSummary(?User $other): array
     {
         return [
-            'id' => $other->id,
-            'name' => $other->name,
+            'id' => $other?->id,
+            'name' => $other?->name ?? __('app.conversations.deleted_user'),
         ];
     }
 
@@ -108,7 +108,7 @@ class Conversation extends Model
             'messages' => $this->messages->map(fn (ChatMessage $message): array => [
                 'id' => $message->id,
                 'senderId' => $message->sender_id,
-                'senderName' => $message->sender->name,
+                'senderName' => $message->sender?->name ?? __('app.conversations.deleted_user'),
                 'body' => $message->body,
                 'createdAt' => $message->created_at->toIso8601String(),
             ])->all(),

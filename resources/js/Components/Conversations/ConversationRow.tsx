@@ -16,14 +16,16 @@ export default function ConversationRow({ conversation, translations }: Conversa
 
             <div className="flex shrink-0 flex-col items-end gap-2">
                 <span className="text-xs text-text-muted">{formatRelativeTime(conversation.updatedAt)}</span>
-                <Link
-                    href={`/listings/${conversation.listing.slug}`}
-                    className="text-text-muted transition-colors hover:text-brand"
-                    title={translations.view_listing}
-                    aria-label={translations.view_listing}
-                >
-                    <ExternalLink className="size-4" />
-                </Link>
+                {conversation.listing.slug && (
+                    <Link
+                        href={`/listings/${conversation.listing.slug}`}
+                        className="text-text-muted transition-colors hover:text-brand"
+                        title={translations.view_listing}
+                        aria-label={translations.view_listing}
+                    >
+                        <ExternalLink className="size-4" />
+                    </Link>
+                )}
             </div>
         </div>
     )

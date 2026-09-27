@@ -59,18 +59,12 @@ export interface ProfileListingRowProps {
     propertyTypeLabels: Record<string, string>
 }
 
-export interface ProfileSettingsUser {
-    id: number
-    name: string
-    email: string
-}
-
-export interface ProfileSettingsAccountTranslations {
+export interface ProfileSettingsDeleteTranslations {
     heading: string
     note: string
-    name: string
-    email: string
+    password: string
     submit: string
+    confirm: ConfirmActionTranslations
     flash: string
 }
 
@@ -88,12 +82,11 @@ export interface ProfileSettingsTranslations {
     title: string
     subtitle: string
     back: string
-    account: ProfileSettingsAccountTranslations
     password: ProfileSettingsPasswordTranslations
+    delete: ProfileSettingsDeleteTranslations
 }
 
 export interface ProfileSettingsPageProps {
-    user: ProfileSettingsUser
     translations: ProfileSettingsTranslations
     [key: string]: unknown
 }

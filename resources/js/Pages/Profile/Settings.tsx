@@ -1,24 +1,21 @@
 import { Head, Link, useForm, usePage } from '@inertiajs/react'
 import { ChevronLeft } from 'lucide-react'
 import { type FormEvent, useEffect, useState } from 'react'
+import ConfirmDialog from '@/Components/UI/ConfirmDialog'
 import FlashBanner from '@/Components/UI/FlashBanner'
 import TextField from '@/Components/UI/TextField'
 import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { ProfileSettingsPageProps } from '@/types/profile'
 import type { SharedProps } from '@/types/shared'
 
-export default function Settings({ user, translations }: ProfileSettingsPageProps) {
+export default function Settings({ translations }: ProfileSettingsPageProps) {
     const { flash } = usePage<SharedProps>().props
     const [banner, setBanner] = useState<string | null>(null)
+    const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false)
 
     useEffect(() => {
         setBanner(flash.success)
     }, [flash.success])
-
-    const accountForm = useForm({
-        name: user.name,
-        email: user.email,
-    })
 
     const passwordForm = useForm({
         current_password: '',
@@ -26,16 +23,28 @@ export default function Settings({ user, translations }: ProfileSettingsPageProp
         password_confirmation: '',
     })
 
-    function submitAccount(e: FormEvent) {
-        e.preventDefault()
-        accountForm.put('/profile/settings/account', { preserveScroll: true })
-    }
+    const deleteForm = useForm({
+        password: '',
+    })
 
     function submitPassword(e: FormEvent) {
         e.preventDefault()
         passwordForm.put('/profile/settings/password', {
             preserveScroll: true,
             onSuccess: () => passwordForm.reset(),
+        })
+    }
+
+    function requestDelete(e: FormEvent) {
+        e.preventDefault()
+        setConfirmDeleteOpen(true)
+    }
+
+    function confirmDelete() {
+        deleteForm.delete('/profile', {
+            preserveScroll: true,
+            onFinish: () => setConfirmDeleteOpen(false),
+            onError: () => deleteForm.reset('password'),
         })
     }
 
@@ -68,45 +77,6 @@ export default function Settings({ user, translations }: ProfileSettingsPageProp
                 )}
 
                 <div className="space-y-12">
-                    <section>
-                        <h2 className="font-display text-xl font-semibold text-text">{translations.account.heading}</h2>
-                        <p className="mt-1 text-sm text-text-soft">{translations.account.note}</p>
-
-                        <form onSubmit={submitAccount} className="mt-6 flex flex-col gap-5">
-                            <TextField
-                                id="name"
-                                type="text"
-                                label={translations.account.name}
-                                autoComplete="name"
-                                value={accountForm.data.name}
-                                onChange={(e) => accountForm.setData('name', e.target.value)}
-                                error={accountForm.errors.name}
-                            />
-
-                            <TextField
-                                id="email"
-                                type="email"
-                                label={translations.account.email}
-                                autoComplete="email"
-                                value={accountForm.data.email}
-                                onChange={(e) => accountForm.setData('email', e.target.value)}
-                                error={accountForm.errors.email}
-                            />
-
-                            <div>
-                                <button
-                                    type="submit"
-                                    disabled={accountForm.processing}
-                                    className="w-full rounded-lg bg-brand px-5 py-3 text-sm font-semibold text-text-inverse transition-colors hover:bg-brand-dark disabled:opacity-60 sm:w-auto"
-                                >
-                                    {translations.account.submit}
-                                </button>
-                            </div>
-                        </form>
-                    </section>
-
-                    <div className="border-t border-border" />
-
                     <section>
                         <h2 className="font-display text-xl font-semibold text-text">{translations.password.heading}</h2>
                         <p className="mt-1 text-sm text-text-soft">{translations.password.note}</p>
@@ -153,8 +123,51 @@ export default function Settings({ user, translations }: ProfileSettingsPageProp
                             </div>
                         </form>
                     </section>
+
+                    <div className="border-t border-border" />
+
+                    <section className="rounded-2xl border border-status-rejected/30 bg-status-rejected/5 p-6">
+                        <h2 className="font-display text-xl font-semibold text-status-rejected">
+                            {translations.delete.heading}
+                        </h2>
+                        <p className="mt-1 text-sm leading-relaxed text-text-soft">{translations.delete.note}</p>
+
+                        <form onSubmit={requestDelete} className="mt-6 flex flex-col gap-5">
+                            <TextField
+                                id="delete_password"
+                                type="password"
+                                label={translations.delete.password}
+                                autoComplete="current-password"
+                                value={deleteForm.data.password}
+                                onChange={(e) => deleteForm.setData('password', e.target.value)}
+                                error={deleteForm.errors.password}
+                                required
+                            />
+
+                            <div>
+                                <button
+                                    type="submit"
+                                    disabled={deleteForm.processing}
+                                    className="w-full rounded-lg bg-status-rejected px-5 py-3 text-sm font-semibold text-text-inverse transition-opacity hover:opacity-90 disabled:opacity-60 sm:w-auto"
+                                >
+                                    {translations.delete.submit}
+                                </button>
+                            </div>
+                        </form>
+                    </section>
                 </div>
             </div>
+
+            <ConfirmDialog
+                open={confirmDeleteOpen}
+                title={translations.delete.confirm.title}
+                description={translations.delete.confirm.description}
+                confirmLabel={translations.delete.confirm.confirm}
+                cancelLabel={translations.delete.confirm.cancel}
+                processing={deleteForm.processing}
+                onConfirm={confirmDelete}
+                onCancel={() => setConfirmDeleteOpen(false)}
+            />
         </ListingsLayout>
     )
 }

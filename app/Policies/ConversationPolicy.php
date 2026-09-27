@@ -40,6 +40,10 @@ class ConversationPolicy
             return false;
         }
 
+        if ($conversation->buyer_id === null || $conversation->owner_id === null || $conversation->listing === null) {
+            return false;
+        }
+
         return ! $this->otherParticipantSuspended($user, $conversation);
     }
 

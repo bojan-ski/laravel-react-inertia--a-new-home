@@ -308,17 +308,8 @@ return [
 
     'profile_settings' => [
         'title' => 'Account Settings',
-        'subtitle' => 'Update your personal account details and password.',
+        'subtitle' => 'Manage your password and account.',
         'back' => 'Back to My Listings',
-
-        'account' => [
-            'heading' => 'Account Details',
-            'note' => 'Update your name and email address.',
-            'name' => 'Name',
-            'email' => 'Email Address',
-            'submit' => 'Save Changes',
-            'flash' => 'Account details updated.',
-        ],
 
         'password' => [
             'heading' => 'Password',
@@ -328,6 +319,20 @@ return [
             'confirm' => 'Confirm New Password',
             'submit' => 'Update Password',
             'flash' => 'Password updated.',
+        ],
+
+        'delete' => [
+            'heading' => 'Delete Account',
+            'note' => 'Permanently delete your account, your listings and your saved properties. Conversations stay visible to the other person, with you shown as "Deleted user". This cannot be undone.',
+            'password' => 'Confirm with your password',
+            'submit' => 'Delete My Account',
+            'confirm' => [
+                'title' => 'Delete your account?',
+                'description' => 'Your account, listings and saved properties will be permanently deleted. This cannot be undone.',
+                'confirm' => 'Delete Account',
+                'cancel' => 'Cancel',
+            ],
+            'flash' => 'Your account has been deleted.',
         ],
     ],
 
@@ -349,6 +354,8 @@ return [
         'title' => 'Conversations',
         'subtitle' => 'Your messages with listing owners and buyers.',
         'view_listing' => 'View listing',
+        'deleted_user' => 'Deleted user',
+        'listing_removed' => 'Listing no longer available',
         'empty' => [
             'headline' => 'No conversations yet.',
             'subtitle' => "Start a conversation from a listing's detail page.",
@@ -361,6 +368,7 @@ return [
             'send' => 'Send',
             'sending' => 'Sending…',
             'hint' => 'Press Ctrl + Enter to send',
+            'read_only' => 'This conversation is closed. The other account or the listing is no longer available, so no new messages can be sent.',
         ],
         'report' => [
             'action' => 'Report',
@@ -381,6 +389,7 @@ return [
             'not_participant' => 'You can only report messages in conversations you participate in.',
             'self_report' => 'You cannot report your own message.',
             'duplicate' => 'You have already reported this message.',
+            'sender_deleted' => 'This message can no longer be reported because the sender deleted their account.',
         ],
     ],
 
