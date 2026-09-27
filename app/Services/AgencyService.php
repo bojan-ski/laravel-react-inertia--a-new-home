@@ -65,22 +65,72 @@ class AgencyService
      */
     public function update(Agency $agency, array $data): Agency
     {
-        $agency->fill(Arr::only($data, [
-            'name',
-            'legal_name',
-            'ein',
-            'license_number',
-            'license_state',
-            'email',
-            'phone',
-            'website',
-            'address',
-            'description',
-        ]));
+        $agency->fill(Arr::only($data, Agency::PROFILE_FIELDS));
 
         $agency->save();
 
         return $agency->refresh();
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    public function submitChanges(Agency $agency, array $data): bool
+    {
+        $changes = collect(Agency::PROFILE_FIELDS)
+            ->mapWithKeys(fn (string $field): array => [$field => $this->normalize($data[$field] ?? null)])
+            ->reject(fn (?string $proposed, string $field): bool => $proposed === $agency->profileValue($field))
+            ->all();
+
+        if ($changes === []) {
+            $agency->pendingChange()->delete();
+
+            return false;
+        }
+
+        $agency->pendingChange()->updateOrCreate([], ['proposed_values' => $changes]);
+
+        return true;
+    }
+
+    /**
+     * @throws InvalidAgencyStatusTransitionException
+     */
+    public function approveChanges(Agency $agency): Agency
+    {
+        $change = $agency->pendingChange;
+
+        if ($change === null) {
+            throw new InvalidAgencyStatusTransitionException('This agency has no pending profile changes.');
+        }
+
+        $this->update($agency, $change->proposed_values);
+        $change->delete();
+
+        $this->mail->sendAgencyChangesApproved($agency);
+
+        return $agency->refresh();
+    }
+
+    /**
+     * @throws InvalidAgencyStatusTransitionException
+     */
+    public function rejectChanges(Agency $agency, string $reason): void
+    {
+        $change = $agency->pendingChange;
+
+        if ($change === null) {
+            throw new InvalidAgencyStatusTransitionException('This agency has no pending profile changes.');
+        }
+
+        $change->delete();
+
+        $this->mail->sendAgencyChangesRejected($agency, $reason);
+    }
+
+    private function normalize(mixed $value): ?string
+    {
+        return $value === null || $value === '' ? null : (string) $value;
     }
 
     /**

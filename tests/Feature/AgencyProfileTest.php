@@ -182,18 +182,19 @@ class AgencyProfileTest extends TestCase
                 ->where('agency.email', 'prefilled@agency.test'));
     }
 
-    public function test_agency_user_can_update_profile(): void
+    public function test_unverified_agency_profile_update_applies_immediately(): void
     {
         $user = User::factory()->agency()->create();
-        $agency = Agency::factory()->approved()->create(['user_id' => $user->id]);
+        $agency = Agency::factory()->pendingVerification()->create(['user_id' => $user->id]);
 
         $this->actingAs($user)
             ->put('/agency', $this->validPayload())
             ->assertRedirect('/agency')
-            ->assertSessionHas('success');
+            ->assertSessionHas('success', __('app.agency_edit.flash'));
 
         $agency->refresh();
 
+        $this->assertNull($agency->pendingChange);
         $this->assertSame('Updated Agency Name', $agency->name);
         $this->assertSame('updated@agency.test', $agency->email);
         $this->assertSame('+1 555 9999', $agency->phone);

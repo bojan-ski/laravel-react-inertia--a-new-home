@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 #[Fillable([
     'name',
@@ -43,9 +44,38 @@ class Agency extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public const PROFILE_FIELDS = [
+        'name',
+        'legal_name',
+        'ein',
+        'license_number',
+        'license_state',
+        'email',
+        'phone',
+        'website',
+        'address',
+        'description',
+    ];
+
     public function listings(): HasMany
     {
         return $this->hasMany(Listing::class);
+    }
+
+    public function pendingChange(): HasOne
+    {
+        return $this->hasOne(AgencyProfileChange::class);
+    }
+
+    public function profileValue(string $field): ?string
+    {
+        $value = $this->getAttribute($field);
+
+        if ($value instanceof UsState) {
+            return $value->value;
+        }
+
+        return $value === null ? null : (string) $value;
     }
 
     #[Scope]

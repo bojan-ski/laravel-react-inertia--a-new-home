@@ -54,4 +54,9 @@ class AgencyPolicy
     {
         return $user->isAdmin() && $agency->canBeModerated();
     }
+
+    public function reviewChanges(User $user, Agency $agency): bool
+    {
+        return $user->isAdmin() && $agency->pendingChange()->exists();
+    }
 }

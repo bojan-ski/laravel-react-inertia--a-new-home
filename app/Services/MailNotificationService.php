@@ -7,6 +7,8 @@ use App\Models\Listing;
 use App\Models\User;
 use App\Notifications\AccountDeletedNotification;
 use App\Notifications\AgencyApprovedNotification;
+use App\Notifications\AgencyChangesApprovedNotification;
+use App\Notifications\AgencyChangesRejectedNotification;
 use App\Notifications\AgencyRejectedNotification;
 use App\Notifications\ListingApprovedNotification;
 use App\Notifications\ListingRejectedNotification;
@@ -47,6 +49,16 @@ class MailNotificationService
     public function sendAgencyRejected(Agency $agency): void
     {
         $agency->user?->notify(new AgencyRejectedNotification($agency->name, (string) $agency->rejection_reason));
+    }
+
+    public function sendAgencyChangesApproved(Agency $agency): void
+    {
+        $agency->user?->notify(new AgencyChangesApprovedNotification($agency->name));
+    }
+
+    public function sendAgencyChangesRejected(Agency $agency, string $reason): void
+    {
+        $agency->user?->notify(new AgencyChangesRejectedNotification($agency->name, $reason));
     }
 
     private function resolveListingRecipient(Listing $listing): ?User

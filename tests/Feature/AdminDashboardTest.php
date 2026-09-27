@@ -128,6 +128,7 @@ class AdminDashboardTest extends TestCase
                     ->where('totalAdmins', 1)
                     ->where('pendingAgencies', 0)
                     ->where('approvedAgencies', 0)
+                    ->where('pendingAgencyChanges', 0)
                     ->where('reportedMessages', 0)
                     ->where('newContactMessages', 0)
                 )

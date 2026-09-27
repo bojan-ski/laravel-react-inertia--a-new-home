@@ -162,13 +162,20 @@ export interface AgencyShowTranslations {
     subtitle: string
     edit: string
     settings: string
+    pending_changes: string
     status: Record<AgencyStatusValue, AgencyStatusCopy>
     profile: AgencyShowProfileTranslations
     listings: AgencyShowListingsTranslations
 }
 
+export interface AgencyPendingChange {
+    submittedAt: string
+    changes: Partial<Record<keyof AgencyFormData, string | null>>
+}
+
 export interface AgencyShowPageProps {
     agency: AgencyShowData
+    pendingChange: AgencyPendingChange | null
     listings: AgencyDashboardListing[]
     translations: AgencyShowTranslations
     propertyTypeLabels: Record<string, string>
@@ -215,11 +222,14 @@ export interface AgencyEditTranslations extends AgencyFormTranslations {
     submit: string
     cancel: string
     status_note: string
+    review_note: string
+    pending_notice: string
     flash: string
 }
 
 export interface AgencyEditPageProps {
     agency: AgencyEditData
+    pendingChange: AgencyPendingChange | null
     translations: AgencyEditTranslations
     usStates: Record<string, string>
 }

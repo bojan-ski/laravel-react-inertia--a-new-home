@@ -660,6 +660,7 @@ return [
         'subtitle' => 'Manage your agency details and public contact information.',
         'edit' => 'Edit Profile',
         'settings' => 'Account Settings',
+        'pending_changes' => 'Profile changes submitted on :date are awaiting admin review. Your current details stay live until they are approved.',
         'status' => [
             'pending_verification' => [
                 'heading' => 'Pending Verification',
@@ -737,8 +738,12 @@ return [
         'back' => 'Back',
         'submit' => 'Save Changes',
         'cancel' => 'Cancel',
-        'status_note' => 'Note: editing your profile does not change your moderation status.',
+        'status_note' => 'Your agency is still awaiting verification, so changes apply to your submission right away.',
+        'review_note' => 'Changes to an approved agency are reviewed by our team before they go live. Your current profile stays visible in the meantime.',
+        'pending_notice' => 'Changes submitted on :date are awaiting review. The form shows your proposed values — saving again replaces that request, and saving your current values withdraws it.',
         'flash' => 'Agency profile updated.',
+        'flash_submitted' => 'Your changes were submitted for review. Your current profile stays live until they are approved.',
+        'flash_unchanged' => 'No changes to review — your profile matches what is live.',
         'sections' => [
             'identity' => 'Agency Identity',
             'business' => 'Business & Licensing',
@@ -828,6 +833,10 @@ return [
                     'label' => 'Pending Agencies',
                     'description' => 'Awaiting verification',
                 ],
+                'agency_changes' => [
+                    'label' => 'Agency Profile Changes',
+                    'description' => 'Awaiting review',
+                ],
                 'reported_messages' => [
                     'label' => 'Reported Messages',
                     'description' => 'Unresolved reports',
@@ -888,6 +897,34 @@ return [
             'license_value' => '#:number (:state)',
             'not_provided' => 'Not provided',
             'submitted' => 'Submitted :date',
+            'verification_heading' => 'New Agencies',
+            'changes' => [
+                'heading' => 'Profile Changes',
+                'subtitle' => 'Approved agencies that edited their profile. The current profile stays live until you decide.',
+                'submitted' => 'Changes submitted :date',
+                'field' => 'Field',
+                'current' => 'Current',
+                'proposed' => 'Proposed',
+                'empty_value' => '—',
+                'view_public' => 'View public page',
+                'actions' => [
+                    'approve' => 'Approve Changes',
+                    'reject' => 'Reject Changes',
+                ],
+                'dialog' => [
+                    'title' => 'Reject Profile Changes',
+                    'reason_label' => 'Reason',
+                    'reason_placeholder' => 'Explain why these changes were not accepted…',
+                    'reason_helper' => 'This message is emailed to the agency owner. The agency and its current profile are not affected.',
+                    'cancel' => 'Cancel',
+                    'reject' => 'Reject Changes',
+                ],
+                'flash' => [
+                    'approved' => 'Profile changes approved and applied.',
+                    'rejected' => 'Profile changes rejected.',
+                    'missing' => 'That agency has no pending profile changes.',
+                ],
+            ],
             'actions' => [
                 'approve' => 'Approve',
                 'reject' => 'Reject',
@@ -1115,6 +1152,19 @@ return [
             'intro' => 'Your agency ":name" was reviewed and could not be approved. The agency record has been removed.',
             'reason' => 'Reason: :reason',
             'outro' => 'You are welcome to register again with details that address the issue above.',
+        ],
+        'agency_changes_approved' => [
+            'subject' => 'Your agency profile changes were approved',
+            'greeting' => 'Good news!',
+            'intro' => 'The profile changes for ":name" have been approved and are now live on New Beginning.',
+            'outro' => 'Thank you for keeping your agency details up to date.',
+        ],
+        'agency_changes_rejected' => [
+            'subject' => 'Your agency profile changes were not approved',
+            'greeting' => 'Agency update',
+            'intro' => 'The profile changes submitted for ":name" were reviewed and could not be approved. Your current profile is unchanged.',
+            'reason' => 'Reason: :reason',
+            'outro' => 'You can submit updated changes from your agency dashboard at any time.',
         ],
     ],
 ];

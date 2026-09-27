@@ -1,12 +1,14 @@
 import { Head, Link } from '@inertiajs/react'
-import { Pencil, Settings } from 'lucide-react'
+import { Clock, Pencil, Settings } from 'lucide-react'
 import AgencyListingsSection from '@/Components/Agency/AgencyListingsSection'
 import AgencyProfileSection from '@/Components/Agency/AgencyProfileSection'
 import AgencyStatusPanel from '@/Components/Agency/AgencyStatusPanel'
 import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { AgencyShowPageProps } from '@/types/agency'
 
-export default function Show({ agency, listings, translations, propertyTypeLabels }: AgencyShowPageProps) {
+export default function Show({ agency, pendingChange, listings, translations, propertyTypeLabels }: AgencyShowPageProps) {
+    const submittedOn = pendingChange ? new Date(pendingChange.submittedAt).toLocaleDateString() : null
+
     return (
         <ListingsLayout>
             <Head title={agency.name} />
@@ -40,6 +42,13 @@ export default function Show({ agency, listings, translations, propertyTypeLabel
             </div>
 
             <div className="mx-auto max-w-5xl px-6 py-8">
+                {submittedOn && (
+                    <div className="mb-6 flex items-start gap-3 rounded-lg border border-accent bg-accent-soft px-5 py-4 text-text">
+                        <Clock className="mt-0.5 size-5 shrink-0 text-accent" />
+                        <p className="text-sm">{translations.pending_changes.replace(':date', submittedOn)}</p>
+                    </div>
+                )}
+
                 <AgencyStatusPanel agency={agency} translations={translations} />
 
                 <div className="mt-8">
