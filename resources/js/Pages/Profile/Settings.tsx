@@ -8,7 +8,7 @@ import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { ProfileSettingsPageProps } from '@/types/profile'
 import type { SharedProps } from '@/types/shared'
 
-export default function Settings({ translations }: ProfileSettingsPageProps) {
+export default function Settings({ translations, backHref, passwordUrl, deleteUrl }: ProfileSettingsPageProps) {
     const { flash } = usePage<SharedProps>().props
     const [banner, setBanner] = useState<string | null>(null)
     const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false)
@@ -29,7 +29,7 @@ export default function Settings({ translations }: ProfileSettingsPageProps) {
 
     function submitPassword(e: FormEvent) {
         e.preventDefault()
-        passwordForm.put('/profile/settings/password', {
+        passwordForm.put(passwordUrl, {
             preserveScroll: true,
             onSuccess: () => passwordForm.reset(),
         })
@@ -41,7 +41,7 @@ export default function Settings({ translations }: ProfileSettingsPageProps) {
     }
 
     function confirmDelete() {
-        deleteForm.delete('/profile', {
+        deleteForm.delete(deleteUrl, {
             preserveScroll: true,
             onFinish: () => setConfirmDeleteOpen(false),
             onError: () => deleteForm.reset('password'),
@@ -62,7 +62,7 @@ export default function Settings({ translations }: ProfileSettingsPageProps) {
                     </div>
 
                     <Link
-                        href="/profile"
+                        href={backHref}
                         className="inline-flex items-center gap-1.5 text-sm text-text-soft transition-colors hover:text-text"
                     >
                         <ChevronLeft className="size-4" />

@@ -340,6 +340,16 @@ return [
         ],
     ],
 
+    'agency_settings' => [
+        'back' => 'Back to Agency Dashboard',
+        'delete' => [
+            'note' => 'Permanently delete your account together with your agency profile, all agency listings and their photos. Conversations stay visible to the other person, with you shown as "Deleted user". This cannot be undone.',
+            'confirm' => [
+                'description' => 'Your account, agency profile and all agency listings will be permanently deleted. This cannot be undone.',
+            ],
+        ],
+    ],
+
     'bookmarks' => [
         'title' => 'My Bookmarks',
         'subtitle' => 'Saved listings you want to revisit.',
@@ -640,6 +650,7 @@ return [
         'title' => 'Agency Profile',
         'subtitle' => 'Manage your agency details and public contact information.',
         'edit' => 'Edit Profile',
+        'settings' => 'Account Settings',
         'status' => [
             'pending_verification' => [
                 'heading' => 'Pending Verification',

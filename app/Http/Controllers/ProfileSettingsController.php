@@ -21,6 +21,9 @@ class ProfileSettingsController extends Controller
     {
         return Inertia::render('Profile/Settings', [
             'translations' => __('app.profile_settings'),
+            'backHref' => route('profile.index', absolute: false),
+            'passwordUrl' => route('profile.settings.password.update', absolute: false),
+            'deleteUrl' => route('profile.destroy', absolute: false),
         ]);
     }
 

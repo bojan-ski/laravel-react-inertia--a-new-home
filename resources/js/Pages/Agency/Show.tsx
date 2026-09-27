@@ -1,5 +1,5 @@
 import { Head, Link } from '@inertiajs/react'
-import { Pencil } from 'lucide-react'
+import { Pencil, Settings } from 'lucide-react'
 import AgencyListingsSection from '@/Components/Agency/AgencyListingsSection'
 import AgencyProfileSection from '@/Components/Agency/AgencyProfileSection'
 import AgencyStatusPanel from '@/Components/Agency/AgencyStatusPanel'
@@ -21,6 +21,13 @@ export default function Show({ agency, listings, translations, propertyTypeLabel
                     </div>
 
                     <div className="flex flex-wrap items-center gap-3">
+                        <Link
+                            href="/agency/settings"
+                            className="inline-flex items-center gap-2 rounded-full border border-border-strong px-5 py-2.5 text-sm font-medium text-text-soft transition-colors hover:border-text hover:text-text"
+                        >
+                            <Settings className="size-4" />
+                            {translations.settings}
+                        </Link>
                         <Link
                             href="/agency/edit"
                             className="inline-flex items-center gap-2 rounded-full border border-border-strong px-5 py-2.5 text-sm font-medium text-text-soft transition-colors hover:border-text hover:text-text"
