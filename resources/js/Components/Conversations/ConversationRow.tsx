@@ -4,18 +4,33 @@ import { formatRelativeTime } from '@/Components/Conversations/formatRelativeTim
 import type { ConversationRowProps } from '@/types/conversation'
 
 export default function ConversationRow({ conversation, translations }: ConversationRowProps) {
+    const hasUnread = conversation.unreadCount > 0
+
     return (
-        <div className="flex items-start gap-4 rounded-xl border border-border bg-surface p-4 transition-colors hover:border-border-strong">
+        <div
+            className={`flex items-start gap-4 rounded-xl border bg-surface p-4 transition-colors hover:border-border-strong ${
+                hasUnread ? 'border-brand/40' : 'border-border'
+            }`}
+        >
             <Link href={`/conversations/${conversation.id}`} className="min-w-0 flex-1">
-                <p className="truncate font-semibold text-text">{conversation.listing.title}</p>
+                <p className={`truncate text-text ${hasUnread ? 'font-bold' : 'font-semibold'}`}>
+                    {conversation.listing.title}
+                </p>
                 <p className="mt-0.5 text-sm text-text-muted">{conversation.otherParticipant.name}</p>
                 {conversation.lastMessage && (
-                    <p className="mt-1 truncate text-sm text-text-soft">{conversation.lastMessage.body}</p>
+                    <p className={`mt-1 truncate text-sm ${hasUnread ? 'font-medium text-text' : 'text-text-soft'}`}>
+                        {conversation.lastMessage.body}
+                    </p>
                 )}
             </Link>
 
             <div className="flex shrink-0 flex-col items-end gap-2">
                 <span className="text-xs text-text-muted">{formatRelativeTime(conversation.updatedAt)}</span>
+                {hasUnread && (
+                    <span className="rounded-full bg-brand px-2 py-0.5 text-xs font-semibold text-text-inverse">
+                        {translations.unread.replace(':count', String(conversation.unreadCount))}
+                    </span>
+                )}
                 {conversation.listing.slug && (
                     <Link
                         href={`/listings/${conversation.listing.slug}`}

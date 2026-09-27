@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\ConversationService;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -60,6 +61,8 @@ class HandleInertiaRequests extends Middleware
             'listingsNav' => fn () => __('app.listings.nav'),
             'footer' => fn () => __('app.footer'),
             'adminNav' => fn () => __('app.admin.nav'),
+            'unreadMessages' => fn () => $user ? app(ConversationService::class)->unreadCountFor($user) : 0,
+            'messageNotifications' => fn () => $user ? __('app.message_notifications') : null,
             'cookieConsent' => fn () => $this->cookieConsent($request),
             'cookieBanner' => fn () => __('app.cookie_banner'),
         ];

@@ -1,4 +1,5 @@
 import { Link, usePage } from '@inertiajs/react'
+import MessagesNavLink from '@/Components/Conversations/MessagesNavLink'
 import type { SharedProps } from '@/types/shared'
 import { dashboardPaths } from '@/types/navigation'
 import type { ListingsNavbarAuthActionsProps } from '@/types/listing'
@@ -33,7 +34,9 @@ export default function ListingsNavbarAuthActions({ nav, onNavigate }: ListingsN
 
     return (
         <>
-            <span className="hidden text-sm font-medium text-text sm:inline">{user.name}</span>
+            <span className="hidden text-sm font-medium text-text sm:inline md:max-xl:hidden">{user.name}</span>
+
+            <MessagesNavLink label={nav.messages} unreadLabel={nav.unread} onNavigate={onNavigate} />
 
             <Link
                 href={dashboardPath}

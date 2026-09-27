@@ -16,6 +16,17 @@ class Conversation extends Model
     /** @use HasFactory<ConversationFactory> */
     use HasFactory;
 
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'buyer_last_read_at' => 'datetime',
+            'owner_last_read_at' => 'datetime',
+        ];
+    }
+
     public function listing(): BelongsTo
     {
         return $this->belongsTo(Listing::class);
@@ -49,6 +60,16 @@ class Conversation extends Model
     public function otherParticipant(User $actor): ?User
     {
         return $this->buyer_id === $actor->id ? $this->owner : $this->buyer;
+    }
+
+    public function otherParticipantId(User $actor): ?int
+    {
+        return $this->buyer_id === $actor->id ? $this->owner_id : $this->buyer_id;
+    }
+
+    public function lastReadColumnFor(User $user): string
+    {
+        return $this->buyer_id === $user->id ? 'buyer_last_read_at' : 'owner_last_read_at';
     }
 
     /**
@@ -90,6 +111,7 @@ class Conversation extends Model
                 'body' => $lastMessage->body,
                 'createdAt' => $lastMessage->created_at->toIso8601String(),
             ] : null,
+            'unreadCount' => (int) ($this->unread_count ?? 0),
             'updatedAt' => $this->updated_at->toIso8601String(),
         ];
     }
