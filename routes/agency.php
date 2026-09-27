@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Agency\AgencyListingController;
 use App\Http\Controllers\Agency\AgencyProfileController;
+use App\Http\Controllers\Agency\AgencySettingsController;
 use App\Http\Controllers\ListingImageController;
 use Illuminate\Support\Facades\Route;
 
@@ -11,6 +12,10 @@ Route::middleware(['auth', 'role:agency'])
     ->group(function () {
         Route::get('/setup', [AgencyProfileController::class, 'create'])->name('setup');
         Route::post('/setup', [AgencyProfileController::class, 'store'])->name('setup.store');
+
+        Route::get('/settings', [AgencySettingsController::class, 'edit'])->name('settings.edit');
+        Route::put('/settings/password', [AgencySettingsController::class, 'updatePassword'])->name('settings.password.update');
+        Route::delete('/account', [AgencySettingsController::class, 'destroy'])->name('account.destroy');
 
         Route::middleware('agency.exists')->group(function () {
             Route::get('/', [AgencyProfileController::class, 'show'])->name('index');

@@ -88,5 +88,8 @@ export interface ProfileSettingsTranslations {
 
 export interface ProfileSettingsPageProps {
     translations: ProfileSettingsTranslations
+    backHref: string
+    passwordUrl: string
+    deleteUrl: string
     [key: string]: unknown
 }

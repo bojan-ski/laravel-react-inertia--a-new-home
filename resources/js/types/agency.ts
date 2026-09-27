@@ -135,6 +135,7 @@ export interface AgencyShowTranslations {
     title: string
     subtitle: string
     edit: string
+    settings: string
     status: Record<AgencyStatusValue, AgencyStatusCopy>
     profile: AgencyShowProfileTranslations
     listings: AgencyShowListingsTranslations
