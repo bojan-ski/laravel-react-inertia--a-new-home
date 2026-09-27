@@ -6,9 +6,9 @@ import AgencyStatusPanel from '@/Components/Agency/AgencyStatusPanel'
 import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { AgencyShowPageProps } from '@/types/agency'
 
-export default function Show({ agency, listings, translations, propertyTypeLabels, listingsNav }: AgencyShowPageProps) {
+export default function Show({ agency, listings, translations, propertyTypeLabels }: AgencyShowPageProps) {
     return (
-        <ListingsLayout nav={listingsNav}>
+        <ListingsLayout>
             <Head title={agency.name} />
 
             <div className="border-b border-border bg-surface">

@@ -1,12 +1,12 @@
 import { Head } from '@inertiajs/react'
 import { MessageCircle } from 'lucide-react'
 import ConversationRow from '@/Components/Conversations/ConversationRow'
-import PublicLayout from '@/Layouts/PublicLayout'
+import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { ConversationsIndexPageProps } from '@/types/conversation'
 
 export default function Index({ conversations, translations }: ConversationsIndexPageProps) {
     return (
-        <PublicLayout>
+        <ListingsLayout>
             <Head title={translations.title} />
 
             <div className="border-b border-border bg-surface">
@@ -35,6 +35,6 @@ export default function Index({ conversations, translations }: ConversationsInde
                     </div>
                 )}
             </div>
-        </PublicLayout>
+        </ListingsLayout>
     )
 }

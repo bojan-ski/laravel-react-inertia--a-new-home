@@ -3,7 +3,7 @@ import { ChevronLeft } from 'lucide-react'
 import { type FormEvent, useEffect, useState } from 'react'
 import FlashBanner from '@/Components/UI/FlashBanner'
 import TextField from '@/Components/UI/TextField'
-import PublicLayout from '@/Layouts/PublicLayout'
+import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { ProfileSettingsPageProps } from '@/types/profile'
 import type { SharedProps } from '@/types/shared'
 
@@ -40,7 +40,7 @@ export default function Settings({ user, translations }: ProfileSettingsPageProp
     }
 
     return (
-        <PublicLayout>
+        <ListingsLayout>
             <Head title={translations.title} />
 
             <div className="border-b border-border bg-surface">
@@ -155,6 +155,6 @@ export default function Settings({ user, translations }: ProfileSettingsPageProp
                     </section>
                 </div>
             </div>
-        </PublicLayout>
+        </ListingsLayout>
     )
 }

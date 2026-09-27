@@ -8,7 +8,7 @@ export default function Index({ listings, translations, listingTranslations }: B
     const countNoun = listings.length === 1 ? translations.count_one : translations.count_other
 
     return (
-        <ListingsLayout nav={listingTranslations.nav}>
+        <ListingsLayout>
             <Head title={translations.title} />
 
             <div className="border-b border-border bg-surface">

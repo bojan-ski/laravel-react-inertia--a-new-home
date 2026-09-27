@@ -4,7 +4,7 @@ import type { FormEvent } from 'react'
 import ImageUploader from '@/Components/Listings/ImageUploader'
 import ListingForm from '@/Components/Listings/ListingForm'
 import FlashBanner from '@/Components/UI/FlashBanner'
-import PublicLayout from '@/Layouts/PublicLayout'
+import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { EditListingPageProps, ListingFormData } from '@/types/listing'
 import type { SharedProps } from '@/types/shared'
 
@@ -46,7 +46,7 @@ export default function Edit({ listing, translations, propertyTypeLabels }: Edit
         ) : null
 
     return (
-        <PublicLayout>
+        <ListingsLayout>
             <Head title={translations.title} />
 
             <div className="border-b border-border bg-surface">
@@ -92,6 +92,6 @@ export default function Edit({ listing, translations, propertyTypeLabels }: Edit
                     />
                 </div>
             </div>
-        </PublicLayout>
+        </ListingsLayout>
     )
 }

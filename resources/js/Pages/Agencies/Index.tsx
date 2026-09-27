@@ -6,11 +6,11 @@ import Pagination from '@/Components/UI/Pagination'
 import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { AgenciesIndexPageProps } from '@/types/agency'
 
-export default function Index({ agencies, filters, translations, listingsNav }: AgenciesIndexPageProps) {
+export default function Index({ agencies, filters, translations }: AgenciesIndexPageProps) {
     const hasActiveSearch = Boolean(filters.search)
 
     return (
-        <ListingsLayout nav={listingsNav}>
+        <ListingsLayout>
             <Head title={translations.title} />
 
             <div className="border-b border-border bg-surface">

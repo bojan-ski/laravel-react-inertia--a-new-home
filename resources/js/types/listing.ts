@@ -222,7 +222,6 @@ export interface ListingDetailRowProps {
 }
 
 export interface ListingsLayoutProps {
-    nav: ListingsNavTranslations
     children: ReactNode
 }
 

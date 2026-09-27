@@ -17,7 +17,7 @@ export default function Index({ listings, filters, translations }: ListingsIndex
     )
 
     return (
-        <ListingsLayout nav={translations.nav}>
+        <ListingsLayout>
             <Head title={translations.title} />
 
             <ListingFilterBar filters={filters} translations={translations.filters} />

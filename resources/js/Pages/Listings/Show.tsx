@@ -16,7 +16,7 @@ export default function Show({ listing, isBookmarked, canBookmark, canStartChat,
         .join(', ')
 
     return (
-        <ListingsLayout nav={translations.nav}>
+        <ListingsLayout>
             <Head title={listing.title} />
 
             <div className="mx-auto max-w-7xl px-6 py-8">

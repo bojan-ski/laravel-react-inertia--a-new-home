@@ -3,7 +3,7 @@ import { ChevronLeft, Info } from 'lucide-react'
 import type { FormEvent } from 'react'
 import ListingForm from '@/Components/Listings/ListingForm'
 import FlashBanner from '@/Components/UI/FlashBanner'
-import PublicLayout from '@/Layouts/PublicLayout'
+import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { EditAgencyListingPageProps, ListingFormData } from '@/types/listing'
 import type { SharedProps } from '@/types/shared'
 
@@ -49,7 +49,7 @@ export default function Edit({ listing, translations, propertyTypeLabels }: Edit
     )
 
     return (
-        <PublicLayout>
+        <ListingsLayout>
             <Head title={translations.title} />
 
             <div className="border-b border-border bg-surface">
@@ -88,6 +88,6 @@ export default function Edit({ listing, translations, propertyTypeLabels }: Edit
                     cancelHref="/agency"
                 />
             </div>
-        </PublicLayout>
+        </ListingsLayout>
     )
 }

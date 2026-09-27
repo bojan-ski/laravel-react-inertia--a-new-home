@@ -1,12 +1,12 @@
 import { Head, Link } from '@inertiajs/react'
 import { Plus, Settings } from 'lucide-react'
 import ProfileListingRow from '@/Components/Profile/ProfileListingRow'
-import PublicLayout from '@/Layouts/PublicLayout'
+import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { ProfileIndexPageProps } from '@/types/profile'
 
 export default function Index({ listings, translations, propertyTypeLabels }: ProfileIndexPageProps) {
     return (
-        <PublicLayout>
+        <ListingsLayout>
             <Head title={translations.title} />
 
             <div className="border-b border-border bg-surface">
@@ -63,6 +63,6 @@ export default function Index({ listings, translations, propertyTypeLabels }: Pr
                     </div>
                 )}
             </div>
-        </PublicLayout>
+        </ListingsLayout>
     )
 }
