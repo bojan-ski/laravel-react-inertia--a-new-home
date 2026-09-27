@@ -1,5 +1,5 @@
 import type { FormEvent, ReactNode } from 'react'
-import type { ListingStatusValue } from '@/types/listing'
+import type { ListingCardData, ListingStatusValue, ListingsTranslations } from '@/types/listing'
 import type { ConfirmActionTranslations } from '@/types/moderation'
 import type { PaginationLabels, Paginator } from '@/types/pagination'
 
@@ -231,9 +231,22 @@ export interface AgenciesDirectoryTranslations {
     subtitle: string
     count_prefix: string
     count_suffix: string
+    view_agency: string
+    show: AgencyPublicPageTranslations
     search: AgenciesSearchTranslations
     empty: AgenciesEmptyTranslations
     pagination: PaginationLabels
+}
+
+export interface AgencyPublicPageTranslations {
+    back: string
+    eyebrow: string
+    member_since: string
+    contact_heading: string
+    listings_heading: string
+    listings_count_one: string
+    listings_count_other: string
+    empty: string
 }
 
 export interface AgenciesIndexPageProps {
@@ -242,7 +255,19 @@ export interface AgenciesIndexPageProps {
     translations: AgenciesDirectoryTranslations
 }
 
+export interface AgencyPublicPageProps {
+    agency: AgencyCardData
+    listings: Paginator<ListingCardData>
+    translations: AgenciesDirectoryTranslations
+    listingTranslations: ListingsTranslations
+}
+
 export interface AgencyCardProps {
+    agency: AgencyCardData
+    viewLabel: string
+}
+
+export interface AgencyContactListProps {
     agency: AgencyCardData
 }
 

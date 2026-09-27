@@ -36,7 +36,7 @@ export default function Index({ agencies, filters, translations }: AgenciesIndex
                     <>
                         <div className="mt-6 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
                             {agencies.data.map((agency) => (
-                                <AgencyCard key={agency.id} agency={agency} />
+                                <AgencyCard key={agency.id} agency={agency} viewLabel={translations.view_agency} />
                             ))}
                         </div>
 

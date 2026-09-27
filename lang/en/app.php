@@ -236,6 +236,18 @@ return [
         'subtitle' => 'Explore approved agencies offering properties on the marketplace.',
         'count_prefix' => 'Showing',
         'count_suffix' => 'agencies',
+        'view_agency' => 'View agency',
+
+        'show' => [
+            'back' => 'All Agencies',
+            'eyebrow' => 'Verified Agency',
+            'member_since' => 'Member since :date',
+            'contact_heading' => 'Contact',
+            'listings_heading' => 'Listings by :name',
+            'listings_count_one' => 'property',
+            'listings_count_other' => 'properties',
+            'empty' => 'This agency has no active listings right now.',
+        ],
 
         'search' => [
             'placeholder' => 'Search by name, description, or location…',

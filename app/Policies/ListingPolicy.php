@@ -78,6 +78,12 @@ class ListingPolicy
             && $agency->isApproved();
     }
 
+    private function ownsThroughAgency(User $user, Listing $listing): bool
+    {
+        return $listing->agency_id !== null
+            && $listing->agency_id === $user->agency?->id;
+    }
+
     /**
      * Determine whether the user can bookmark the listing.
      */
@@ -85,6 +91,7 @@ class ListingPolicy
     {
         return $listing->isActuallyPubliclyVisible()
             && $listing->user_id !== $user->id
+            && ! $this->ownsThroughAgency($user, $listing)
             && ! $user->isAdmin()
             && $user->isActive();
     }

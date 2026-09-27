@@ -229,15 +229,29 @@ class ListingService
             default => $query->orderByDesc('approved_at'),
         };
 
-        $paginator = $query->paginate(self::PER_PAGE)->withQueryString();
+        return $this->toCardPaginator($query->paginate(self::PER_PAGE)->withQueryString(), $request->user());
+    }
 
-        $user = $request->user();
-        $bookmarkedIds = $this->bookmarkedListingIds($user, $paginator->getCollection());
+    public function getPublicListingsForAgency(Agency $agency, ?User $viewer): LengthAwarePaginator
+    {
+        $paginator = Listing::actuallyPubliclyVisible()
+            ->whereBelongsTo($agency)
+            ->with(['owner', 'images', 'agency.user'])
+            ->orderByDesc('approved_at')
+            ->paginate(self::PER_PAGE)
+            ->withQueryString();
+
+        return $this->toCardPaginator($paginator, $viewer);
+    }
+
+    private function toCardPaginator(LengthAwarePaginator $paginator, ?User $viewer): LengthAwarePaginator
+    {
+        $bookmarkedIds = $this->bookmarkedListingIds($viewer, $paginator->getCollection());
 
         return $paginator->through(fn (Listing $listing): array => [
             ...$listing->toCardArray(),
             'isBookmarked' => $bookmarkedIds->contains($listing->id),
-            'canBookmark' => $user === null || $user->can('bookmark', $listing),
+            'canBookmark' => $viewer === null || $viewer->can('bookmark', $listing),
         ]);
     }
 
