@@ -47,24 +47,61 @@ class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the named rate limiters guarding the authentication endpoints.
+     * Register the named rate limiters guarding the form submissions.
      */
     protected function configureRateLimiters(): void
     {
-        RateLimiter::for('login', function (Request $request): Limit {
-            return Limit::perMinute(5)->by(Str::lower((string) $request->input('email')).'|'.$request->ip());
+        RateLimiter::for('login', function (Request $request): array {
+            return [
+                Limit::perMinute(5)->by(Str::lower((string) $request->input('email')).'|'.$request->ip()),
+                Limit::perMinute(20)->by('ip:'.$request->ip()),
+            ];
         });
 
-        RateLimiter::for('register', function (Request $request): Limit {
-            return Limit::perMinute(5)->by((string) $request->ip());
+        RateLimiter::for('register', function (Request $request): array {
+            return [
+                Limit::perMinute(5)->by('minute:'.$request->ip()),
+                Limit::perHour(20)->by('hour:'.$request->ip()),
+            ];
         });
 
         RateLimiter::for('password', function (Request $request): Limit {
             return Limit::perMinute(5)->by((string) $request->ip());
         });
 
-        RateLimiter::for('contact', function (Request $request): Limit {
-            return Limit::perMinute(3)->by((string) $request->ip());
+        RateLimiter::for('contact', function (Request $request): array {
+            return [
+                Limit::perMinute(3)->by('minute:'.$request->ip()),
+                Limit::perHour(10)->by('hour:'.$request->ip()),
+            ];
         });
+
+        RateLimiter::for('chat', function (Request $request): Limit {
+            return Limit::perMinute(20)->by($this->rateLimitKey($request));
+        });
+
+        RateLimiter::for('conversation-start', function (Request $request): Limit {
+            return Limit::perHour(20)->by($this->rateLimitKey($request));
+        });
+
+        RateLimiter::for('listing-images', function (Request $request): Limit {
+            return Limit::perMinute(20)->by($this->rateLimitKey($request));
+        });
+
+        RateLimiter::for('listing-write', function (Request $request): Limit {
+            return Limit::perMinute(10)->by($this->rateLimitKey($request));
+        });
+
+        RateLimiter::for('password-confirm', function (Request $request): Limit {
+            return Limit::perMinute(5)->by($this->rateLimitKey($request));
+        });
+    }
+
+    /**
+     * Key a limit by the signed-in user, falling back to the IP address.
+     */
+    protected function rateLimitKey(Request $request): string
+    {
+        return (string) ($request->user()?->id ?: $request->ip());
     }
 }

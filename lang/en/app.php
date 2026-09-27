@@ -1096,6 +1096,11 @@ return [
         'reject' => 'Reject',
     ],
 
+    'rate_limit' => [
+        'throttled' => '{1} Too many attempts. Please try again in a minute.|[2,*] Too many attempts. Please try again in :minutes minutes.',
+        'honeypot' => "We couldn't submit this form. Please reload the page and try again.",
+    ],
+
     'contact' => [
         'eyebrow' => 'Company',
         'title' => 'Contact Us',

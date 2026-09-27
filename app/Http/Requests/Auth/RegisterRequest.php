@@ -36,6 +36,17 @@ class RegisterRequest extends FormRequest
             'account_type' => ['required', 'string', Rule::in([UserRole::RegularUser->value, UserRole::Agency->value])],
             'terms_accepted' => ['accepted'],
             'privacy_accepted' => ['accepted'],
+            'website' => ['prohibited'],
+        ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'website.prohibited' => __('app.rate_limit.honeypot'),
         ];
     }
 }

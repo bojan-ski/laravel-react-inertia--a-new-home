@@ -20,6 +20,12 @@ export interface AccountTypeFieldProps {
     onChange: (value: string) => void
 }
 
+export interface HoneypotFieldProps {
+    value: string
+    error?: string
+    onChange: (value: string) => void
+}
+
 export interface AcceptanceCheckboxProps {
     id: string
     checked: boolean

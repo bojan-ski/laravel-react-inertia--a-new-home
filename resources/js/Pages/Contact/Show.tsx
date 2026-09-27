@@ -1,6 +1,7 @@
 import { Head, useForm, usePage } from '@inertiajs/react'
 import type { FormEvent } from 'react'
 import FlashBanner from '@/Components/UI/FlashBanner'
+import HoneypotField from '@/Components/UI/HoneypotField'
 import TextField from '@/Components/UI/TextField'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { ContactFormData, ContactPageProps } from '@/types/contact'
@@ -12,6 +13,7 @@ export default function Show({ defaultEmail, translations }: ContactPageProps) {
         email: defaultEmail,
         subject: '',
         message: '',
+        website: '',
     })
 
     function handleSubmit(event: FormEvent) {
@@ -86,6 +88,8 @@ export default function Show({ defaultEmail, translations }: ContactPageProps) {
                             />
                             {errors.message && <p className="text-sm text-status-rejected">{errors.message}</p>}
                         </div>
+
+                        <HoneypotField value={data.website} error={errors.website} onChange={(value) => setData('website', value)} />
 
                         <button
                             type="submit"

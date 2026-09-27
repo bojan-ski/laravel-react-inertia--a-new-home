@@ -2,6 +2,7 @@ import { Head, Link, useForm } from '@inertiajs/react'
 import type { FormEvent } from 'react'
 import AccountTypeField from '@/Components/Auth/AccountTypeField'
 import AcceptanceCheckbox from '@/Components/UI/AcceptanceCheckbox'
+import HoneypotField from '@/Components/UI/HoneypotField'
 import TextField from '@/Components/UI/TextField'
 import AuthLayout from '@/Layouts/AuthLayout'
 import type { RegisterPageProps } from '@/types/auth'
@@ -15,6 +16,7 @@ export default function Register({ translations }: RegisterPageProps) {
         password_confirmation: '',
         terms_accepted: false,
         privacy_accepted: false,
+        website: '',
     })
 
     const accountTypeOptions = [
@@ -126,6 +128,8 @@ export default function Register({ translations }: RegisterPageProps) {
                         </a>
                     </AcceptanceCheckbox>
                 </div>
+
+                <HoneypotField value={data.website} error={errors.website} onChange={(value) => setData('website', value)} />
 
                 <button
                     type="submit"
