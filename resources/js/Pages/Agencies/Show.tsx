@@ -1,6 +1,7 @@
 import { Head, Link } from '@inertiajs/react'
-import { Building2, ChevronLeft, MapPin } from 'lucide-react'
+import { BadgeCheck, Building2, ChevronLeft, MapPin } from 'lucide-react'
 import AgencyContactList from '@/Components/Agencies/AgencyContactList'
+import { formatLicense } from '@/Components/Agencies/agencyFormat'
 import ListingCard from '@/Components/Listings/ListingCard'
 import Pagination from '@/Components/UI/Pagination'
 import ListingsLayout from '@/Layouts/ListingsLayout'
@@ -9,6 +10,7 @@ import type { AgencyPublicPageProps } from '@/types/agency'
 export default function Show({ agency, listings, translations, listingTranslations }: AgencyPublicPageProps) {
     const show = translations.show
     const countNoun = listings.total === 1 ? show.listings_count_one : show.listings_count_other
+    const license = formatLicense(translations.license, agency.licenseNumber, agency.licenseState)
     const memberSince = agency.approvedAt
         ? new Date(agency.approvedAt).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })
         : null
@@ -37,6 +39,12 @@ export default function Show({ agency, listings, translations, listingTranslatio
                                     <span className="flex items-center gap-1.5">
                                         <MapPin className="size-4 shrink-0" />
                                         {agency.address}
+                                    </span>
+                                )}
+                                {license && (
+                                    <span className="flex items-center gap-1.5">
+                                        <BadgeCheck className="size-4 shrink-0" />
+                                        {license}
                                     </span>
                                 )}
                                 {memberSince && <span>{show.member_since.replace(':date', memberSince)}</span>}

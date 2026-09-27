@@ -22,6 +22,10 @@ class AgencySetupTest extends TestCase
     {
         return array_merge([
             'name' => 'Premier Properties',
+            'legal_name' => 'Premier Properties LLC',
+            'ein' => '12-3456789',
+            'license_number' => '01234567',
+            'license_state' => 'CA',
             'email' => 'contact@premier.test',
             'phone' => '+1 555 0100',
             'website' => 'https://premier.test',
@@ -190,6 +194,10 @@ class AgencySetupTest extends TestCase
         $this->actingAs($user)
             ->post('/agency/setup', [
                 'name' => 'Minimal Agency',
+                'legal_name' => 'Minimal Agency Inc.',
+                'ein' => '98-7654321',
+                'license_number' => 'BRK-1001',
+                'license_state' => 'TX',
                 'email' => 'minimal@agency.test',
             ])
             ->assertRedirect('/agency');
@@ -219,7 +227,7 @@ class AgencySetupTest extends TestCase
 
         $this->actingAs($user)
             ->post('/agency/setup', [])
-            ->assertSessionHasErrors(['name', 'email']);
+            ->assertSessionHasErrors(['name', 'email', 'legal_name', 'ein', 'license_number', 'license_state']);
 
         $this->assertDatabaseCount('agencies', 0);
     }

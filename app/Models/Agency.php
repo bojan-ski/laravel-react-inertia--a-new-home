@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\AgencyStatus;
 use App\Enums\UserStatus;
+use App\Enums\UsState;
 use Database\Factories\AgencyFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
@@ -15,6 +16,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable([
     'name',
+    'legal_name',
+    'ein',
+    'license_number',
+    'license_state',
     'description',
     'phone',
     'email',
@@ -122,6 +127,8 @@ class Agency extends Model
             'website' => $this->website,
             'address' => $this->address,
             'description' => $this->description,
+            'licenseNumber' => $this->license_number,
+            'licenseState' => $this->license_state?->value,
             'approvedAt' => $this->approved_at?->toIso8601String(),
         ];
     }
@@ -140,6 +147,7 @@ class Agency extends Model
             'website' => $this->website,
             'address' => $this->address,
             'description' => $this->description,
+            ...$this->businessDetails(),
             'ownerName' => $this->user?->name,
             'ownerEmail' => $this->user?->email,
             'createdAt' => $this->created_at?->toIso8601String(),
@@ -160,6 +168,7 @@ class Agency extends Model
             'email' => $this->email,
             'website' => $this->website,
             'address' => $this->address,
+            ...$this->businessDetails(),
             'status' => $this->status->value,
             'rejectionReason' => $this->rejection_reason,
             'approvedAt' => $this->approved_at?->toIso8601String(),
@@ -179,7 +188,21 @@ class Agency extends Model
             'email' => $this->email,
             'website' => $this->website,
             'address' => $this->address,
+            ...$this->businessDetails(),
             'status' => $this->status->value,
+        ];
+    }
+
+    /**
+     * @return array{legalName: ?string, ein: ?string, licenseNumber: ?string, licenseState: ?string}
+     */
+    private function businessDetails(): array
+    {
+        return [
+            'legalName' => $this->legal_name,
+            'ein' => $this->ein,
+            'licenseNumber' => $this->license_number,
+            'licenseState' => $this->license_state?->value,
         ];
     }
 
@@ -191,6 +214,8 @@ class Agency extends Model
         return [
             'status' => AgencyStatus::class,
             'approved_at' => 'datetime',
+            'ein' => 'encrypted',
+            'license_state' => UsState::class,
         ];
     }
 }

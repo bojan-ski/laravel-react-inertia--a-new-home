@@ -5,9 +5,13 @@ import AgencyForm from '@/Components/Agency/AgencyForm'
 import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { AgencyFormData, AgencySetupPageProps } from '@/types/agency'
 
-export default function Setup({ translations }: AgencySetupPageProps) {
+export default function Setup({ translations, usStates }: AgencySetupPageProps) {
     const { data, setData, post, processing, errors } = useForm<AgencyFormData>({
         name: '',
+        legal_name: '',
+        ein: '',
+        license_number: '',
+        license_state: '',
         email: '',
         phone: '',
         website: '',
@@ -48,6 +52,7 @@ export default function Setup({ translations }: AgencySetupPageProps) {
                         submitLabel={translations.submit}
                         onSubmit={submit}
                         translations={translations}
+                        usStates={usStates}
                         note={<p className="text-sm text-text-muted">{translations.submit_note}</p>}
                         cancelSlot={
                             <Link

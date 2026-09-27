@@ -1,10 +1,12 @@
 import { Link } from '@inertiajs/react'
-import { ArrowRight, MapPin } from 'lucide-react'
+import { ArrowRight, BadgeCheck, MapPin } from 'lucide-react'
 import AgencyContactList from '@/Components/Agencies/AgencyContactList'
+import { formatLicense } from '@/Components/Agencies/agencyFormat'
 import type { AgencyCardProps } from '@/types/agency'
 
-export default function AgencyCard({ agency, viewLabel }: AgencyCardProps) {
+export default function AgencyCard({ agency, viewLabel, licenseLabel }: AgencyCardProps) {
     const href = `/agencies/${agency.slug}`
+    const license = formatLicense(licenseLabel, agency.licenseNumber, agency.licenseState)
 
     return (
         <article className="flex flex-col rounded-xl border border-border bg-surface p-6 shadow-sm transition-shadow hover:shadow-md">
@@ -18,6 +20,13 @@ export default function AgencyCard({ agency, viewLabel }: AgencyCardProps) {
                 <p className="mt-1.5 flex items-start gap-1.5 text-sm text-text-muted">
                     <MapPin className="mt-0.5 size-4 shrink-0" />
                     <span>{agency.address}</span>
+                </p>
+            )}
+
+            {license && (
+                <p className="mt-1 flex items-center gap-1.5 text-xs text-text-muted">
+                    <BadgeCheck className="size-4 shrink-0" />
+                    <span>{license}</span>
                 </p>
             )}
 

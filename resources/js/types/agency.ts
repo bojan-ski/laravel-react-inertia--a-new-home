@@ -3,8 +3,16 @@ import type { ListingCardData, ListingStatusValue, ListingsTranslations } from '
 import type { ConfirmActionTranslations } from '@/types/moderation'
 import type { PaginationLabels, Paginator } from '@/types/pagination'
 
+export interface AgencyBusinessDetails {
+    legalName: string | null
+    ein: string | null
+    licenseNumber: string | null
+    licenseState: string | null
+}
+
 export interface AgencyFormSections {
     identity: string
+    business: string
     contact: string
 }
 
@@ -16,6 +24,13 @@ export interface AgencyFormFields {
     phone: string
     website: string
     address: string
+    legal_name: string
+    ein: string
+    ein_placeholder: string
+    license_number: string
+    license_state: string
+    license_state_placeholder: string
+    business_note: string
 }
 
 export interface AgencyFormTranslations {
@@ -25,6 +40,10 @@ export interface AgencyFormTranslations {
 
 export interface AgencyFormData {
     name: string
+    legal_name: string
+    ein: string
+    license_number: string
+    license_state: string
     email: string
     phone: string
     website: string
@@ -40,6 +59,7 @@ export interface AgencyFormProps {
     submitLabel: string
     onSubmit: (event: FormEvent<HTMLFormElement>) => void
     translations: AgencyFormTranslations
+    usStates: Record<string, string>
     note?: ReactNode
     cancelSlot?: ReactNode
 }
@@ -56,11 +76,12 @@ export interface AgencySetupTranslations extends AgencyFormTranslations {
 
 export interface AgencySetupPageProps {
     translations: AgencySetupTranslations
+    usStates: Record<string, string>
 }
 
 export type AgencyStatusValue = 'pending_verification' | 'approved' | 'rejected' | 'hidden'
 
-export interface AgencyShowData {
+export interface AgencyShowData extends AgencyBusinessDetails {
     id: number
     name: string
     slug: string
@@ -106,6 +127,11 @@ export interface AgencyShowProfileTranslations {
     phone: string
     website: string
     address: string
+    legal_name: string
+    ein: string
+    license: string
+    license_value: string
+    missing: string
 }
 
 export type AgencyListingsConfirmTranslations = ConfirmActionTranslations
@@ -171,7 +197,7 @@ export interface AgencyListingRowProps {
     propertyTypeLabels: Record<string, string>
 }
 
-export interface AgencyEditData {
+export interface AgencyEditData extends AgencyBusinessDetails {
     id: number
     name: string
     description: string | null
@@ -195,6 +221,7 @@ export interface AgencyEditTranslations extends AgencyFormTranslations {
 export interface AgencyEditPageProps {
     agency: AgencyEditData
     translations: AgencyEditTranslations
+    usStates: Record<string, string>
 }
 
 export interface AgencyCardData {
@@ -206,6 +233,8 @@ export interface AgencyCardData {
     website: string | null
     address: string | null
     description: string | null
+    licenseNumber: string | null
+    licenseState: string | null
     approvedAt: string | null
 }
 
@@ -233,6 +262,7 @@ export interface AgenciesDirectoryTranslations {
     count_prefix: string
     count_suffix: string
     view_agency: string
+    license: string
     show: AgencyPublicPageTranslations
     search: AgenciesSearchTranslations
     empty: AgenciesEmptyTranslations
@@ -266,6 +296,7 @@ export interface AgencyPublicPageProps {
 export interface AgencyCardProps {
     agency: AgencyCardData
     viewLabel: string
+    licenseLabel: string
 }
 
 export interface AgencyContactListProps {

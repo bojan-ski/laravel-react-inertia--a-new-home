@@ -67,6 +67,10 @@ class AgencyService
     {
         $agency->fill(Arr::only($data, [
             'name',
+            'legal_name',
+            'ein',
+            'license_number',
+            'license_state',
             'email',
             'phone',
             'website',

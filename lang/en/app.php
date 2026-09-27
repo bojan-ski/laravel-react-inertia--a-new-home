@@ -241,6 +241,7 @@ return [
         'count_prefix' => 'Showing',
         'count_suffix' => 'agencies',
         'view_agency' => 'View agency',
+        'license' => 'License #:number (:state)',
 
         'show' => [
             'back' => 'All Agencies',
@@ -633,6 +634,7 @@ return [
         'flash' => 'Agency profile submitted for verification.',
         'sections' => [
             'identity' => 'Agency Identity',
+            'business' => 'Business & Licensing',
             'contact' => 'Contact',
         ],
         'fields' => [
@@ -643,6 +645,13 @@ return [
             'phone' => 'Phone',
             'website' => 'Website',
             'address' => 'Address',
+            'legal_name' => 'Legal Entity Name',
+            'ein' => 'EIN (Federal Tax ID)',
+            'ein_placeholder' => '12-3456789',
+            'license_number' => 'Brokerage License Number',
+            'license_state' => 'Licensing State',
+            'license_state_placeholder' => 'Select a state',
+            'business_note' => 'Your license number and state are shown publicly, as state advertising rules require. Your legal entity name and EIN are only visible to our verification team.',
         ],
     ],
 
@@ -680,6 +689,11 @@ return [
             'phone' => 'Phone',
             'website' => 'Website',
             'address' => 'Address',
+            'legal_name' => 'Legal Entity Name',
+            'ein' => 'EIN',
+            'license' => 'Brokerage License',
+            'license_value' => '#:number (:state)',
+            'missing' => 'Not provided — required on your next profile update',
         ],
         'listings' => [
             'heading' => 'Listings',
@@ -727,6 +741,7 @@ return [
         'flash' => 'Agency profile updated.',
         'sections' => [
             'identity' => 'Agency Identity',
+            'business' => 'Business & Licensing',
             'contact' => 'Contact',
         ],
         'fields' => [
@@ -737,6 +752,34 @@ return [
             'phone' => 'Phone',
             'website' => 'Website',
             'address' => 'Address',
+            'legal_name' => 'Legal Entity Name',
+            'ein' => 'EIN (Federal Tax ID)',
+            'ein_placeholder' => '12-3456789',
+            'license_number' => 'Brokerage License Number',
+            'license_state' => 'Licensing State',
+            'license_state_placeholder' => 'Select a state',
+            'business_note' => 'Your license number and state are shown publicly, as state advertising rules require. Your legal entity name and EIN are only visible to our verification team.',
+        ],
+    ],
+
+    'us_states' => [
+        'AL' => 'Alabama', 'AK' => 'Alaska', 'AZ' => 'Arizona', 'AR' => 'Arkansas', 'CA' => 'California',
+        'CO' => 'Colorado', 'CT' => 'Connecticut', 'DE' => 'Delaware', 'DC' => 'District of Columbia',
+        'FL' => 'Florida', 'GA' => 'Georgia', 'HI' => 'Hawaii', 'ID' => 'Idaho', 'IL' => 'Illinois',
+        'IN' => 'Indiana', 'IA' => 'Iowa', 'KS' => 'Kansas', 'KY' => 'Kentucky', 'LA' => 'Louisiana',
+        'ME' => 'Maine', 'MD' => 'Maryland', 'MA' => 'Massachusetts', 'MI' => 'Michigan', 'MN' => 'Minnesota',
+        'MS' => 'Mississippi', 'MO' => 'Missouri', 'MT' => 'Montana', 'NE' => 'Nebraska', 'NV' => 'Nevada',
+        'NH' => 'New Hampshire', 'NJ' => 'New Jersey', 'NM' => 'New Mexico', 'NY' => 'New York',
+        'NC' => 'North Carolina', 'ND' => 'North Dakota', 'OH' => 'Ohio', 'OK' => 'Oklahoma', 'OR' => 'Oregon',
+        'PA' => 'Pennsylvania', 'RI' => 'Rhode Island', 'SC' => 'South Carolina', 'SD' => 'South Dakota',
+        'TN' => 'Tennessee', 'TX' => 'Texas', 'UT' => 'Utah', 'VT' => 'Vermont', 'VA' => 'Virginia',
+        'WA' => 'Washington', 'WV' => 'West Virginia', 'WI' => 'Wisconsin', 'WY' => 'Wyoming',
+    ],
+
+    'agency_business' => [
+        'validation' => [
+            'ein' => 'The EIN must be in the format 12-3456789.',
+            'license_number' => 'The license number may only contain letters, numbers and dashes.',
         ],
     ],
 
@@ -840,6 +883,10 @@ return [
             'contact' => 'Contact: :contact',
             'website' => 'Website: :website',
             'address' => 'Address: :address',
+            'legal' => 'Legal entity: :name • EIN: :ein',
+            'license' => 'License: :license',
+            'license_value' => '#:number (:state)',
+            'not_provided' => 'Not provided',
             'submitted' => 'Submitted :date',
             'actions' => [
                 'approve' => 'Approve',
