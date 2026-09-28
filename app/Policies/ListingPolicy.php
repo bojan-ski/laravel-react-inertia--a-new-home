@@ -97,6 +97,14 @@ class ListingPolicy
     }
 
     /**
+     * Determine whether the user can open the admin review page of the listing.
+     */
+    public function review(User $user, Listing $listing): bool
+    {
+        return $user->isAdmin();
+    }
+
+    /**
      * Determine whether the user can approve the listing.
      */
     public function approve(User $user, Listing $listing): bool

@@ -1,4 +1,5 @@
 import type { AgencyBusinessDetails } from '@/types/agency'
+import type { ListingShowData, ListingsShowTranslations } from '@/types/listing'
 import type { ConfirmActionTranslations, ModerationFlashTranslations, RejectDialogTranslations } from '@/types/moderation'
 import type { Paginator, PaginationLabels } from '@/types/pagination'
 
@@ -206,6 +207,45 @@ export interface AdminListingsTranslations {
     }
     flash: ModerationFlashTranslations
     pagination: PaginationLabels
+    view_listing: string
+    review: AdminListingReviewTranslations
+}
+
+export type AdminListingOwnerType = 'user' | 'agency'
+
+export type AdminListingStatusValue = 'pending_review' | 'approved' | 'rejected' | 'hidden'
+
+export interface AdminListingReviewTranslations {
+    back: string
+    moderation_heading: string
+    owner_label: string
+    submitted_label: string
+    rejection_reason_label: string
+    owner_types: Record<AdminListingOwnerType, string>
+    statuses: Record<AdminListingStatusValue, string>
+}
+
+export interface AdminListingReviewData extends ListingShowData {
+    status: AdminListingStatusValue
+    rejectionReason: string | null
+    ownerType: AdminListingOwnerType
+    ownerName: string | null
+    ownerEmail: string | null
+    createdAt: string | null
+}
+
+export interface AdminListingReviewPageProps {
+    listing: AdminListingReviewData
+    canModerate: boolean
+    translations: AdminListingsTranslations
+    listingTranslations: ListingsShowTranslations
+    propertyTypeLabels: Record<string, string>
+}
+
+export interface ListingModerationActionsProps {
+    listingId: number
+    listingTitle: string
+    translations: AdminListingsTranslations
 }
 
 export interface AdminListingsPageProps {

@@ -16,6 +16,7 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
         Route::get('/listings', [ListingModerationController::class, 'index'])->name('listings.index');
+        Route::get('/listings/{listing}', [ListingModerationController::class, 'show'])->withTrashed()->name('listings.show');
         Route::post('/listings/{listing}/approve', [ListingModerationController::class, 'approve'])->name('listings.approve');
         Route::post('/listings/{listing}/reject', [ListingModerationController::class, 'reject'])->name('listings.reject');
 
