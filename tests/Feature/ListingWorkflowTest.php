@@ -261,6 +261,83 @@ class ListingWorkflowTest extends TestCase
         (new ListingService)->reject($listing, 'A valid reason.');
     }
 
+    public function test_approved_listing_can_be_closed_by_owner(): void
+    {
+        $owner = $this->regularOwner();
+        $sale = Listing::factory()->approved()->for($owner, 'owner')->create(['listing_type' => 'sale']);
+        $rent = Listing::factory()->approved()->for($owner, 'owner')->create(['listing_type' => 'rent']);
+
+        $this->actingAs($owner)->post("/my-listings/{$sale->id}/close")->assertRedirect();
+        $this->actingAs($owner)->post("/my-listings/{$rent->id}/close")->assertRedirect();
+
+        $this->assertSame(ListingStatus::Sold, $sale->refresh()->status);
+        $this->assertSame(ListingStatus::Rented, $rent->refresh()->status);
+    }
+
+    public function test_closed_listings_cannot_be_edited_by_owner(): void
+    {
+        $owner = $this->regularOwner();
+
+        foreach (['sold', 'rented'] as $state) {
+            $listing = Listing::factory()->{$state}()->for($owner, 'owner')->create();
+
+            $this->actingAs($owner)
+                ->put("/my-listings/{$listing->id}", $this->validPayload())
+                ->assertForbidden();
+        }
+
+        $this->expectException(InvalidListingStatusTransitionException::class);
+
+        (new ListingService)->update(Listing::factory()->sold()->create(), $this->validPayload());
+    }
+
+    public function test_closed_listings_cannot_be_moderated(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        foreach (['sold', 'rented'] as $state) {
+            $listing = Listing::factory()->{$state}()->for($this->regularOwner(), 'owner')->create();
+
+            $this->actingAs($admin)->post("/admin/listings/{$listing->id}/approve")->assertForbidden();
+            $this->actingAs($admin)
+                ->post("/admin/listings/{$listing->id}/reject", ['reason' => 'A valid reason.'])
+                ->assertForbidden();
+        }
+
+        $this->expectException(InvalidListingStatusTransitionException::class);
+
+        (new ListingService)->approve(Listing::factory()->rented()->create());
+    }
+
+    public function test_closed_listings_can_be_deleted_by_owner(): void
+    {
+        $owner = $this->regularOwner();
+
+        foreach (['sold', 'rented'] as $state) {
+            $listing = Listing::factory()->{$state}()->for($owner, 'owner')->create();
+
+            $this->actingAs($owner)
+                ->delete("/my-listings/{$listing->id}")
+                ->assertRedirect('/profile');
+
+            $this->assertSoftDeleted($listing);
+        }
+    }
+
+    public function test_closed_listing_can_be_reopened_by_owner_without_review(): void
+    {
+        $owner = $this->regularOwner();
+        $listing = Listing::factory()->rented()->for($owner, 'owner')->create();
+
+        $this->actingAs($owner)->post("/my-listings/{$listing->id}/reopen")->assertRedirect();
+
+        $listing->refresh();
+
+        $this->assertSame(ListingStatus::Approved, $listing->status);
+        $this->assertNotNull($listing->approved_at);
+        $this->assertNull($listing->closed_at);
+    }
+
     // ---------------------------------------------------------------------
     // soft-delete is orthogonal to status
     // ---------------------------------------------------------------------

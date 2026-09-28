@@ -69,6 +69,29 @@ class ListingPolicy
         return $listing->user_id === $user->id;
     }
 
+    public function close(User $user, Listing $listing): bool
+    {
+        return $this->managesListing($user, $listing) && $listing->canBeClosedByOwner();
+    }
+
+    public function reopen(User $user, Listing $listing): bool
+    {
+        return $this->managesListing($user, $listing) && $listing->canBeReopenedByOwner();
+    }
+
+    private function managesListing(User $user, Listing $listing): bool
+    {
+        if ($user->isSuspended()) {
+            return false;
+        }
+
+        if ($listing->agency_id !== null) {
+            return $this->ownsApprovedAgency($user, $listing);
+        }
+
+        return $listing->user_id === $user->id;
+    }
+
     private function ownsApprovedAgency(User $user, Listing $listing): bool
     {
         $agency = $user->agency;
@@ -94,6 +117,12 @@ class ListingPolicy
             && ! $this->ownsThroughAgency($user, $listing)
             && ! $user->isAdmin()
             && $user->isActive();
+    }
+
+    public function removeBookmark(User $user, Listing $listing): bool
+    {
+        return $user->isActive()
+            && $user->bookmarks()->where('listing_id', $listing->id)->exists();
     }
 
     /**

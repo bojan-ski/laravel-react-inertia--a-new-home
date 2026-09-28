@@ -286,6 +286,15 @@ return [
         'per_month' => '/mo',
         'delete' => 'Delete listing',
         'flash_deleted' => 'Listing deleted.',
+        'closed_on' => 'Closed :date',
+        'mark_sold' => 'Mark as sold',
+        'mark_rented' => 'Mark as rented',
+        'reopen' => 'Reopen',
+        'flash_closed_sold' => 'Listing marked as sold.',
+        'flash_closed_rented' => 'Listing marked as rented.',
+        'flash_reopened' => 'Listing reopened and visible again.',
+        'flash_close_failed' => 'Only approved listings can be marked as sold or rented.',
+        'flash_reopen_failed' => 'Only sold or rented listings can be reopened.',
 
         'listing_types' => [
             'sale' => 'Sale',
@@ -297,6 +306,30 @@ return [
             'approved' => 'Approved',
             'rejected' => 'Rejected',
             'hidden' => 'Hidden',
+            'sold' => 'Sold',
+            'rented' => 'Rented',
+        ],
+
+        'close_confirm' => [
+            'sale' => [
+                'title' => 'Mark as sold?',
+                'description' => "Mark ':title' as sold? It will be removed from search and can't be edited.",
+                'cancel' => 'Cancel',
+                'confirm' => 'Mark as sold',
+            ],
+            'rent' => [
+                'title' => 'Mark as rented?',
+                'description' => "Mark ':title' as rented? It will be removed from search and can't be edited.",
+                'cancel' => 'Cancel',
+                'confirm' => 'Mark as rented',
+            ],
+        ],
+
+        'reopen_confirm' => [
+            'title' => 'Reopen listing?',
+            'description' => "':title' will be publicly visible again right away, with its current details.",
+            'cancel' => 'Cancel',
+            'confirm' => 'Reopen',
         ],
 
         'empty' => [
@@ -365,6 +398,14 @@ return [
             'headline' => "You haven't bookmarked any listings yet.",
             'cta' => 'Browse Listings',
         ],
+        'closed' => [
+            'heading' => 'No longer available',
+            'subtitle' => 'These properties have been sold or rented. Remove them with the heart.',
+            'status' => [
+                'sold' => 'Sold',
+                'rented' => 'Rented',
+            ],
+        ],
     ],
 
     'conversations' => [
@@ -374,6 +415,10 @@ return [
         'deleted_user' => 'Deleted user',
         'listing_removed' => 'Listing no longer available',
         'unread' => ':count new',
+        'listing_status' => [
+            'sold' => 'Sold',
+            'rented' => 'Rented',
+        ],
         'empty' => [
             'headline' => 'No conversations yet.',
             'subtitle' => "Start a conversation from a listing's detail page.",
@@ -710,6 +755,15 @@ return [
             'create_listing' => 'Create Listing',
             'delete' => 'Delete listing',
             'flash_deleted' => 'Listing deleted.',
+            'closed_on' => 'Closed :date',
+            'mark_sold' => 'Mark as sold',
+            'mark_rented' => 'Mark as rented',
+            'reopen' => 'Reopen',
+            'flash_closed_sold' => 'Listing marked as sold.',
+            'flash_closed_rented' => 'Listing marked as rented.',
+            'flash_reopened' => 'Listing reopened and visible again.',
+            'flash_close_failed' => 'Only approved listings can be marked as sold or rented.',
+            'flash_reopen_failed' => 'Only sold or rented listings can be reopened.',
             'empty_headline' => 'No listings yet.',
             'empty_subline' => 'Once your agency is approved, you can create listings.',
             'empty_headline_approved' => 'No listings yet.',
@@ -723,12 +777,34 @@ return [
                 'approved' => 'Approved',
                 'rejected' => 'Rejected',
                 'hidden' => 'Hidden',
+                'sold' => 'Sold',
+                'rented' => 'Rented',
             ],
             'confirm' => [
                 'title' => 'Delete listing?',
                 'description' => "Are you sure you want to delete ':title'? This cannot be undone.",
                 'cancel' => 'Cancel',
                 'confirm' => 'Delete',
+            ],
+            'close_confirm' => [
+                'sale' => [
+                    'title' => 'Mark as sold?',
+                    'description' => "Mark ':title' as sold? It will be removed from search and can't be edited.",
+                    'cancel' => 'Cancel',
+                    'confirm' => 'Mark as sold',
+                ],
+                'rent' => [
+                    'title' => 'Mark as rented?',
+                    'description' => "Mark ':title' as rented? It will be removed from search and can't be edited.",
+                    'cancel' => 'Cancel',
+                    'confirm' => 'Mark as rented',
+                ],
+            ],
+            'reopen_confirm' => [
+                'title' => 'Reopen listing?',
+                'description' => "':title' will be publicly visible again right away, with its current details.",
+                'cancel' => 'Cancel',
+                'confirm' => 'Reopen',
             ],
         ],
     ],
@@ -819,6 +895,10 @@ return [
                 'rejected_listings' => [
                     'label' => 'Rejected',
                 ],
+                'closed_listings' => [
+                    'label' => 'Sold / Rented',
+                    'description' => 'Closed by their owners',
+                ],
                 'regular_users' => [
                     'label' => 'Regular Users',
                 ],
@@ -899,6 +979,8 @@ return [
                     'approved' => 'Approved',
                     'rejected' => 'Rejected',
                     'hidden' => 'Hidden',
+                    'sold' => 'Sold',
+                    'rented' => 'Rented',
                 ],
             ],
         ],

@@ -145,6 +145,32 @@ class ListingService
         $listing->delete();
     }
 
+    public function close(Listing $listing): Listing
+    {
+        if (! $listing->canBeClosedByOwner()) {
+            throw new InvalidListingStatusTransitionException('This listing cannot be closed.');
+        }
+
+        $listing->status = $listing->closedStatus();
+        $listing->closed_at = now();
+        $listing->save();
+
+        return $listing;
+    }
+
+    public function reopen(Listing $listing): Listing
+    {
+        if (! $listing->canBeReopenedByOwner()) {
+            throw new InvalidListingStatusTransitionException('This listing cannot be reopened.');
+        }
+
+        $listing->status = ListingStatus::Approved;
+        $listing->closed_at = null;
+        $listing->save();
+
+        return $listing;
+    }
+
     /**
      * @throws InvalidListingStatusTransitionException
      */

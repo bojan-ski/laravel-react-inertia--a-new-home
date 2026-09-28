@@ -1,5 +1,5 @@
 import type { FormEvent, ReactNode } from 'react'
-import type { ListingCardData, ListingStatusValue, ListingsTranslations } from '@/types/listing'
+import type { ListingCardData, ListingCloseTranslations, ListingStatusValue, ListingsTranslations } from '@/types/listing'
 import type { ConfirmActionTranslations } from '@/types/moderation'
 import type { PaginationLabels, Paginator } from '@/types/pagination'
 
@@ -121,6 +121,7 @@ export interface AgencyDashboardListing {
     createdAt: string | null
     approvedAt: string | null
     rejectionReason: string | null
+    closedAt: string | null
 }
 
 export interface AgencyStatusCopy {
@@ -150,7 +151,7 @@ export interface AgencyShowProfileTranslations {
 
 export type AgencyListingsConfirmTranslations = ConfirmActionTranslations
 
-export interface AgencyShowListingsTranslations {
+export interface AgencyShowListingsTranslations extends ListingCloseTranslations {
     heading: string
     count: string
     count_one: string

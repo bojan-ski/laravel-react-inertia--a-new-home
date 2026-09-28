@@ -5,36 +5,42 @@ import { formatArea, formatPrice } from '@/Components/Listings/listingFormat'
 import ListingImagePlaceholder from '@/Components/Listings/ListingImagePlaceholder'
 import type { ListingCardProps } from '@/types/listing'
 
-export default function ListingCard({ listing, translations, propertyTypeLabels }: ListingCardProps) {
+export default function ListingCard({ listing, translations, propertyTypeLabels, closedLabel }: ListingCardProps) {
     const isRental = listing.listingType === 'rent'
     const typeLabel = isRental ? translations.for_rent : translations.for_sale
     const propertyLabel = propertyTypeLabels[listing.propertyType] ?? listing.propertyType
+    const isClosed = closedLabel !== undefined
 
     function handleHeartClick(event: MouseEvent) {
         event.preventDefault()
         router.post(`/listings/${listing.id}/bookmark`, {}, { preserveScroll: true })
     }
 
-    return (
-        <Link
-            href={`/listings/${listing.slug}`}
-            className="group flex flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-sm transition-shadow hover:shadow-md"
-        >
+    const content = (
+        <>
             <div className="relative aspect-4/3 overflow-hidden bg-surface-muted">
                 {listing.imageUrl ? (
                     <img
                         src={listing.imageUrl}
                         alt={listing.title}
-                        className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        className={`size-full object-cover transition-transform duration-300 ${
+                            isClosed ? 'grayscale' : 'group-hover:scale-105'
+                        }`}
                     />
                 ) : (
                     <ListingImagePlaceholder />
                 )}
 
                 <div className="absolute left-3 top-3 flex gap-2">
-                    <span className="rounded-md bg-surface-dark px-2.5 py-1 text-xs font-medium text-text-inverse">
-                        {typeLabel}
-                    </span>
+                    {isClosed ? (
+                        <span className="rounded-md bg-status-sold px-2.5 py-1 text-xs font-medium uppercase tracking-wide text-text-inverse">
+                            {closedLabel}
+                        </span>
+                    ) : (
+                        <span className="rounded-md bg-surface-dark px-2.5 py-1 text-xs font-medium text-text-inverse">
+                            {typeLabel}
+                        </span>
+                    )}
                     <span className="rounded-md border border-border bg-surface px-2.5 py-1 text-xs font-medium text-text">
                         {propertyLabel}
                     </span>
@@ -100,6 +106,23 @@ export default function ListingCard({ listing, translations, propertyTypeLabels 
                     )}
                 </div>
             </div>
+        </>
+    )
+
+    if (isClosed) {
+        return (
+            <div className="flex flex-col overflow-hidden rounded-xl border border-border bg-surface opacity-70 shadow-sm">
+                {content}
+            </div>
+        )
+    }
+
+    return (
+        <Link
+            href={`/listings/${listing.slug}`}
+            className="group flex flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-sm transition-shadow hover:shadow-md"
+        >
+            {content}
         </Link>
     )
 }

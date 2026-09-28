@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import MessageBubble from '@/Components/Conversations/MessageBubble'
 import MessageComposer from '@/Components/Conversations/MessageComposer'
 import ReportMessageDialog from '@/Components/Conversations/ReportMessageDialog'
+import StatusBadge from '@/Components/UI/StatusBadge'
 import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { ChatMessageBroadcast, ChatMessageData, ConversationShowPageProps } from '@/types/conversation'
 import type { SharedProps } from '@/types/shared'
@@ -13,6 +14,8 @@ export default function Show({ conversation, canReply, translations }: Conversat
     const page = usePage<SharedProps>()
     const currentUserId = page.props.auth.user?.id ?? null
     const thread = translations.thread
+    const listingStatus = conversation.listing.status
+    const closedStatus = listingStatus === 'sold' || listingStatus === 'rented' ? listingStatus : null
 
     const [liveMessages, setLiveMessages] = useState<ChatMessageData[]>([])
     const [reportMessage, setReportMessage] = useState<ChatMessageData | null>(null)
@@ -63,7 +66,12 @@ export default function Show({ conversation, canReply, translations }: Conversat
 
                 <div className="mt-4 rounded-2xl border border-border bg-surface">
                     <div className="border-b border-border px-6 py-4">
-                        {conversation.listing.slug ? (
+                        {closedStatus ? (
+                            <div className="flex flex-wrap items-center gap-2">
+                                <p className="font-semibold text-text">{conversation.listing.title}</p>
+                                <StatusBadge status={closedStatus} label={translations.listing_status[closedStatus]} />
+                            </div>
+                        ) : conversation.listing.slug ? (
                             <Link
                                 href={`/listings/${conversation.listing.slug}`}
                                 className="font-semibold text-text transition-colors hover:text-brand"

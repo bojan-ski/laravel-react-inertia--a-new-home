@@ -18,10 +18,20 @@ class BookmarkController extends Controller
 
     public function toggle(Request $request, Listing $listing): RedirectResponse
     {
+        $user = $request->user();
+
+        if ($this->bookmarkService->hasBookmarked($user, $listing)) {
+            Gate::authorize('removeBookmark', $listing);
+
+            $this->bookmarkService->remove($user, $listing);
+
+            return redirect()->back()->with('success', __('app.bookmarks.flash_removed'));
+        }
+
         abort_unless($listing->isActuallyPubliclyVisible(), 404);
         Gate::authorize('bookmark', $listing);
 
-        $bookmarked = $this->bookmarkService->toggle($request->user(), $listing);
+        $bookmarked = $this->bookmarkService->toggle($user, $listing);
 
         return redirect()->back()->with('success', __($bookmarked ? 'app.bookmarks.flash_added' : 'app.bookmarks.flash_removed'));
     }
@@ -37,8 +47,16 @@ class BookmarkController extends Controller
                 'canBookmark' => $user->can('bookmark', $listing),
             ]);
 
+        $closedListings = $this->bookmarkService->getClosedBookmarkedListings($user)
+            ->map(fn (Listing $listing) => [
+                ...$listing->toBookmarkCardArray(),
+                'isBookmarked' => true,
+                'canBookmark' => $user->can('removeBookmark', $listing),
+            ]);
+
         return Inertia::render('Bookmarks/Index', [
             'listings' => $listings,
+            'closedListings' => $closedListings,
             'translations' => __('app.bookmarks'),
             'listingTranslations' => __('app.listings'),
         ]);

@@ -5,6 +5,8 @@ const statusStyles: Record<BadgeStatusValue, string> = {
     approved: 'bg-status-approved/10 text-status-approved',
     rejected: 'bg-status-rejected/10 text-status-rejected',
     hidden: 'bg-status-hidden/10 text-status-hidden',
+    sold: 'bg-status-sold/10 text-status-sold',
+    rented: 'bg-status-rented/10 text-status-rented',
     active: 'bg-status-approved/10 text-status-approved',
     suspended: 'bg-status-suspended/10 text-status-suspended',
 }

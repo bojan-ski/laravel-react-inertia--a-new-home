@@ -8,6 +8,16 @@ use Illuminate\Support\Collection;
 
 class BookmarkService
 {
+    public function hasBookmarked(User $user, Listing $listing): bool
+    {
+        return $user->bookmarks()->where('listing_id', $listing->id)->exists();
+    }
+
+    public function remove(User $user, Listing $listing): void
+    {
+        $user->bookmarks()->where('listing_id', $listing->id)->delete();
+    }
+
     public function toggle(User $user, Listing $listing): bool
     {
         $bookmark = $user->bookmarks()->where('listing_id', $listing->id)->first();
@@ -30,6 +40,16 @@ class BookmarkService
     {
         return $user->bookmarkedListings()
             ->actuallyPubliclyVisible()
+            ->with(['owner', 'images', 'agency.user'])
+            ->orderByPivot('created_at', 'desc')
+            ->get();
+    }
+
+    public function getClosedBookmarkedListings(User $user): Collection
+    {
+        return $user->bookmarkedListings()
+            ->closed()
+            ->ownerNotSuspended()
             ->with(['owner', 'images', 'agency.user'])
             ->orderByPivot('created_at', 'desc')
             ->get();

@@ -104,4 +104,28 @@ class ListingFactory extends Factory
             'approved_at' => null,
         ]);
     }
+
+    public function sold(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'listing_type' => 'sale',
+            'status' => ListingStatus::Sold,
+            'approved_at' => fake()->dateTimeBetween('-6 months', '-1 week'),
+            'closed_at' => now()->subDay(),
+            'rejected_at' => null,
+            'rejection_reason' => null,
+        ]);
+    }
+
+    public function rented(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'listing_type' => 'rent',
+            'status' => ListingStatus::Rented,
+            'approved_at' => fake()->dateTimeBetween('-6 months', '-1 week'),
+            'closed_at' => now()->subDay(),
+            'rejected_at' => null,
+            'rejection_reason' => null,
+        ]);
+    }
 }

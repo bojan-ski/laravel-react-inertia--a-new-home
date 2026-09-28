@@ -5,6 +5,7 @@ import type { ConversationRowProps } from '@/types/conversation'
 
 export default function ConversationRow({ conversation, translations }: ConversationRowProps) {
     const hasUnread = conversation.unreadCount > 0
+    const isClosed = conversation.listing.status === 'sold' || conversation.listing.status === 'rented'
 
     return (
         <div
@@ -31,7 +32,7 @@ export default function ConversationRow({ conversation, translations }: Conversa
                         {translations.unread.replace(':count', String(conversation.unreadCount))}
                     </span>
                 )}
-                {conversation.listing.slug && (
+                {conversation.listing.slug && !isClosed && (
                     <Link
                         href={`/listings/${conversation.listing.slug}`}
                         className="text-text-muted transition-colors hover:text-brand"

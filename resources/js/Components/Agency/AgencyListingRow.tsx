@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, router } from '@inertiajs/react'
 import { Trash2 } from 'lucide-react'
+import ListingCloseActions from '@/Components/Listings/ListingCloseActions'
 import { formatDate, formatPrice } from '@/Components/Listings/listingFormat'
 import ConfirmDialog from '@/Components/UI/ConfirmDialog'
 import StatusBadge from '@/Components/UI/StatusBadge'
@@ -14,6 +15,8 @@ export default function AgencyListingRow({ listing, translations, propertyTypeLa
     const typeLabel = translations.listing_types[listing.listingType] ?? listing.listingType
     const propertyLabel = propertyTypeLabels[listing.propertyType] ?? listing.propertyType
     const createdDate = formatDate(listing.createdAt)
+    const isClosed = listing.status === 'sold' || listing.status === 'rented'
+    const closedDate = isClosed && listing.closedAt ? formatDate(listing.closedAt) : null
 
     function handleDelete() {
         router.delete(`/agency/listings/${listing.id}`, {
@@ -30,12 +33,16 @@ export default function AgencyListingRow({ listing, translations, propertyTypeLa
         <div className="rounded-xl border border-border bg-surface p-4 sm:p-5">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div className="min-w-0">
-                    <Link
-                        href={`/agency/listings/${listing.id}/edit`}
-                        className="font-semibold text-text transition-colors hover:text-brand"
-                    >
-                        {listing.title}
-                    </Link>
+                    {isClosed ? (
+                        <p className="font-semibold text-text">{listing.title}</p>
+                    ) : (
+                        <Link
+                            href={`/agency/listings/${listing.id}/edit`}
+                            className="font-semibold text-text transition-colors hover:text-brand"
+                        >
+                            {listing.title}
+                        </Link>
+                    )}
                     <p className="mt-1 text-sm text-text-muted">
                         {typeLabel} • {propertyLabel} • {listing.city}, {listing.country}
                     </p>
@@ -48,20 +55,24 @@ export default function AgencyListingRow({ listing, translations, propertyTypeLa
                     {createdDate && (
                         <p className="mt-1 text-xs text-text-muted">
                             {translations.created.replace(':date', createdDate)}
+                            {closedDate && ` • ${translations.closed_on.replace(':date', closedDate)}`}
                         </p>
                     )}
                 </div>
 
                 <div className="flex items-center justify-between gap-3 sm:flex-col sm:items-end">
                     <StatusBadge status={listing.status} label={translations.status[listing.status]} />
-                    <button
-                        type="button"
-                        onClick={() => setConfirmOpen(true)}
-                        aria-label={translations.delete}
-                        className="rounded-lg p-2 text-text-muted transition-colors hover:bg-status-rejected/10 hover:text-status-rejected"
-                    >
-                        <Trash2 className="size-4" />
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <ListingCloseActions listing={listing} baseUrl="/agency/listings" translations={translations} />
+                        <button
+                            type="button"
+                            onClick={() => setConfirmOpen(true)}
+                            aria-label={translations.delete}
+                            className="rounded-lg p-2 text-text-muted transition-colors hover:bg-status-rejected/10 hover:text-status-rejected"
+                        >
+                            <Trash2 className="size-4" />
+                        </button>
+                    </div>
                 </div>
             </div>
 

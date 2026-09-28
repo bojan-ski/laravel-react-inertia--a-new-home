@@ -77,4 +77,32 @@ class AgencyListingController extends Controller
 
         return redirect()->route('agency.index')->with('success', __('app.agency_show.listings.flash_deleted'));
     }
+
+    public function close(Listing $listing, ListingService $listingService): RedirectResponse
+    {
+        Gate::authorize('close', $listing);
+
+        try {
+            $listingService->close($listing);
+        } catch (InvalidListingStatusTransitionException) {
+            return redirect()->back()->with('error', __('app.agency_show.listings.flash_close_failed'));
+        }
+
+        return redirect()->back()->with('success', __($listing->isRented()
+            ? 'app.agency_show.listings.flash_closed_rented'
+            : 'app.agency_show.listings.flash_closed_sold'));
+    }
+
+    public function reopen(Listing $listing, ListingService $listingService): RedirectResponse
+    {
+        Gate::authorize('reopen', $listing);
+
+        try {
+            $listingService->reopen($listing);
+        } catch (InvalidListingStatusTransitionException) {
+            return redirect()->back()->with('error', __('app.agency_show.listings.flash_reopen_failed'));
+        }
+
+        return redirect()->back()->with('success', __('app.agency_show.listings.flash_reopened'));
+    }
 }
