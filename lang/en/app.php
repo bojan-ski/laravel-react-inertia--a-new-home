@@ -750,7 +750,7 @@ return [
             'approved' => 'Approved :date',
             'per_month' => '/mo',
             'rejection_reason_label' => 'Rejection reason',
-            'new_listing' => '+ New Listing',
+            'new_listing' => 'New Listing',
             'new_listing_disabled_help' => 'You can create listings once your agency is approved.',
             'create_listing' => 'Create Listing',
             'delete' => 'Delete listing',
