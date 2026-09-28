@@ -98,4 +98,19 @@ class MyListingController extends Controller
 
         return redirect()->back()->with('success', __('app.profile.flash_reopened'));
     }
+
+    public function renew(Listing $listing, ListingService $listingService): RedirectResponse
+    {
+        Gate::authorize('renew', $listing);
+
+        try {
+            $listingService->renew($listing);
+        } catch (InvalidListingStatusTransitionException) {
+            return redirect()->back()->with('error', __('app.profile.flash_renew_failed'));
+        }
+
+        return redirect()->back()->with('success', __('app.profile.flash_renewed', [
+            'date' => $listing->expires_at->format('F j, Y'),
+        ]));
+    }
 }

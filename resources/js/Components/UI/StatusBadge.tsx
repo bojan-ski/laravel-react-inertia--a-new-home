@@ -7,6 +7,7 @@ const statusStyles: Record<BadgeStatusValue, string> = {
     hidden: 'bg-status-hidden/10 text-status-hidden',
     sold: 'bg-status-sold/10 text-status-sold',
     rented: 'bg-status-rented/10 text-status-rented',
+    expired: 'bg-status-hidden/10 text-status-hidden',
     active: 'bg-status-approved/10 text-status-approved',
     suspended: 'bg-status-suspended/10 text-status-suspended',
 }

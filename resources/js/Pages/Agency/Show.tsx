@@ -1,12 +1,15 @@
-import { Head, Link } from '@inertiajs/react'
+import { Head, Link, usePage } from '@inertiajs/react'
 import { Clock, Pencil, Settings } from 'lucide-react'
 import AgencyListingsSection from '@/Components/Agency/AgencyListingsSection'
 import AgencyProfileSection from '@/Components/Agency/AgencyProfileSection'
 import AgencyStatusPanel from '@/Components/Agency/AgencyStatusPanel'
+import FlashBanner from '@/Components/UI/FlashBanner'
 import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { AgencyShowPageProps } from '@/types/agency'
+import type { SharedProps } from '@/types/shared'
 
 export default function Show({ agency, pendingChange, listings, translations, propertyTypeLabels }: AgencyShowPageProps) {
+    const { flash } = usePage<SharedProps>().props
     const submittedOn = pendingChange ? new Date(pendingChange.submittedAt).toLocaleDateString() : null
 
     return (
@@ -42,6 +45,9 @@ export default function Show({ agency, pendingChange, listings, translations, pr
             </div>
 
             <div className="mx-auto max-w-5xl px-6 py-8">
+                {flash.success && <FlashBanner message={flash.success} variant="success" />}
+                {flash.error && <FlashBanner message={flash.error} variant="error" />}
+
                 {submittedOn && (
                     <div className="mb-6 flex items-start gap-3 rounded-lg border border-accent bg-accent-soft px-5 py-4 text-text">
                         <Clock className="mt-0.5 size-5 shrink-0 text-accent" />

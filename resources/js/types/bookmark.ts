@@ -9,6 +9,7 @@ export interface BookmarksClosedTranslations {
     heading: string
     subtitle: string
     status: Record<ClosedListingStatusValue, string>
+    expired: string
 }
 
 export interface BookmarksTranslations {
@@ -24,7 +25,7 @@ export interface BookmarksTranslations {
 }
 
 export interface ClosedBookmarkCardData extends ListingCardData {
-    status: ClosedListingStatusValue
+    status: ClosedListingStatusValue | 'approved'
 }
 
 export interface BookmarksIndexPageProps {

@@ -71,8 +71,7 @@ class ListingService
         $listing->area_unit = Listing::AREA_UNIT;
 
         if ($shouldRevertToPending) {
-            $listing->status = ListingStatus::PendingReview;
-            $listing->approved_at = null;
+            $this->revertToPendingReview($listing);
         }
 
         $listing->save();
@@ -131,8 +130,7 @@ class ListingService
         $listing->contact_phone = null;
 
         if ($shouldRevertToPending) {
-            $listing->status = ListingStatus::PendingReview;
-            $listing->approved_at = null;
+            $this->revertToPendingReview($listing);
         }
 
         $listing->save();
@@ -166,6 +164,22 @@ class ListingService
 
         $listing->status = ListingStatus::Approved;
         $listing->closed_at = null;
+        $this->startLifetime($listing);
+        $listing->save();
+
+        return $listing;
+    }
+
+    /**
+     * @throws InvalidListingStatusTransitionException
+     */
+    public function renew(Listing $listing): Listing
+    {
+        if (! $listing->canBeRenewedByOwner()) {
+            throw new InvalidListingStatusTransitionException('This listing cannot be renewed.');
+        }
+
+        $this->startLifetime($listing);
         $listing->save();
 
         return $listing;
@@ -184,6 +198,7 @@ class ListingService
         $listing->approved_at = now();
         $listing->rejection_reason = null;
         $listing->rejected_at = null;
+        $this->startLifetime($listing);
         $listing->save();
 
         return $listing->refresh();
@@ -207,6 +222,26 @@ class ListingService
         $listing->delete();
 
         return $listing;
+    }
+
+    public function markExpiryReminderSent(Listing $listing): void
+    {
+        $listing->expiry_reminder_sent_at = now();
+        $listing->save();
+    }
+
+    private function startLifetime(Listing $listing): void
+    {
+        $listing->expires_at = now()->addDays(Listing::LIFETIME_DAYS);
+        $listing->expiry_reminder_sent_at = null;
+    }
+
+    private function revertToPendingReview(Listing $listing): void
+    {
+        $listing->status = ListingStatus::PendingReview;
+        $listing->approved_at = null;
+        $listing->expires_at = null;
+        $listing->expiry_reminder_sent_at = null;
     }
 
     private function generateUniqueSlug(string $base, ?int $ignoreId = null): string

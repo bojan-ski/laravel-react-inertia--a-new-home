@@ -42,6 +42,10 @@ class Listing extends Model
 
     public const AREA_UNIT = 'm²';
 
+    public const LIFETIME_DAYS = 90;
+
+    public const EXPIRY_REMINDER_DAYS = 7;
+
     /**
      * @var array<string, mixed>
      */
@@ -81,7 +85,27 @@ class Listing extends Model
     {
         $query->where('status', ListingStatus::Approved->value)
             ->whereNotNull('approved_at')
-            ->where('approved_at', '<=', now());
+            ->where('approved_at', '<=', now())
+            ->where(fn (Builder $query) => $query
+                ->whereNull('expires_at')
+                ->orWhere('expires_at', '>', now()));
+    }
+
+    #[Scope]
+    protected function expired(Builder $query): void
+    {
+        $query->where('status', ListingStatus::Approved->value)
+            ->whereNotNull('expires_at')
+            ->where('expires_at', '<=', now());
+    }
+
+    #[Scope]
+    protected function dueForExpiryReminder(Builder $query): void
+    {
+        $query->where('status', ListingStatus::Approved->value)
+            ->whereNull('expiry_reminder_sent_at')
+            ->where('expires_at', '>', now())
+            ->where('expires_at', '<=', now()->addDays(self::EXPIRY_REMINDER_DAYS));
     }
 
     #[Scope]
@@ -160,7 +184,22 @@ class Listing extends Model
         return $this->isApproved()
             && $this->approved_at !== null
             && $this->approved_at->lessThanOrEqualTo(now())
+            && ! $this->isExpired()
             && ! $this->trashed();
+    }
+
+    public function isExpired(): bool
+    {
+        return $this->isApproved()
+            && $this->expires_at !== null
+            && $this->expires_at->lessThanOrEqualTo(now());
+    }
+
+    public function canBeRenewedByOwner(): bool
+    {
+        return $this->isApproved()
+            && $this->expires_at !== null
+            && $this->expires_at->lessThanOrEqualTo(now()->addDays(self::EXPIRY_REMINDER_DAYS));
     }
 
     public function shouldBeHiddenDueToOwnerSuspension(): bool
@@ -268,6 +307,9 @@ class Listing extends Model
             'createdAt' => $this->created_at?->toIso8601String(),
             'rejectionReason' => $this->rejection_reason,
             'closedAt' => $this->closed_at?->toIso8601String(),
+            'expiresAt' => $this->expires_at?->toIso8601String(),
+            'isExpired' => $this->isExpired(),
+            'canRenew' => $this->canBeRenewedByOwner(),
         ];
     }
 
@@ -393,6 +435,7 @@ class Listing extends Model
             'ownerName' => $this->owner?->name ?? $this->agency?->name,
             'ownerEmail' => $this->owner?->email ?? $this->agency?->email,
             'createdAt' => $this->created_at?->toIso8601String(),
+            'expiresAt' => $this->isApproved() ? $this->expires_at?->toIso8601String() : null,
         ];
     }
 
@@ -408,6 +451,8 @@ class Listing extends Model
             'approved_at' => 'datetime',
             'rejected_at' => 'datetime',
             'closed_at' => 'datetime',
+            'expires_at' => 'datetime',
+            'expiry_reminder_sent_at' => 'datetime',
         ];
     }
 }

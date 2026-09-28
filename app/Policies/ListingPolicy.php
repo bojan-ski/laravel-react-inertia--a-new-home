@@ -79,6 +79,11 @@ class ListingPolicy
         return $this->managesListing($user, $listing) && $listing->canBeReopenedByOwner();
     }
 
+    public function renew(User $user, Listing $listing): bool
+    {
+        return $this->managesListing($user, $listing) && $listing->canBeRenewedByOwner();
+    }
+
     private function managesListing(User $user, Listing $listing): bool
     {
         if ($user->isSuspended()) {

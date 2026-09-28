@@ -29,6 +29,7 @@ Route::middleware(['auth', 'role:agency'])
             Route::delete('/listings/{listing}', [AgencyListingController::class, 'destroy'])->name('listings.destroy');
             Route::post('/listings/{listing}/close', [AgencyListingController::class, 'close'])->middleware('throttle:listing-write')->name('listings.close');
             Route::post('/listings/{listing}/reopen', [AgencyListingController::class, 'reopen'])->middleware('throttle:listing-write')->name('listings.reopen');
+            Route::post('/listings/{listing}/renew', [AgencyListingController::class, 'renew'])->middleware('throttle:listing-write')->name('listings.renew');
 
             Route::post('/listings/{listing}/images', [ListingImageController::class, 'store'])->middleware('throttle:listing-images')->name('listings.images.store');
             Route::delete('/listings/{listing}/images/{image}', [ListingImageController::class, 'destroy'])->name('listings.images.destroy');

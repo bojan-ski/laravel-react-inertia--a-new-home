@@ -1,10 +1,14 @@
-import { Head, Link } from '@inertiajs/react'
+import { Head, Link, usePage } from '@inertiajs/react'
 import { Plus, Settings } from 'lucide-react'
 import ProfileListingRow from '@/Components/Profile/ProfileListingRow'
+import FlashBanner from '@/Components/UI/FlashBanner'
 import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { ProfileIndexPageProps } from '@/types/profile'
+import type { SharedProps } from '@/types/shared'
 
 export default function Index({ listings, translations, propertyTypeLabels }: ProfileIndexPageProps) {
+    const { flash } = usePage<SharedProps>().props
+
     return (
         <ListingsLayout>
             <Head title={translations.title} />
@@ -38,6 +42,9 @@ export default function Index({ listings, translations, propertyTypeLabels }: Pr
             </div>
 
             <div className="mx-auto max-w-7xl px-6 py-8">
+                {flash.success && <FlashBanner message={flash.success} variant="success" />}
+                {flash.error && <FlashBanner message={flash.error} variant="error" />}
+
                 {listings.length === 0 ? (
                     <div className="flex flex-col items-center justify-center gap-4 py-24 text-center">
                         <p className="text-lg font-semibold text-text">{translations.empty.headline}</p>

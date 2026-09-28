@@ -26,6 +26,33 @@ export interface ListingCloseActionsProps {
     translations: ListingCloseTranslations
 }
 
+export interface ListingExpiryTranslations {
+    expires_on: string
+    expires_in: string
+    expires_in_one: string
+    expired: string
+    renew: string
+}
+
+export interface ListingExpiryData {
+    id: number
+    status: ListingStatusValue
+    expiresAt: string | null
+    isExpired: boolean
+    canRenew: boolean
+}
+
+export interface ListingExpiryNoteProps {
+    listing: ListingExpiryData
+    translations: ListingExpiryTranslations
+}
+
+export interface ListingRenewButtonProps {
+    listing: ListingExpiryData
+    baseUrl: string
+    translations: ListingExpiryTranslations
+}
+
 export interface ListingCardData {
     id: number
     title: string

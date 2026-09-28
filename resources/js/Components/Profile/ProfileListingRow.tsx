@@ -2,7 +2,9 @@ import { useState } from 'react'
 import { Link, router } from '@inertiajs/react'
 import { ImageIcon, Trash2 } from 'lucide-react'
 import ListingCloseActions from '@/Components/Listings/ListingCloseActions'
+import ListingExpiryNote from '@/Components/Listings/ListingExpiryNote'
 import { formatDate, formatPrice } from '@/Components/Listings/listingFormat'
+import ListingRenewButton from '@/Components/Listings/ListingRenewButton'
 import ConfirmDialog from '@/Components/UI/ConfirmDialog'
 import StatusBadge from '@/Components/UI/StatusBadge'
 import type { ProfileListingRowProps } from '@/types/profile'
@@ -67,11 +69,17 @@ export default function ProfileListingRow({ listing, translations, propertyTypeL
                             {translations.created.replace(':date', createdDate)}
                             {closedDate && ` • ${translations.closed_on.replace(':date', closedDate)}`}
                         </p>
+                        <ListingExpiryNote listing={listing} translations={translations} />
                     </div>
 
                     <div className="flex items-center justify-between gap-3 sm:flex-col sm:items-end">
-                        <StatusBadge status={listing.status} label={translations.status[listing.status]} />
+                        {listing.isExpired ? (
+                            <StatusBadge status="expired" label={translations.expired} />
+                        ) : (
+                            <StatusBadge status={listing.status} label={translations.status[listing.status]} />
+                        )}
                         <div className="flex items-center gap-2">
+                            <ListingRenewButton listing={listing} baseUrl="/my-listings" translations={translations} />
                             <ListingCloseActions listing={listing} baseUrl="/my-listings" translations={translations} />
                             <button
                                 type="button"
