@@ -884,7 +884,7 @@ return [
                 'previous' => 'Previous',
                 'next' => 'Next',
             ],
-            'view_listing' => 'View Listing',
+            'view_listing' => 'View',
             'review' => [
                 'back' => 'Back to Pending Listings',
                 'moderation_heading' => 'Moderation',
