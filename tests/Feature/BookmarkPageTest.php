@@ -6,6 +6,7 @@ use App\Models\Bookmark;
 use App\Models\Listing;
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
@@ -171,6 +172,41 @@ class BookmarkPageTest extends TestCase
                 ->has('listings', 0)
                 ->has('closedListings', 0)
             );
+    }
+
+    public function test_closed_bookmarks_do_not_add_a_query_per_card(): void
+    {
+        $user = User::factory()->regularUser()->create();
+
+        $countQueries = function () use ($user): int {
+            DB::flushQueryLog();
+            DB::enableQueryLog();
+
+            $this->actingAs($user)->get('/bookmarks')->assertOk();
+
+            $count = count(DB::getQueryLog());
+            DB::disableQueryLog();
+
+            return $count;
+        };
+
+        Bookmark::factory()->create(['user_id' => $user->id, 'listing_id' => Listing::factory()->sold()->create()->id]);
+
+        $withOne = $countQueries();
+
+        foreach (Listing::factory()->count(3)->rented()->create() as $listing) {
+            Bookmark::factory()->create(['user_id' => $user->id, 'listing_id' => $listing->id]);
+        }
+
+        $this->actingAs($user)
+            ->get('/bookmarks')
+            ->assertInertia(fn (Assert $page) => $page
+                ->has('closedListings', 4)
+                ->where('closedListings.0.canBookmark', true)
+                ->where('closedListings.3.canBookmark', true)
+            );
+
+        $this->assertSame($withOne, $countQueries());
     }
 
     public function test_closed_bookmark_can_be_removed_with_the_heart(): void

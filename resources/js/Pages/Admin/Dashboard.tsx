@@ -3,13 +3,19 @@ import StatCard from '@/Components/Admin/StatCard'
 import AdminLayout from '@/Layouts/AdminLayout'
 import type { AdminDashboardPageProps, AdminStatSectionProps, StatCardProps } from '@/types/admin'
 
+const wideGridColumns: Record<number, string> = {
+    5: 'lg:grid-cols-3 xl:grid-cols-5',
+}
+
 function StatSection({ heading, cards }: AdminStatSectionProps) {
+    const columns = wideGridColumns[cards.length] ?? 'lg:grid-cols-4'
+
     return (
         <section>
             <h2 className="border-b border-border pb-3 font-display text-xl font-semibold text-text">
                 {heading}
             </h2>
-            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className={`mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 ${columns}`}>
                 {cards.map((card) => (
                     <StatCard key={card.label} {...card} />
                 ))}

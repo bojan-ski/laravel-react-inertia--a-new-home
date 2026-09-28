@@ -93,9 +93,10 @@ class Listing extends Model
     #[Scope]
     protected function ownerNotSuspended(Builder $query): void
     {
-        $query->whereDoesntHave('owner', function (Builder $query) {
-            $query->where('status', UserStatus::Suspended->value);
-        })
+        $query
+            ->whereDoesntHave('owner', function (Builder $query) {
+                $query->where('status', UserStatus::Suspended->value);
+            })
             ->whereDoesntHave('agency.user', function (Builder $query) {
                 $query->where('status', UserStatus::Suspended->value);
             });
