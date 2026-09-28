@@ -121,8 +121,15 @@ class ListingPolicy
 
     public function removeBookmark(User $user, Listing $listing): bool
     {
-        return $user->isActive()
-            && $user->bookmarks()->where('listing_id', $listing->id)->exists();
+        if (! $user->isActive()) {
+            return false;
+        }
+
+        if ($listing->relationLoaded('pivot') && (int) $listing->pivot->user_id === $user->id) {
+            return true;
+        }
+
+        return $user->bookmarks()->where('listing_id', $listing->id)->exists();
     }
 
     /**

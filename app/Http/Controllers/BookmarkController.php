@@ -31,9 +31,9 @@ class BookmarkController extends Controller
         abort_unless($listing->isActuallyPubliclyVisible(), 404);
         Gate::authorize('bookmark', $listing);
 
-        $bookmarked = $this->bookmarkService->toggle($user, $listing);
+        $this->bookmarkService->add($user, $listing);
 
-        return redirect()->back()->with('success', __($bookmarked ? 'app.bookmarks.flash_added' : 'app.bookmarks.flash_removed'));
+        return redirect()->back()->with('success', __('app.bookmarks.flash_added'));
     }
 
     public function index(Request $request): Response

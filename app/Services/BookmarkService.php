@@ -18,19 +18,9 @@ class BookmarkService
         $user->bookmarks()->where('listing_id', $listing->id)->delete();
     }
 
-    public function toggle(User $user, Listing $listing): bool
+    public function add(User $user, Listing $listing): void
     {
-        $bookmark = $user->bookmarks()->where('listing_id', $listing->id)->first();
-
-        if ($bookmark !== null) {
-            $bookmark->delete();
-
-            return false;
-        }
-
-        $user->bookmarks()->create(['listing_id' => $listing->id]);
-
-        return true;
+        $user->bookmarks()->firstOrCreate(['listing_id' => $listing->id]);
     }
 
     /**
