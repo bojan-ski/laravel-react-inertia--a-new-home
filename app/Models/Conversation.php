@@ -81,6 +81,7 @@ class Conversation extends Model
             'id' => $this->listing?->id,
             'title' => $this->listing?->title ?? $this->listing_title ?? __('app.conversations.listing_removed'),
             'slug' => $this->listing?->slug,
+            'status' => $this->listing?->status?->value,
         ];
     }
 

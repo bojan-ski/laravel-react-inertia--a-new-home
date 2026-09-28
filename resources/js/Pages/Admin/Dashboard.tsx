@@ -24,6 +24,7 @@ export default function Dashboard({ stats, translations }: AdminDashboardPagePro
         { ...translations.stats.pending_listings, value: stats.pendingListings },
         { ...translations.stats.approved_listings, value: stats.approvedListings },
         { ...translations.stats.rejected_listings, value: stats.rejectedListings },
+        { ...translations.stats.closed_listings, value: stats.closedListings },
     ]
 
     const userCards: StatCardProps[] = [

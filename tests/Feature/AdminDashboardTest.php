@@ -51,14 +51,17 @@ class AdminDashboardTest extends TestCase
         Listing::factory()->count(5)->approved()->create();
         Listing::factory()->count(2)->rejected()->create();
         Listing::factory()->count(4)->hidden()->create();
+        Listing::factory()->count(2)->sold()->create();
+        Listing::factory()->count(1)->rented()->create();
 
         $this->actingAs($admin)
             ->get('/admin')
             ->assertInertia(fn (Assert $page) => $page
-                ->where('stats.totalListings', 14)
+                ->where('stats.totalListings', 17)
                 ->where('stats.pendingListings', 3)
                 ->where('stats.approvedListings', 5)
                 ->where('stats.rejectedListings', 2)
+                ->where('stats.closedListings', 3)
             );
     }
 
@@ -123,6 +126,7 @@ class AdminDashboardTest extends TestCase
                     ->where('pendingListings', 0)
                     ->where('approvedListings', 0)
                     ->where('rejectedListings', 0)
+                    ->where('closedListings', 0)
                     ->where('totalRegularUsers', 0)
                     ->where('totalAgencyUsers', 0)
                     ->where('totalAdmins', 1)

@@ -8,6 +8,7 @@ export interface AdminStats {
     pendingListings: number
     approvedListings: number
     rejectedListings: number
+    closedListings: number
     totalRegularUsers: number
     totalAgencyUsers: number
     totalAdmins: number
@@ -46,6 +47,7 @@ export interface AdminDashboardTranslations {
         pending_listings: AdminStatLabel
         approved_listings: AdminStatLabel
         rejected_listings: AdminStatLabel
+        closed_listings: AdminStatLabel
         regular_users: AdminStatLabel
         agency_users: AdminStatLabel
         admins: AdminStatLabel
@@ -213,7 +215,7 @@ export interface AdminListingsTranslations {
 
 export type AdminListingOwnerType = 'user' | 'agency'
 
-export type AdminListingStatusValue = 'pending_review' | 'approved' | 'rejected' | 'hidden'
+export type AdminListingStatusValue = 'pending_review' | 'approved' | 'rejected' | 'hidden' | 'sold' | 'rented'
 
 export interface AdminListingReviewTranslations {
     back: string

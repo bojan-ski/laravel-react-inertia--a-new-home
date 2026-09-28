@@ -8,4 +8,6 @@ enum ListingStatus: string
     case Approved = 'approved';
     case Rejected = 'rejected';
     case Hidden = 'hidden';
+    case Sold = 'sold';
+    case Rented = 'rented';
 }

@@ -33,6 +33,8 @@ class DashboardController extends Controller
             'pendingListings' => (int) $listingCounts->get(ListingStatus::PendingReview->value, 0),
             'approvedListings' => (int) $listingCounts->get(ListingStatus::Approved->value, 0),
             'rejectedListings' => (int) $listingCounts->get(ListingStatus::Rejected->value, 0),
+            'closedListings' => (int) $listingCounts->get(ListingStatus::Sold->value, 0)
+                + (int) $listingCounts->get(ListingStatus::Rented->value, 0),
             'totalRegularUsers' => (int) $userCounts->get(UserRole::RegularUser->value, 0),
             'totalAgencyUsers' => (int) $userCounts->get(UserRole::Agency->value, 0),
             'totalAdmins' => (int) $userCounts->get(UserRole::Admin->value, 0),

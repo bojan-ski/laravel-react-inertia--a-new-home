@@ -34,7 +34,7 @@ class ConversationController extends Controller
         $this->conversationService->markRead($conversation, $request->user());
 
         $conversation->load([
-            'listing:id,title,slug',
+            'listing:id,title,slug,status',
             'buyer:id,name',
             'owner:id,name',
             'messages.sender:id,name',

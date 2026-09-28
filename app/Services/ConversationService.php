@@ -84,7 +84,7 @@ class ConversationService
                 $query->where('buyer_id', $user->id)
                     ->orWhere('owner_id', $user->id);
             })
-            ->with(['listing:id,title,slug', 'buyer:id,name,status', 'owner:id,name,status', 'latestMessage'])
+            ->with(['listing:id,title,slug,status', 'buyer:id,name,status', 'owner:id,name,status', 'latestMessage'])
             ->withCount(['messages as unread_count' => fn (Builder $query) => $this->whereUnreadFor($query, $user)])
             ->orderByDesc('updated_at')
             ->get()

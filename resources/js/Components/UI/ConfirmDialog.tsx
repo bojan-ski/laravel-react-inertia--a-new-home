@@ -11,6 +11,7 @@ export default function ConfirmDialog({
     processing,
     onConfirm,
     onCancel,
+    tone = 'danger',
 }: ConfirmDialogProps) {
     const cancelRef = useRef<HTMLButtonElement>(null)
     const panelRef = useFocusTrap(open, onCancel, cancelRef)
@@ -51,7 +52,9 @@ export default function ConfirmDialog({
                         type="button"
                         onClick={onConfirm}
                         disabled={processing}
-                        className="rounded-lg bg-status-rejected px-4 py-2 text-sm font-semibold text-text-inverse transition-colors hover:opacity-90 disabled:opacity-50"
+                        className={`rounded-lg px-4 py-2 text-sm font-semibold text-text-inverse transition-colors hover:opacity-90 disabled:opacity-50 ${
+                            tone === 'brand' ? 'bg-brand' : 'bg-status-rejected'
+                        }`}
                     >
                         {confirmLabel}
                     </button>

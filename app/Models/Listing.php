@@ -87,13 +87,24 @@ class Listing extends Model
     #[Scope]
     protected function actuallyPubliclyVisible(Builder $query): void
     {
-        $query->publiclyVisible()
-            ->whereDoesntHave('owner', function (Builder $query) {
-                $query->where('status', UserStatus::Suspended->value);
-            })
+        $query->publiclyVisible()->ownerNotSuspended();
+    }
+
+    #[Scope]
+    protected function ownerNotSuspended(Builder $query): void
+    {
+        $query->whereDoesntHave('owner', function (Builder $query) {
+            $query->where('status', UserStatus::Suspended->value);
+        })
             ->whereDoesntHave('agency.user', function (Builder $query) {
                 $query->where('status', UserStatus::Suspended->value);
             });
+    }
+
+    #[Scope]
+    protected function closed(Builder $query): void
+    {
+        $query->whereIn('status', [ListingStatus::Sold->value, ListingStatus::Rented->value]);
     }
 
     #[Scope]
@@ -126,6 +137,21 @@ class Listing extends Model
     public function isHidden(): bool
     {
         return $this->status === ListingStatus::Hidden;
+    }
+
+    public function isSold(): bool
+    {
+        return $this->status === ListingStatus::Sold;
+    }
+
+    public function isRented(): bool
+    {
+        return $this->status === ListingStatus::Rented;
+    }
+
+    public function isClosed(): bool
+    {
+        return $this->isSold() || $this->isRented();
     }
 
     public function isPubliclyVisible(): bool
@@ -171,6 +197,21 @@ class Listing extends Model
     public function shouldReturnToPendingReviewOnEdit(): bool
     {
         return $this->status === ListingStatus::Approved;
+    }
+
+    public function canBeClosedByOwner(): bool
+    {
+        return $this->status === ListingStatus::Approved;
+    }
+
+    public function canBeReopenedByOwner(): bool
+    {
+        return $this->isClosed();
+    }
+
+    public function closedStatus(): ListingStatus
+    {
+        return $this->listing_type === 'rent' ? ListingStatus::Rented : ListingStatus::Sold;
     }
 
     public function ownerName(): ?string
@@ -225,6 +266,15 @@ class Listing extends Model
             'status' => $this->status->value,
             'createdAt' => $this->created_at?->toIso8601String(),
             'rejectionReason' => $this->rejection_reason,
+            'closedAt' => $this->closed_at?->toIso8601String(),
+        ];
+    }
+
+    public function toBookmarkCardArray(): array
+    {
+        return [
+            ...$this->toCardArray(),
+            'status' => $this->status->value,
         ];
     }
 
@@ -356,6 +406,7 @@ class Listing extends Model
             'area_value' => 'decimal:2',
             'approved_at' => 'datetime',
             'rejected_at' => 'datetime',
+            'closed_at' => 'datetime',
         ];
     }
 }

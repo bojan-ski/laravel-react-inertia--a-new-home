@@ -25,4 +25,5 @@ export interface ConfirmDialogProps {
     processing: boolean
     onConfirm: () => void
     onCancel: () => void
+    tone?: 'danger' | 'brand'
 }

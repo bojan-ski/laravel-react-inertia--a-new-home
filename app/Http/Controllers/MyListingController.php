@@ -72,4 +72,30 @@ class MyListingController extends Controller
 
         return redirect()->route('profile.index')->with('success', __('app.profile.flash_deleted'));
     }
+
+    public function close(Listing $listing, ListingService $listingService): RedirectResponse
+    {
+        Gate::authorize('close', $listing);
+
+        try {
+            $listingService->close($listing);
+        } catch (InvalidListingStatusTransitionException) {
+            return redirect()->back()->with('error', __('app.profile.flash_close_failed'));
+        }
+
+        return redirect()->back()->with('success', __($listing->isRented() ? 'app.profile.flash_closed_rented' : 'app.profile.flash_closed_sold'));
+    }
+
+    public function reopen(Listing $listing, ListingService $listingService): RedirectResponse
+    {
+        Gate::authorize('reopen', $listing);
+
+        try {
+            $listingService->reopen($listing);
+        } catch (InvalidListingStatusTransitionException) {
+            return redirect()->back()->with('error', __('app.profile.flash_reopen_failed'));
+        }
+
+        return redirect()->back()->with('success', __('app.profile.flash_reopened'));
+    }
 }

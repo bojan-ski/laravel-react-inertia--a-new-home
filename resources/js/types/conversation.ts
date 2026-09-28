@@ -1,9 +1,11 @@
+import type { ClosedListingStatusValue, ListingStatusValue } from '@/types/listing'
 import type { ReportMessageTranslations } from '@/types/reported-message'
 
 export interface ConversationListingSummary {
     id: number | null
     title: string
     slug: string | null
+    status: ListingStatusValue | null
 }
 
 export interface ConversationParticipant {
@@ -87,6 +89,7 @@ export interface ConversationsTranslations {
     deleted_user: string
     listing_removed: string
     unread: string
+    listing_status: Record<ClosedListingStatusValue, string>
     empty: ConversationsEmptyTranslations
     thread: ConversationsThreadTranslations
     report: ReportMessageTranslations

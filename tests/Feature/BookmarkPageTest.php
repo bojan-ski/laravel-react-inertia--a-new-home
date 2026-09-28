@@ -124,6 +124,83 @@ class BookmarkPageTest extends TestCase
             ->assertInertia(fn (Assert $page) => $page->has('listings', 0));
     }
 
+    public function test_closed_bookmarks_are_listed_in_their_own_group(): void
+    {
+        $user = User::factory()->regularUser()->create();
+
+        $active = Listing::factory()->approved()->create();
+        $sold = Listing::factory()->sold()->create();
+        $rented = Listing::factory()->rented()->create();
+
+        Bookmark::factory()->create(['user_id' => $user->id, 'listing_id' => $active->id]);
+        Bookmark::factory()->create(['user_id' => $user->id, 'listing_id' => $sold->id, 'created_at' => now()->subDay()]);
+        Bookmark::factory()->create(['user_id' => $user->id, 'listing_id' => $rented->id, 'created_at' => now()->subDays(2)]);
+
+        $this->actingAs($user)
+            ->get('/bookmarks')
+            ->assertInertia(fn (Assert $page) => $page
+                ->has('listings', 1)
+                ->where('listings.0.id', $active->id)
+                ->missing('listings.0.status')
+                ->has('closedListings', 2)
+                ->where('closedListings.0.id', $sold->id)
+                ->where('closedListings.0.status', 'sold')
+                ->where('closedListings.0.isBookmarked', true)
+                ->where('closedListings.0.canBookmark', true)
+                ->where('closedListings.1.id', $rented->id)
+                ->where('closedListings.1.status', 'rented')
+                ->where('translations.closed.heading', __('app.bookmarks.closed.heading'))
+            );
+    }
+
+    public function test_closed_bookmarks_of_suspended_owners_and_trashed_listings_are_excluded(): void
+    {
+        $user = User::factory()->regularUser()->create();
+
+        $suspendedOwned = Listing::factory()->sold()->for(User::factory()->suspended(), 'owner')->create();
+        $trashed = Listing::factory()->rented()->create();
+
+        Bookmark::factory()->create(['user_id' => $user->id, 'listing_id' => $suspendedOwned->id]);
+        Bookmark::factory()->create(['user_id' => $user->id, 'listing_id' => $trashed->id]);
+
+        $trashed->delete();
+
+        $this->actingAs($user)
+            ->get('/bookmarks')
+            ->assertInertia(fn (Assert $page) => $page
+                ->has('listings', 0)
+                ->has('closedListings', 0)
+            );
+    }
+
+    public function test_closed_bookmark_can_be_removed_with_the_heart(): void
+    {
+        $user = User::factory()->regularUser()->create();
+        $listing = Listing::factory()->sold()->create();
+        Bookmark::factory()->create(['user_id' => $user->id, 'listing_id' => $listing->id]);
+
+        $this->actingAs($user)
+            ->post("/listings/{$listing->id}/bookmark")
+            ->assertRedirect()
+            ->assertSessionHas('success', __('app.bookmarks.flash_removed'));
+
+        $this->assertDatabaseMissing('bookmarks', ['user_id' => $user->id, 'listing_id' => $listing->id]);
+    }
+
+    public function test_closed_listing_cannot_be_bookmarked_by_a_user_without_a_bookmark(): void
+    {
+        $user = User::factory()->regularUser()->create();
+        $listing = Listing::factory()->rented()->create();
+        Bookmark::factory()->create(['listing_id' => $listing->id]);
+
+        $this->actingAs($user)
+            ->post("/listings/{$listing->id}/bookmark")
+            ->assertNotFound();
+
+        $this->assertDatabaseMissing('bookmarks', ['user_id' => $user->id, 'listing_id' => $listing->id]);
+        $this->assertDatabaseCount('bookmarks', 1);
+    }
+
     public function test_listings_index_reflects_per_listing_bookmark_state_for_authenticated_users(): void
     {
         $user = User::factory()->regularUser()->create();

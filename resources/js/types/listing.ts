@@ -1,7 +1,30 @@
 import type { FormEvent, ReactNode } from 'react'
+import type { ConfirmActionTranslations } from '@/types/moderation'
 import type { Paginator, PaginationLabels } from '@/types/pagination'
 
-export type ListingStatusValue = 'pending_review' | 'approved' | 'rejected' | 'hidden'
+export type ListingStatusValue = 'pending_review' | 'approved' | 'rejected' | 'hidden' | 'sold' | 'rented'
+
+export type ClosedListingStatusValue = Extract<ListingStatusValue, 'sold' | 'rented'>
+
+export interface ListingCloseTranslations {
+    closed_on: string
+    mark_sold: string
+    mark_rented: string
+    reopen: string
+    close_confirm: Record<'sale' | 'rent', ConfirmActionTranslations>
+    reopen_confirm: ConfirmActionTranslations
+}
+
+export interface ListingCloseActionsProps {
+    listing: {
+        id: number
+        title: string
+        listingType: string
+        status: ListingStatusValue
+    }
+    baseUrl: string
+    translations: ListingCloseTranslations
+}
 
 export interface ListingCardData {
     id: number
@@ -252,6 +275,7 @@ export interface ListingCardProps {
     listing: ListingCardData
     translations: ListingsCardTranslations
     propertyTypeLabels: Record<string, string>
+    closedLabel?: string
 }
 
 export interface ListingsEmptyStateProps {
