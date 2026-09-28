@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use App\Enums\AgencyStatus;
+use App\Enums\EuropeanCountry;
 use App\Enums\UserStatus;
-use App\Enums\UsState;
+use BackedEnum;
 use Database\Factories\AgencyFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
@@ -18,9 +19,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 #[Fillable([
     'name',
     'legal_name',
-    'ein',
-    'license_number',
-    'license_state',
+    'vat_id',
+    'registration_number',
+    'registration_country',
+    'broker_register_number',
     'description',
     'phone',
     'email',
@@ -47,9 +49,10 @@ class Agency extends Model
     public const PROFILE_FIELDS = [
         'name',
         'legal_name',
-        'ein',
-        'license_number',
-        'license_state',
+        'vat_id',
+        'registration_number',
+        'registration_country',
+        'broker_register_number',
         'email',
         'phone',
         'website',
@@ -71,7 +74,7 @@ class Agency extends Model
     {
         $value = $this->getAttribute($field);
 
-        if ($value instanceof UsState) {
+        if ($value instanceof BackedEnum) {
             return $value->value;
         }
 
@@ -157,8 +160,10 @@ class Agency extends Model
             'website' => $this->website,
             'address' => $this->address,
             'description' => $this->description,
-            'licenseNumber' => $this->license_number,
-            'licenseState' => $this->license_state?->value,
+            'vatId' => $this->vat_id,
+            'registrationNumber' => $this->registration_number,
+            'registrationCountry' => $this->registration_country?->value,
+            'brokerRegisterNumber' => $this->broker_register_number,
             'approvedAt' => $this->approved_at?->toIso8601String(),
         ];
     }
@@ -224,15 +229,16 @@ class Agency extends Model
     }
 
     /**
-     * @return array{legalName: ?string, ein: ?string, licenseNumber: ?string, licenseState: ?string}
+     * @return array{legalName: ?string, vatId: ?string, registrationNumber: ?string, registrationCountry: ?string, brokerRegisterNumber: ?string}
      */
     private function businessDetails(): array
     {
         return [
             'legalName' => $this->legal_name,
-            'ein' => $this->ein,
-            'licenseNumber' => $this->license_number,
-            'licenseState' => $this->license_state?->value,
+            'vatId' => $this->vat_id,
+            'registrationNumber' => $this->registration_number,
+            'registrationCountry' => $this->registration_country?->value,
+            'brokerRegisterNumber' => $this->broker_register_number,
         ];
     }
 
@@ -244,8 +250,7 @@ class Agency extends Model
         return [
             'status' => AgencyStatus::class,
             'approved_at' => 'datetime',
-            'ein' => 'encrypted',
-            'license_state' => UsState::class,
+            'registration_country' => EuropeanCountry::class,
         ];
     }
 }

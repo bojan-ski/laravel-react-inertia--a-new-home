@@ -5,7 +5,7 @@ import AgencyForm from '@/Components/Agency/AgencyForm'
 import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { AgencyEditPageProps, AgencyFormData } from '@/types/agency'
 
-export default function Edit({ agency, pendingChange, translations, usStates }: AgencyEditPageProps) {
+export default function Edit({ agency, pendingChange, translations, countries }: AgencyEditPageProps) {
     const pendingValues = Object.fromEntries(
         Object.entries(pendingChange?.changes ?? {}).map(([field, value]) => [field, value ?? '']),
     ) as Partial<AgencyFormData>
@@ -13,9 +13,10 @@ export default function Edit({ agency, pendingChange, translations, usStates }: 
     const { data, setData, put, processing, errors } = useForm<AgencyFormData>({
         name: agency.name,
         legal_name: agency.legalName ?? '',
-        ein: agency.ein ?? '',
-        license_number: agency.licenseNumber ?? '',
-        license_state: agency.licenseState ?? '',
+        vat_id: agency.vatId ?? '',
+        registration_number: agency.registrationNumber ?? '',
+        registration_country: agency.registrationCountry ?? '',
+        broker_register_number: agency.brokerRegisterNumber ?? '',
         email: agency.email,
         phone: agency.phone ?? '',
         website: agency.website ?? '',
@@ -71,7 +72,7 @@ export default function Edit({ agency, pendingChange, translations, usStates }: 
                     submitLabel={translations.submit}
                     onSubmit={submit}
                     translations={translations}
-                    usStates={usStates}
+                    countries={countries}
                     note={
                         <p className="text-sm text-text-soft">
                             {isApproved ? translations.review_note : translations.status_note}

@@ -22,7 +22,7 @@ class AgencyProfileController extends Controller
 
         return Inertia::render('Agency/Setup', [
             'translations' => __('app.agency_setup'),
-            'usStates' => __('app.us_states'),
+            'countries' => __('app.european_countries'),
         ]);
     }
 
@@ -66,7 +66,7 @@ class AgencyProfileController extends Controller
             'agency' => $agency->toFormArray(),
             'pendingChange' => $agency->pendingChange?->toOwnerArray(),
             'translations' => __('app.agency_edit'),
-            'usStates' => __('app.us_states'),
+            'countries' => __('app.european_countries'),
         ]);
     }
 

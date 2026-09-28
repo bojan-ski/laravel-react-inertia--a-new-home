@@ -35,6 +35,8 @@ class ListingService
 
         $listing->slug = $this->generateUniqueSlug($data['title']);
         $listing->agency_id = null;
+        $listing->currency = Listing::CURRENCY;
+        $listing->area_unit = Listing::AREA_UNIT;
         $listing->status = ListingStatus::PendingReview;
         $listing->approved_at = null;
         $listing->rejected_at = null;
@@ -65,6 +67,8 @@ class ListingService
         $listing->fill(Arr::only($data, $listing->getFillable()));
         $listing->slug = $slug;
         $listing->agency_id = null;
+        $listing->currency = Listing::CURRENCY;
+        $listing->area_unit = Listing::AREA_UNIT;
 
         if ($shouldRevertToPending) {
             $listing->status = ListingStatus::PendingReview;
@@ -85,6 +89,8 @@ class ListingService
 
         $listing->slug = $this->generateUniqueSlug($data['title']);
         $listing->user_id = null;
+        $listing->currency = Listing::CURRENCY;
+        $listing->area_unit = Listing::AREA_UNIT;
         $listing->status = ListingStatus::PendingReview;
         $listing->approved_at = null;
         $listing->rejected_at = null;
@@ -118,6 +124,8 @@ class ListingService
         $listing->fill(Arr::only($data, $listing->getFillable()));
         $listing->slug = $slug;
         $listing->user_id = null;
+        $listing->currency = Listing::CURRENCY;
+        $listing->area_unit = Listing::AREA_UNIT;
         $listing->contact_name = null;
         $listing->contact_email = null;
         $listing->contact_phone = null;

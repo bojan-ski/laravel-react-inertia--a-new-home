@@ -75,9 +75,9 @@ class MarketplaceIntegrationTest extends TestCase
         return array_merge([
             'name' => 'Premier Properties',
             'legal_name' => 'Premier Properties LLC',
-            'ein' => '12-3456789',
-            'license_number' => '01234567',
-            'license_state' => 'CA',
+            'vat_id' => 'DE123456789',
+            'registration_number' => '01234567',
+            'registration_country' => 'DE',
             'email' => 'contact@premier.test',
             'phone' => '+1 555 0100',
             'website' => 'https://premier.test',

@@ -1,7 +1,5 @@
 const currencySymbols: Record<string, string> = {
     EUR: '€',
-    USD: '$',
-    GBP: '£',
 }
 
 export function formatPrice(price: string, currency: string): string {

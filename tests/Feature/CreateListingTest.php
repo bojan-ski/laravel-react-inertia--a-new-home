@@ -120,8 +120,9 @@ class CreateListingTest extends TestCase
             ->post('/my-listings', [])
             ->assertSessionHasErrors([
                 'title', 'listing_type', 'property_type', 'price',
-                'currency', 'description', 'country', 'city',
-            ]);
+                'description', 'country', 'city',
+            ])
+            ->assertSessionDoesntHaveErrors(['currency', 'area_unit']);
 
         $this->assertDatabaseCount('listings', 0);
     }

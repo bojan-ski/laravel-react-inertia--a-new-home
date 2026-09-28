@@ -27,9 +27,9 @@ class AgencyProfileChangeReviewTest extends TestCase
             'user_id' => $user->id,
             'name' => 'Harbor Homes',
             'legal_name' => 'Harbor Homes LLC',
-            'ein' => '12-3456789',
-            'license_number' => '01234567',
-            'license_state' => 'CA',
+            'vat_id' => 'DE123456789',
+            'registration_number' => '01234567',
+            'registration_country' => 'DE',
             'email' => 'hello@harbor.test',
             'phone' => '+1 555 0100',
             'website' => 'https://harbor.test',
@@ -49,9 +49,10 @@ class AgencyProfileChangeReviewTest extends TestCase
         return array_merge([
             'name' => $agency->name,
             'legal_name' => $agency->legal_name,
-            'ein' => $agency->ein,
-            'license_number' => $agency->license_number,
-            'license_state' => $agency->license_state->value,
+            'vat_id' => $agency->vat_id,
+            'registration_number' => $agency->registration_number,
+            'registration_country' => $agency->registration_country->value,
+            'broker_register_number' => $agency->broker_register_number,
             'email' => $agency->email,
             'phone' => $agency->phone,
             'website' => $agency->website,
@@ -114,10 +115,29 @@ class AgencyProfileChangeReviewTest extends TestCase
     {
         [$user, $agency] = $this->approvedAgency();
 
-        $this->actingAs($user)->put('/agency', $this->payloadFor($agency, ['ein' => '98-7654321']));
+        $this->actingAs($user)->put('/agency', $this->payloadFor($agency, ['legal_name' => 'Confidential Holdings GmbH']));
 
         $raw = DB::table('agency_profile_changes')->value('proposed_values');
-        $this->assertStringNotContainsString('98-7654321', $raw);
+        $this->assertStringNotContainsString('Confidential Holdings', $raw);
+    }
+
+    public function test_migration_strips_us_fields_from_pending_changes_and_drops_emptied_rows(): void
+    {
+        [, $mixed] = $this->approvedAgency();
+        [, $usOnly] = $this->approvedAgency();
+        AgencyProfileChange::factory()->for($mixed)->create([
+            'proposed_values' => ['name' => 'Renamed Agency', 'ein' => '98-7654321', 'license_state' => 'NV'],
+        ]);
+        AgencyProfileChange::factory()->for($usOnly)->create([
+            'proposed_values' => ['license_number' => '0999', 'license_state' => 'TX'],
+        ]);
+
+        $migration = require database_path('migrations/2026_09_28_160106_strip_us_business_fields_from_agency_profile_changes.php');
+        $migration->up();
+
+        $this->assertSame(['name' => 'Renamed Agency'], $mixed->fresh()->pendingChange->proposed_values);
+        $this->assertNull($usOnly->fresh()->pendingChange);
+        $this->assertDatabaseCount('agency_profile_changes', 1);
     }
 
     public function test_owner_sees_the_pending_request_on_dashboard_and_edit_page(): void
@@ -141,7 +161,7 @@ class AgencyProfileChangeReviewTest extends TestCase
     public function test_admin_sees_a_diff_of_the_pending_changes(): void
     {
         [$user, $agency] = $this->approvedAgency();
-        $this->actingAs($user)->put('/agency', $this->payloadFor($agency, ['name' => 'Renamed Agency', 'license_state' => 'NV']));
+        $this->actingAs($user)->put('/agency', $this->payloadFor($agency, ['name' => 'Renamed Agency', 'registration_country' => 'AT']));
 
         $this->actingAs(User::factory()->admin()->create())
             ->get('/admin/agencies')
@@ -150,7 +170,7 @@ class AgencyProfileChangeReviewTest extends TestCase
                 ->where('profileChanges.0.agencyId', $agency->id)
                 ->where('profileChanges.0.changes', [
                     ['field' => 'name', 'current' => 'Harbor Homes', 'proposed' => 'Renamed Agency'],
-                    ['field' => 'license_state', 'current' => 'CA', 'proposed' => 'NV'],
+                    ['field' => 'registration_country', 'current' => 'DE', 'proposed' => 'AT'],
                 ])
                 ->where('fieldLabels.name', __('app.agency_edit.fields.name')));
     }

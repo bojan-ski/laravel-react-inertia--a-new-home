@@ -20,7 +20,6 @@ use Illuminate\Support\Facades\Storage;
     'listing_type',
     'property_type',
     'price',
-    'currency',
     'description',
     'country',
     'city',
@@ -29,7 +28,6 @@ use Illuminate\Support\Facades\Storage;
     'bedrooms',
     'bathrooms',
     'area_value',
-    'area_unit',
     'year_built',
     'contact_name',
     'contact_email',
@@ -40,12 +38,17 @@ class Listing extends Model
     /** @use HasFactory<ListingFactory> */
     use HasFactory, SoftDeletes;
 
+    public const CURRENCY = 'EUR';
+
+    public const AREA_UNIT = 'm²';
+
     /**
      * @var array<string, mixed>
      */
     protected $attributes = [
         'status' => ListingStatus::PendingReview->value,
-        'currency' => 'EUR',
+        'currency' => self::CURRENCY,
+        'area_unit' => self::AREA_UNIT,
     ];
 
     public function owner(): BelongsTo

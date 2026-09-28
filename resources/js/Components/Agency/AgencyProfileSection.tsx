@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { formatLicense } from '@/Components/Agencies/agencyFormat'
+import { formatRegistration } from '@/Components/Agencies/agencyFormat'
 import type { AgencyProfileSectionProps } from '@/types/agency'
 
 function Row({ label, children }: { label: string; children: ReactNode }) {
@@ -43,11 +43,18 @@ export default function AgencyProfileSection({ agency, translations }: AgencyPro
 
                 <Row label={translations.legal_name}>{agency.legalName ?? translations.missing}</Row>
 
-                <Row label={translations.ein}>{agency.ein ?? translations.missing}</Row>
+                <Row label={translations.registration}>
+                    {formatRegistration(
+                        translations.registration_value,
+                        agency.registrationNumber,
+                        agency.registrationCountry,
+                    ) ?? translations.missing}
+                </Row>
 
-                <Row label={translations.license}>
-                    {formatLicense(translations.license_value, agency.licenseNumber, agency.licenseState) ??
-                        translations.missing}
+                <Row label={translations.vat_id}>{agency.vatId ?? translations.not_set}</Row>
+
+                <Row label={translations.broker_register_number}>
+                    {agency.brokerRegisterNumber ?? translations.not_set}
                 </Row>
             </dl>
         </section>

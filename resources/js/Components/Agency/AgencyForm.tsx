@@ -9,7 +9,7 @@ export default function AgencyForm({
     submitLabel,
     onSubmit,
     translations,
-    usStates,
+    countries,
     note,
     cancelSlot,
 }: AgencyFormProps) {
@@ -67,48 +67,56 @@ export default function AgencyForm({
                     />
 
                     <TextField
-                        id="ein"
+                        id="vat_id"
                         type="text"
-                        inputMode="numeric"
-                        label={translations.fields.ein}
-                        placeholder={translations.fields.ein_placeholder}
-                        value={data.ein}
-                        onChange={(e) => setData('ein', e.target.value)}
-                        error={errors.ein}
+                        label={translations.fields.vat_id}
+                        placeholder={translations.fields.vat_id_placeholder}
+                        value={data.vat_id}
+                        onChange={(e) => setData('vat_id', e.target.value)}
+                        error={errors.vat_id}
                     />
 
                     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                         <TextField
-                            id="license_number"
+                            id="registration_number"
                             type="text"
-                            label={translations.fields.license_number}
-                            value={data.license_number}
-                            onChange={(e) => setData('license_number', e.target.value)}
-                            error={errors.license_number}
+                            label={translations.fields.registration_number}
+                            value={data.registration_number}
+                            onChange={(e) => setData('registration_number', e.target.value)}
+                            error={errors.registration_number}
                         />
 
                         <div className="flex flex-col gap-1.5">
-                            <label htmlFor="license_state" className="text-sm font-medium text-text-soft">
-                                {translations.fields.license_state}
+                            <label htmlFor="registration_country" className="text-sm font-medium text-text-soft">
+                                {translations.fields.registration_country}
                             </label>
                             <select
-                                id="license_state"
-                                value={data.license_state}
-                                onChange={(e) => setData('license_state', e.target.value)}
+                                id="registration_country"
+                                value={data.registration_country}
+                                onChange={(e) => setData('registration_country', e.target.value)}
                                 className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-text outline-none transition-colors focus:border-brand"
                             >
-                                <option value="">{translations.fields.license_state_placeholder}</option>
-                                {Object.entries(usStates).map(([code, name]) => (
+                                <option value="">{translations.fields.registration_country_placeholder}</option>
+                                {Object.entries(countries).map(([code, name]) => (
                                     <option key={code} value={code}>
                                         {name}
                                     </option>
                                 ))}
                             </select>
-                            {errors.license_state && (
-                                <p className="text-sm text-status-rejected">{errors.license_state}</p>
+                            {errors.registration_country && (
+                                <p className="text-sm text-status-rejected">{errors.registration_country}</p>
                             )}
                         </div>
                     </div>
+
+                    <TextField
+                        id="broker_register_number"
+                        type="text"
+                        label={translations.fields.broker_register_number}
+                        value={data.broker_register_number}
+                        onChange={(e) => setData('broker_register_number', e.target.value)}
+                        error={errors.broker_register_number}
+                    />
                 </div>
             </section>
 

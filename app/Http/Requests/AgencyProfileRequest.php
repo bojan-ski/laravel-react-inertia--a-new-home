@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\UsState;
+use App\Enums\EuropeanCountry;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -18,6 +18,18 @@ class AgencyProfileRequest extends FormRequest
     }
 
     /**
+     * Uppercase the VAT ID and strip its spaces so "de 123 456 789" is stored as "DE123456789".
+     */
+    protected function prepareForValidation(): void
+    {
+        if (is_string($this->input('vat_id'))) {
+            $this->merge([
+                'vat_id' => mb_strtoupper(preg_replace('/\s+/', '', $this->input('vat_id'))),
+            ]);
+        }
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, ValidationRule|array<mixed>|string>
@@ -27,9 +39,10 @@ class AgencyProfileRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'legal_name' => ['required', 'string', 'max:255'],
-            'ein' => ['required', 'string', 'regex:/^\d{2}-\d{7}$/'],
-            'license_number' => ['required', 'string', 'max:50', 'regex:/^[A-Za-z0-9-]+$/'],
-            'license_state' => ['required', Rule::enum(UsState::class)],
+            'vat_id' => ['nullable', 'string', 'regex:/^[A-Z]{2}[A-Z0-9]{2,13}$/'],
+            'registration_number' => ['required', 'string', 'max:50', 'regex:/^[A-Za-z0-9\/.\- ]+$/'],
+            'registration_country' => ['required', Rule::enum(EuropeanCountry::class)],
+            'broker_register_number' => ['nullable', 'string', 'max:50'],
             'email' => ['required', 'email', 'max:255'],
             'phone' => ['nullable', 'string', 'max:50'],
             'website' => ['nullable', 'url', 'max:255'],
@@ -44,8 +57,8 @@ class AgencyProfileRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'ein.regex' => __('app.agency_business.validation.ein'),
-            'license_number.regex' => __('app.agency_business.validation.license_number'),
+            'vat_id.regex' => __('app.agency_business.validation.vat_id'),
+            'registration_number.regex' => __('app.agency_business.validation.registration_number'),
         ];
     }
 }
