@@ -47,6 +47,7 @@ class ListingFactory extends Factory
             'contact_email' => null,
             'contact_phone' => null,
             'approved_at' => fake()->dateTimeBetween('-6 months', '-1 day'),
+            'expires_at' => now()->addDays(fake()->numberBetween(30, Listing::LIFETIME_DAYS)),
             'rejected_at' => null,
             'rejection_reason' => null,
         ];
@@ -72,6 +73,7 @@ class ListingFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'status' => ListingStatus::PendingReview,
             'approved_at' => null,
+            'expires_at' => null,
             'rejected_at' => null,
             'rejection_reason' => null,
         ]);
@@ -82,8 +84,16 @@ class ListingFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'status' => ListingStatus::Approved,
             'approved_at' => fake()->dateTimeBetween('-6 months', '-1 day'),
+            'expires_at' => now()->addDays(fake()->numberBetween(30, Listing::LIFETIME_DAYS)),
             'rejected_at' => null,
             'rejection_reason' => null,
+        ]);
+    }
+
+    public function expired(): static
+    {
+        return $this->approved()->state(fn (array $attributes) => [
+            'expires_at' => now()->subDays(fake()->numberBetween(1, 30)),
         ]);
     }
 
@@ -92,6 +102,7 @@ class ListingFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'status' => ListingStatus::Rejected,
             'approved_at' => null,
+            'expires_at' => null,
             'rejected_at' => now(),
             'rejection_reason' => fake()->sentence(),
         ]);
@@ -102,6 +113,7 @@ class ListingFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'status' => ListingStatus::Hidden,
             'approved_at' => null,
+            'expires_at' => null,
         ]);
     }
 

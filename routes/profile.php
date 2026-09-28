@@ -20,6 +20,7 @@ Route::middleware(['auth', 'role:regular_user'])->group(function () {
     Route::delete('/my-listings/{listing}', [MyListingController::class, 'destroy'])->name('my-listings.destroy');
     Route::post('/my-listings/{listing}/close', [MyListingController::class, 'close'])->middleware('throttle:listing-write')->name('my-listings.close');
     Route::post('/my-listings/{listing}/reopen', [MyListingController::class, 'reopen'])->middleware('throttle:listing-write')->name('my-listings.reopen');
+    Route::post('/my-listings/{listing}/renew', [MyListingController::class, 'renew'])->middleware('throttle:listing-write')->name('my-listings.renew');
 
     Route::post('/my-listings/{listing}/images', [ListingImageController::class, 'store'])->middleware('throttle:listing-images')->name('my-listings.images.store');
     Route::delete('/my-listings/{listing}/images/{image}', [ListingImageController::class, 'destroy'])->name('my-listings.images.destroy');

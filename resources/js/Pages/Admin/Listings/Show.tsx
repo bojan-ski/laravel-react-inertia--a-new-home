@@ -76,6 +76,12 @@ export default function Show({
                                 <dt className="text-text-muted">{review.submitted_label}</dt>
                                 <dd className="mt-0.5 text-text">{formatDateTime(listing.createdAt)}</dd>
                             </div>
+                            {listing.expiresAt && (
+                                <div>
+                                    <dt className="text-text-muted">{review.expires_label}</dt>
+                                    <dd className="mt-0.5 text-text">{formatDateTime(listing.expiresAt)}</dd>
+                                </div>
+                            )}
                         </dl>
 
                         {listing.rejectionReason && (

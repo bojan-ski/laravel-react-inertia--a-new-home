@@ -11,6 +11,7 @@ use App\Notifications\AgencyChangesApprovedNotification;
 use App\Notifications\AgencyChangesRejectedNotification;
 use App\Notifications\AgencyRejectedNotification;
 use App\Notifications\ListingApprovedNotification;
+use App\Notifications\ListingExpiringNotification;
 use App\Notifications\ListingRejectedNotification;
 use App\Notifications\UserSuspendedNotification;
 use Illuminate\Support\Facades\Notification;
@@ -39,6 +40,15 @@ class MailNotificationService
         $this->resolveListingRecipient($listing)?->notify(
             new ListingRejectedNotification($listing->title, (string) $listing->rejection_reason)
         );
+    }
+
+    public function sendListingExpiring(Listing $listing): void
+    {
+        $this->resolveListingRecipient($listing)?->notify(new ListingExpiringNotification(
+            $listing->title,
+            $listing->expires_at->format('F j, Y'),
+            route($listing->agency_id !== null ? 'agency.index' : 'profile.index'),
+        ));
     }
 
     public function sendAgencyApproved(Agency $agency): void

@@ -222,6 +222,7 @@ export interface AdminListingReviewTranslations {
     moderation_heading: string
     owner_label: string
     submitted_label: string
+    expires_label: string
     rejection_reason_label: string
     owner_types: Record<AdminListingOwnerType, string>
     statuses: Record<AdminListingStatusValue, string>
@@ -234,6 +235,7 @@ export interface AdminListingReviewData extends ListingShowData {
     ownerName: string | null
     ownerEmail: string | null
     createdAt: string | null
+    expiresAt: string | null
 }
 
 export interface AdminListingReviewPageProps {

@@ -295,6 +295,13 @@ return [
         'flash_reopened' => 'Listing reopened and visible again.',
         'flash_close_failed' => 'Only approved listings can be marked as sold or rented.',
         'flash_reopen_failed' => 'Only sold or rented listings can be reopened.',
+        'expires_on' => 'Expires :date',
+        'expires_in' => 'Expires in :days days',
+        'expires_in_one' => 'Expires in 1 day',
+        'expired' => 'Expired',
+        'renew' => 'Renew for 90 days',
+        'flash_renewed' => 'Listing renewed until :date.',
+        'flash_renew_failed' => 'Only listings expiring within 7 days or already expired can be renewed.',
 
         'listing_types' => [
             'sale' => 'Sale',
@@ -400,11 +407,12 @@ return [
         ],
         'closed' => [
             'heading' => 'No longer available',
-            'subtitle' => 'These properties have been sold or rented. Remove them with the heart.',
+            'subtitle' => 'These properties have been sold, rented or have expired. Remove them with the heart.',
             'status' => [
                 'sold' => 'Sold',
                 'rented' => 'Rented',
             ],
+            'expired' => 'Expired',
         ],
     ],
 
@@ -764,6 +772,13 @@ return [
             'flash_reopened' => 'Listing reopened and visible again.',
             'flash_close_failed' => 'Only approved listings can be marked as sold or rented.',
             'flash_reopen_failed' => 'Only sold or rented listings can be reopened.',
+            'expires_on' => 'Expires :date',
+            'expires_in' => 'Expires in :days days',
+            'expires_in_one' => 'Expires in 1 day',
+            'expired' => 'Expired',
+            'renew' => 'Renew for 90 days',
+            'flash_renewed' => 'Listing renewed until :date.',
+            'flash_renew_failed' => 'Only listings expiring within 7 days or already expired can be renewed.',
             'empty_headline' => 'No listings yet.',
             'empty_subline' => 'Once your agency is approved, you can create listings.',
             'empty_headline_approved' => 'No listings yet.',
@@ -969,6 +984,7 @@ return [
                 'moderation_heading' => 'Moderation',
                 'owner_label' => 'Owner',
                 'submitted_label' => 'Submitted',
+                'expires_label' => 'Expires',
                 'rejection_reason_label' => 'Rejection reason',
                 'owner_types' => [
                     'user' => 'Private owner',
@@ -1244,6 +1260,13 @@ return [
             'intro' => 'Your listing ":title" was reviewed and could not be approved.',
             'reason' => 'Reason: :reason',
             'outro' => 'You are welcome to submit a new listing that addresses the issue above.',
+        ],
+        'listing_expiring' => [
+            'subject' => 'Your listing expires soon',
+            'greeting' => 'Listing reminder',
+            'intro' => 'Your listing ":title" expires on :date and will then be removed from search.',
+            'action' => 'Renew listing',
+            'outro' => 'Renewing keeps it live for another 90 days without a new review. Editing the listing sends it back for review.',
         ],
         'agency_approved' => [
             'subject' => 'Your agency has been approved',

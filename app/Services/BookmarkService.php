@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Listing;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 class BookmarkService
@@ -35,10 +36,13 @@ class BookmarkService
             ->get();
     }
 
-    public function getClosedBookmarkedListings(User $user): Collection
+    /**
+     * @return Collection<int, Listing>
+     */
+    public function getUnavailableBookmarkedListings(User $user): Collection
     {
         return $user->bookmarkedListings()
-            ->closed()
+            ->where(fn (Builder $query) => $query->closed()->orWhere(fn (Builder $query) => $query->expired()))
             ->ownerNotSuspended()
             ->with(['owner', 'images', 'agency.user'])
             ->orderByPivot('created_at', 'desc')

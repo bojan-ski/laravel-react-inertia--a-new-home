@@ -47,7 +47,7 @@ class BookmarkController extends Controller
                 'canBookmark' => $user->can('bookmark', $listing),
             ]);
 
-        $closedListings = $this->bookmarkService->getClosedBookmarkedListings($user)
+        $closedListings = $this->bookmarkService->getUnavailableBookmarkedListings($user)
             ->map(fn (Listing $listing) => [
                 ...$listing->toBookmarkCardArray(),
                 'isBookmarked' => true,

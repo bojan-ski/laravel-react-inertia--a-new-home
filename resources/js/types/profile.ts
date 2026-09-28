@@ -1,4 +1,4 @@
-import type { ListingCloseTranslations, ListingStatusValue } from '@/types/listing'
+import type { ListingCloseTranslations, ListingExpiryTranslations, ListingStatusValue } from '@/types/listing'
 import type { ConfirmActionTranslations } from '@/types/moderation'
 
 export interface ProfileListingData {
@@ -15,6 +15,9 @@ export interface ProfileListingData {
     createdAt: string
     rejectionReason: string | null
     closedAt: string | null
+    expiresAt: string | null
+    isExpired: boolean
+    canRenew: boolean
 }
 
 export type ProfileStatusLabels = Record<ListingStatusValue, string>
@@ -27,7 +30,7 @@ export interface ProfileEmptyTranslations {
 
 export type ProfileConfirmTranslations = ConfirmActionTranslations
 
-export interface ProfileTranslations extends ListingCloseTranslations {
+export interface ProfileTranslations extends ListingCloseTranslations, ListingExpiryTranslations {
     title: string
     subtitle: string
     account_settings: string

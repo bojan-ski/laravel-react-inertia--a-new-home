@@ -64,7 +64,11 @@ export default function Index({ listings, closedListings, translations, listingT
                                             listing={listing}
                                             translations={listingTranslations.card}
                                             propertyTypeLabels={listingTranslations.filters.property_types}
-                                            closedLabel={translations.closed.status[listing.status]}
+                                            closedLabel={
+                                                listing.status === 'approved'
+                                                    ? translations.closed.expired
+                                                    : translations.closed.status[listing.status]
+                                            }
                                         />
                                     ))}
                                 </div>
