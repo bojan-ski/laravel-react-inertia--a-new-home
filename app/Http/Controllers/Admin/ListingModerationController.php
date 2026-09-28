@@ -39,6 +39,21 @@ class ListingModerationController extends Controller
         ]);
     }
 
+    public function show(Listing $listing): Response
+    {
+        Gate::authorize('review', $listing);
+
+        $listing->load(['images', 'owner:id,name,email', 'agency:id,name,email']);
+
+        return Inertia::render('Admin/Listings/Show', [
+            'listing' => $listing->toReviewArray(),
+            'canModerate' => Gate::allows('approve', $listing),
+            'translations' => __('app.admin.listings'),
+            'listingTranslations' => __('app.listings.show'),
+            'propertyTypeLabels' => __('app.listings.filters.property_types'),
+        ]);
+    }
+
     public function approve(Listing $listing): RedirectResponse
     {
         Gate::authorize('approve', $listing);

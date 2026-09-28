@@ -4,15 +4,18 @@ import { ChevronLeft, Menu, X } from 'lucide-react'
 import ListingsNavbarAuthActions from '@/Components/Listings/ListingsNavbarAuthActions'
 import ListingsNavbarMobilePanel from '@/Components/Listings/ListingsNavbarMobilePanel'
 import type { ListingsNavbarProps, ListingsNavLink } from '@/types/listing'
+import type { SharedProps } from '@/types/shared'
 
 export default function ListingsNavbar({ nav }: ListingsNavbarProps) {
-    const currentPath = usePage().url
+    const page = usePage<SharedProps>()
+    const currentPath = page.url
+    const isAdmin = page.props.auth?.user?.role === 'admin'
     const [open, setOpen] = useState(false)
 
     const centerLinks: ListingsNavLink[] = [
         { label: nav.listings, href: '/listings' },
         { label: nav.agencies, href: '/agencies' },
-        { label: nav.favorites, href: '/bookmarks' },
+        ...(isAdmin ? [] : [{ label: nav.favorites, href: '/bookmarks' }]),
     ]
 
     return (

@@ -59,4 +59,14 @@ class SharedNavigationTest extends TestCase
             ->get('/agency/edit')
             ->assertInertia(fn (Assert $page) => $page->where('listingsNav', __('app.listings.nav')));
     }
+
+    public function test_admin_pages_receive_listings_navbar(): void
+    {
+        $this->actingAs(User::factory()->admin()->create())
+            ->get('/admin/listings')
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('Admin/Listings/Index')
+                ->where('listingsNav', __('app.listings.nav')));
+    }
 }

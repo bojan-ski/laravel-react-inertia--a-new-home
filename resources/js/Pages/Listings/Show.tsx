@@ -1,10 +1,11 @@
 import { Head, Link } from '@inertiajs/react'
 import { ChevronLeft, MapPin } from 'lucide-react'
+import ListingDetailRow from '@/Components/Listings/ListingDetailRow'
 import ListingFacts from '@/Components/Listings/ListingFacts'
 import ListingGallery from '@/Components/Listings/ListingGallery'
 import ListingSidebar from '@/Components/Listings/ListingSidebar'
 import ListingsLayout from '@/Layouts/ListingsLayout'
-import type { ListingDetailRowProps, ListingShowPageProps } from '@/types/listing'
+import type { ListingShowPageProps } from '@/types/listing'
 
 export default function Show({ listing, isBookmarked, canBookmark, canStartChat, translations }: ListingShowPageProps) {
     const show = translations.show
@@ -70,14 +71,14 @@ export default function Show({ listing, isBookmarked, canBookmark, canStartChat,
                         <section>
                             <h2 className="font-display text-xl font-semibold text-text">{show.details_heading}</h2>
                             <dl className="mt-4 flex flex-col gap-4">
-                                <DetailRow label={show.detail_address} value={address} />
-                                <DetailRow label={show.detail_property_type} value={propertyLabel} />
-                                <DetailRow label={show.detail_listing_type} value={typeLabel} />
+                                <ListingDetailRow label={show.detail_address} value={address} />
+                                <ListingDetailRow label={show.detail_property_type} value={propertyLabel} />
+                                <ListingDetailRow label={show.detail_listing_type} value={typeLabel} />
                                 {listing.yearBuilt !== null && (
-                                    <DetailRow label={show.detail_year_built} value={String(listing.yearBuilt)} />
+                                    <ListingDetailRow label={show.detail_year_built} value={String(listing.yearBuilt)} />
                                 )}
                                 {listing.approvedAt && (
-                                    <DetailRow label={show.detail_listed} value={listing.approvedAt} />
+                                    <ListingDetailRow label={show.detail_listed} value={listing.approvedAt} />
                                 )}
                             </dl>
                         </section>
@@ -95,14 +96,5 @@ export default function Show({ listing, isBookmarked, canBookmark, canStartChat,
                 </div>
             </div>
         </ListingsLayout>
-    )
-}
-
-function DetailRow({ label, value }: ListingDetailRowProps) {
-    return (
-        <div className="flex justify-between gap-6 border-b border-border pb-4">
-            <dt className="text-text-muted">{label}</dt>
-            <dd className="text-right text-text">{value}</dd>
-        </div>
     )
 }

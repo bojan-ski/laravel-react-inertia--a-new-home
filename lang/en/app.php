@@ -884,6 +884,24 @@ return [
                 'previous' => 'Previous',
                 'next' => 'Next',
             ],
+            'view_listing' => 'View Listing',
+            'review' => [
+                'back' => 'Back to Pending Listings',
+                'moderation_heading' => 'Moderation',
+                'owner_label' => 'Owner',
+                'submitted_label' => 'Submitted',
+                'rejection_reason_label' => 'Rejection reason',
+                'owner_types' => [
+                    'user' => 'Private owner',
+                    'agency' => 'Agency',
+                ],
+                'statuses' => [
+                    'pending_review' => 'Pending Review',
+                    'approved' => 'Approved',
+                    'rejected' => 'Rejected',
+                    'hidden' => 'Hidden',
+                ],
+            ],
         ],
         'agencies' => [
             'title' => 'Pending Agencies',

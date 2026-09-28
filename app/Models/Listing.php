@@ -327,6 +327,22 @@ class Listing extends Model
     }
 
     /**
+     * @return array<string, mixed>
+     */
+    public function toReviewArray(): array
+    {
+        return [
+            ...$this->toShowArray(),
+            'status' => $this->status->value,
+            'rejectionReason' => $this->rejection_reason,
+            'ownerType' => $this->agency_id !== null ? 'agency' : 'user',
+            'ownerName' => $this->owner?->name ?? $this->agency?->name,
+            'ownerEmail' => $this->owner?->email ?? $this->agency?->email,
+            'createdAt' => $this->created_at?->toIso8601String(),
+        ];
+    }
+
+    /**
      * @return array<string, string>
      */
     protected function casts(): array

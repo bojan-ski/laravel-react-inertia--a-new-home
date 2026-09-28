@@ -1,6 +1,5 @@
-import { useState } from 'react'
-import { router } from '@inertiajs/react'
-import RejectListingDialog from '@/Components/Admin/RejectListingDialog'
+import { Link } from '@inertiajs/react'
+import ListingModerationActions from '@/Components/Admin/ListingModerationActions'
 import { formatDateTime, formatPrice } from '@/Components/Listings/listingFormat'
 import type { AdminListingModerationRowProps } from '@/types/admin'
 
@@ -9,16 +8,7 @@ export default function ListingModerationRow({
     translations,
     propertyTypeLabels,
 }: AdminListingModerationRowProps) {
-    const [rejectOpen, setRejectOpen] = useState(false)
-    const [processing, setProcessing] = useState(false)
-
-    function approve() {
-        router.post(`/admin/listings/${listing.id}/approve`, {}, {
-            preserveScroll: true,
-            onStart: () => setProcessing(true),
-            onFinish: () => setProcessing(false),
-        })
-    }
+    const reviewUrl = `/admin/listings/${listing.id}`
 
     const metaLine = [
         translations.listing_types[listing.listingType],
@@ -34,7 +24,9 @@ export default function ListingModerationRow({
         <div className="rounded-xl border border-border bg-surface p-4 sm:p-5">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div className="min-w-0">
-                    <p className="font-semibold text-text">{listing.title}</p>
+                    <Link href={reviewUrl} className="font-semibold text-text transition-colors hover:text-brand">
+                        {listing.title}
+                    </Link>
                     <p className="mt-0.5 text-sm text-text-muted">{metaLine}</p>
 
                     <p className="mt-2 font-bold text-text">
@@ -57,32 +49,19 @@ export default function ListingModerationRow({
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3 md:shrink-0">
-                    <button
-                        type="button"
-                        onClick={approve}
-                        disabled={processing}
-                        className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-text-inverse transition-colors hover:bg-brand-dark disabled:opacity-50"
+                    <Link
+                        href={reviewUrl}
+                        className="rounded-lg border border-border-strong px-4 py-2 text-sm font-semibold text-text transition-colors hover:border-text"
                     >
-                        {translations.actions.approve}
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => setRejectOpen(true)}
-                        disabled={processing}
-                        className="rounded-lg border border-status-rejected px-4 py-2 text-sm font-semibold text-status-rejected transition-colors hover:bg-status-rejected/10 disabled:opacity-50"
-                    >
-                        {translations.actions.reject}
-                    </button>
+                        {translations.view_listing}
+                    </Link>
+                    <ListingModerationActions
+                        listingId={listing.id}
+                        listingTitle={listing.title}
+                        translations={translations}
+                    />
                 </div>
             </div>
-
-            <RejectListingDialog
-                open={rejectOpen}
-                onClose={() => setRejectOpen(false)}
-                listingId={listing.id}
-                listingTitle={listing.title}
-                translations={translations}
-            />
         </div>
     )
 }
