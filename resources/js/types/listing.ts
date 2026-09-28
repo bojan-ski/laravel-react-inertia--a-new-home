@@ -264,7 +264,6 @@ export type ListingFormData = {
     listing_type: string
     property_type: string
     price: string
-    currency: string
     description: string
     country: string
     city: string
@@ -273,7 +272,6 @@ export type ListingFormData = {
     bedrooms: string
     bathrooms: string
     area_value: string
-    area_unit: string
     year_built: string
     contact_name: string
     contact_email: string
@@ -285,7 +283,6 @@ export interface ListingFormFieldLabels {
     listing_type: string
     property_type: string
     price: string
-    currency: string
     description: string
     country: string
     city: string

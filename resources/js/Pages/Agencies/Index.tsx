@@ -40,7 +40,7 @@ export default function Index({ agencies, filters, translations }: AgenciesIndex
                                     key={agency.id}
                                     agency={agency}
                                     viewLabel={translations.view_agency}
-                                    licenseLabel={translations.license}
+                                    registrationLabels={translations}
                                 />
                             ))}
                         </div>

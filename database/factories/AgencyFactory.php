@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Enums\AgencyStatus;
-use App\Enums\UsState;
+use App\Enums\EuropeanCountry;
 use App\Models\Agency;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -20,14 +20,22 @@ class AgencyFactory extends Factory
     public function definition(): array
     {
         $name = $this->generateName();
+        $country = fake()->randomElement([
+            EuropeanCountry::Germany,
+            EuropeanCountry::Austria,
+            EuropeanCountry::Croatia,
+            EuropeanCountry::Slovenia,
+            EuropeanCountry::Netherlands,
+        ]);
 
         return [
             'user_id' => User::factory()->agency(),
             'name' => $name,
-            'legal_name' => $name.' LLC',
-            'ein' => fake()->numerify('##-#######'),
-            'license_number' => fake()->bothify('#######'),
-            'license_state' => fake()->randomElement(UsState::cases()),
+            'legal_name' => $name.' Ltd.',
+            'vat_id' => $country->value.fake()->numerify('#########'),
+            'registration_number' => fake()->numerify('REG-########'),
+            'registration_country' => $country,
+            'broker_register_number' => fake()->numerify('BR-#####'),
             'slug' => Str::slug($name).'-'.fake()->unique()->numerify('######'),
             'description' => fake()->paragraphs(2, true),
             'phone' => fake()->phoneNumber(),

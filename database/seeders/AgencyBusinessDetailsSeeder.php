@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Enums\UsState;
+use App\Enums\EuropeanCountry;
 use App\Models\Agency;
 use Illuminate\Database\Seeder;
 
@@ -14,12 +14,23 @@ class AgencyBusinessDetailsSeeder extends Seeder
     public function run(): void
     {
         Agency::query()
-            ->whereNull('legal_name')
-            ->each(fn (Agency $agency) => $agency->update([
-                'legal_name' => $agency->name.' LLC',
-                'ein' => fake()->numerify('##-#######'),
-                'license_number' => fake()->bothify('#######'),
-                'license_state' => fake()->randomElement(UsState::cases()),
-            ]));
+            ->whereNull('registration_number')
+            ->each(function (Agency $agency): void {
+                $country = fake()->randomElement([
+                    EuropeanCountry::Germany,
+                    EuropeanCountry::Austria,
+                    EuropeanCountry::Croatia,
+                    EuropeanCountry::Slovenia,
+                    EuropeanCountry::Netherlands,
+                ]);
+
+                $agency->update([
+                    'legal_name' => $agency->legal_name ?? $agency->name.' Ltd.',
+                    'vat_id' => $country->value.fake()->numerify('#########'),
+                    'registration_number' => fake()->numerify('REG-########'),
+                    'registration_country' => $country,
+                    'broker_register_number' => fake()->numerify('BR-#####'),
+                ]);
+            });
     }
 }

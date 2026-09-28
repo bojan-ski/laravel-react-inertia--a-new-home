@@ -290,8 +290,9 @@ export interface AdminAgenciesTranslations {
     website: string
     address: string
     legal: string
-    license: string
-    license_value: string
+    registration: string
+    registration_value: string
+    broker_register: string
     not_provided: string
     submitted: string
     verification_heading: string

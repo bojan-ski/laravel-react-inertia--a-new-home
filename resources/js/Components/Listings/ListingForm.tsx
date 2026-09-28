@@ -7,10 +7,6 @@ const PROPERTY_TYPES = [
     'condo', 'land', 'commercial', 'other',
 ]
 
-const CURRENCIES = ['EUR', 'USD', 'GBP']
-
-const AREA_UNITS = ['m²', 'sqft']
-
 const controlClasses =
     'w-full rounded-lg border border-border bg-surface px-4 py-3 text-text outline-none transition-colors focus:border-brand'
 
@@ -94,25 +90,7 @@ export default function ListingForm({
                         onChange={(e) => setData('price', e.target.value)}
                         error={errors.price}
                     />
-
-                    <div className="flex flex-col gap-1.5">
-                        <label htmlFor="currency" className="text-sm font-medium text-text-soft">
-                            {fields.currency}
-                        </label>
-                        <select
-                            id="currency"
-                            className={controlClasses}
-                            value={data.currency}
-                            onChange={(e) => setData('currency', e.target.value)}
-                        >
-                            {CURRENCIES.map((currency) => (
-                                <option key={currency} value={currency}>
-                                    {currency}
-                                </option>
-                            ))}
-                        </select>
-                        {errors.currency && <p className="text-sm text-status-rejected">{errors.currency}</p>}
-                    </div>
+                    <div className="hidden md:block" aria-hidden="true" />
                 </div>
 
                 <div className="flex flex-col gap-1.5">
@@ -197,35 +175,16 @@ export default function ListingForm({
                         error={errors.bathrooms}
                     />
 
-                    <div className="flex flex-col gap-1.5">
-                        <label htmlFor="area_value" className="text-sm font-medium text-text-soft">
-                            {fields.area}
-                        </label>
-                        <div className="flex gap-2">
-                            <input
-                                id="area_value"
-                                type="number"
-                                min={0}
-                                step="0.01"
-                                className={controlClasses}
-                                value={data.area_value}
-                                onChange={(e) => setData('area_value', e.target.value)}
-                            />
-                            <select
-                                aria-label={fields.area}
-                                className="rounded-lg border border-border bg-surface px-3 py-3 text-text outline-none transition-colors focus:border-brand"
-                                value={data.area_unit}
-                                onChange={(e) => setData('area_unit', e.target.value)}
-                            >
-                                {AREA_UNITS.map((unit) => (
-                                    <option key={unit} value={unit}>
-                                        {unit}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        {errors.area_value && <p className="text-sm text-status-rejected">{errors.area_value}</p>}
-                    </div>
+                    <TextField
+                        id="area_value"
+                        type="number"
+                        min={0}
+                        step="0.01"
+                        label={fields.area}
+                        value={data.area_value}
+                        onChange={(e) => setData('area_value', e.target.value)}
+                        error={errors.area_value}
+                    />
 
                     <TextField
                         id="year_built"

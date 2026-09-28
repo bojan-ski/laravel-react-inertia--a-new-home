@@ -3,11 +3,21 @@ import type { ListingCardData, ListingStatusValue, ListingsTranslations } from '
 import type { ConfirmActionTranslations } from '@/types/moderation'
 import type { PaginationLabels, Paginator } from '@/types/pagination'
 
-export interface AgencyBusinessDetails {
+export interface AgencyRegistrationDetails {
+    vatId: string | null
+    registrationNumber: string | null
+    registrationCountry: string | null
+    brokerRegisterNumber: string | null
+}
+
+export interface AgencyBusinessDetails extends AgencyRegistrationDetails {
     legalName: string | null
-    ein: string | null
-    licenseNumber: string | null
-    licenseState: string | null
+}
+
+export interface AgencyRegistrationLabels {
+    registration: string
+    broker_register: string
+    vat_id: string
 }
 
 export interface AgencyFormSections {
@@ -25,11 +35,12 @@ export interface AgencyFormFields {
     website: string
     address: string
     legal_name: string
-    ein: string
-    ein_placeholder: string
-    license_number: string
-    license_state: string
-    license_state_placeholder: string
+    vat_id: string
+    vat_id_placeholder: string
+    registration_number: string
+    registration_country: string
+    registration_country_placeholder: string
+    broker_register_number: string
     business_note: string
 }
 
@@ -41,9 +52,10 @@ export interface AgencyFormTranslations {
 export interface AgencyFormData {
     name: string
     legal_name: string
-    ein: string
-    license_number: string
-    license_state: string
+    vat_id: string
+    registration_number: string
+    registration_country: string
+    broker_register_number: string
     email: string
     phone: string
     website: string
@@ -59,7 +71,7 @@ export interface AgencyFormProps {
     submitLabel: string
     onSubmit: (event: FormEvent<HTMLFormElement>) => void
     translations: AgencyFormTranslations
-    usStates: Record<string, string>
+    countries: Record<string, string>
     note?: ReactNode
     cancelSlot?: ReactNode
 }
@@ -76,7 +88,7 @@ export interface AgencySetupTranslations extends AgencyFormTranslations {
 
 export interface AgencySetupPageProps {
     translations: AgencySetupTranslations
-    usStates: Record<string, string>
+    countries: Record<string, string>
 }
 
 export type AgencyStatusValue = 'pending_verification' | 'approved' | 'rejected' | 'hidden'
@@ -128,9 +140,11 @@ export interface AgencyShowProfileTranslations {
     website: string
     address: string
     legal_name: string
-    ein: string
-    license: string
-    license_value: string
+    vat_id: string
+    registration: string
+    registration_value: string
+    broker_register_number: string
+    not_set: string
     missing: string
 }
 
@@ -231,10 +245,10 @@ export interface AgencyEditPageProps {
     agency: AgencyEditData
     pendingChange: AgencyPendingChange | null
     translations: AgencyEditTranslations
-    usStates: Record<string, string>
+    countries: Record<string, string>
 }
 
-export interface AgencyCardData {
+export interface AgencyCardData extends AgencyRegistrationDetails {
     id: number
     name: string
     slug: string
@@ -243,8 +257,6 @@ export interface AgencyCardData {
     website: string | null
     address: string | null
     description: string | null
-    licenseNumber: string | null
-    licenseState: string | null
     approvedAt: string | null
 }
 
@@ -265,14 +277,13 @@ export interface AgenciesEmptyTranslations {
     none: string
 }
 
-export interface AgenciesDirectoryTranslations {
+export interface AgenciesDirectoryTranslations extends AgencyRegistrationLabels {
     title: string
     heading: string
     subtitle: string
     count_prefix: string
     count_suffix: string
     view_agency: string
-    license: string
     show: AgencyPublicPageTranslations
     search: AgenciesSearchTranslations
     empty: AgenciesEmptyTranslations
@@ -306,7 +317,7 @@ export interface AgencyPublicPageProps {
 export interface AgencyCardProps {
     agency: AgencyCardData
     viewLabel: string
-    licenseLabel: string
+    registrationLabels: AgencyRegistrationLabels
 }
 
 export interface AgencyContactListProps {

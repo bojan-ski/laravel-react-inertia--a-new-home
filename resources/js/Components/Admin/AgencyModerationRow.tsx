@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import { Building2 } from 'lucide-react'
 import RejectAgencyDialog from '@/Components/Admin/RejectAgencyDialog'
-import { formatLicense } from '@/Components/Agencies/agencyFormat'
+import { formatRegistration } from '@/Components/Agencies/agencyFormat'
 import { formatDateTime } from '@/Components/Listings/listingFormat'
 import type { AdminAgencyModerationRowProps } from '@/types/admin'
 
@@ -73,15 +73,23 @@ export default function AgencyModerationRow({ agency, translations }: AdminAgenc
                     <p className="mt-2 text-sm text-text-muted">
                         {translations.legal
                             .replace(':name', agency.legalName ?? translations.not_provided)
-                            .replace(':ein', agency.ein ?? translations.not_provided)}
+                            .replace(':vat', agency.vatId ?? translations.not_provided)}
                     </p>
                     <p className="mt-0.5 text-sm text-text-muted">
-                        {translations.license.replace(
-                            ':license',
-                            formatLicense(translations.license_value, agency.licenseNumber, agency.licenseState) ??
-                                translations.not_provided,
+                        {translations.registration.replace(
+                            ':registration',
+                            formatRegistration(
+                                translations.registration_value,
+                                agency.registrationNumber,
+                                agency.registrationCountry,
+                            ) ?? translations.not_provided,
                         )}
                     </p>
+                    {agency.brokerRegisterNumber && (
+                        <p className="mt-0.5 text-sm text-text-muted">
+                            {translations.broker_register.replace(':number', agency.brokerRegisterNumber)}
+                        </p>
+                    )}
 
                     <p className="mt-2 text-sm text-text-muted">
                         {translations.submitted.replace(':date', formatDateTime(agency.createdAt))}

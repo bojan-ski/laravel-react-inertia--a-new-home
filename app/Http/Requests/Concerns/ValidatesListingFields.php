@@ -24,7 +24,6 @@ trait ValidatesListingFields
             'listing_type' => ['required', 'string', Rule::in(['sale', 'rent'])],
             'property_type' => ['required', 'string', Rule::in(self::PROPERTY_TYPES)],
             'price' => ['required', 'numeric', 'min:0'],
-            'currency' => ['required', 'string', 'max:10'],
             'description' => ['required', 'string', 'max:10000'],
             'country' => ['required', 'string', 'max:255'],
             'city' => ['required', 'string', 'max:255'],
@@ -33,7 +32,6 @@ trait ValidatesListingFields
             'bedrooms' => ['nullable', 'integer', 'min:0'],
             'bathrooms' => ['nullable', 'integer', 'min:0'],
             'area_value' => ['nullable', 'numeric', 'min:0'],
-            'area_unit' => ['nullable', 'string', 'max:50'],
             'year_built' => ['nullable', 'integer', 'min:1800', 'max:2100'],
         ];
     }
