@@ -1,35 +1,27 @@
-import { X } from 'lucide-react'
+import { Check, Info, X } from 'lucide-react'
 import type { FlashBannerProps } from '@/types/ui'
 
-export default function FlashBanner({ message, variant, coloredText = false, className = 'mb-6', onDismiss }: FlashBannerProps) {
-    const palette =
-        variant === 'success'
-            ? 'border-status-approved/30 bg-status-approved/10'
-            : 'border-status-rejected/30 bg-status-rejected/10'
-    const textColor = coloredText ? 'text-status-rejected' : 'text-text'
+const variants = {
+    success: { palette: 'bg-forest-50 text-forest-800', Icon: Check },
+    info: { palette: 'bg-sand text-ink', Icon: Info },
+    error: { palette: 'border border-ink bg-paper text-ink', Icon: Info },
+}
 
-    const classes = [
-        className,
-        onDismiss ? 'flex items-start justify-between gap-4' : null,
-        'rounded-lg border',
-        palette,
-        'px-4 py-3 text-sm',
-        textColor,
-    ]
-        .filter(Boolean)
-        .join(' ')
+export default function FlashBanner({ message, variant, className = 'mb-6', onDismiss }: FlashBannerProps) {
+    const { palette, Icon } = variants[variant]
 
     return (
-        <div className={classes}>
-            <span>{message}</span>
+        <div className={`${className} flex items-start gap-3 px-4.5 py-3.5 text-[15px] ${palette}`}>
+            <Icon className="mt-0.5 size-4.5 shrink-0" strokeWidth={1.25} aria-hidden="true" />
+            <span className="flex-1">{message}</span>
             {onDismiss && (
                 <button
                     type="button"
                     onClick={onDismiss}
-                    className="text-text-soft transition-colors hover:text-text"
+                    className="mt-0.5 shrink-0 opacity-70 transition-opacity duration-150 hover:opacity-100"
                     aria-label="Dismiss"
                 >
-                    <X className="size-4" />
+                    <X className="size-4.5" strokeWidth={1.25} aria-hidden="true" />
                 </button>
             )}
         </div>

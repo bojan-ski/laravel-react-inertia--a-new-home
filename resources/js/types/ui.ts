@@ -1,7 +1,10 @@
+import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ChangeEvent, ReactNode } from 'react'
+import type { InertiaLinkProps } from '@inertiajs/react'
 import type { UserStatusValue } from '@/types/admin'
+import type { AgencyStatusValue } from '@/types/agency'
 import type { ListingStatusValue } from '@/types/listing'
 
-export type BadgeStatusValue = ListingStatusValue | UserStatusValue | 'expired'
+export type BadgeStatusValue = ListingStatusValue | UserStatusValue | AgencyStatusValue | 'expired'
 
 export interface StatusBadgeProps {
     status: BadgeStatusValue
@@ -10,8 +13,7 @@ export interface StatusBadgeProps {
 
 export interface FlashBannerProps {
     message: string
-    variant: 'success' | 'error'
-    coloredText?: boolean
+    variant: 'success' | 'info' | 'error'
     className?: string
     onDismiss?: () => void
 }
@@ -26,4 +28,87 @@ export interface ConfirmDialogProps {
     onConfirm: () => void
     onCancel: () => void
     tone?: 'danger' | 'brand'
+}
+
+export type ButtonVariant =
+    | 'primary'
+    | 'secondary'
+    | 'link'
+    | 'strong-link'
+    | 'ink-outline'
+    | 'on-photo'
+    | 'on-photo-outline'
+
+export type ButtonSize = 'sm' | 'md' | 'lg'
+
+interface ButtonBaseProps {
+    variant?: ButtonVariant
+    size?: ButtonSize
+    fullWidth?: boolean
+    trailing?: ReactNode
+    className?: string
+    children: ReactNode
+}
+
+export type NativeButtonProps = ButtonBaseProps &
+    Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof ButtonBaseProps> & {
+        href?: undefined
+        external?: undefined
+    }
+
+export type InertiaButtonLinkProps = ButtonBaseProps &
+    Omit<InertiaLinkProps, keyof ButtonBaseProps | 'href'> & {
+        href: string
+        external?: false
+    }
+
+export type ExternalButtonLinkProps = ButtonBaseProps &
+    Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof ButtonBaseProps | 'href'> & {
+        href: string
+        external: true
+    }
+
+export type ButtonProps = NativeButtonProps | InertiaButtonLinkProps | ExternalButtonLinkProps
+
+export interface ToggleOption<T extends string = string> {
+    value: T
+    label: string
+}
+
+export interface SegmentedToggleProps<T extends string = string> {
+    name: string
+    legend: string
+    options: ToggleOption<T>[]
+    value: T
+    onChange: (value: T) => void
+    size?: 'sm' | 'md'
+    className?: string
+}
+
+export interface ChipToggleProps {
+    type: 'checkbox' | 'radio'
+    name: string
+    value: string
+    label: string
+    checked: boolean
+    onChange: (checked: boolean, event: ChangeEvent<HTMLInputElement>) => void
+}
+
+export interface EmptyStateProps {
+    title: string
+    hint?: string
+    action?: ReactNode
+    className?: string
+}
+
+export interface KickerProps {
+    as?: 'span' | 'p' | 'h2'
+    size?: 'sm' | 'md'
+    className?: string
+    children: ReactNode
+}
+
+export interface LogoTileProps {
+    name: string
+    size?: 'md' | 'lg' | 'xl'
 }

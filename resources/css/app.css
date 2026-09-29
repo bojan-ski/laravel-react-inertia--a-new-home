@@ -4,41 +4,104 @@
 @source '../../storage/framework/views/*.php';
 
 @theme {
-    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Archivo', 'Archivo fallback', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
     --font-body: var(--font-sans);
-    --font-display: 'Playfair Display', ui-serif, Georgia, 'Times New Roman', serif;
 
-    --color-background: #f8f7f4;
-    --color-surface: #ffffff;
-    --color-surface-muted: #f1efe9;
-    --color-surface-dark: #111827;
+    --color-paper: #f6f3ec;
+    --color-sand: #ece7dc;
+    --color-ink: #1c201c;
+    --color-ink-muted: color-mix(in srgb, #1c201c 65%, transparent);
+    --color-ink-faint: color-mix(in srgb, #1c201c 64%, transparent);
+    --color-rule: color-mix(in srgb, #1c201c 18%, transparent);
 
-    --color-text: #111827;
-    --color-text-soft: #4b5563;
-    --color-text-muted: #6b7280;
-    --color-text-inverse: #f9fafb;
+    --color-forest: #22523a;
+    --color-forest-50: #edf3ee;
+    --color-forest-100: #d9e7dd;
+    --color-forest-200: #b6cfbe;
+    --color-forest-300: #7ea893;
+    --color-forest-400: #3e7a5b;
+    --color-forest-600: #1b4430;
+    --color-forest-700: #163a29;
+    --color-forest-800: #112d20;
+    --color-forest-900: #0c2017;
 
-    --color-brand: #0f766e;
-    --color-brand-dark: #115e59;
-    --color-brand-soft: #ccfbf1;
-    --color-accent: #c2873c;
-    --color-accent-soft: #f5e7d0;
+    --radius-*: initial;
 
-    --color-border: #e5e7eb;
-    --color-border-strong: #d1d5db;
+    --shadow-sm: 0 1px 2px color-mix(in srgb, #2d2b2b 14%, transparent);
+    --shadow-md: 0 3px 10px color-mix(in srgb, #2d2b2b 16%, transparent);
+    --shadow-lg: 0 12px 32px color-mix(in srgb, #2d2b2b 22%, transparent);
 
-    --color-status-pending-review: #b45309;
-    --color-status-approved: #166534;
-    --color-status-rejected: #991b1b;
-    --color-status-suspended: #7c2d12;
-    --color-status-hidden: #6b7280;
-    --color-status-pending-verification: #a16207;
-    --color-status-sold: #115e59;
-    --color-status-rented: #115e59;
+    --text-display-xl: 7rem;
+    --text-display-xl--line-height: 0.92;
+    --text-display-xl--letter-spacing: -0.045em;
+    --text-display-xl--font-weight: 200;
+    --text-display-l: 5.5rem;
+    --text-display-l--line-height: 0.95;
+    --text-display-l--letter-spacing: -0.045em;
+    --text-display-l--font-weight: 200;
+    --text-display-m: 4rem;
+    --text-display-m--line-height: 1;
+    --text-display-m--letter-spacing: -0.04em;
+    --text-display-m--font-weight: 200;
+
+    --font-weight-airy: 250;
+    --font-weight-book: 350;
+
+    --tracking-kicker: 0.14em;
+}
+
+@theme {
+    --font-display: var(--font-sans);
+
+    --color-background: var(--color-paper);
+    --color-surface: var(--color-paper);
+    --color-surface-muted: var(--color-sand);
+    --color-surface-dark: var(--color-ink);
+
+    --color-text: var(--color-ink);
+    --color-text-soft: var(--color-ink-muted);
+    --color-text-muted: var(--color-ink-muted);
+    --color-text-inverse: var(--color-paper);
+
+    --color-brand: var(--color-forest);
+    --color-brand-dark: var(--color-forest-600);
+    --color-brand-soft: var(--color-forest-50);
+    --color-accent: var(--color-forest-700);
+    --color-accent-soft: var(--color-sand);
+
+    --color-border: var(--color-rule);
+    --color-border-strong: var(--color-ink-faint);
+
+    --color-status-pending-review: var(--color-ink);
+    --color-status-approved: var(--color-forest);
+    --color-status-rejected: var(--color-ink);
+    --color-status-suspended: var(--color-ink);
+    --color-status-hidden: var(--color-ink-muted);
+    --color-status-pending-verification: var(--color-ink);
+    --color-status-sold: var(--color-ink);
+    --color-status-rented: var(--color-ink);
 }
 
 @layer base {
+    body {
+        @apply bg-paper font-sans text-ink;
+        text-wrap: pretty;
+    }
+
+    a:hover {
+        color: var(--color-forest);
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--color-forest);
+        outline-offset: 2px;
+    }
+
+    ::selection {
+        background: var(--color-forest-100);
+    }
+
     button:not(:disabled),
     [role='button']:not(:disabled) {
         cursor: pointer;

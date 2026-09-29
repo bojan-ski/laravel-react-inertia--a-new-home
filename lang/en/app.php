@@ -215,6 +215,7 @@ return [
             'page_of' => 'Page :current of :last',
             'previous' => 'Previous',
             'next' => 'Next',
+            'aria_label' => 'Pagination',
         ],
 
         'show' => [
@@ -329,6 +330,7 @@ return [
             'page_of' => 'Page :current of :last',
             'previous' => 'Previous',
             'next' => 'Next',
+            'aria_label' => 'Pagination',
         ],
     ],
 
@@ -1140,6 +1142,7 @@ return [
                 'page_of' => 'Page :current of :last',
                 'previous' => 'Previous',
                 'next' => 'Next',
+                'aria_label' => 'Pagination',
             ],
             'view_listing' => 'View',
             'review' => [
@@ -1230,6 +1233,7 @@ return [
                 'page_of' => 'Page :current of :last',
                 'previous' => 'Previous',
                 'next' => 'Next',
+                'aria_label' => 'Pagination',
             ],
         ],
         'users' => [
@@ -1279,6 +1283,7 @@ return [
                 'page_of' => 'Page :current of :last',
                 'previous' => 'Previous',
                 'next' => 'Next',
+                'aria_label' => 'Pagination',
             ],
         ],
         'listing_reports' => [
@@ -1315,6 +1320,7 @@ return [
                 'page_of' => 'Page :current of :last',
                 'previous' => 'Previous',
                 'next' => 'Next',
+                'aria_label' => 'Pagination',
             ],
         ],
         'reported_messages' => [
@@ -1348,6 +1354,7 @@ return [
                 'page_of' => 'Page :current of :last',
                 'previous' => 'Previous',
                 'next' => 'Next',
+                'aria_label' => 'Pagination',
             ],
         ],
         'contact_messages' => [
@@ -1393,6 +1400,7 @@ return [
                 'page_of' => 'Page :current of :last',
                 'previous' => 'Previous',
                 'next' => 'Next',
+                'aria_label' => 'Pagination',
             ],
         ],
     ],

@@ -1,10 +1,43 @@
-import type { InputHTMLAttributes, ReactNode } from 'react'
+import type { InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from 'react'
 
 export interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
     id: string
     label: string
     error?: string
+    trailing?: ReactNode
 }
+
+export interface FieldShellProps {
+    id: string
+    label: string
+    error?: string
+    children: ReactNode
+}
+
+export interface PasswordFieldProps extends Omit<TextFieldProps, 'type' | 'trailing'> {
+    showLabel: string
+    hideLabel: string
+}
+
+export interface SelectFieldProps extends SelectHTMLAttributes<HTMLSelectElement> {
+    id: string
+    label: string
+    error?: string
+    children: ReactNode
+}
+
+export interface TextAreaFieldProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+    id: string
+    label: string
+    error?: string
+}
+
+export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'className' | 'children'> {
+    className?: string
+    children?: ReactNode
+}
+
+export type RadioProps = CheckboxProps
 
 export interface AccountTypeOption {
     value: string

@@ -22,7 +22,7 @@ export default function Login({ translations }: LoginPageProps) {
         <AuthLayout>
             <Head title={translations.title} />
 
-            {flash.error && <FlashBanner message={flash.error} variant="error" coloredText />}
+            {flash.error && <FlashBanner message={flash.error} variant="error" />}
 
             <h1 className="font-display text-3xl font-semibold text-text">{translations.title}</h1>
             <p className="mt-2 text-sm text-text-soft">{translations.subtitle}</p>
