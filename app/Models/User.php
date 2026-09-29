@@ -52,6 +52,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Listing::class, 'bookmarks')->withTimestamps();
     }
 
+    public function savedSearches(): HasMany
+    {
+        return $this->hasMany(SavedSearch::class);
+    }
+
     public function hasBookmarked(Listing $listing): bool
     {
         return $this->bookmarks()->where('listing_id', $listing->id)->exists();

@@ -1,12 +1,23 @@
-import { Head } from '@inertiajs/react'
+import { Head, usePage } from '@inertiajs/react'
 import ListingCard from '@/Components/Listings/ListingCard'
 import ListingFilterBar from '@/Components/Listings/ListingFilterBar'
 import ListingsEmptyState from '@/Components/Listings/ListingsEmptyState'
+import SaveSearchButton from '@/Components/SavedSearches/SaveSearchButton'
+import FlashBanner from '@/Components/UI/FlashBanner'
 import Pagination from '@/Components/UI/Pagination'
 import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { ListingsIndexPageProps } from '@/types/listing'
+import type { SharedProps } from '@/types/shared'
 
-export default function Index({ listings, filters, translations }: ListingsIndexPageProps) {
+export default function Index({
+    listings,
+    filters,
+    canSaveSearch,
+    suggestedSearchName,
+    saveSearchTranslations,
+    translations,
+}: ListingsIndexPageProps) {
+    const { flash } = usePage<SharedProps>().props
     const hasActiveFilters = Boolean(
         filters.search ||
             filters.listingType ||
@@ -29,9 +40,22 @@ export default function Index({ listings, filters, translations }: ListingsIndex
                 filters={filters}
                 translations={translations.filters}
                 amenityLabels={translations.amenities}
+                actionsSlot={
+                    canSaveSearch &&
+                    hasActiveFilters && (
+                        <SaveSearchButton
+                            filters={filters}
+                            suggestedName={suggestedSearchName}
+                            translations={saveSearchTranslations}
+                        />
+                    )
+                }
             />
 
             <div className="mx-auto max-w-7xl px-6 py-8">
+                {flash.success && <FlashBanner message={flash.success} variant="success" />}
+                {flash.error && <FlashBanner message={flash.error} variant="error" />}
+
                 <p className="text-sm text-text-muted">
                     {translations.count_prefix} <strong className="text-text">{listings.total}</strong>{' '}
                     {translations.count_suffix}

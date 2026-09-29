@@ -14,8 +14,10 @@ use App\Notifications\ListingApprovedNotification;
 use App\Notifications\ListingExpiringNotification;
 use App\Notifications\ListingRejectedNotification;
 use App\Notifications\ListingTakenDownNotification;
+use App\Notifications\SavedSearchDigestNotification;
 use App\Notifications\UserSuspendedNotification;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\URL;
 
 class MailNotificationService
 {
@@ -56,6 +58,18 @@ class MailNotificationService
             $listing->title,
             $listing->expires_at->format('F j, Y'),
             route($listing->agency_id !== null ? 'agency.index' : 'profile.index'),
+        ));
+    }
+
+    /**
+     * @param  list<array{name: string, url: string, listings: list<array{title: string, url: string, price: string, city: string}>, total: int}>  $sections
+     */
+    public function sendSavedSearchDigest(User $user, array $sections): void
+    {
+        $user->notify(new SavedSearchDigestNotification(
+            $sections,
+            route('saved-searches.index'),
+            URL::signedRoute('saved-searches.unsubscribe.show', ['user' => $user->id]),
         ));
     }
 

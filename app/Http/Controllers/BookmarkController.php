@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Listing;
+use App\Models\SavedSearch;
 use App\Services\BookmarkService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -57,6 +58,7 @@ class BookmarkController extends Controller
         return Inertia::render('Bookmarks/Index', [
             'listings' => $listings,
             'closedListings' => $closedListings,
+            'canManageSavedSearches' => Gate::allows('viewAny', SavedSearch::class),
             'translations' => __('app.bookmarks'),
             'listingTranslations' => __('app.listings'),
         ]);

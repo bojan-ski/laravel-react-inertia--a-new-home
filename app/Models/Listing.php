@@ -280,6 +280,24 @@ class Listing extends Model
         return null;
     }
 
+    public static function formatPrice(float|int|string $amount): string
+    {
+        return '€'.number_format((float) $amount);
+    }
+
+    /**
+     * @return array{title: string, url: string, price: string, city: string}
+     */
+    public function toDigestArray(): array
+    {
+        return [
+            'title' => $this->title,
+            'url' => route('listings.show', $this->slug),
+            'price' => self::formatPrice($this->price),
+            'city' => $this->city,
+        ];
+    }
+
     /**
      * @return array<string, mixed>
      */

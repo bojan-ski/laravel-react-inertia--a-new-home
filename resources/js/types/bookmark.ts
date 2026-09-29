@@ -20,6 +20,7 @@ export interface BookmarksTranslations {
     count_other: string
     flash_added: string
     flash_removed: string
+    saved_searches_link: string
     empty: BookmarksEmptyTranslations
     closed: BookmarksClosedTranslations
 }
@@ -31,6 +32,7 @@ export interface ClosedBookmarkCardData extends ListingCardData {
 export interface BookmarksIndexPageProps {
     listings: ListingCardData[]
     closedListings: ClosedBookmarkCardData[]
+    canManageSavedSearches: boolean
     translations: BookmarksTranslations
     listingTranslations: ListingsTranslations
     [key: string]: unknown
