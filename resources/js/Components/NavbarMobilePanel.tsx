@@ -1,31 +1,23 @@
-import { Link } from '@inertiajs/react'
 import NavbarAuthActions from '@/Components/NavbarAuthActions'
+import NavbarLink from '@/Components/NavbarLink'
+import { isNavItemActive } from '@/Components/navItems'
 import type { NavbarMobilePanelProps } from '@/types/navigation'
 
-export default function NavbarMobilePanel({ links, currentPath, onClose }: NavbarMobilePanelProps) {
+export default function NavbarMobilePanel({ id, items, currentPath, user, onClose }: NavbarMobilePanelProps) {
     return (
-        <div className="border-t border-border bg-surface-muted md:hidden">
-            <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-6 py-4">
-                {links.map((link) => {
-                    const isActive = link.internal && currentPath.startsWith(link.href)
-                    const className = `py-2 text-base font-medium transition-colors hover:text-text ${
-                        isActive ? 'text-text' : 'text-text-soft'
-                    }`
+        <div id={id} className="border-t border-rule bg-paper lg:hidden">
+            <nav className="mx-auto flex max-w-360 flex-col px-5 pb-8 md:px-10">
+                {items.map((item) => (
+                    <NavbarLink
+                        key={item.key}
+                        item={item}
+                        active={isNavItemActive(item, currentPath)}
+                        className="min-h-13 border-b border-rule text-[17px]"
+                        onNavigate={onClose}
+                    />
+                ))}
 
-                    return link.internal ? (
-                        <Link key={link.href} href={link.href} onClick={onClose} className={className}>
-                            {link.label}
-                        </Link>
-                    ) : (
-                        <a key={link.href} href={link.href} onClick={onClose} className={className}>
-                            {link.label}
-                        </a>
-                    )
-                })}
-
-                <div className="mt-3 flex flex-col items-start gap-3 border-t border-border pt-4">
-                    <NavbarAuthActions onNavigate={onClose} />
-                </div>
+                <NavbarAuthActions user={user} variant="panel" onNavigate={onClose} />
             </nav>
         </div>
     )

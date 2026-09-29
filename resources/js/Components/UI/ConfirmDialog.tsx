@@ -1,5 +1,6 @@
 import { useRef } from 'react'
-import { useFocusTrap } from '@/Components/UI/useFocusTrap'
+import Button from '@/Components/UI/Button'
+import Dialog, { DialogActions } from '@/Components/UI/Dialog'
 import type { ConfirmDialogProps } from '@/types/ui'
 
 export default function ConfirmDialog({
@@ -14,52 +15,24 @@ export default function ConfirmDialog({
     tone = 'danger',
 }: ConfirmDialogProps) {
     const cancelRef = useRef<HTMLButtonElement>(null)
-    const panelRef = useFocusTrap(open, onCancel, cancelRef)
-
-    if (!open) {
-        return null
-    }
 
     return (
-        <div
-            className="fixed inset-0 z-60 flex items-center justify-center bg-black/50 p-4"
-            onClick={onCancel}
+        <Dialog
+            open={open}
+            onClose={onCancel}
+            title={title}
+            description={description}
+            size="confirm"
+            initialFocusRef={cancelRef}
         >
-            <div
-                ref={panelRef}
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="confirm-dialog-title"
-                className="w-full max-w-md rounded-xl border border-border bg-surface p-6 shadow-xl"
-                onClick={(event) => event.stopPropagation()}
-            >
-                <h2 id="confirm-dialog-title" className="font-display text-2xl font-semibold text-text">
-                    {title}
-                </h2>
-                <p className="mt-3 text-sm leading-relaxed text-text-soft">{description}</p>
-
-                <div className="mt-6 flex justify-end gap-3">
-                    <button
-                        ref={cancelRef}
-                        type="button"
-                        onClick={onCancel}
-                        disabled={processing}
-                        className="rounded-lg border border-border-strong px-4 py-2 text-sm font-medium text-text-soft transition-colors hover:border-text hover:text-text disabled:opacity-50"
-                    >
-                        {cancelLabel}
-                    </button>
-                    <button
-                        type="button"
-                        onClick={onConfirm}
-                        disabled={processing}
-                        className={`rounded-lg px-4 py-2 text-sm font-semibold text-text-inverse transition-colors hover:opacity-90 disabled:opacity-50 ${
-                            tone === 'brand' ? 'bg-brand' : 'bg-status-rejected'
-                        }`}
-                    >
-                        {confirmLabel}
-                    </button>
-                </div>
-            </div>
-        </div>
+            <DialogActions>
+                <Button ref={cancelRef} variant="secondary" onClick={onCancel} disabled={processing}>
+                    {cancelLabel}
+                </Button>
+                <Button variant={tone === 'brand' ? 'primary' : 'ink-outline'} onClick={onConfirm} disabled={processing}>
+                    {confirmLabel}
+                </Button>
+            </DialogActions>
+        </Dialog>
     )
 }

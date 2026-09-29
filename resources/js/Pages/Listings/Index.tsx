@@ -5,7 +5,7 @@ import ListingsEmptyState from '@/Components/Listings/ListingsEmptyState'
 import SaveSearchButton from '@/Components/SavedSearches/SaveSearchButton'
 import FlashBanner from '@/Components/UI/FlashBanner'
 import Pagination from '@/Components/UI/Pagination'
-import ListingsLayout from '@/Layouts/ListingsLayout'
+import PublicLayout from '@/Layouts/PublicLayout'
 import type { ListingsIndexPageProps } from '@/types/listing'
 import type { SharedProps } from '@/types/shared'
 
@@ -14,6 +14,7 @@ export default function Index({
     filters,
     canSaveSearch,
     suggestedSearchName,
+    searchSummary,
     saveSearchTranslations,
     translations,
 }: ListingsIndexPageProps) {
@@ -33,7 +34,7 @@ export default function Index({
     )
 
     return (
-        <ListingsLayout>
+        <PublicLayout>
             <Head title={translations.title} />
 
             <ListingFilterBar
@@ -46,6 +47,7 @@ export default function Index({
                         <SaveSearchButton
                             filters={filters}
                             suggestedName={suggestedSearchName}
+                            summary={searchSummary}
                             translations={saveSearchTranslations}
                         />
                     )
@@ -80,6 +82,6 @@ export default function Index({
                     </>
                 )}
             </div>
-        </ListingsLayout>
+        </PublicLayout>
     )
 }

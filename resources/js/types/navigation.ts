@@ -1,4 +1,4 @@
-import type { UserRole } from '@/types/shared'
+import type { AuthUser, UserRole } from '@/types/shared'
 
 export const dashboardPaths: Record<UserRole, string> = {
     regular_user: '/profile',
@@ -11,6 +11,8 @@ export interface NavTranslations {
     features: string
     how_it_works: string
     listings: string
+    agencies: string
+    favorites: string
     login: string
     get_started: string
     dashboard: string
@@ -21,10 +23,43 @@ export interface NavTranslations {
     close_menu: string
 }
 
-export interface NavLink {
+export type NavItemKey = 'listings' | 'agencies' | 'favorites' | 'messages' | 'dashboard' | 'login'
+
+export interface NavItem {
+    key: NavItemKey
     label: string
     href: string
-    internal: boolean
+    activePaths: string[]
+}
+
+export interface NavBack {
+    href: string
+    label: string
+}
+
+export interface NavbarProps {
+    back?: NavBack
+}
+
+export interface NavbarLinkProps {
+    item: NavItem
+    active: boolean
+    className: string
+    onNavigate?: () => void
+}
+
+export interface NavbarAuthActionsProps {
+    user: AuthUser | null
+    variant: 'desktop' | 'panel'
+    onNavigate?: () => void
+}
+
+export interface NavbarMobilePanelProps {
+    id: string
+    items: NavItem[]
+    currentPath: string
+    user: AuthUser | null
+    onClose: () => void
 }
 
 export interface FooterTranslations {
@@ -58,14 +93,4 @@ export interface FooterLink {
 export interface FooterLinkColumnProps {
     heading: string
     links: FooterLink[]
-}
-
-export interface NavbarAuthActionsProps {
-    onNavigate?: () => void
-}
-
-export interface NavbarMobilePanelProps {
-    links: NavLink[]
-    currentPath: string
-    onClose: () => void
 }

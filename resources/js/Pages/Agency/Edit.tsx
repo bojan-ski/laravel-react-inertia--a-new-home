@@ -2,7 +2,7 @@ import { Head, Link, useForm } from '@inertiajs/react'
 import { ChevronLeft, Clock } from 'lucide-react'
 import type { FormEvent } from 'react'
 import AgencyForm from '@/Components/Agency/AgencyForm'
-import ListingsLayout from '@/Layouts/ListingsLayout'
+import PublicLayout from '@/Layouts/PublicLayout'
 import type { AgencyEditPageProps, AgencyFormData } from '@/types/agency'
 
 export default function Edit({ agency, pendingChange, translations, countries }: AgencyEditPageProps) {
@@ -34,7 +34,7 @@ export default function Edit({ agency, pendingChange, translations, countries }:
     }
 
     return (
-        <ListingsLayout>
+        <PublicLayout back={{ href: '/agency', label: translations.back }} footer={false}>
             <Head title={translations.title} />
 
             <div className="border-b border-border bg-surface">
@@ -48,7 +48,7 @@ export default function Edit({ agency, pendingChange, translations, countries }:
 
                     <Link
                         href="/agency"
-                        className="inline-flex items-center gap-1 text-sm text-text-soft transition-colors hover:text-text"
+                        className="hidden items-center gap-1 text-sm text-text-soft transition-colors hover:text-text lg:inline-flex"
                     >
                         <ChevronLeft className="size-4" />
                         {translations.back}
@@ -88,6 +88,6 @@ export default function Edit({ agency, pendingChange, translations, countries }:
                     }
                 />
             </div>
-        </ListingsLayout>
+        </PublicLayout>
     )
 }

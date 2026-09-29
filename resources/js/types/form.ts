@@ -1,6 +1,7 @@
-import type { InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from 'react'
+import type { InputHTMLAttributes, ReactNode, Ref, SelectHTMLAttributes, TextareaHTMLAttributes } from 'react'
 
 export interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
+    ref?: Ref<HTMLInputElement>
     id: string
     label: string
     error?: string
@@ -27,12 +28,14 @@ export interface SelectFieldProps extends SelectHTMLAttributes<HTMLSelectElement
 }
 
 export interface TextAreaFieldProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+    ref?: Ref<HTMLTextAreaElement>
     id: string
     label: string
     error?: string
 }
 
 export interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'className' | 'children'> {
+    ref?: Ref<HTMLInputElement>
     className?: string
     children?: ReactNode
 }

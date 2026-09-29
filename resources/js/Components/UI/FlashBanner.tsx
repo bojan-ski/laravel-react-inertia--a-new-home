@@ -7,7 +7,13 @@ const variants = {
     error: { palette: 'border border-ink bg-paper text-ink', Icon: Info },
 }
 
-export default function FlashBanner({ message, variant, className = 'mb-6', onDismiss }: FlashBannerProps) {
+export default function FlashBanner({
+    message,
+    variant,
+    className = 'mb-6',
+    onDismiss,
+    dismissLabel,
+}: FlashBannerProps) {
     const { palette, Icon } = variants[variant]
 
     return (
@@ -19,7 +25,7 @@ export default function FlashBanner({ message, variant, className = 'mb-6', onDi
                     type="button"
                     onClick={onDismiss}
                     className="mt-0.5 shrink-0 opacity-70 transition-opacity duration-150 hover:opacity-100"
-                    aria-label="Dismiss"
+                    aria-label={dismissLabel}
                 >
                     <X className="size-4.5" strokeWidth={1.25} aria-hidden="true" />
                 </button>

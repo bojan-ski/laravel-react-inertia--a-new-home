@@ -2,7 +2,7 @@ import { Head, Link, useForm } from '@inertiajs/react'
 import { Info } from 'lucide-react'
 import type { FormEvent } from 'react'
 import AgencyForm from '@/Components/Agency/AgencyForm'
-import ListingsLayout from '@/Layouts/ListingsLayout'
+import PublicLayout from '@/Layouts/PublicLayout'
 import type { AgencyFormData, AgencySetupPageProps } from '@/types/agency'
 
 export default function Setup({ translations, countries }: AgencySetupPageProps) {
@@ -26,7 +26,7 @@ export default function Setup({ translations, countries }: AgencySetupPageProps)
     }
 
     return (
-        <ListingsLayout>
+        <PublicLayout back={{ href: '/', label: translations.back }} footer={false}>
             <Head title={translations.title} />
 
             <div className="border-b border-border bg-surface">
@@ -66,6 +66,6 @@ export default function Setup({ translations, countries }: AgencySetupPageProps)
                     />
                 </div>
             </div>
-        </ListingsLayout>
+        </PublicLayout>
     )
 }

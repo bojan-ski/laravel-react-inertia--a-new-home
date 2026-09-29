@@ -8,7 +8,7 @@ import type { SharedProps } from '@/types/shared'
 const buttonClass =
     'flex items-center gap-1.5 rounded-lg border border-border-strong px-4 py-2.5 text-sm font-medium text-text-soft transition-colors hover:border-text hover:text-text'
 
-export default function SaveSearchButton({ filters, suggestedName, translations }: SaveSearchButtonProps) {
+export default function SaveSearchButton({ filters, suggestedName, summary, translations }: SaveSearchButtonProps) {
     const { auth } = usePage<SharedProps>().props
     const [open, setOpen] = useState(false)
     const close = useCallback(() => setOpen(false), [])
@@ -35,6 +35,7 @@ export default function SaveSearchButton({ filters, suggestedName, translations 
                     onClose={close}
                     filters={filters}
                     suggestedName={suggestedName}
+                    summary={summary}
                     translations={translations}
                 />
             )}

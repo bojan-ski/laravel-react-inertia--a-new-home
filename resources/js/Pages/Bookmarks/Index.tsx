@@ -1,7 +1,7 @@
 import { Head, Link } from '@inertiajs/react'
 import { Heart, Search } from 'lucide-react'
 import ListingCard from '@/Components/Listings/ListingCard'
-import ListingsLayout from '@/Layouts/ListingsLayout'
+import PublicLayout from '@/Layouts/PublicLayout'
 import type { BookmarksIndexPageProps } from '@/types/bookmark'
 
 export default function Index({
@@ -14,7 +14,7 @@ export default function Index({
     const countNoun = listings.length === 1 ? translations.count_one : translations.count_other
 
     return (
-        <ListingsLayout>
+        <PublicLayout>
             <Head title={translations.title} />
 
             <div className="border-b border-border bg-surface">
@@ -95,6 +95,6 @@ export default function Index({
                     </>
                 )}
             </div>
-        </ListingsLayout>
+        </PublicLayout>
     )
 }

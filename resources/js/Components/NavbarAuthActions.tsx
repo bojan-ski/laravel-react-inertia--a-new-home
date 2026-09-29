@@ -1,59 +1,51 @@
 import { Link, usePage } from '@inertiajs/react'
-import MessagesNavLink from '@/Components/Conversations/MessagesNavLink'
+import { ArrowRight } from 'lucide-react'
+import Button from '@/Components/UI/Button'
+import type { NavbarAuthActionsProps } from '@/types/navigation'
 import type { SharedProps } from '@/types/shared'
-import { dashboardPaths, type NavbarAuthActionsProps } from '@/types/navigation'
 
-export default function NavbarAuthActions({ onNavigate }: NavbarAuthActionsProps) {
-    const { auth, nav } = usePage<SharedProps>().props
-    const user = auth?.user ?? null
+export default function NavbarAuthActions({ user, variant, onNavigate }: NavbarAuthActionsProps) {
+    const { nav } = usePage<SharedProps>().props
 
-    if (!user) {
+    if (user) {
         return (
-            <>
-                <Link
-                    href="/login"
-                    onClick={onNavigate}
-                    className="text-sm font-medium text-text-soft transition-colors hover:text-text"
-                >
-                    {nav.login}
-                </Link>
-
-                <Link
-                    href="/register"
-                    onClick={onNavigate}
-                    className="rounded-full bg-brand px-5 py-2 text-sm font-semibold text-text-inverse transition-colors hover:bg-brand-dark"
-                >
-                    {nav.get_started}
-                </Link>
-            </>
-        )
-    }
-
-    const dashboardPath = dashboardPaths[user.role] ?? '/profile'
-
-    return (
-        <>
-            <span className="text-sm font-medium text-text md:max-xl:hidden">{user.name}</span>
-
-            <MessagesNavLink label={nav.messages} unreadLabel={nav.unread} onNavigate={onNavigate} />
-
-            <Link
-                href={dashboardPath}
-                onClick={onNavigate}
-                className="text-sm font-medium text-text-soft transition-colors hover:text-text"
-            >
-                {nav.dashboard}
-            </Link>
-
             <Link
                 href="/logout"
                 method="post"
                 as="button"
                 onClick={onNavigate}
-                className="text-sm font-medium text-text-soft transition-colors hover:text-text"
+                className={
+                    variant === 'desktop'
+                        ? 'text-ink-muted transition-colors duration-150 hover:text-forest'
+                        : 'flex min-h-13 w-full items-center border-b border-rule text-left text-[17px] text-ink-muted transition-colors duration-150 hover:text-forest'
+                }
             >
                 {nav.sign_out}
             </Link>
-        </>
+        )
+    }
+
+    if (variant === 'desktop') {
+        return (
+            <Link
+                href="/register"
+                className="border-b border-current pb-0.5 font-medium text-ink transition-colors duration-150 hover:text-forest"
+            >
+                {nav.get_started}
+            </Link>
+        )
+    }
+
+    return (
+        <Button
+            href="/register"
+            onClick={onNavigate}
+            size="lg"
+            fullWidth
+            className="mt-6"
+            trailing={<ArrowRight className="size-5" strokeWidth={1.25} aria-hidden="true" />}
+        >
+            {nav.get_started}
+        </Button>
     )
 }

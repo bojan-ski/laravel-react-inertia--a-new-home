@@ -13,12 +13,21 @@ class SharedNavigationTest extends TestCase
 {
     use LazilyRefreshDatabase;
 
-    public function test_both_navbars_are_shared_to_guests(): void
+    public function test_one_navbar_is_shared_to_guests(): void
     {
         $this->get('/')
             ->assertInertia(fn (Assert $page) => $page
                 ->where('nav', __('app.nav'))
-                ->where('listingsNav', __('app.listings.nav')));
+                ->where('nav.agencies', __('app.nav.agencies'))
+                ->where('nav.favorites', __('app.nav.favorites'))
+                ->missing('listingsNav'));
+    }
+
+    public function test_dismiss_label_is_shared_to_guests(): void
+    {
+        $this->get('/')
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('ui.dismiss', __('app.ui.dismiss')));
     }
 
     /**
@@ -35,38 +44,44 @@ class SharedNavigationTest extends TestCase
     }
 
     #[DataProvider('regularUserPages')]
-    public function test_regular_user_pages_receive_listings_navbar(string $url, string $component): void
+    public function test_regular_user_pages_receive_the_shared_navbar(string $url, string $component): void
     {
         $this->actingAs(User::factory()->regularUser()->create())
             ->get($url)
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->component($component)
-                ->where('listingsNav', __('app.listings.nav')));
+                ->where('nav', __('app.nav'))
+                ->missing('listingsNav'));
     }
 
-    public function test_agency_pages_receive_listings_navbar(): void
+    public function test_agency_pages_receive_the_shared_navbar(): void
     {
         $user = User::factory()->agency()->create();
 
         $this->actingAs($user)
             ->get('/agency/setup')
-            ->assertInertia(fn (Assert $page) => $page->where('listingsNav', __('app.listings.nav')));
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('nav', __('app.nav'))
+                ->missing('listingsNav'));
 
         Agency::factory()->approved()->create(['user_id' => $user->id]);
 
         $this->actingAs($user->refresh())
             ->get('/agency/edit')
-            ->assertInertia(fn (Assert $page) => $page->where('listingsNav', __('app.listings.nav')));
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('nav', __('app.nav'))
+                ->missing('listingsNav'));
     }
 
-    public function test_admin_pages_receive_listings_navbar(): void
+    public function test_admin_pages_receive_the_shared_navbar(): void
     {
         $this->actingAs(User::factory()->admin()->create())
             ->get('/admin/listings')
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->component('Admin/Listings/Index')
-                ->where('listingsNav', __('app.listings.nav')));
+                ->where('nav', __('app.nav'))
+                ->missing('listingsNav'));
     }
 }

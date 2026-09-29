@@ -27,11 +27,12 @@ class AgencyDirectoryTest extends TestCase
             ->assertInertia(fn (Assert $page) => $page->component('Agencies/Index'));
     }
 
-    public function test_agencies_page_receives_listings_navbar_translations(): void
+    public function test_agencies_page_receives_navbar_translations(): void
     {
         $this->get('/agencies')
             ->assertInertia(fn (Assert $page) => $page
-                ->where('listingsNav', __('app.listings.nav')));
+                ->where('nav', __('app.nav'))
+                ->missing('listingsNav'));
     }
 
     public function test_only_approved_agencies_appear(): void

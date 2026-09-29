@@ -4,7 +4,7 @@ import type { FormEvent } from 'react'
 import ImageUploader from '@/Components/Listings/ImageUploader'
 import ListingForm from '@/Components/Listings/ListingForm'
 import FlashBanner from '@/Components/UI/FlashBanner'
-import ListingsLayout from '@/Layouts/ListingsLayout'
+import PublicLayout from '@/Layouts/PublicLayout'
 import type { EditAgencyListingPageProps, ListingFormData } from '@/types/listing'
 import type { SharedProps } from '@/types/shared'
 
@@ -49,7 +49,7 @@ export default function Edit({ listing, translations, propertyTypeLabels, amenit
     )
 
     return (
-        <ListingsLayout>
+        <PublicLayout back={{ href: '/agency', label: translations.back }} footer={false}>
             <Head title={translations.title} />
 
             <div className="border-b border-border bg-surface">
@@ -63,7 +63,7 @@ export default function Edit({ listing, translations, propertyTypeLabels, amenit
 
                     <Link
                         href="/agency"
-                        className="inline-flex items-center gap-1.5 text-sm text-text-soft transition-colors hover:text-text"
+                        className="hidden items-center gap-1.5 text-sm text-text-soft transition-colors hover:text-text lg:inline-flex"
                     >
                         <ChevronLeft className="size-4" />
                         {translations.back}
@@ -98,6 +98,6 @@ export default function Edit({ listing, translations, propertyTypeLabels, amenit
                     />
                 </div>
             </div>
-        </ListingsLayout>
+        </PublicLayout>
     )
 }

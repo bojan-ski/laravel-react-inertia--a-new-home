@@ -2,7 +2,7 @@ import { Head, Link, usePage } from '@inertiajs/react'
 import { ChevronLeft, Search } from 'lucide-react'
 import SavedSearchCard from '@/Components/SavedSearches/SavedSearchCard'
 import FlashBanner from '@/Components/UI/FlashBanner'
-import ListingsLayout from '@/Layouts/ListingsLayout'
+import PublicLayout from '@/Layouts/PublicLayout'
 import type { SavedSearchesIndexPageProps } from '@/types/saved-search'
 import type { SharedProps } from '@/types/shared'
 
@@ -10,7 +10,7 @@ export default function Index({ searches, maxSearches, translations }: SavedSear
     const { flash } = usePage<SharedProps>().props
 
     return (
-        <ListingsLayout>
+        <PublicLayout>
             <Head title={translations.title} />
 
             <div className="border-b border-border bg-surface">
@@ -59,6 +59,6 @@ export default function Index({ searches, maxSearches, translations }: SavedSear
                     </>
                 )}
             </div>
-        </ListingsLayout>
+        </PublicLayout>
     )
 }

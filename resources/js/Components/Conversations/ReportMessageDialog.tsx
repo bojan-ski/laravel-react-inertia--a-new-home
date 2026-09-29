@@ -1,7 +1,9 @@
 import { useCallback, useRef } from 'react'
 import { useForm } from '@inertiajs/react'
 import type { FormEvent } from 'react'
-import { useFocusTrap } from '@/Components/UI/useFocusTrap'
+import Button from '@/Components/UI/Button'
+import Dialog, { DialogActions } from '@/Components/UI/Dialog'
+import TextAreaField from '@/Components/UI/TextAreaField'
 import type { ReportMessageDialogProps } from '@/types/reported-message'
 
 export default function ReportMessageDialog({
@@ -20,12 +22,6 @@ export default function ReportMessageDialog({
         onClose()
     }, [reset, clearErrors, onClose])
 
-    const panelRef = useFocusTrap(open, handleClose, textareaRef)
-
-    if (!open) {
-        return null
-    }
-
     function handleSubmit(event: FormEvent) {
         event.preventDefault()
 
@@ -41,62 +37,32 @@ export default function ReportMessageDialog({
     const submitDisabled = processing || data.reason.trim() === ''
 
     return (
-        <div
-            className="fixed inset-0 z-60 flex items-center justify-center bg-black/50 p-4"
-            onClick={handleClose}
-        >
-            <div
-                ref={panelRef}
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="report-dialog-title"
-                className="w-full max-w-lg rounded-xl border border-border bg-surface p-6 shadow-xl"
-                onClick={(event) => event.stopPropagation()}
-            >
-                <h2 id="report-dialog-title" className="font-display text-2xl font-semibold text-text">
-                    {translations.title}
-                </h2>
+        <Dialog open={open} onClose={handleClose} title={translations.title} initialFocusRef={textareaRef}>
+            <blockquote className="border-l border-rule pl-3.5 text-sm/normal wrap-break-word text-ink/75">
+                {preview}
+            </blockquote>
 
-                <blockquote className="mt-4 border-l-4 border-status-rejected bg-surface-muted px-4 py-3 text-sm italic text-text-soft">
-                    {preview}
-                </blockquote>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-5.5">
+                <TextAreaField
+                    ref={textareaRef}
+                    id="report-reason"
+                    label={translations.prompt}
+                    value={data.reason}
+                    onChange={(event) => setData('reason', event.target.value)}
+                    placeholder={translations.placeholder}
+                    rows={4}
+                    error={errors.reason}
+                />
 
-                <form onSubmit={handleSubmit} className="mt-5">
-                    <label htmlFor="report-reason" className="block text-sm font-medium text-text">
-                        {translations.prompt}
-                    </label>
-                    <textarea
-                        id="report-reason"
-                        ref={textareaRef}
-                        value={data.reason}
-                        onChange={(event) => setData('reason', event.target.value)}
-                        placeholder={translations.placeholder}
-                        rows={4}
-                        className="mt-1.5 w-full resize-y rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text outline-none transition-colors focus:border-brand"
-                    />
-                    {errors.reason && (
-                        <p className="mt-1.5 text-sm text-status-rejected">{errors.reason}</p>
-                    )}
-
-                    <div className="mt-6 flex justify-end gap-3">
-                        <button
-                            type="button"
-                            onClick={handleClose}
-                            disabled={processing}
-                            className="rounded-lg border border-border-strong px-4 py-2 text-sm font-medium text-text-soft transition-colors hover:border-text hover:text-text disabled:opacity-50"
-                        >
-                            {translations.cancel}
-                        </button>
-                        <button
-                            type="submit"
-                            disabled={submitDisabled}
-                            className="rounded-lg bg-status-rejected px-4 py-2 text-sm font-semibold text-text-inverse transition-colors hover:opacity-90 disabled:opacity-50"
-                        >
-                            {translations.submit}
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+                <DialogActions>
+                    <Button variant="secondary" onClick={handleClose} disabled={processing}>
+                        {translations.cancel}
+                    </Button>
+                    <Button type="submit" disabled={submitDisabled}>
+                        {translations.submit}
+                    </Button>
+                </DialogActions>
+            </form>
+        </Dialog>
     )
 }

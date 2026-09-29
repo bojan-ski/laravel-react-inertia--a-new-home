@@ -1,4 +1,4 @@
-import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ChangeEvent, ReactNode } from 'react'
+import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ChangeEvent, ReactNode, Ref, RefObject } from 'react'
 import type { InertiaLinkProps } from '@inertiajs/react'
 import type { UserStatusValue } from '@/types/admin'
 import type { AgencyStatusValue } from '@/types/agency'
@@ -11,11 +11,27 @@ export interface StatusBadgeProps {
     label: string
 }
 
-export interface FlashBannerProps {
+interface FlashBannerBaseProps {
     message: string
     variant: 'success' | 'info' | 'error'
     className?: string
-    onDismiss?: () => void
+}
+
+export type FlashBannerProps = FlashBannerBaseProps &
+    ({ onDismiss?: undefined; dismissLabel?: undefined } | { onDismiss: () => void; dismissLabel: string })
+
+export interface DialogProps {
+    open: boolean
+    onClose: () => void
+    title: string
+    description?: ReactNode
+    size?: 'confirm' | 'form'
+    initialFocusRef?: RefObject<HTMLElement | null>
+    children: ReactNode
+}
+
+export interface DialogActionsProps {
+    children: ReactNode
 }
 
 export interface ConfirmDialogProps {
@@ -54,6 +70,7 @@ export type NativeButtonProps = ButtonBaseProps &
     Omit<ButtonHTMLAttributes<HTMLButtonElement>, keyof ButtonBaseProps> & {
         href?: undefined
         external?: undefined
+        ref?: Ref<HTMLButtonElement>
     }
 
 export type InertiaButtonLinkProps = ButtonBaseProps &

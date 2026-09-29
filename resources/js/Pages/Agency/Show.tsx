@@ -4,7 +4,7 @@ import AgencyListingsSection from '@/Components/Agency/AgencyListingsSection'
 import AgencyProfileSection from '@/Components/Agency/AgencyProfileSection'
 import AgencyStatusPanel from '@/Components/Agency/AgencyStatusPanel'
 import FlashBanner from '@/Components/UI/FlashBanner'
-import ListingsLayout from '@/Layouts/ListingsLayout'
+import PublicLayout from '@/Layouts/PublicLayout'
 import type { AgencyShowPageProps } from '@/types/agency'
 import type { SharedProps } from '@/types/shared'
 
@@ -13,7 +13,7 @@ export default function Show({ agency, pendingChange, listings, translations, pr
     const submittedOn = pendingChange ? new Date(pendingChange.submittedAt).toLocaleDateString() : null
 
     return (
-        <ListingsLayout>
+        <PublicLayout>
             <Head title={agency.name} />
 
             <div className="border-b border-border bg-surface">
@@ -68,6 +68,6 @@ export default function Show({ agency, pendingChange, listings, translations, pr
                     agencyStatus={agency.status}
                 />
             </div>
-        </ListingsLayout>
+        </PublicLayout>
     )
 }

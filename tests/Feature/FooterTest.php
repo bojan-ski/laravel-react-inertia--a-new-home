@@ -18,4 +18,13 @@ class FooterTest extends TestCase
                 ->missing('footer.press')
                 ->missing('footer.careers'));
     }
+
+    public function test_footer_copyright_carries_the_copyright_sign(): void
+    {
+        $this->get('/')
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('footer.copyright', fn (string $copyright) => str_starts_with($copyright, '© ')
+                    && str_contains($copyright, ':year')));
+    }
 }

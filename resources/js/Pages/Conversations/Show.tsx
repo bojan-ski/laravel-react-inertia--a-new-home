@@ -6,7 +6,7 @@ import MessageBubble from '@/Components/Conversations/MessageBubble'
 import MessageComposer from '@/Components/Conversations/MessageComposer'
 import ReportMessageDialog from '@/Components/Conversations/ReportMessageDialog'
 import StatusBadge from '@/Components/UI/StatusBadge'
-import ListingsLayout from '@/Layouts/ListingsLayout'
+import PublicLayout from '@/Layouts/PublicLayout'
 import type { ChatMessageBroadcast, ChatMessageData, ConversationShowPageProps } from '@/types/conversation'
 import type { SharedProps } from '@/types/shared'
 
@@ -52,19 +52,19 @@ export default function Show({ conversation, canReply, translations }: Conversat
     }, [messages.length])
 
     return (
-        <ListingsLayout>
+        <PublicLayout back={{ href: '/conversations', label: thread.back }} footer={false}>
             <Head title={conversation.listing.title} />
 
             <div className="mx-auto flex max-w-4xl flex-col px-6 py-6">
                 <Link
                     href="/conversations"
-                    className="inline-flex items-center gap-1 text-sm text-text-soft transition-colors hover:text-text"
+                    className="hidden items-center gap-1 text-sm text-text-soft transition-colors hover:text-text lg:inline-flex"
                 >
                     <ChevronLeft className="size-4" />
                     {thread.back}
                 </Link>
 
-                <div className="mt-4 rounded-2xl border border-border bg-surface">
+                <div className="rounded-2xl border border-border bg-surface lg:mt-4">
                     <div className="border-b border-border px-6 py-4">
                         {closedStatus ? (
                             <div className="flex flex-wrap items-center gap-2">
@@ -127,6 +127,6 @@ export default function Show({ conversation, canReply, translations }: Conversat
                 preview={reportMessage?.body.slice(0, 100) ?? ''}
                 translations={translations.report}
             />
-        </ListingsLayout>
+        </PublicLayout>
     )
 }

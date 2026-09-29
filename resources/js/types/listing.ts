@@ -91,27 +91,6 @@ export interface ListingFilters {
     sort: string
 }
 
-export interface ListingsNavTranslations {
-    back: string
-    brand: string
-    listings: string
-    agencies: string
-    favorites: string
-    login: string
-    sign_up: string
-    dashboard: string
-    sign_out: string
-    messages: string
-    unread: string
-    open_menu: string
-    close_menu: string
-}
-
-export interface ListingsNavLink {
-    label: string
-    href: string
-}
-
 export interface ListingsFilterTranslations {
     search_placeholder: string
     all: string
@@ -225,7 +204,6 @@ export interface ListingsTranslations {
     title: string
     count_prefix: string
     count_suffix: string
-    nav: ListingsNavTranslations
     filters: ListingsFilterTranslations
     card: ListingsCardTranslations
     empty: ListingsEmptyTranslations
@@ -239,6 +217,7 @@ export interface ListingsIndexPageProps {
     filters: ListingFilters
     canSaveSearch: boolean
     suggestedSearchName: string
+    searchSummary: string[]
     saveSearchTranslations: SaveSearchTranslations
     translations: ListingsTranslations
     [key: string]: unknown
@@ -349,26 +328,6 @@ export interface ListingAmenitiesProps {
     amenities: string[]
     labels: Record<string, string>
     heading: string
-}
-
-export interface ListingsLayoutProps {
-    children: ReactNode
-}
-
-export interface ListingsNavbarProps {
-    nav: ListingsNavTranslations
-}
-
-export interface ListingsNavbarAuthActionsProps {
-    nav: ListingsNavTranslations
-    onNavigate?: () => void
-}
-
-export interface ListingsNavbarMobilePanelProps {
-    nav: ListingsNavTranslations
-    links: ListingsNavLink[]
-    currentPath: string
-    onClose: () => void
 }
 
 export interface ListingFilterBarProps {

@@ -3,7 +3,7 @@ import { ChevronLeft } from 'lucide-react'
 import type { FormEvent } from 'react'
 import ListingForm from '@/Components/Listings/ListingForm'
 import NewListingImagePicker from '@/Components/Listings/NewListingImagePicker'
-import ListingsLayout from '@/Layouts/ListingsLayout'
+import PublicLayout from '@/Layouts/PublicLayout'
 import type { CreateAgencyListingPageProps, CreateListingFormData } from '@/types/listing'
 
 export default function Create({ translations, propertyTypeLabels, amenityLabels }: CreateAgencyListingPageProps) {
@@ -34,7 +34,7 @@ export default function Create({ translations, propertyTypeLabels, amenityLabels
     }
 
     return (
-        <ListingsLayout>
+        <PublicLayout back={{ href: '/agency', label: translations.back }} footer={false}>
             <Head title={translations.title} />
 
             <div className="border-b border-border bg-surface">
@@ -48,7 +48,7 @@ export default function Create({ translations, propertyTypeLabels, amenityLabels
 
                     <Link
                         href="/agency"
-                        className="inline-flex items-center gap-1.5 text-sm text-text-soft transition-colors hover:text-text"
+                        className="hidden items-center gap-1.5 text-sm text-text-soft transition-colors hover:text-text lg:inline-flex"
                     >
                         <ChevronLeft className="size-4" />
                         {translations.back}
@@ -81,6 +81,6 @@ export default function Create({ translations, propertyTypeLabels, amenityLabels
                     }
                 />
             </div>
-        </ListingsLayout>
+        </PublicLayout>
     )
 }

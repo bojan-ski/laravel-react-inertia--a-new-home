@@ -9,7 +9,7 @@ import MortgageCalculator from '@/Components/Listings/MortgageCalculator'
 import ReportListingButton from '@/Components/Listings/ReportListingButton'
 import SimilarListings from '@/Components/Listings/SimilarListings'
 import FlashBanner from '@/Components/UI/FlashBanner'
-import ListingsLayout from '@/Layouts/ListingsLayout'
+import PublicLayout from '@/Layouts/PublicLayout'
 import type { ListingShowPageProps } from '@/types/listing'
 import type { SharedProps } from '@/types/shared'
 
@@ -35,19 +35,19 @@ export default function Show({
         .join(', ')
 
     return (
-        <ListingsLayout>
+        <PublicLayout back={{ href: '/listings', label: show.back }}>
             <Head title={listing.title} />
 
             <div className="mx-auto max-w-7xl px-6 py-8">
                 <Link
                     href="/listings"
-                    className="inline-flex items-center gap-1 text-sm text-text-muted transition-colors hover:text-text"
+                    className="hidden items-center gap-1 text-sm text-text-muted transition-colors hover:text-text lg:inline-flex"
                 >
                     <ChevronLeft className="size-4" />
                     {show.back}
                 </Link>
 
-                <div className="mt-6 flex flex-col gap-3">
+                <div className="flex flex-col gap-3 lg:mt-6">
                     <div className="flex flex-wrap gap-2">
                         <span className="rounded-md bg-surface-dark px-2.5 py-1 text-xs font-medium text-text-inverse">
                             {typeLabel}
@@ -152,6 +152,6 @@ export default function Show({
                     propertyTypeLabels={translations.filters.property_types}
                 />
             </div>
-        </ListingsLayout>
+        </PublicLayout>
     )
 }
