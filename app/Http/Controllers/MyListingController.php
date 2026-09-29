@@ -22,6 +22,7 @@ class MyListingController extends Controller
         return Inertia::render('Listings/Create', [
             'translations' => __('app.create_listing'),
             'propertyTypeLabels' => __('app.listings.filters.property_types'),
+            'amenityLabels' => __('app.listings.amenities'),
         ]);
     }
 
@@ -44,6 +45,7 @@ class MyListingController extends Controller
             'listing' => $listing->toFormArray(),
             'translations' => __('app.edit_listing'),
             'propertyTypeLabels' => __('app.listings.filters.property_types'),
+            'amenityLabels' => __('app.listings.amenities'),
         ]);
     }
 

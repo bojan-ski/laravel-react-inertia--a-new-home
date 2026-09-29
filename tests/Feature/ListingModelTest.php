@@ -262,7 +262,7 @@ class ListingModelTest extends TestCase
             'id', 'title', 'listingType', 'propertyType', 'status', 'price',
             'currency', 'description', 'country', 'city', 'addressLine',
             'postalCode', 'bedrooms', 'bathrooms', 'areaValue', 'areaUnit',
-            'yearBuilt', 'contactName', 'contactEmail', 'contactPhone', 'images',
+            'yearBuilt', 'contactName', 'contactEmail', 'contactPhone', 'amenities', 'images',
         ], array_keys($form));
 
         $this->assertSame($listing->id, $form['id']);

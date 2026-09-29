@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\Amenity;
 use App\Enums\ListingStatus;
 use App\Models\Listing;
 use App\Models\User;
@@ -43,6 +44,7 @@ class ListingFactory extends Factory
             'area_value' => fake()->numberBetween(45, 320),
             'area_unit' => Listing::AREA_UNIT,
             'year_built' => fake()->numberBetween(1960, 2024),
+            'amenities' => $this->randomAmenities(),
             'contact_name' => null,
             'contact_email' => null,
             'contact_phone' => null,
@@ -51,6 +53,19 @@ class ListingFactory extends Factory
             'rejected_at' => null,
             'rejection_reason' => null,
         ];
+    }
+
+    /**
+     * @return array<int, Amenity>
+     */
+    private function randomAmenities(): array
+    {
+        $picked = fake()->randomElements(Amenity::cases(), fake()->numberBetween(0, 6));
+
+        return array_values(array_filter(
+            Amenity::cases(),
+            fn (Amenity $amenity): bool => in_array($amenity, $picked, true),
+        ));
     }
 
     private function generateTitle(): string

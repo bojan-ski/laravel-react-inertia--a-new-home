@@ -147,6 +147,7 @@ export interface ListingsShowTranslations {
     baths: string
     built: string
     description_heading: string
+    amenities_heading: string
     details_heading: string
     detail_address: string
     detail_property_type: string
@@ -170,6 +171,7 @@ export interface ListingsTranslations {
     empty: ListingsEmptyTranslations
     pagination: PaginationLabels
     show: ListingsShowTranslations
+    amenities: Record<string, string>
 }
 
 export interface ListingsIndexPageProps {
@@ -207,6 +209,7 @@ export interface ListingShowData {
     contactName: string | null
     contactEmail: string | null
     contactPhone: string | null
+    amenities: string[]
     approvedAt: string | null
     images: ListingImageData[]
 }
@@ -273,6 +276,12 @@ export interface ListingDetailRowProps {
     value: string
 }
 
+export interface ListingAmenitiesProps {
+    amenities: string[]
+    labels: Record<string, string>
+    heading: string
+}
+
 export interface ListingsLayoutProps {
     children: ReactNode
 }
@@ -324,6 +333,7 @@ export type ListingFormData = {
     bathrooms: string
     area_value: string
     year_built: string
+    amenities: string[]
     contact_name: string
     contact_email: string
     contact_phone: string
@@ -356,6 +366,7 @@ export interface ListingFormTranslations {
         basic: string
         location: string
         specs: string
+        amenities: string
         contact: string
     }
     listing_types: {
@@ -396,6 +407,7 @@ export interface CreateListingTranslations extends ListingFormTranslations {
 export interface CreateListingPageProps {
     translations: CreateListingTranslations
     propertyTypeLabels: Record<string, string>
+    amenityLabels: Record<string, string>
     [key: string]: unknown
 }
 
@@ -420,6 +432,7 @@ export interface EditListingData {
     contactName: string | null
     contactEmail: string | null
     contactPhone: string | null
+    amenities: string[]
     images: ListingImageData[]
 }
 
@@ -436,6 +449,7 @@ export interface EditListingPageProps {
     listing: EditListingData
     translations: EditListingTranslations
     propertyTypeLabels: Record<string, string>
+    amenityLabels: Record<string, string>
     [key: string]: unknown
 }
 
@@ -448,6 +462,7 @@ export interface ListingFormProps {
     onSubmit: (event: FormEvent<HTMLFormElement>) => void
     translations: ListingFormTranslations
     propertyTypeLabels: Record<string, string>
+    amenityLabels: Record<string, string>
     headerSlot?: ReactNode
     footerSlot?: ReactNode
     hideContactSection?: boolean
@@ -466,6 +481,7 @@ export interface CreateAgencyListingTranslations extends ListingFormTranslations
 export interface CreateAgencyListingPageProps {
     translations: CreateAgencyListingTranslations
     propertyTypeLabels: Record<string, string>
+    amenityLabels: Record<string, string>
     [key: string]: unknown
 }
 
@@ -483,5 +499,6 @@ export interface EditAgencyListingPageProps {
     listing: EditListingData
     translations: EditAgencyListingTranslations
     propertyTypeLabels: Record<string, string>
+    amenityLabels: Record<string, string>
     [key: string]: unknown
 }

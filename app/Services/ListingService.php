@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\Amenity;
 use App\Enums\ListingStatus;
 use App\Exceptions\InvalidListingStatusTransitionException;
 use App\Http\Requests\ListingIndexRequest;
@@ -34,6 +35,7 @@ class ListingService
         $listing = new Listing(Arr::only($data, (new Listing)->getFillable()));
 
         $listing->slug = $this->generateUniqueSlug($data['title']);
+        $listing->amenities = $this->normalizeAmenities($data);
         $listing->agency_id = null;
         $listing->currency = Listing::CURRENCY;
         $listing->area_unit = Listing::AREA_UNIT;
@@ -66,6 +68,7 @@ class ListingService
 
         $listing->fill(Arr::only($data, $listing->getFillable()));
         $listing->slug = $slug;
+        $listing->amenities = $this->normalizeAmenities($data);
         $listing->agency_id = null;
         $listing->currency = Listing::CURRENCY;
         $listing->area_unit = Listing::AREA_UNIT;
@@ -87,6 +90,7 @@ class ListingService
         $listing = new Listing(Arr::only($data, (new Listing)->getFillable()));
 
         $listing->slug = $this->generateUniqueSlug($data['title']);
+        $listing->amenities = $this->normalizeAmenities($data);
         $listing->user_id = null;
         $listing->currency = Listing::CURRENCY;
         $listing->area_unit = Listing::AREA_UNIT;
@@ -122,6 +126,7 @@ class ListingService
 
         $listing->fill(Arr::only($data, $listing->getFillable()));
         $listing->slug = $slug;
+        $listing->amenities = $this->normalizeAmenities($data);
         $listing->user_id = null;
         $listing->currency = Listing::CURRENCY;
         $listing->area_unit = Listing::AREA_UNIT;
@@ -242,6 +247,20 @@ class ListingService
         $listing->approved_at = null;
         $listing->expires_at = null;
         $listing->expiry_reminder_sent_at = null;
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<int, Amenity>
+     */
+    private function normalizeAmenities(array $data): array
+    {
+        $selected = $data['amenities'] ?? [];
+
+        return array_values(array_filter(
+            Amenity::cases(),
+            fn (Amenity $amenity): bool => in_array($amenity->value, $selected, true),
+        ));
     }
 
     private function generateUniqueSlug(string $base, ?int $ignoreId = null): string

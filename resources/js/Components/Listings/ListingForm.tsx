@@ -19,12 +19,22 @@ export default function ListingForm({
     onSubmit,
     translations,
     propertyTypeLabels,
+    amenityLabels,
     headerSlot,
     footerSlot,
     hideContactSection = false,
     cancelHref = '/profile',
 }: ListingFormProps) {
     const { sections, fields, listing_types } = translations
+    const amenitiesError =
+        errors.amenities ?? Object.entries(errors).find(([key]) => key.startsWith('amenities.'))?.[1]
+
+    function toggleAmenity(amenity: string, checked: boolean) {
+        setData(
+            'amenities',
+            checked ? [...data.amenities, amenity] : data.amenities.filter((value) => value !== amenity),
+        )
+    }
 
     return (
         <form onSubmit={onSubmit} className="space-y-12">
@@ -197,6 +207,30 @@ export default function ListingForm({
                         error={errors.year_built}
                     />
                 </div>
+            </section>
+
+            <section className="space-y-5 border-t border-border pt-12">
+                <h2 className="font-display text-xl font-semibold text-text">{sections.amenities}</h2>
+
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    {Object.entries(amenityLabels).map(([amenity, label]) => (
+                        <label
+                            key={amenity}
+                            className="flex min-h-11 cursor-pointer items-center gap-3 rounded-lg border border-border bg-surface px-4 py-2.5 text-sm text-text transition-colors hover:border-border-strong has-checked:border-brand"
+                        >
+                            <input
+                                type="checkbox"
+                                value={amenity}
+                                checked={data.amenities.includes(amenity)}
+                                onChange={(e) => toggleAmenity(amenity, e.target.checked)}
+                                className="size-4 shrink-0 accent-brand"
+                            />
+                            {label}
+                        </label>
+                    ))}
+                </div>
+
+                {amenitiesError && <p className="text-sm text-status-rejected">{amenitiesError}</p>}
             </section>
 
             {!hideContactSection && (

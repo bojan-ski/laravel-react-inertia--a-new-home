@@ -8,7 +8,7 @@ import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { EditListingPageProps, ListingFormData } from '@/types/listing'
 import type { SharedProps } from '@/types/shared'
 
-export default function Edit({ listing, translations, propertyTypeLabels }: EditListingPageProps) {
+export default function Edit({ listing, translations, propertyTypeLabels, amenityLabels }: EditListingPageProps) {
     const { flash } = usePage<SharedProps>().props
 
     const { data, setData, put, processing, errors } = useForm<ListingFormData>({
@@ -25,6 +25,7 @@ export default function Edit({ listing, translations, propertyTypeLabels }: Edit
         bathrooms: listing.bathrooms?.toString() ?? '',
         area_value: listing.areaValue ?? '',
         year_built: listing.yearBuilt?.toString() ?? '',
+        amenities: listing.amenities,
         contact_name: listing.contactName ?? '',
         contact_email: listing.contactEmail ?? '',
         contact_phone: listing.contactPhone ?? '',
@@ -78,6 +79,7 @@ export default function Edit({ listing, translations, propertyTypeLabels }: Edit
                     onSubmit={submit}
                     translations={translations}
                     propertyTypeLabels={propertyTypeLabels}
+                    amenityLabels={amenityLabels}
                     headerSlot={approvedNotice}
                 />
 

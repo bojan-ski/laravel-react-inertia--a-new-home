@@ -23,6 +23,7 @@ class AgencyListingController extends Controller
         return Inertia::render('Agency/Listings/Create', [
             'translations' => __('app.create_agency_listing'),
             'propertyTypeLabels' => __('app.listings.filters.property_types'),
+            'amenityLabels' => __('app.listings.amenities'),
         ]);
     }
 
@@ -47,6 +48,7 @@ class AgencyListingController extends Controller
             'listing' => $listing->toFormArray(),
             'translations' => __('app.edit_agency_listing'),
             'propertyTypeLabels' => __('app.listings.filters.property_types'),
+            'amenityLabels' => __('app.listings.amenities'),
         ]);
     }
 

@@ -1,5 +1,6 @@
 import { Head, Link } from '@inertiajs/react'
 import { ChevronLeft, MapPin } from 'lucide-react'
+import ListingAmenities from '@/Components/Listings/ListingAmenities'
 import ListingDetailRow from '@/Components/Listings/ListingDetailRow'
 import ListingFacts from '@/Components/Listings/ListingFacts'
 import ListingGallery from '@/Components/Listings/ListingGallery'
@@ -67,6 +68,12 @@ export default function Show({ listing, isBookmarked, canBookmark, canStartChat,
                                 {listing.description}
                             </p>
                         </section>
+
+                        <ListingAmenities
+                            amenities={listing.amenities}
+                            labels={translations.amenities}
+                            heading={show.amenities_heading}
+                        />
 
                         <section>
                             <h2 className="font-display text-xl font-semibold text-text">{show.details_heading}</h2>

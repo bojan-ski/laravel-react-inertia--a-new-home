@@ -51,6 +51,7 @@ class ListingModerationController extends Controller
             'translations' => __('app.admin.listings'),
             'listingTranslations' => __('app.listings.show'),
             'propertyTypeLabels' => __('app.listings.filters.property_types'),
+            'amenityLabels' => __('app.listings.amenities'),
         ]);
     }
 
