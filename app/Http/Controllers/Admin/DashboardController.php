@@ -41,6 +41,7 @@ class DashboardController extends Controller
             'pendingAgencies' => Agency::byStatus(AgencyStatus::PendingVerification)->count(),
             'approvedAgencies' => Agency::byStatus(AgencyStatus::Approved)->count(),
             'pendingAgencyChanges' => AgencyProfileChange::count(),
+            'reportedListings' => Listing::whereHas('openReports')->count(),
             'reportedMessages' => ReportedChatMessage::whereNull('resolved_at')->count(),
             'newContactMessages' => ContactMessage::whereNull('handled_at')->count(),
         ];

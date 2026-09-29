@@ -218,6 +218,29 @@ class ListingService
             throw new InvalidListingStatusTransitionException('This listing cannot be rejected.');
         }
 
+        return $this->markRejected($listing, $reason);
+    }
+
+    /**
+     * @throws InvalidListingStatusTransitionException
+     */
+    public function takeDown(Listing $listing, string $reason): Listing
+    {
+        if (! $listing->isApproved()) {
+            throw new InvalidListingStatusTransitionException('This listing cannot be taken down.');
+        }
+
+        return $this->markRejected($listing, $reason);
+    }
+
+    public function markExpiryReminderSent(Listing $listing): void
+    {
+        $listing->expiry_reminder_sent_at = now();
+        $listing->save();
+    }
+
+    private function markRejected(Listing $listing, string $reason): Listing
+    {
         $listing->status = ListingStatus::Rejected;
         $listing->rejection_reason = $reason;
         $listing->rejected_at = now();
@@ -227,12 +250,6 @@ class ListingService
         $listing->delete();
 
         return $listing;
-    }
-
-    public function markExpiryReminderSent(Listing $listing): void
-    {
-        $listing->expiry_reminder_sent_at = now();
-        $listing->save();
     }
 
     private function startLifetime(Listing $listing): void

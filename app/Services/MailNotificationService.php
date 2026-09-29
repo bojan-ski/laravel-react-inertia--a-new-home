@@ -13,6 +13,7 @@ use App\Notifications\AgencyRejectedNotification;
 use App\Notifications\ListingApprovedNotification;
 use App\Notifications\ListingExpiringNotification;
 use App\Notifications\ListingRejectedNotification;
+use App\Notifications\ListingTakenDownNotification;
 use App\Notifications\UserSuspendedNotification;
 use Illuminate\Support\Facades\Notification;
 
@@ -39,6 +40,13 @@ class MailNotificationService
     {
         $this->resolveListingRecipient($listing)?->notify(
             new ListingRejectedNotification($listing->title, (string) $listing->rejection_reason)
+        );
+    }
+
+    public function sendListingTakenDown(Listing $listing): void
+    {
+        $this->resolveListingRecipient($listing)?->notify(
+            new ListingTakenDownNotification($listing->title, (string) $listing->rejection_reason)
         );
     }
 

@@ -1,4 +1,5 @@
 import type { FormEvent, ReactNode } from 'react'
+import type { ListingReportTranslations } from '@/types/listing-report'
 import type { ConfirmActionTranslations } from '@/types/moderation'
 import type { Paginator, PaginationLabels } from '@/types/pagination'
 
@@ -231,7 +232,9 @@ export interface ListingShowPageProps {
     isBookmarked: boolean
     canBookmark: boolean
     canStartChat: boolean
+    canReport: boolean
     translations: ListingsTranslations
+    reportTranslations: ListingReportTranslations
     [key: string]: unknown
 }
 
@@ -281,6 +284,7 @@ export interface ListingSidebarProps {
     canBookmark: boolean
     canStartChat: boolean
     translations: ListingsShowTranslations
+    footerSlot?: ReactNode
 }
 
 export interface ListingDetailRowProps {

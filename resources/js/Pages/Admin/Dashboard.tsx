@@ -42,6 +42,7 @@ export default function Dashboard({ stats, translations }: AdminDashboardPagePro
     const moderationCards: StatCardProps[] = [
         { ...translations.stats.pending_agencies, value: stats.pendingAgencies },
         { ...translations.stats.agency_changes, value: stats.pendingAgencyChanges },
+        { ...translations.stats.reported_listings, value: stats.reportedListings },
         { ...translations.stats.reported_messages, value: stats.reportedMessages },
         { ...translations.stats.contact_messages, value: stats.newContactMessages },
     ]

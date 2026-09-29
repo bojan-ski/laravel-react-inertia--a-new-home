@@ -490,6 +490,36 @@ return [
         ],
     ],
 
+    'listing_reports' => [
+        'action' => 'Report this listing',
+        'dialog' => [
+            'title' => 'Report Listing',
+            'reason_label' => 'What is wrong with this listing?',
+            'details_label' => 'Details (optional)',
+            'details_label_required' => 'Details (required)',
+            'details_placeholder' => 'Tell us what you noticed…',
+            'cancel' => 'Cancel',
+            'submit' => 'Report',
+        ],
+        'reasons' => [
+            'scam' => 'Scam or fraud',
+            'incorrect_info' => 'Wrong or misleading information',
+            'no_longer_available' => 'Already sold or rented',
+            'duplicate' => 'Duplicate listing',
+            'offensive' => 'Offensive or inappropriate',
+            'other' => 'Something else',
+        ],
+        'flash' => [
+            'reported' => 'Thanks, our team will review this listing.',
+        ],
+        'errors' => [
+            'duplicate' => 'You have already reported this listing.',
+        ],
+        'validation' => [
+            'details_required' => 'Please describe the problem.',
+        ],
+    ],
+
     'create_listing' => [
         'title' => 'Create Listing',
         'subtitle' => 'Add your property details for admin review.',
@@ -915,6 +945,7 @@ return [
             'listings' => 'Listings',
             'agencies' => 'Agencies',
             'users' => 'Users',
+            'reported_listings' => 'Reported Listings',
             'reported_messages' => 'Reported Messages',
             'contact_messages' => 'Contact Messages',
         ],
@@ -960,6 +991,10 @@ return [
                 'agency_changes' => [
                     'label' => 'Agency Profile Changes',
                     'description' => 'Awaiting review',
+                ],
+                'reported_listings' => [
+                    'label' => 'Reported Listings',
+                    'description' => 'Listings with open reports',
                 ],
                 'reported_messages' => [
                     'label' => 'Reported Messages',
@@ -1148,6 +1183,42 @@ return [
                 'next' => 'Next',
             ],
         ],
+        'listing_reports' => [
+            'title' => 'Reported Listings',
+            'subtitle' => 'Live listings reported by users. Dismiss the reports or take the listing down.',
+            'panel_heading' => 'Reports',
+            'owner' => 'Owner: :name • :email',
+            'reports_count_one' => ':count report',
+            'reports_count_other' => ':count reports',
+            'reported_by' => 'by :name • :date',
+            'not_approved' => 'This listing is no longer live, so it cannot be taken down. You can still dismiss the reports.',
+            'actions' => [
+                'dismiss' => 'Dismiss',
+                'take_down' => 'Take down',
+            ],
+            'dialog' => [
+                'title' => 'Take Down Listing',
+                'reason_label' => 'Reason',
+                'reason_placeholder' => 'Explain why this listing is being removed…',
+                'reason_helper' => "The listing is removed immediately, the owner is emailed this reason, and it's permanently deleted after 7 days.",
+                'cancel' => 'Cancel',
+                'reject' => 'Take down',
+            ],
+            'empty' => [
+                'title' => 'No reported listings.',
+                'subtitle' => "You're all caught up.",
+            ],
+            'flash' => [
+                'dismissed' => 'Reports dismissed. The listing stays live.',
+                'taken_down' => 'Listing taken down and the owner notified.',
+                'take_down_failed' => 'That listing is no longer live, so it cannot be taken down.',
+            ],
+            'pagination' => [
+                'page_of' => 'Page :current of :last',
+                'previous' => 'Previous',
+                'next' => 'Next',
+            ],
+        ],
         'reported_messages' => [
             'title' => 'Reported Messages',
             'subtitle' => 'Review chat messages reported by participants.',
@@ -1290,6 +1361,13 @@ return [
             'intro' => 'Your listing ":title" was reviewed and could not be approved.',
             'reason' => 'Reason: :reason',
             'outro' => 'You are welcome to submit a new listing that addresses the issue above.',
+        ],
+        'listing_taken_down' => [
+            'subject' => 'Your listing has been removed',
+            'greeting' => 'Listing update',
+            'intro' => 'Your listing ":title" was removed from New Beginning after review by our team.',
+            'reason' => 'Reason: :reason',
+            'outro' => 'The listing is no longer visible and will be permanently deleted in 7 days. If you believe this was a mistake, please contact our support team.',
         ],
         'listing_expiring' => [
             'subject' => 'Your listing expires soon',

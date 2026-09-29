@@ -39,6 +39,8 @@ class ListingController extends Controller
             'isBookmarked' => $user->hasBookmarked($listing),
             'canBookmark' => $user->can('bookmark', $listing),
             'canStartChat' => Gate::allows('start', [Conversation::class, $listing]),
+            'canReport' => Gate::allows('report', $listing),
+            'reportTranslations' => __('app.listing_reports'),
             'translations' => __('app.listings'),
         ]);
     }

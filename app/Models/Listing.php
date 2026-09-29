@@ -83,6 +83,16 @@ class Listing extends Model
         return $this->hasMany(Conversation::class);
     }
 
+    public function reports(): HasMany
+    {
+        return $this->hasMany(ListingReport::class);
+    }
+
+    public function openReports(): HasMany
+    {
+        return $this->reports()->whereNull('resolved_at');
+    }
+
     #[Scope]
     protected function publiclyVisible(Builder $query): void
     {
@@ -435,6 +445,33 @@ class Listing extends Model
             'ownerName' => $this->owner?->name ?? $this->agency?->name,
             'ownerEmail' => $this->owner?->email ?? $this->agency?->email,
             'createdAt' => $this->created_at?->toIso8601String(),
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function toReportModerationArray(User $actor): array
+    {
+        $image = $this->relationLoaded('images') ? $this->images->first() : null;
+        $reports = $this->relationLoaded('openReports') ? $this->openReports : collect();
+
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'status' => $this->status->value,
+            'imageUrl' => $image?->small_path
+                ? Storage::disk($image->disk)->url($image->small_path)
+                : null,
+            'ownerName' => $this->owner?->name ?? $this->agency?->name,
+            'ownerEmail' => $this->owner?->email ?? $this->agency?->email,
+            'openReportsCount' => $this->open_reports_count ?? $reports->count(),
+            'reports' => $reports
+                ->sortByDesc('created_at')
+                ->values()
+                ->map(fn (ListingReport $report): array => $report->toModerationArray())
+                ->all(),
+            'canTakeDown' => $actor->can('takeDown', [ListingReport::class, $this]),
         ];
     }
 
