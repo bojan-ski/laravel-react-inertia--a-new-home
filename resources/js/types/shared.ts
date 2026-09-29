@@ -1,11 +1,10 @@
 import type { AdminNavTranslations } from '@/types/admin'
-import type { ListingsNavTranslations } from '@/types/listing'
 import type { FooterTranslations, NavTranslations } from '@/types/navigation'
 
 export interface SharedProps {
     name: string
     nav: NavTranslations
-    listingsNav: ListingsNavTranslations
+    ui: UiTranslations
     footer: FooterTranslations
     adminNav: AdminNavTranslations
     auth: {
@@ -24,6 +23,10 @@ export interface SharedProps {
 }
 
 export type CookieConsent = 'accepted' | 'rejected'
+
+export interface UiTranslations {
+    dismiss: string
+}
 
 export interface MessageNotificationTranslations {
     title: string

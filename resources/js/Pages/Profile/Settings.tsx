@@ -4,12 +4,12 @@ import { type FormEvent, useEffect, useState } from 'react'
 import ConfirmDialog from '@/Components/UI/ConfirmDialog'
 import FlashBanner from '@/Components/UI/FlashBanner'
 import TextField from '@/Components/UI/TextField'
-import ListingsLayout from '@/Layouts/ListingsLayout'
+import PublicLayout from '@/Layouts/PublicLayout'
 import type { ProfileSettingsPageProps } from '@/types/profile'
 import type { SharedProps } from '@/types/shared'
 
 export default function Settings({ translations, backHref, passwordUrl, deleteUrl }: ProfileSettingsPageProps) {
-    const { flash } = usePage<SharedProps>().props
+    const { flash, ui } = usePage<SharedProps>().props
     const [banner, setBanner] = useState<string | null>(null)
     const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false)
 
@@ -49,7 +49,7 @@ export default function Settings({ translations, backHref, passwordUrl, deleteUr
     }
 
     return (
-        <ListingsLayout>
+        <PublicLayout>
             <Head title={translations.title} />
 
             <div className="border-b border-border bg-surface">
@@ -73,7 +73,13 @@ export default function Settings({ translations, backHref, passwordUrl, deleteUr
 
             <div className="mx-auto max-w-2xl px-6 py-10">
                 {banner && (
-                    <FlashBanner message={banner} variant="success" className="mb-8" onDismiss={() => setBanner(null)} />
+                    <FlashBanner
+                        message={banner}
+                        variant="success"
+                        className="mb-8"
+                        onDismiss={() => setBanner(null)}
+                        dismissLabel={ui.dismiss}
+                    />
                 )}
 
                 <div className="space-y-12">
@@ -168,6 +174,6 @@ export default function Settings({ translations, backHref, passwordUrl, deleteUr
                 onConfirm={confirmDelete}
                 onCancel={() => setConfirmDeleteOpen(false)}
             />
-        </ListingsLayout>
+        </PublicLayout>
     )
 }

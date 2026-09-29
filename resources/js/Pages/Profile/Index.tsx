@@ -2,7 +2,7 @@ import { Head, Link, usePage } from '@inertiajs/react'
 import { Plus, Settings } from 'lucide-react'
 import ProfileListingRow from '@/Components/Profile/ProfileListingRow'
 import FlashBanner from '@/Components/UI/FlashBanner'
-import ListingsLayout from '@/Layouts/ListingsLayout'
+import PublicLayout from '@/Layouts/PublicLayout'
 import type { ProfileIndexPageProps } from '@/types/profile'
 import type { SharedProps } from '@/types/shared'
 
@@ -10,7 +10,7 @@ export default function Index({ listings, translations, propertyTypeLabels }: Pr
     const { flash } = usePage<SharedProps>().props
 
     return (
-        <ListingsLayout>
+        <PublicLayout>
             <Head title={translations.title} />
 
             <div className="border-b border-border bg-surface">
@@ -70,6 +70,6 @@ export default function Index({ listings, translations, propertyTypeLabels }: Pr
                     </div>
                 )}
             </div>
-        </ListingsLayout>
+        </PublicLayout>
     )
 }

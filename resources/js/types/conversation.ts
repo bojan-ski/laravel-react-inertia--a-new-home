@@ -63,6 +63,8 @@ export interface MessageNotifierProps {
 export interface MessagesNavLinkProps {
     label: string
     unreadLabel: string
+    active: boolean
+    className: string
     onNavigate?: () => void
 }
 

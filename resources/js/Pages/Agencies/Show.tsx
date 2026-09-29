@@ -4,7 +4,7 @@ import AgencyContactList from '@/Components/Agencies/AgencyContactList'
 import { agencyRegistrationLines } from '@/Components/Agencies/agencyFormat'
 import ListingCard from '@/Components/Listings/ListingCard'
 import Pagination from '@/Components/UI/Pagination'
-import ListingsLayout from '@/Layouts/ListingsLayout'
+import PublicLayout from '@/Layouts/PublicLayout'
 import type { AgencyPublicPageProps } from '@/types/agency'
 
 export default function Show({ agency, listings, translations, listingTranslations }: AgencyPublicPageProps) {
@@ -16,20 +16,20 @@ export default function Show({ agency, listings, translations, listingTranslatio
         : null
 
     return (
-        <ListingsLayout>
+        <PublicLayout back={{ href: '/agencies', label: show.back }}>
             <Head title={agency.name} />
 
             <div className="border-b border-border bg-surface">
                 <div className="mx-auto max-w-7xl px-6 py-8 md:py-12">
                     <Link
                         href="/agencies"
-                        className="inline-flex items-center gap-1 text-sm text-text-muted transition-colors hover:text-text"
+                        className="hidden items-center gap-1 text-sm text-text-muted transition-colors hover:text-text lg:inline-flex"
                     >
                         <ChevronLeft className="size-4" />
                         {show.back}
                     </Link>
 
-                    <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_320px]">
+                    <div className="grid grid-cols-1 gap-8 lg:mt-6 lg:grid-cols-[1fr_320px]">
                         <div>
                             <p className="text-xs font-medium uppercase tracking-wider text-accent">{show.eyebrow}</p>
                             <h1 className="mt-2 font-display text-3xl font-semibold text-text sm:text-4xl">{agency.name}</h1>
@@ -101,6 +101,6 @@ export default function Show({ agency, listings, translations, listingTranslatio
                     </>
                 )}
             </div>
-        </ListingsLayout>
+        </PublicLayout>
     )
 }

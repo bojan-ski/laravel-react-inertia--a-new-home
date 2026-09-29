@@ -8,6 +8,8 @@ return [
         'features' => 'Features',
         'how_it_works' => 'How It Works',
         'listings' => 'Listings',
+        'agencies' => 'Agencies',
+        'favorites' => 'Favorites',
         'login' => 'Log in',
         'get_started' => 'Get Started',
         'dashboard' => 'Dashboard',
@@ -16,6 +18,10 @@ return [
         'unread' => ':count unread',
         'open_menu' => 'Open menu',
         'close_menu' => 'Close menu',
+    ],
+
+    'ui' => [
+        'dismiss' => 'Dismiss',
     ],
 
     'footer' => [
@@ -34,7 +40,7 @@ return [
         'linkedin' => 'LinkedIn',
         'facebook' => 'Facebook',
         'instagram' => 'Instagram',
-        'copyright' => ':year New Beginning. All rights reserved.',
+        'copyright' => '© :year New Beginning. All rights reserved.',
         'privacy' => 'Privacy',
         'terms' => 'Terms',
         'cookies' => 'Cookies',
@@ -140,22 +146,6 @@ return [
         'title' => 'Listings',
         'count_prefix' => 'Showing',
         'count_suffix' => 'properties',
-
-        'nav' => [
-            'back' => 'Back',
-            'brand' => 'New Beginning',
-            'listings' => 'Listings',
-            'agencies' => 'Agencies',
-            'favorites' => 'Favorites',
-            'login' => 'Log in',
-            'sign_up' => 'Sign Up',
-            'dashboard' => 'Dashboard',
-            'sign_out' => 'Sign Out',
-            'messages' => 'Messages',
-            'unread' => ':count unread',
-            'open_menu' => 'Open menu',
-            'close_menu' => 'Close menu',
-        ],
 
         'filters' => [
             'search_placeholder' => 'Search by location, title…',

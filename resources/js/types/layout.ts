@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import type { NavBack } from '@/types/navigation'
 
 export interface AppShellProps {
     children: ReactNode
@@ -6,6 +7,8 @@ export interface AppShellProps {
 
 export interface PublicLayoutProps {
     children: ReactNode
+    back?: NavBack
+    footer?: boolean
 }
 
 export interface AuthLayoutProps {

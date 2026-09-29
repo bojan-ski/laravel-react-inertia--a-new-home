@@ -60,8 +60,7 @@ class MessageNotificationTest extends TestCase
             ->get('/')
             ->assertInertia(fn (Assert $page) => $page
                 ->where('messageNotifications', __('app.message_notifications'))
-                ->where('nav.messages', __('app.nav.messages'))
-                ->where('listingsNav.messages', __('app.listings.nav.messages')));
+                ->where('nav.messages', __('app.nav.messages')));
     }
 
     public function test_messages_from_the_other_side_count_as_unread(): void

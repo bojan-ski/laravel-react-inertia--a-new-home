@@ -1,6 +1,6 @@
 import { Link, usePage } from '@inertiajs/react'
 import Footer from '@/Components/Footer'
-import ListingsNavbar from '@/Components/Listings/ListingsNavbar'
+import Navbar from '@/Components/Navbar'
 import type { AdminLayoutProps } from '@/types/layout'
 import type { SharedProps } from '@/types/shared'
 
@@ -14,7 +14,7 @@ function isLinkActive(href: string, currentPath: string): boolean {
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
     const page = usePage<SharedProps>()
-    const { adminNav, listingsNav } = page.props
+    const { adminNav } = page.props
     const currentPath = page.url
 
     const links = [
@@ -29,7 +29,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
     return (
         <div className="flex min-h-screen flex-col bg-background text-text">
-            <ListingsNavbar nav={listingsNav} />
+            <Navbar />
 
             <main className="flex-1">
                 <div className="mx-auto max-w-7xl px-6 py-10 md:py-14">

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, usePage } from '@inertiajs/react'
+import Button from '@/Components/UI/Button'
 import type { CookieConsent, SharedProps } from '@/types/shared'
 
 const COOKIE_NAME = 'cookie_consent'
@@ -25,34 +26,28 @@ export default function CookieBanner() {
     }
 
     return (
-        <section
-            aria-label={cookieBanner.title}
-            className="fixed inset-x-4 bottom-4 z-50 rounded-2xl border border-border bg-surface p-5 shadow-lg sm:inset-x-auto sm:left-6 sm:bottom-6 sm:max-w-sm"
-        >
-            <h2 className="font-semibold text-text">{cookieBanner.title}</h2>
-            <p className="mt-2 text-sm leading-relaxed text-text-soft">{cookieBanner.body}</p>
-            <Link
-                href="/cookie-policy"
-                className="mt-2 inline-block text-sm font-medium text-brand transition-colors hover:text-brand-dark"
-            >
-                {cookieBanner.policy_link}
-            </Link>
+        <section aria-label={cookieBanner.title} className="fixed inset-x-0 bottom-0 z-50 bg-ink text-paper">
+            <div className="mx-auto flex max-w-360 flex-col gap-3.5 px-5 py-6 md:px-10 lg:grid lg:grid-cols-[260px_minmax(0,1fr)_auto] lg:items-center lg:gap-10 lg:px-16 lg:py-7">
+                <h2 className="text-[26px] font-light tracking-[-0.015em]">{cookieBanner.title}</h2>
 
-            <div className="mt-4 grid grid-cols-2 gap-3">
-                <button
-                    type="button"
-                    onClick={() => choose('rejected')}
-                    className="rounded-full border border-border-strong px-4 py-2.5 text-sm font-semibold text-text transition-colors hover:border-text"
-                >
-                    {cookieBanner.reject}
-                </button>
-                <button
-                    type="button"
-                    onClick={() => choose('accepted')}
-                    className="rounded-full bg-brand px-4 py-2.5 text-sm font-semibold text-text-inverse transition-colors hover:bg-brand-dark"
-                >
-                    {cookieBanner.accept}
-                </button>
+                <p className="text-sm/[1.6] text-paper/85">
+                    {cookieBanner.body}{' '}
+                    <Link
+                        href="/cookie-policy"
+                        className="border-b border-current text-forest-200 transition-colors duration-150 hover:text-paper"
+                    >
+                        {cookieBanner.policy_link}
+                    </Link>
+                </p>
+
+                <div className="grid grid-cols-2 gap-2.5 lg:flex">
+                    <Button variant="on-photo-outline" onClick={() => choose('rejected')}>
+                        {cookieBanner.reject}
+                    </Button>
+                    <Button variant="on-photo" onClick={() => choose('accepted')}>
+                        {cookieBanner.accept}
+                    </Button>
+                </div>
             </div>
         </section>
     )

@@ -229,6 +229,16 @@ class SavedSearchTest extends TestCase
             );
     }
 
+    public function test_listings_page_passes_the_search_summary_chips(): void
+    {
+        $this->get('/listings?listingType=rent&propertyType=apartment&city=Belgrade')
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('searchSummary', ['Rent', 'Apartment', 'Belgrade']));
+
+        $this->get('/listings')
+            ->assertInertia(fn (Assert $page) => $page->where('searchSummary', []));
+    }
+
     public function test_guest_can_see_the_save_button_but_admin_cannot(): void
     {
         $this->get('/listings')->assertInertia(fn (Assert $page) => $page->where('canSaveSearch', true));

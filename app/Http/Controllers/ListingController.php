@@ -29,6 +29,7 @@ class ListingController extends Controller
             'filters' => $filters,
             'canSaveSearch' => $request->user() === null || Gate::allows('create', SavedSearch::class),
             'suggestedSearchName' => $this->savedSearchService->suggestName($filters),
+            'searchSummary' => $this->savedSearchService->summarize($filters),
             'saveSearchTranslations' => __('app.saved_searches.save'),
             'translations' => __('app.listings'),
         ]);

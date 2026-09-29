@@ -76,12 +76,14 @@ export interface SaveSearchDialogProps {
     onClose: () => void
     filters: ListingFilters
     suggestedName: string
+    summary: string[]
     translations: SaveSearchTranslations
 }
 
 export interface SaveSearchButtonProps {
     filters: ListingFilters
     suggestedName: string
+    summary: string[]
     translations: SaveSearchTranslations
 }
 
