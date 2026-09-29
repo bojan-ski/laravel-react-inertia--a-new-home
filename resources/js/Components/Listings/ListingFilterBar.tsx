@@ -1,6 +1,7 @@
 import { FormEvent, useState } from 'react'
-import { router } from '@inertiajs/react'
+import { router, usePage } from '@inertiajs/react'
 import { Search, SlidersHorizontal } from 'lucide-react'
+import ListingMoreFilters from '@/Components/Listings/ListingMoreFilters'
 import type { ListingFilterBarProps, ListingFilters } from '@/types/listing'
 
 const emptyFilters: ListingFilters = {
@@ -10,13 +11,28 @@ const emptyFilters: ListingFilters = {
     city: '',
     minPrice: '',
     maxPrice: '',
+    minBedrooms: '',
+    minBathrooms: '',
+    minArea: '',
+    maxArea: '',
+    amenities: [],
     sort: 'newest',
 }
 
-export default function ListingFilterBar({ filters, translations }: ListingFilterBarProps) {
+export default function ListingFilterBar({ filters, translations, amenityLabels }: ListingFilterBarProps) {
+    const errors = Object.values(usePage().props.errors)
     const [form, setForm] = useState<ListingFilters>(filters)
     const [showMore, setShowMore] = useState(
-        Boolean(filters.city || filters.minPrice || filters.maxPrice)
+        Boolean(
+            filters.city ||
+                filters.minPrice ||
+                filters.maxPrice ||
+                filters.minBedrooms ||
+                filters.minBathrooms ||
+                filters.minArea ||
+                filters.maxArea ||
+                filters.amenities.length > 0
+        )
     )
 
     function set<K extends keyof ListingFilters>(key: K, value: ListingFilters[K]) {
@@ -27,7 +43,7 @@ export default function ListingFilterBar({ filters, translations }: ListingFilte
         event.preventDefault()
 
         const data = Object.fromEntries(
-            Object.entries(form).filter(([, value]) => value !== '')
+            Object.entries(form).filter(([, value]) => (Array.isArray(value) ? value.length > 0 : value !== ''))
         )
 
         router.get('/listings', data, { preserveState: true, preserveScroll: true, replace: true })
@@ -130,32 +146,19 @@ export default function ListingFilterBar({ filters, translations }: ListingFilte
                 </button>
 
                 {showMore && (
-                    <div className="mt-3 flex flex-col gap-3 sm:flex-row">
-                        <input
-                            type="text"
-                            value={form.city}
-                            onChange={(event) => set('city', event.target.value)}
-                            placeholder={translations.city_placeholder}
-                            className="rounded-lg border border-border bg-surface px-4 py-2.5 text-sm text-text outline-none transition-colors focus:border-brand sm:w-48"
-                        />
-                        <input
-                            type="number"
-                            min="0"
-                            value={form.minPrice}
-                            onChange={(event) => set('minPrice', event.target.value)}
-                            placeholder={translations.min_price}
-                            className="rounded-lg border border-border bg-surface px-4 py-2.5 text-sm text-text outline-none transition-colors focus:border-brand sm:w-40"
-                        />
-                        <input
-                            type="number"
-                            min="0"
-                            value={form.maxPrice}
-                            onChange={(event) => set('maxPrice', event.target.value)}
-                            placeholder={translations.max_price}
-                            className="rounded-lg border border-border bg-surface px-4 py-2.5 text-sm text-text outline-none transition-colors focus:border-brand sm:w-40"
-                        />
-                    </div>
+                    <ListingMoreFilters
+                        form={form}
+                        set={set}
+                        translations={translations}
+                        amenityLabels={amenityLabels}
+                    />
                 )}
+
+                {errors.map((error) => (
+                    <p key={error} className="mt-3 text-sm text-status-rejected">
+                        {error}
+                    </p>
+                ))}
             </div>
         </form>
     )

@@ -13,14 +13,23 @@ export default function Index({ listings, filters, translations }: ListingsIndex
             filters.propertyType ||
             filters.city ||
             filters.minPrice ||
-            filters.maxPrice
+            filters.maxPrice ||
+            filters.minBedrooms ||
+            filters.minBathrooms ||
+            filters.minArea ||
+            filters.maxArea ||
+            filters.amenities.length > 0
     )
 
     return (
         <ListingsLayout>
             <Head title={translations.title} />
 
-            <ListingFilterBar filters={filters} translations={translations.filters} />
+            <ListingFilterBar
+                filters={filters}
+                translations={translations.filters}
+                amenityLabels={translations.amenities}
+            />
 
             <div className="mx-auto max-w-7xl px-6 py-8">
                 <p className="text-sm text-text-muted">

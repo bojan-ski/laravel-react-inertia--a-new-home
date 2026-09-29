@@ -284,8 +284,30 @@ class ListingService
     {
         $filters = $request->filters();
 
-        $query = Listing::actuallyPubliclyVisible()->with(['owner', 'images', 'agency.user']);
+        $query = $this->applyPublicFilters(
+            Listing::actuallyPubliclyVisible()->with(['owner', 'images', 'agency.user']),
+            $filters,
+        );
 
+        match ($filters['sort']) {
+            'oldest' => $query->orderBy('approved_at'),
+            'price_low_high' => $query->orderBy('price'),
+            'price_high_low' => $query->orderByDesc('price'),
+            default => $query->orderByDesc('approved_at'),
+        };
+
+        return $this->toCardPaginator($query->paginate(self::PER_PAGE)->withQueryString(), $request->user());
+    }
+
+    /**
+     * Apply the public listing filters produced by ListingIndexRequest::filters().
+     *
+     * @param  Builder<Listing>  $query
+     * @param  array{search: string, listingType: string, propertyType: string, city: string, minPrice: string, maxPrice: string, minBedrooms: string, minBathrooms: string, minArea: string, maxArea: string, amenities: list<string>, sort: string}  $filters
+     * @return Builder<Listing>
+     */
+    public function applyPublicFilters(Builder $query, array $filters): Builder
+    {
         if ($filters['search'] !== '') {
             $this->applyLikeSearch($query, $filters['search'], ['title', 'city', 'description']);
         }
@@ -299,7 +321,7 @@ class ListingService
         }
 
         if ($filters['city'] !== '') {
-            $query->where('city', 'like', "%{$filters['city']}%");
+            $this->applyLikeSearch($query, $filters['city'], ['city']);
         }
 
         if ($filters['minPrice'] !== '') {
@@ -310,14 +332,27 @@ class ListingService
             $query->where('price', '<=', $filters['maxPrice']);
         }
 
-        match ($filters['sort']) {
-            'oldest' => $query->orderBy('approved_at'),
-            'price_low_high' => $query->orderBy('price'),
-            'price_high_low' => $query->orderByDesc('price'),
-            default => $query->orderByDesc('approved_at'),
-        };
+        if ($filters['minBedrooms'] !== '') {
+            $query->where('bedrooms', '>=', $filters['minBedrooms']);
+        }
 
-        return $this->toCardPaginator($query->paginate(self::PER_PAGE)->withQueryString(), $request->user());
+        if ($filters['minBathrooms'] !== '') {
+            $query->where('bathrooms', '>=', $filters['minBathrooms']);
+        }
+
+        if ($filters['minArea'] !== '') {
+            $query->where('area_value', '>=', $filters['minArea']);
+        }
+
+        if ($filters['maxArea'] !== '') {
+            $query->where('area_value', '<=', $filters['maxArea']);
+        }
+
+        foreach ($filters['amenities'] as $amenity) {
+            $query->whereJsonContains('amenities', $amenity);
+        }
+
+        return $query;
     }
 
     public function getPublicListingsForAgency(Agency $agency, ?User $viewer): LengthAwarePaginator

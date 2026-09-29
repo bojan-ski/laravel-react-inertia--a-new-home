@@ -81,6 +81,11 @@ export interface ListingFilters {
     city: string
     minPrice: string
     maxPrice: string
+    minBedrooms: string
+    minBathrooms: string
+    minArea: string
+    maxArea: string
+    amenities: string[]
     sort: string
 }
 
@@ -117,6 +122,13 @@ export interface ListingsFilterTranslations {
     city_placeholder: string
     min_price: string
     max_price: string
+    any_beds: string
+    beds_option: string
+    any_baths: string
+    baths_option: string
+    min_area: string
+    max_area: string
+    amenities_label: string
     property_types: Record<string, string>
     sorts: Record<string, string>
 }
@@ -305,6 +317,14 @@ export interface ListingsNavbarMobilePanelProps {
 export interface ListingFilterBarProps {
     filters: ListingFilters
     translations: ListingsFilterTranslations
+    amenityLabels: Record<string, string>
+}
+
+export interface ListingMoreFiltersProps {
+    form: ListingFilters
+    set: <K extends keyof ListingFilters>(key: K, value: ListingFilters[K]) => void
+    translations: ListingsFilterTranslations
+    amenityLabels: Record<string, string>
 }
 
 export interface ListingCardProps {
