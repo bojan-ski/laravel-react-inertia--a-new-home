@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Concerns;
 
+use App\Enums\Amenity;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Validation\Rule;
 
@@ -33,6 +34,8 @@ trait ValidatesListingFields
             'bathrooms' => ['nullable', 'integer', 'min:0'],
             'area_value' => ['nullable', 'numeric', 'min:0'],
             'year_built' => ['nullable', 'integer', 'min:1800', 'max:2100'],
+            'amenities' => ['nullable', 'array'],
+            'amenities.*' => ['string', 'distinct', Rule::enum(Amenity::class)],
         ];
     }
 

@@ -244,6 +244,7 @@ export interface AdminListingReviewPageProps {
     translations: AdminListingsTranslations
     listingTranslations: ListingsShowTranslations
     propertyTypeLabels: Record<string, string>
+    amenityLabels: Record<string, string>
 }
 
 export interface ListingModerationActionsProps {

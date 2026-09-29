@@ -220,6 +220,7 @@ return [
             'baths' => 'Baths',
             'built' => 'Built :year',
             'description_heading' => 'Description',
+            'amenities_heading' => 'Amenities',
             'details_heading' => 'Property Details',
             'detail_address' => 'Address',
             'detail_property_type' => 'Property Type',
@@ -231,6 +232,24 @@ return [
             'saved' => 'Saved',
             'start_chat' => 'Start Chat',
             'contact_heading' => 'Contact',
+        ],
+
+        'amenities' => [
+            'parking' => 'Parking',
+            'garage' => 'Garage',
+            'elevator' => 'Elevator',
+            'balcony' => 'Balcony',
+            'terrace' => 'Terrace',
+            'garden' => 'Garden',
+            'pool' => 'Swimming pool',
+            'air_conditioning' => 'Air conditioning',
+            'central_heating' => 'Central heating',
+            'furnished' => 'Furnished',
+            'pets_allowed' => 'Pets allowed',
+            'storage' => 'Storage room',
+            'fireplace' => 'Fireplace',
+            'accessible' => 'Wheelchair accessible',
+            'security' => 'Security / video intercom',
         ],
     ],
 
@@ -485,6 +504,7 @@ return [
             'basic' => 'Basic Listing Details',
             'location' => 'Location',
             'specs' => 'Property Specs',
+            'amenities' => 'Amenities',
             'contact' => 'Contact Info',
         ],
         'listing_types' => [
@@ -527,6 +547,7 @@ return [
             'basic' => 'Basic Listing Details',
             'location' => 'Location',
             'specs' => 'Property Specs',
+            'amenities' => 'Amenities',
             'contact' => 'Contact Info',
         ],
         'listing_types' => [
@@ -593,6 +614,7 @@ return [
             'basic' => 'Basic Listing Details',
             'location' => 'Location',
             'specs' => 'Property Specs',
+            'amenities' => 'Amenities',
             'contact' => 'Contact Info',
         ],
         'listing_types' => [
@@ -649,6 +671,7 @@ return [
             'basic' => 'Basic Listing Details',
             'location' => 'Location',
             'specs' => 'Property Specs',
+            'amenities' => 'Amenities',
             'contact' => 'Contact Info',
         ],
         'listing_types' => [

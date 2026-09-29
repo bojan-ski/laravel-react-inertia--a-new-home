@@ -6,7 +6,7 @@ import NewListingImagePicker from '@/Components/Listings/NewListingImagePicker'
 import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { CreateAgencyListingPageProps, CreateListingFormData } from '@/types/listing'
 
-export default function Create({ translations, propertyTypeLabels }: CreateAgencyListingPageProps) {
+export default function Create({ translations, propertyTypeLabels, amenityLabels }: CreateAgencyListingPageProps) {
     const { data, setData, post, processing, errors } = useForm<CreateListingFormData>({
         title: '',
         listing_type: 'sale',
@@ -21,6 +21,7 @@ export default function Create({ translations, propertyTypeLabels }: CreateAgenc
         bathrooms: '',
         area_value: '',
         year_built: '',
+        amenities: [],
         contact_name: '',
         contact_email: '',
         contact_phone: '',
@@ -67,6 +68,7 @@ export default function Create({ translations, propertyTypeLabels }: CreateAgenc
                     onSubmit={submit}
                     translations={translations}
                     propertyTypeLabels={propertyTypeLabels}
+                    amenityLabels={amenityLabels}
                     hideContactSection
                     cancelHref="/agency"
                     footerSlot={

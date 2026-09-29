@@ -6,7 +6,7 @@ import NewListingImagePicker from '@/Components/Listings/NewListingImagePicker'
 import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { CreateListingFormData, CreateListingPageProps } from '@/types/listing'
 
-export default function Create({ translations, propertyTypeLabels }: CreateListingPageProps) {
+export default function Create({ translations, propertyTypeLabels, amenityLabels }: CreateListingPageProps) {
     const { data, setData, post, processing, errors } = useForm<CreateListingFormData>({
         title: '',
         listing_type: 'sale',
@@ -21,6 +21,7 @@ export default function Create({ translations, propertyTypeLabels }: CreateListi
         bathrooms: '',
         area_value: '',
         year_built: '',
+        amenities: [],
         contact_name: '',
         contact_email: '',
         contact_phone: '',
@@ -65,6 +66,7 @@ export default function Create({ translations, propertyTypeLabels }: CreateListi
                     onSubmit={submit}
                     translations={translations}
                     propertyTypeLabels={propertyTypeLabels}
+                    amenityLabels={amenityLabels}
                     footerSlot={
                         <NewListingImagePicker
                             files={data.images}

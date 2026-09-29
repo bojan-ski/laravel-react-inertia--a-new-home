@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Enums\Amenity;
 use App\Enums\ListingStatus;
 use App\Enums\UserStatus;
 use Database\Factories\ListingFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\AsEnumCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -29,6 +31,7 @@ use Illuminate\Support\Facades\Storage;
     'bathrooms',
     'area_value',
     'year_built',
+    'amenities',
     'contact_name',
     'contact_email',
     'contact_phone',
@@ -322,6 +325,17 @@ class Listing extends Model
     }
 
     /**
+     * @return array<int, string>
+     */
+    private function amenityValues(): array
+    {
+        return $this->amenities
+            ?->map(fn (Amenity $amenity): string => $amenity->value)
+            ->values()
+            ->all() ?? [];
+    }
+
+    /**
      * @return array<int, array<string, mixed>>
      */
     private function imagesForShow(): array
@@ -364,6 +378,7 @@ class Listing extends Model
             'contactName' => $this->contact_name,
             'contactEmail' => $this->contact_email,
             'contactPhone' => $this->contact_phone,
+            'amenities' => $this->amenityValues(),
             'approvedAt' => $this->approved_at?->format('F j, Y'),
             'images' => $images,
         ];
@@ -397,6 +412,7 @@ class Listing extends Model
             'contactName' => $this->contact_name,
             'contactEmail' => $this->contact_email,
             'contactPhone' => $this->contact_phone,
+            'amenities' => $this->amenityValues(),
             'images' => $images,
         ];
     }
@@ -446,6 +462,7 @@ class Listing extends Model
     {
         return [
             'status' => ListingStatus::class,
+            'amenities' => AsEnumCollection::of(Amenity::class),
             'price' => 'decimal:2',
             'area_value' => 'decimal:2',
             'approved_at' => 'datetime',

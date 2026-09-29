@@ -1,6 +1,7 @@
 import { Head, Link, usePage } from '@inertiajs/react'
 import { ChevronLeft, MapPin } from 'lucide-react'
 import ListingModerationActions from '@/Components/Admin/ListingModerationActions'
+import ListingAmenities from '@/Components/Listings/ListingAmenities'
 import ListingDetailRow from '@/Components/Listings/ListingDetailRow'
 import ListingFacts from '@/Components/Listings/ListingFacts'
 import ListingGallery from '@/Components/Listings/ListingGallery'
@@ -18,6 +19,7 @@ export default function Show({
     translations,
     listingTranslations,
     propertyTypeLabels,
+    amenityLabels,
 }: AdminListingReviewPageProps) {
     const { flash } = usePage<SharedProps>().props
     const review = translations.review
@@ -142,6 +144,12 @@ export default function Show({
                             {listing.description}
                         </p>
                     </section>
+
+                    <ListingAmenities
+                        amenities={listing.amenities}
+                        labels={amenityLabels}
+                        heading={show.amenities_heading}
+                    />
 
                     <section>
                         <h2 className="font-display text-xl font-semibold text-text">{show.details_heading}</h2>

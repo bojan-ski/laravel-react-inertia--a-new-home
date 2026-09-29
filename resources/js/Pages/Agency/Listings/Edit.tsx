@@ -8,7 +8,7 @@ import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { EditAgencyListingPageProps, ListingFormData } from '@/types/listing'
 import type { SharedProps } from '@/types/shared'
 
-export default function Edit({ listing, translations, propertyTypeLabels }: EditAgencyListingPageProps) {
+export default function Edit({ listing, translations, propertyTypeLabels, amenityLabels }: EditAgencyListingPageProps) {
     const { flash } = usePage<SharedProps>().props
 
     const { data, setData, put, processing, errors } = useForm<ListingFormData>({
@@ -25,6 +25,7 @@ export default function Edit({ listing, translations, propertyTypeLabels }: Edit
         bathrooms: listing.bathrooms?.toString() ?? '',
         area_value: listing.areaValue ?? '',
         year_built: listing.yearBuilt?.toString() ?? '',
+        amenities: listing.amenities,
         contact_name: '',
         contact_email: '',
         contact_phone: '',
@@ -82,6 +83,7 @@ export default function Edit({ listing, translations, propertyTypeLabels }: Edit
                     onSubmit={submit}
                     translations={translations}
                     propertyTypeLabels={propertyTypeLabels}
+                    amenityLabels={amenityLabels}
                     headerSlot={headerSlot}
                     hideContactSection
                     cancelHref="/agency"
