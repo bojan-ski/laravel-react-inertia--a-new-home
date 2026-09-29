@@ -48,6 +48,8 @@ class ListingController extends Controller
             'canBookmark' => $user->can('bookmark', $listing),
             'canStartChat' => Gate::allows('start', [Conversation::class, $listing]),
             'canReport' => Gate::allows('report', $listing),
+            'similarListings' => Inertia::defer(fn (): array => $this->listingService->getSimilarListings($listing, $user)),
+            'mortgageDefaults' => config('listings.mortgage'),
             'reportTranslations' => __('app.listing_reports'),
             'translations' => __('app.listings'),
         ]);

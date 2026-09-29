@@ -1,8 +1,12 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
+import { Maximize2 } from 'lucide-react'
+import ListingLightbox from '@/Components/Listings/ListingLightbox'
 import type { ListingGalleryProps } from '@/types/listing'
 
-export default function ListingGallery({ images, title }: ListingGalleryProps) {
+export default function ListingGallery({ images, title, translations }: ListingGalleryProps) {
     const [activeIndex, setActiveIndex] = useState(0)
+    const [isLightboxOpen, setIsLightboxOpen] = useState(false)
+    const closeLightbox = useCallback(() => setIsLightboxOpen(false), [])
 
     if (images.length === 0) {
         return null
@@ -12,9 +16,20 @@ export default function ListingGallery({ images, title }: ListingGalleryProps) {
 
     return (
         <div className="flex flex-col gap-4">
-            <div className="aspect-video w-full overflow-hidden rounded-2xl border border-border bg-surface-muted">
+            <button
+                type="button"
+                onClick={() => setIsLightboxOpen(true)}
+                aria-label={translations.open
+                    .replace(':current', String(activeIndex + 1))
+                    .replace(':total', String(images.length))}
+                className="group relative aspect-video w-full cursor-zoom-in overflow-hidden rounded-2xl border border-border bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+            >
                 <img src={active.url} alt={active.altText || title} className="size-full object-cover" />
-            </div>
+                <span className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-1.5 text-xs font-medium text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 pointer-coarse:opacity-100">
+                    <Maximize2 className="size-3.5" />
+                    {translations.expand}
+                </span>
+            </button>
 
             {images.length > 1 && (
                 <div className="flex gap-3 overflow-x-auto pb-1">
@@ -34,6 +49,16 @@ export default function ListingGallery({ images, title }: ListingGalleryProps) {
                         </button>
                     ))}
                 </div>
+            )}
+
+            {isLightboxOpen && (
+                <ListingLightbox
+                    images={images}
+                    title={title}
+                    initialIndex={activeIndex}
+                    onClose={closeLightbox}
+                    translations={translations}
+                />
             )}
         </div>
     )

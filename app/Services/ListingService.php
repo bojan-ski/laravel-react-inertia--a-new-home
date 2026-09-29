@@ -22,6 +22,10 @@ class ListingService
 
     private const PER_PAGE = 12;
 
+    private const SIMILAR_LIMIT = 4;
+
+    private const SIMILAR_PRICE_BAND = 0.3;
+
     /**
      * Create a listing owned by a regular user.
      *
@@ -384,15 +388,50 @@ class ListingService
         return $this->toCardPaginator($paginator, $viewer);
     }
 
+    /**
+     * @return list<array<string, mixed>>
+     */
+    public function getSimilarListings(Listing $listing, User $viewer): array
+    {
+        $price = (float) $listing->price;
+
+        $similar = Listing::actuallyPubliclyVisible()
+            ->whereKeyNot($listing->getKey())
+            ->where('listing_type', $listing->listing_type)
+            ->where('property_type', $listing->property_type)
+            ->whereBetween('price', [
+                round($price * (1 - self::SIMILAR_PRICE_BAND), 2),
+                round($price * (1 + self::SIMILAR_PRICE_BAND), 2),
+            ])
+            ->with(['owner', 'images', 'agency.user'])
+            ->orderByRaw('city = ? desc', [$listing->city])
+            ->orderByRaw('abs(price - ?)', [$listing->price])
+            ->orderByDesc('approved_at')
+            ->orderByDesc('id')
+            ->limit(self::SIMILAR_LIMIT)
+            ->get();
+
+        return $this->toCardArrays($similar, $viewer)->all();
+    }
+
     private function toCardPaginator(LengthAwarePaginator $paginator, ?User $viewer): LengthAwarePaginator
     {
-        $bookmarkedIds = $this->bookmarkedListingIds($viewer, $paginator->getCollection());
+        return $paginator->setCollection($this->toCardArrays($paginator->getCollection(), $viewer));
+    }
 
-        return $paginator->through(fn (Listing $listing): array => [
+    /**
+     * @param  Collection<int, Listing>  $listings
+     * @return Collection<int, array<string, mixed>>
+     */
+    private function toCardArrays(Collection $listings, ?User $viewer): Collection
+    {
+        $bookmarkedIds = $this->bookmarkedListingIds($viewer, $listings);
+
+        return $listings->map(fn (Listing $listing): array => [
             ...$listing->toCardArray(),
             'isBookmarked' => $bookmarkedIds->contains($listing->id),
             'canBookmark' => $viewer === null || $viewer->can('bookmark', $listing),
-        ]);
+        ])->values();
     }
 
     /**

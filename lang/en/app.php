@@ -239,6 +239,36 @@ return [
             'saved' => 'Saved',
             'start_chat' => 'Start Chat',
             'contact_heading' => 'Contact',
+
+            'gallery' => [
+                'open' => 'View photo :current of :total, fullscreen',
+                'expand' => 'Expand',
+                'dialog_label' => 'Photo gallery',
+                'close' => 'Close gallery',
+                'previous' => 'Previous photo',
+                'next' => 'Next photo',
+                'counter' => ':current / :total',
+            ],
+
+            'similar' => [
+                'heading' => 'Similar Properties',
+                'loading' => 'Loading similar properties',
+            ],
+
+            'mortgage' => [
+                'heading' => 'Mortgage Calculator',
+                'price' => 'Price (€)',
+                'down_payment' => 'Down payment (%)',
+                'interest_rate' => 'Interest rate (% per year)',
+                'term' => 'Term',
+                'term_option' => ':years years',
+                'monthly_payment' => 'Estimated monthly payment',
+                'per_month' => 'per month',
+                'loan_amount' => 'Loan amount: :amount',
+                'total_interest' => 'Total interest: :amount',
+                'unavailable' => '—',
+                'disclaimer' => 'Estimate only. Not a loan offer. Actual terms depend on your lender.',
+            ],
         ],
 
         'amenities' => [
