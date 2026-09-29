@@ -7,6 +7,7 @@
 
     <title inertia>{{ config('app.name', 'MyApp') }}</title>
 
+    @fonts
     @viteReactRefresh
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 

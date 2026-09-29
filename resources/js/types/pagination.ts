@@ -24,6 +24,12 @@ export interface PaginationLabels {
     page_of: string
     previous: string
     next: string
+    aria_label: string
+}
+
+export interface PageLinkProps {
+    url: string | null
+    label: string
 }
 
 export interface PaginationProps {

@@ -72,7 +72,7 @@ export default function Edit({ listing, translations, propertyTypeLabels, amenit
             </div>
 
             <div className="mx-auto max-w-3xl px-6 py-10">
-                {flash.error && <FlashBanner message={flash.error} variant="error" coloredText className="mb-8" />}
+                {flash.error && <FlashBanner message={flash.error} variant="error" className="mb-8" />}
 
                 <ListingForm
                     data={data}
