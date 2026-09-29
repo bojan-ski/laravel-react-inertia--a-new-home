@@ -169,7 +169,7 @@ export default function Show({
 
             {listing.images.length > 0 && (
                 <div className="mt-8">
-                    <ListingGallery images={listing.images} title={listing.title} />
+                    <ListingGallery images={listing.images} title={listing.title} translations={show.gallery} />
                 </div>
             )}
 

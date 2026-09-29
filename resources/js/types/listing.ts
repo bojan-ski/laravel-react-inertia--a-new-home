@@ -173,6 +173,52 @@ export interface ListingsShowTranslations {
     saved: string
     start_chat: string
     contact_heading: string
+    gallery: ListingGalleryTranslations
+    similar: SimilarListingsTranslations
+    mortgage: MortgageCalculatorTranslations
+}
+
+export interface ListingGalleryTranslations {
+    open: string
+    expand: string
+    dialog_label: string
+    close: string
+    previous: string
+    next: string
+    counter: string
+}
+
+export interface SimilarListingsTranslations {
+    heading: string
+    loading: string
+}
+
+export interface MortgageCalculatorTranslations {
+    heading: string
+    price: string
+    down_payment: string
+    interest_rate: string
+    term: string
+    term_option: string
+    monthly_payment: string
+    per_month: string
+    loan_amount: string
+    total_interest: string
+    unavailable: string
+    disclaimer: string
+}
+
+export interface MortgageDefaults {
+    down_payment_percent: number
+    interest_rate: number
+    term_years: number
+    term_options: number[]
+}
+
+export interface MortgageEstimate {
+    loanAmount: number
+    monthlyPayment: number
+    totalInterest: number
 }
 
 export interface ListingsTranslations {
@@ -237,6 +283,8 @@ export interface ListingShowPageProps {
     canBookmark: boolean
     canStartChat: boolean
     canReport: boolean
+    similarListings?: ListingCardData[]
+    mortgageDefaults: MortgageDefaults
     translations: ListingsTranslations
     reportTranslations: ListingReportTranslations
     [key: string]: unknown
@@ -245,6 +293,7 @@ export interface ListingShowPageProps {
 export interface ListingGalleryProps {
     images: ListingImageData[]
     title: string
+    translations: ListingGalleryTranslations
 }
 
 export interface ListingImagePlaceholderProps {

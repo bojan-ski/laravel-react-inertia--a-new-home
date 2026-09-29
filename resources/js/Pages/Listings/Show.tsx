@@ -5,7 +5,9 @@ import ListingDetailRow from '@/Components/Listings/ListingDetailRow'
 import ListingFacts from '@/Components/Listings/ListingFacts'
 import ListingGallery from '@/Components/Listings/ListingGallery'
 import ListingSidebar from '@/Components/Listings/ListingSidebar'
+import MortgageCalculator from '@/Components/Listings/MortgageCalculator'
 import ReportListingButton from '@/Components/Listings/ReportListingButton'
+import SimilarListings from '@/Components/Listings/SimilarListings'
 import FlashBanner from '@/Components/UI/FlashBanner'
 import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { ListingShowPageProps } from '@/types/listing'
@@ -17,6 +19,8 @@ export default function Show({
     canBookmark,
     canStartChat,
     canReport,
+    similarListings,
+    mortgageDefaults,
     translations,
     reportTranslations,
 }: ListingShowPageProps) {
@@ -65,7 +69,7 @@ export default function Show({
 
                 {listing.images.length > 0 && (
                     <div className="mt-8">
-                        <ListingGallery images={listing.images} title={listing.title} />
+                        <ListingGallery images={listing.images} title={listing.title} translations={show.gallery} />
                     </div>
                 )}
 
@@ -102,6 +106,14 @@ export default function Show({
                                 )}
                             </dl>
                         </section>
+
+                        {listing.listingType === 'sale' && (
+                            <MortgageCalculator
+                                price={listing.price}
+                                defaults={mortgageDefaults}
+                                translations={show.mortgage}
+                            />
+                        )}
                     </div>
 
                     <div className="lg:col-span-1">
@@ -132,6 +144,13 @@ export default function Show({
                         />
                     </div>
                 </div>
+
+                <SimilarListings
+                    listings={similarListings}
+                    translations={show.similar}
+                    cardTranslations={translations.card}
+                    propertyTypeLabels={translations.filters.property_types}
+                />
             </div>
         </ListingsLayout>
     )
