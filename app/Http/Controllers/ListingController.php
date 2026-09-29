@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ListingIndexRequest;
 use App\Models\Conversation;
 use App\Models\Listing;
+use App\Models\SavedSearch;
 use App\Services\ListingService;
+use App\Services\SavedSearchService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
@@ -15,13 +17,19 @@ class ListingController extends Controller
 {
     public function __construct(
         private ListingService $listingService,
+        private SavedSearchService $savedSearchService,
     ) {}
 
     public function index(ListingIndexRequest $request): Response
     {
+        $filters = $request->filters();
+
         return Inertia::render('Listings/Index', [
             'listings' => $this->listingService->getPublicListings($request),
-            'filters' => $request->filters(),
+            'filters' => $filters,
+            'canSaveSearch' => $request->user() === null || Gate::allows('create', SavedSearch::class),
+            'suggestedSearchName' => $this->savedSearchService->suggestName($filters),
+            'saveSearchTranslations' => __('app.saved_searches.save'),
             'translations' => __('app.listings'),
         ]);
     }

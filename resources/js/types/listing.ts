@@ -2,6 +2,7 @@ import type { FormEvent, ReactNode } from 'react'
 import type { ListingReportTranslations } from '@/types/listing-report'
 import type { ConfirmActionTranslations } from '@/types/moderation'
 import type { Paginator, PaginationLabels } from '@/types/pagination'
+import type { SaveSearchTranslations } from '@/types/saved-search'
 
 export type ListingStatusValue = 'pending_review' | 'approved' | 'rejected' | 'hidden' | 'sold' | 'rented'
 
@@ -190,6 +191,9 @@ export interface ListingsTranslations {
 export interface ListingsIndexPageProps {
     listings: Paginator<ListingCardData>
     filters: ListingFilters
+    canSaveSearch: boolean
+    suggestedSearchName: string
+    saveSearchTranslations: SaveSearchTranslations
     translations: ListingsTranslations
     [key: string]: unknown
 }
@@ -322,6 +326,7 @@ export interface ListingFilterBarProps {
     filters: ListingFilters
     translations: ListingsFilterTranslations
     amenityLabels: Record<string, string>
+    actionsSlot?: ReactNode
 }
 
 export interface ListingMoreFiltersProps {

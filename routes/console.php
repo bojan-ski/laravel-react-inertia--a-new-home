@@ -11,3 +11,5 @@ Artisan::command('inspire', function () {
 Schedule::command('listings:purge-rejected')->daily();
 
 Schedule::command('listings:send-expiry-reminders')->dailyAt('08:00')->withoutOverlapping(60);
+
+Schedule::command('saved-searches:send-digest')->dailyAt('07:00')->timezone('Europe/Belgrade')->withoutOverlapping(60);

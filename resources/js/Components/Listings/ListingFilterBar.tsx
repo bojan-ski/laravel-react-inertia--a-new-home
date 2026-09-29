@@ -19,7 +19,7 @@ const emptyFilters: ListingFilters = {
     sort: 'newest',
 }
 
-export default function ListingFilterBar({ filters, translations, amenityLabels }: ListingFilterBarProps) {
+export default function ListingFilterBar({ filters, translations, amenityLabels, actionsSlot }: ListingFilterBarProps) {
     const errors = Object.values(usePage().props.errors)
     const [form, setForm] = useState<ListingFilters>(filters)
     const [showMore, setShowMore] = useState(
@@ -133,6 +133,8 @@ export default function ListingFilterBar({ filters, translations, amenityLabels 
                         >
                             {translations.reset}
                         </button>
+
+                        {actionsSlot}
                     </div>
                 </div>
 

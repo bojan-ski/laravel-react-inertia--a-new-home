@@ -8,6 +8,7 @@ use App\Models\Conversation;
 use App\Models\Listing;
 use App\Models\ListingReport;
 use App\Models\ReportedChatMessage;
+use App\Models\SavedSearch;
 use App\Models\User;
 use App\Policies\AgencyPolicy;
 use App\Policies\ContactMessagePolicy;
@@ -15,6 +16,7 @@ use App\Policies\ConversationPolicy;
 use App\Policies\ListingPolicy;
 use App\Policies\ListingReportPolicy;
 use App\Policies\ReportedChatMessagePolicy;
+use App\Policies\SavedSearchPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -45,6 +47,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(ReportedChatMessage::class, ReportedChatMessagePolicy::class);
         Gate::policy(ContactMessage::class, ContactMessagePolicy::class);
         Gate::policy(ListingReport::class, ListingReportPolicy::class);
+        Gate::policy(SavedSearch::class, SavedSearchPolicy::class);
 
         $this->configureRateLimiters();
     }
@@ -101,6 +104,10 @@ class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('listing-report', function (Request $request): Limit {
             return Limit::perHour(10)->by($this->rateLimitKey($request));
+        });
+
+        RateLimiter::for('saved-search', function (Request $request): Limit {
+            return Limit::perHour(20)->by($this->rateLimitKey($request));
         });
     }
 

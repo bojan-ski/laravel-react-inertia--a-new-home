@@ -1,10 +1,16 @@
 import { Head, Link } from '@inertiajs/react'
-import { Heart } from 'lucide-react'
+import { Heart, Search } from 'lucide-react'
 import ListingCard from '@/Components/Listings/ListingCard'
 import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { BookmarksIndexPageProps } from '@/types/bookmark'
 
-export default function Index({ listings, closedListings, translations, listingTranslations }: BookmarksIndexPageProps) {
+export default function Index({
+    listings,
+    closedListings,
+    canManageSavedSearches,
+    translations,
+    listingTranslations,
+}: BookmarksIndexPageProps) {
     const countNoun = listings.length === 1 ? translations.count_one : translations.count_other
 
     return (
@@ -12,9 +18,21 @@ export default function Index({ listings, closedListings, translations, listingT
             <Head title={translations.title} />
 
             <div className="border-b border-border bg-surface">
-                <div className="mx-auto max-w-7xl px-6 py-10">
-                    <h1 className="font-display text-3xl font-semibold text-text">{translations.title}</h1>
-                    <p className="mt-2 text-text-soft">{translations.subtitle}</p>
+                <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-10 sm:flex-row sm:items-end sm:justify-between">
+                    <div>
+                        <h1 className="font-display text-3xl font-semibold text-text">{translations.title}</h1>
+                        <p className="mt-2 text-text-soft">{translations.subtitle}</p>
+                    </div>
+
+                    {canManageSavedSearches && (
+                        <Link
+                            href="/saved-searches"
+                            className="flex items-center gap-1.5 self-start rounded-lg border border-border-strong px-4 py-2.5 text-sm font-medium text-text-soft transition-colors hover:border-text hover:text-text sm:self-auto"
+                        >
+                            <Search className="size-4" />
+                            {translations.saved_searches_link}
+                        </Link>
+                    )}
                 </div>
             </div>
 
