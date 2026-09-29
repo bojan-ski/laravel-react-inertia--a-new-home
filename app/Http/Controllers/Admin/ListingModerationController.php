@@ -10,6 +10,7 @@ use App\Models\Listing;
 use App\Services\ListingService;
 use App\Services\MailNotificationService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -39,15 +40,20 @@ class ListingModerationController extends Controller
         ]);
     }
 
-    public function show(Listing $listing): Response
+    public function show(Request $request, Listing $listing): Response
     {
         Gate::authorize('review', $listing);
 
-        $listing->load(['images', 'owner:id,name,email', 'agency:id,name,email']);
+        $listing->load(['images', 'owner:id,name,email', 'agency:id,name,email', 'openReports.reportedBy:id,name']);
+
+        $hasOpenReports = ! $listing->trashed() && $listing->openReports->isNotEmpty();
 
         return Inertia::render('Admin/Listings/Show', [
             'listing' => $listing->toReviewArray(),
             'canModerate' => Gate::allows('approve', $listing),
+            'reportModeration' => $hasOpenReports ? $listing->toReportModerationArray($request->user()) : null,
+            'reportTranslations' => __('app.admin.listing_reports'),
+            'reasonLabels' => __('app.listing_reports.reasons'),
             'translations' => __('app.admin.listings'),
             'listingTranslations' => __('app.listings.show'),
             'propertyTypeLabels' => __('app.listings.filters.property_types'),

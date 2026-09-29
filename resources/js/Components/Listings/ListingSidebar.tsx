@@ -10,6 +10,7 @@ export default function ListingSidebar({
     canBookmark,
     canStartChat,
     translations,
+    footerSlot,
 }: ListingSidebarProps) {
     const isRental = listing.listingType === 'rent'
     const hasContact = Boolean(listing.contactName || listing.contactEmail || listing.contactPhone)
@@ -117,6 +118,8 @@ export default function ListingSidebar({
                         </div>
                     </div>
                 )}
+
+                {footerSlot && <div className="mt-6 border-t border-border pt-6">{footerSlot}</div>}
             </div>
         </aside>
     )

@@ -124,6 +124,18 @@ class ListingPolicy
             && $user->isActive();
     }
 
+    /**
+     * Determine whether the user can report the listing.
+     */
+    public function report(User $user, Listing $listing): bool
+    {
+        return $listing->isActuallyPubliclyVisible()
+            && $listing->user_id !== $user->id
+            && ! $this->ownsThroughAgency($user, $listing)
+            && ! $user->isAdmin()
+            && $user->isActive();
+    }
+
     public function removeBookmark(User $user, Listing $listing): bool
     {
         if (! $user->isActive()) {

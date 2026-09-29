@@ -1,15 +1,28 @@
-import { Head, Link } from '@inertiajs/react'
+import { Head, Link, usePage } from '@inertiajs/react'
 import { ChevronLeft, MapPin } from 'lucide-react'
 import ListingAmenities from '@/Components/Listings/ListingAmenities'
 import ListingDetailRow from '@/Components/Listings/ListingDetailRow'
 import ListingFacts from '@/Components/Listings/ListingFacts'
 import ListingGallery from '@/Components/Listings/ListingGallery'
 import ListingSidebar from '@/Components/Listings/ListingSidebar'
+import ReportListingButton from '@/Components/Listings/ReportListingButton'
+import FlashBanner from '@/Components/UI/FlashBanner'
 import ListingsLayout from '@/Layouts/ListingsLayout'
 import type { ListingShowPageProps } from '@/types/listing'
+import type { SharedProps } from '@/types/shared'
 
-export default function Show({ listing, isBookmarked, canBookmark, canStartChat, translations }: ListingShowPageProps) {
+export default function Show({
+    listing,
+    isBookmarked,
+    canBookmark,
+    canStartChat,
+    canReport,
+    translations,
+    reportTranslations,
+}: ListingShowPageProps) {
+    const { flash } = usePage<SharedProps>().props
     const show = translations.show
+    const hasSidebarFooter = Boolean(flash.success || flash.error || canReport)
     const propertyLabel = translations.filters.property_types[listing.propertyType] ?? listing.propertyType
     const typeLabel = listing.listingType === 'rent' ? show.for_rent : show.for_sale
 
@@ -98,6 +111,24 @@ export default function Show({ listing, isBookmarked, canBookmark, canStartChat,
                             canBookmark={canBookmark}
                             canStartChat={canStartChat}
                             translations={show}
+                            footerSlot={
+                                hasSidebarFooter && (
+                                    <div className="flex flex-col gap-4">
+                                        {flash.success && (
+                                            <FlashBanner message={flash.success} variant="success" className="" />
+                                        )}
+                                        {flash.error && (
+                                            <FlashBanner message={flash.error} variant="error" className="" />
+                                        )}
+                                        {canReport && (
+                                            <ReportListingButton
+                                                listingId={listing.id}
+                                                translations={reportTranslations}
+                                            />
+                                        )}
+                                    </div>
+                                )
+                            }
                         />
                     </div>
                 </div>

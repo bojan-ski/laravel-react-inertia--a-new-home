@@ -1,5 +1,10 @@
 import type { AgencyBusinessDetails } from '@/types/agency'
 import type { ListingShowData, ListingsShowTranslations } from '@/types/listing'
+import type {
+    AdminListingReportsTranslations,
+    ListingReportModerationItem,
+    ListingReportReasonValue,
+} from '@/types/listing-report'
 import type { ConfirmActionTranslations, ModerationFlashTranslations, RejectDialogTranslations } from '@/types/moderation'
 import type { Paginator, PaginationLabels } from '@/types/pagination'
 
@@ -15,6 +20,7 @@ export interface AdminStats {
     pendingAgencies: number
     approvedAgencies: number
     pendingAgencyChanges: number
+    reportedListings: number
     reportedMessages: number
     newContactMessages: number
 }
@@ -25,6 +31,7 @@ export interface AdminNavTranslations {
     listings: string
     agencies: string
     users: string
+    reported_listings: string
     reported_messages: string
     contact_messages: string
 }
@@ -53,6 +60,7 @@ export interface AdminDashboardTranslations {
         admins: AdminStatLabel
         pending_agencies: AdminStatLabel
         agency_changes: AdminStatLabel
+        reported_listings: AdminStatLabel
         reported_messages: AdminStatLabel
         contact_messages: AdminStatLabel
     }
@@ -245,6 +253,9 @@ export interface AdminListingReviewPageProps {
     listingTranslations: ListingsShowTranslations
     propertyTypeLabels: Record<string, string>
     amenityLabels: Record<string, string>
+    reportModeration: ListingReportModerationItem | null
+    reportTranslations: AdminListingReportsTranslations
+    reasonLabels: Record<ListingReportReasonValue, string>
 }
 
 export interface ListingModerationActionsProps {

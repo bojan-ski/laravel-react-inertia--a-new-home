@@ -1,6 +1,8 @@
 import { Head, Link, usePage } from '@inertiajs/react'
 import { ChevronLeft, MapPin } from 'lucide-react'
 import ListingModerationActions from '@/Components/Admin/ListingModerationActions'
+import ListingReportActions from '@/Components/Admin/ListingReportActions'
+import ListingReportList from '@/Components/Admin/ListingReportList'
 import ListingAmenities from '@/Components/Listings/ListingAmenities'
 import ListingDetailRow from '@/Components/Listings/ListingDetailRow'
 import ListingFacts from '@/Components/Listings/ListingFacts'
@@ -20,6 +22,9 @@ export default function Show({
     listingTranslations,
     propertyTypeLabels,
     amenityLabels,
+    reportModeration,
+    reportTranslations,
+    reasonLabels,
 }: AdminListingReviewPageProps) {
     const { flash } = usePage<SharedProps>().props
     const review = translations.review
@@ -107,6 +112,40 @@ export default function Show({
                     )}
                 </div>
             </section>
+
+            {reportModeration && (
+                <section className="mt-4 rounded-2xl border border-status-rejected/30 bg-surface p-5 sm:p-6">
+                    <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
+                        <div className="min-w-0 flex-1">
+                            <div className="flex flex-wrap items-center gap-3">
+                                <h2 className="text-xs font-medium uppercase tracking-wide text-text-muted">
+                                    {reportTranslations.panel_heading}
+                                </h2>
+                                <span className="rounded-full bg-status-rejected/10 px-2.5 py-0.5 text-xs font-semibold text-status-rejected">
+                                    {(reportModeration.openReportsCount === 1
+                                        ? reportTranslations.reports_count_one
+                                        : reportTranslations.reports_count_other
+                                    ).replace(':count', String(reportModeration.openReportsCount))}
+                                </span>
+                            </div>
+                            <div className="mt-4">
+                                <ListingReportList
+                                    reports={reportModeration.reports}
+                                    translations={reportTranslations}
+                                    reasonLabels={reasonLabels}
+                                />
+                            </div>
+                            {!reportModeration.canTakeDown && (
+                                <p className="mt-3 text-sm text-text-muted">{reportTranslations.not_approved}</p>
+                            )}
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-3 md:shrink-0">
+                            <ListingReportActions listing={reportModeration} translations={reportTranslations} />
+                        </div>
+                    </div>
+                </section>
+            )}
 
             <div className="mt-8 flex flex-col gap-3">
                 <div className="flex flex-wrap gap-2">
