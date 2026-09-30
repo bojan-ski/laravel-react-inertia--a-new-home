@@ -19,6 +19,10 @@ export function formatArea(value: string, unit: string | null): string {
     return unit ? `${formatted} ${unit}` : formatted
 }
 
+export function countLabel(count: number, one: string, other: string): string {
+    return (count === 1 ? one : other).replace(':count', count.toLocaleString('en-US'))
+}
+
 export function formatDate(iso: string | null, style: 'short' | 'long' = 'short'): string {
     if (!iso) {
         return ''

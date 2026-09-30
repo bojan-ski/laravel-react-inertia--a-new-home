@@ -21,7 +21,7 @@ function PageLink({ url, label }: PageLinkProps) {
     )
 }
 
-export default function Pagination({ paginator, labels }: PaginationProps) {
+export default function Pagination({ paginator, labels, className = 'mt-12' }: PaginationProps) {
     if (paginator.last_page <= 1) {
         return null
     }
@@ -33,7 +33,7 @@ export default function Pagination({ paginator, labels }: PaginationProps) {
     return (
         <nav
             aria-label={labels.aria_label}
-            className="mt-12 flex items-center justify-between gap-4 sm:justify-end sm:gap-8"
+            className={`${className} flex items-center justify-between gap-4 sm:justify-end sm:gap-8`}
         >
             <p className="order-2 text-sm text-ink-muted sm:order-first sm:mr-auto">{pageOf}</p>
             <span className="order-1 sm:order-0">

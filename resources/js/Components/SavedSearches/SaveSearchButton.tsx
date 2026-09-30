@@ -6,18 +6,24 @@ import type { SaveSearchButtonProps } from '@/types/saved-search'
 import type { SharedProps } from '@/types/shared'
 
 const buttonClass =
-    'flex items-center gap-1.5 rounded-lg border border-border-strong px-4 py-2.5 text-sm font-medium text-text-soft transition-colors hover:border-text hover:text-text'
+    'inline-flex min-h-11 shrink-0 items-center gap-1.5 text-[15px] text-ink-muted transition-colors duration-150 hover:text-forest'
 
 export default function SaveSearchButton({ filters, suggestedName, summary, translations }: SaveSearchButtonProps) {
     const { auth } = usePage<SharedProps>().props
     const [open, setOpen] = useState(false)
     const close = useCallback(() => setOpen(false), [])
 
+    const content = (
+        <>
+            <Bookmark className="size-4" strokeWidth={1.25} aria-hidden="true" />
+            {translations.action}
+        </>
+    )
+
     if (auth.user === null) {
         return (
             <Link href="/login" className={buttonClass}>
-                <Bookmark className="size-4" />
-                {translations.action}
+                {content}
             </Link>
         )
     }
@@ -25,8 +31,7 @@ export default function SaveSearchButton({ filters, suggestedName, summary, tran
     return (
         <>
             <button type="button" onClick={() => setOpen(true)} className={buttonClass}>
-                <Bookmark className="size-4" />
-                {translations.action}
+                {content}
             </button>
 
             {open && (

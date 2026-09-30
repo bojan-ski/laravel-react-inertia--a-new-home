@@ -25,7 +25,7 @@ export function useFocusTrap<T extends HTMLElement = HTMLElement>(
             }
 
             const focusable = panelRef.current.querySelectorAll<HTMLElement>(
-                'button:not([disabled]), [href], textarea, input, [tabindex]:not([tabindex="-1"])',
+                'button:not([disabled]), [href], textarea, input, select:not([disabled]), [tabindex]:not([tabindex="-1"])',
             )
 
             if (focusable.length === 0) {

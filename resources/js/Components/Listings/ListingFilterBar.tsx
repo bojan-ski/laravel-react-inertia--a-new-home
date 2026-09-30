@@ -1,167 +1,245 @@
-import { FormEvent, useState } from 'react'
-import { router, usePage } from '@inertiajs/react'
-import { Search, SlidersHorizontal } from 'lucide-react'
+import { useCallback, useState, type FormEvent } from 'react'
+import { router } from '@inertiajs/react'
+import { Search } from 'lucide-react'
+import { FilterActions, PriceFields } from '@/Components/Listings/ListingFilterFields'
+import ListingFiltersSheet from '@/Components/Listings/ListingFiltersSheet'
 import ListingMoreFilters from '@/Components/Listings/ListingMoreFilters'
+import ListingTextSelect from '@/Components/Listings/ListingTextSelect'
+import {
+    BEDROOM_OPTIONS,
+    emptyFilters,
+    moreFiltersCount,
+    nonEmptyFilters,
+    sheetFiltersCount,
+} from '@/Components/Listings/listingFilters'
+import Popover from '@/Components/UI/Popover'
+import SegmentedToggle from '@/Components/UI/SegmentedToggle'
 import type { ListingFilterBarProps, ListingFilters } from '@/types/listing'
 
-const emptyFilters: ListingFilters = {
-    search: '',
-    listingType: '',
-    propertyType: '',
-    city: '',
-    minPrice: '',
-    maxPrice: '',
-    minBedrooms: '',
-    minBathrooms: '',
-    minArea: '',
-    maxArea: '',
-    amenities: [],
-    sort: 'newest',
-}
+type OpenPopover = 'price' | 'more' | null
+
+const searchInputClass =
+    'w-full min-w-0 appearance-none bg-transparent placeholder:text-ink-faint [&::-webkit-search-cancel-button]:hidden'
 
 export default function ListingFilterBar({ filters, translations, amenityLabels, actionsSlot }: ListingFilterBarProps) {
-    const errors = Object.values(usePage().props.errors)
     const [form, setForm] = useState<ListingFilters>(filters)
-    const [showMore, setShowMore] = useState(
-        Boolean(
-            filters.city ||
-                filters.minPrice ||
-                filters.maxPrice ||
-                filters.minBedrooms ||
-                filters.minBathrooms ||
-                filters.minArea ||
-                filters.maxArea ||
-                filters.amenities.length > 0
-        )
-    )
+    const [openPopover, setOpenPopover] = useState<OpenPopover>(null)
+    const [sheetOpen, setSheetOpen] = useState(false)
+
+    const setPriceOpen = useCallback((open: boolean) => setOpenPopover(open ? 'price' : null), [])
+    const setMoreOpen = useCallback((open: boolean) => setOpenPopover(open ? 'more' : null), [])
+    const closeSheet = useCallback(() => setSheetOpen(false), [])
 
     function set<K extends keyof ListingFilters>(key: K, value: ListingFilters[K]) {
         setForm((current) => ({ ...current, [key]: value }))
     }
 
-    function submit(event: FormEvent) {
-        event.preventDefault()
-
-        const data = Object.fromEntries(
-            Object.entries(form).filter(([, value]) => (Array.isArray(value) ? value.length > 0 : value !== ''))
-        )
-
-        router.get('/listings', data, { preserveState: true, preserveScroll: true, replace: true })
+    function apply(next: ListingFilters) {
+        setForm(next)
+        setOpenPopover(null)
+        setSheetOpen(false)
+        router.get('/listings', nonEmptyFilters(next), { preserveState: true, preserveScroll: true, replace: true })
     }
 
-    function reset() {
+    function update<K extends keyof ListingFilters>(key: K, value: ListingFilters[K]) {
+        apply({ ...form, [key]: value })
+    }
+
+    function submit(event: FormEvent) {
+        event.preventDefault()
+        apply(form)
+    }
+
+    function clearAll() {
         setForm(emptyFilters)
-        setShowMore(false)
+        setOpenPopover(null)
+        setSheetOpen(false)
         router.get('/listings', {}, { preserveState: true, preserveScroll: true, replace: true })
     }
 
-    const segments = [
-        { label: translations.all, value: '' },
-        { label: translations.buy, value: 'sale' },
-        { label: translations.rent, value: 'rent' },
+    const listingTypeOptions = [
+        { value: '', label: translations.all },
+        { value: 'sale', label: translations.buy },
+        { value: 'rent', label: translations.rent },
     ]
+    const propertyTypeOptions = [{ value: '', label: translations.all_types }].concat(
+        Object.entries(translations.property_types).map(([value, label]) => ({ value, label })),
+    )
+    const bedroomOptions = [{ value: '', label: translations.beds }].concat(
+        BEDROOM_OPTIONS.map((count) => ({
+            value: String(count),
+            label: translations.beds_option.replace(':count', String(count)),
+        })),
+    )
+    const toOptions = (labels: Record<string, string>) =>
+        Object.entries(labels).map(([value, label]) => ({ value, label }))
+
+    const moreCount = moreFiltersCount(filters)
+    const sheetCount = sheetFiltersCount(filters)
+    const fieldProps = { form, set, translations, idPrefix: 'bar' }
 
     return (
-        <form onSubmit={submit} className="border-b border-border bg-surface">
-            <div className="mx-auto max-w-7xl px-6 py-4">
-                <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-                    <div className="relative lg:w-1/3">
-                        <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-text-muted" />
-                        <input
-                            type="text"
-                            value={form.search}
-                            onChange={(event) => set('search', event.target.value)}
-                            placeholder={translations.search_placeholder}
-                            className="w-full rounded-lg border border-border bg-surface py-2.5 pl-9 pr-4 text-sm text-text outline-none transition-colors focus:border-brand"
-                        />
-                    </div>
+        <form role="search" onSubmit={submit}>
+            <div className="hidden items-center gap-8 border-y border-rule py-2 text-[15px] xl:flex 2xl:gap-10">
+                <SegmentedToggle
+                    name="listingType"
+                    legend={translations.listing_type_label}
+                    options={listingTypeOptions}
+                    value={form.listingType}
+                    onChange={(value) => update('listingType', value)}
+                    size="bar"
+                    className="shrink-0"
+                />
 
-                    <div className="flex rounded-lg border border-border p-0.5">
-                        {segments.map((segment) => (
-                            <button
-                                key={segment.value || 'all'}
-                                type="button"
-                                onClick={() => set('listingType', segment.value)}
-                                className={`flex-1 rounded-md px-4 py-1.5 text-sm font-medium transition-colors lg:flex-none ${
-                                    form.listingType === segment.value
-                                        ? 'bg-surface-muted text-text'
-                                        : 'text-text-soft hover:text-text'
-                                }`}
-                            >
-                                {segment.label}
-                            </button>
-                        ))}
-                    </div>
+                <div className="min-w-40 flex-1">
+                    <label htmlFor="listings-search" className="sr-only">
+                        {translations.search_label}
+                    </label>
+                    <input
+                        id="listings-search"
+                        type="search"
+                        maxLength={255}
+                        value={form.search}
+                        onChange={(event) => set('search', event.target.value)}
+                        placeholder={translations.search_placeholder}
+                        className={`min-h-11 ${searchInputClass}`}
+                    />
+                </div>
 
-                    <select
-                        value={form.propertyType}
-                        onChange={(event) => set('propertyType', event.target.value)}
-                        className="rounded-lg border border-border bg-surface px-3 py-2.5 text-sm text-text outline-none transition-colors focus:border-brand"
+                <ListingTextSelect
+                    id="listings-property-type"
+                    label={translations.property_type_label}
+                    value={form.propertyType}
+                    onChange={(value) => update('propertyType', value)}
+                    options={propertyTypeOptions}
+                    active={form.propertyType !== ''}
+                />
+
+                <Popover
+                    id="listings-price-filters"
+                    label={translations.price}
+                    open={openPopover === 'price'}
+                    onOpenChange={setPriceOpen}
+                    active={Boolean(filters.minPrice || filters.maxPrice)}
+                >
+                    <PriceFields {...fieldProps} />
+                    <FilterActions
+                        clearLabel={translations.clear}
+                        onClear={() => apply({ ...form, minPrice: '', maxPrice: '' })}
+                        applyLabel={translations.apply}
+                    />
+                </Popover>
+
+                <ListingTextSelect
+                    id="listings-beds"
+                    label={translations.beds}
+                    value={form.minBedrooms}
+                    onChange={(value) => update('minBedrooms', value)}
+                    options={bedroomOptions}
+                    active={form.minBedrooms !== ''}
+                />
+
+                <Popover
+                    id="listings-more-filters"
+                    label={moreCount > 0 ? `${translations.more_filters} · ${moreCount}` : translations.more_filters}
+                    open={openPopover === 'more'}
+                    onOpenChange={setMoreOpen}
+                    active={moreCount > 0}
+                    align="end"
+                    width="md"
+                    chevron={false}
+                >
+                    <ListingMoreFilters {...fieldProps} amenityLabels={amenityLabels} />
+                    <FilterActions
+                        clearLabel={translations.clear_all}
+                        onClear={clearAll}
+                        applyLabel={translations.apply}
+                    />
+                </Popover>
+
+                <ListingTextSelect
+                    id="listings-sort"
+                    label={translations.sort_label}
+                    value={form.sort}
+                    onChange={(value) => update('sort', value)}
+                    options={toOptions(translations.sorts)}
+                    className="text-ink-muted"
+                />
+
+                {actionsSlot}
+            </div>
+
+            <div className="xl:hidden">
+                <div className="flex min-h-12 items-center border-b border-ink has-[input:focus-visible]:border-forest has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-offset-4 has-[input:focus-visible]:outline-forest">
+                    <label htmlFor="listings-search-compact" className="sr-only">
+                        {translations.search_label}
+                    </label>
+                    <input
+                        id="listings-search-compact"
+                        type="search"
+                        maxLength={255}
+                        value={form.search}
+                        onChange={(event) => set('search', event.target.value)}
+                        placeholder={translations.search_placeholder}
+                        className={`text-base font-light focus-visible:outline-none ${searchInputClass}`}
+                    />
+                    <button
+                        type="submit"
+                        aria-label={translations.search}
+                        className="flex size-11 shrink-0 items-center justify-end transition-colors duration-150 hover:text-forest"
                     >
-                        <option value="">{translations.all_types}</option>
-                        {Object.entries(translations.property_types).map(([value, label]) => (
-                            <option key={value} value={value}>
-                                {label}
-                            </option>
-                        ))}
-                    </select>
+                        <Search className="size-5" strokeWidth={1.25} aria-hidden="true" />
+                    </button>
+                </div>
 
-                    <select
-                        value={form.sort}
-                        onChange={(event) => set('sort', event.target.value)}
-                        className="rounded-lg border border-border bg-surface px-3 py-2.5 text-sm text-text outline-none transition-colors focus:border-brand"
-                    >
-                        {Object.entries(translations.sorts).map(([value, label]) => (
-                            <option key={value} value={value}>
-                                {label}
-                            </option>
-                        ))}
-                    </select>
+                <div className="flex items-center justify-between gap-4 border-b border-rule text-[15px]">
+                    <SegmentedToggle
+                        name="listingTypeCompact"
+                        legend={translations.listing_type_label}
+                        options={listingTypeOptions}
+                        value={form.listingType}
+                        onChange={(value) => update('listingType', value)}
+                        size="bar"
+                    />
 
-                    <div className="flex items-center gap-2 lg:ml-auto">
-                        <button
-                            type="submit"
-                            className="rounded-lg bg-surface-dark px-5 py-2.5 text-sm font-semibold text-text-inverse transition-colors hover:bg-text"
-                        >
-                            {translations.search}
-                        </button>
-
+                    <div className="flex items-center gap-4.5">
                         <button
                             type="button"
-                            onClick={reset}
-                            className="text-sm font-medium text-text-soft transition-colors hover:text-text"
+                            onClick={() => setSheetOpen(true)}
+                            className={`min-h-11 transition-colors duration-150 hover:text-forest ${
+                                sheetCount > 0 ? 'text-forest' : ''
+                            }`}
                         >
-                            {translations.reset}
+                            {sheetCount > 0
+                                ? translations.filters_count.replace(':count', String(sheetCount))
+                                : translations.filters}
                         </button>
 
-                        {actionsSlot}
+                        <ListingTextSelect
+                            id="listings-sort-compact"
+                            label={translations.sort_label}
+                            value={form.sort}
+                            onChange={(value) => update('sort', value)}
+                            options={toOptions(translations.sorts_short)}
+                            className="text-ink-muted"
+                        />
                     </div>
                 </div>
 
-                <button
-                    type="button"
-                    onClick={() => setShowMore((value) => !value)}
-                    className="mt-3 flex items-center gap-1.5 text-sm font-medium text-text-soft transition-colors hover:text-text"
-                >
-                    <SlidersHorizontal className="size-4" />
-                    {translations.more_filters}
-                </button>
-
-                {showMore && (
-                    <ListingMoreFilters
-                        form={form}
-                        set={set}
-                        translations={translations}
-                        amenityLabels={amenityLabels}
-                    />
-                )}
-
-                {errors.map((error) => (
-                    <p key={error} className="mt-3 text-sm text-status-rejected">
-                        {error}
-                    </p>
-                ))}
+                {actionsSlot && <div className="flex justify-end">{actionsSlot}</div>}
             </div>
+
+            {sheetOpen && (
+                <ListingFiltersSheet
+                    open={sheetOpen}
+                    onClose={closeSheet}
+                    filters={form}
+                    translations={translations}
+                    amenityLabels={amenityLabels}
+                    onApply={apply}
+                    onClearAll={clearAll}
+                />
+            )}
         </form>
     )
 }

@@ -27,6 +27,16 @@ class ListingPageTest extends TestCase
             ->assertInertia(fn (Assert $page) => $page->component('Listings/Index'));
     }
 
+    public function test_listings_page_passes_the_listings_translations(): void
+    {
+        $this->get('/listings')
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('translations', __('app.listings'))
+                ->where('translations.filters.sorts_short', fn ($sortsShort) => array_keys($sortsShort->all()) === array_keys(__('app.listings.filters.sorts')))
+            );
+    }
+
     public function test_only_approved_listings_appear(): void
     {
         $visible = Listing::factory()->approved()->create();
