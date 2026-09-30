@@ -1,7 +1,8 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { Link, usePage } from '@inertiajs/react'
-import { ArrowLeft, Equal, X } from 'lucide-react'
+import { Equal, X } from 'lucide-react'
 import NavbarAuthActions from '@/Components/NavbarAuthActions'
+import NavbarBackBar from '@/Components/NavbarBackBar'
 import NavbarLink from '@/Components/NavbarLink'
 import NavbarMobilePanel from '@/Components/NavbarMobilePanel'
 import { buildNavItems, isNavItemActive } from '@/Components/navItems'
@@ -76,17 +77,7 @@ export default function Navbar({ back, backAction, variant = 'default' }: Navbar
             </div>
 
             {back ? (
-                <div className="grid grid-cols-[44px_1fr_44px] items-center py-2 pr-3 pl-2 lg:hidden">
-                    <Link
-                        href={back.href}
-                        aria-label={back.label}
-                        className="flex size-11 items-center justify-center text-ink transition-colors duration-150 hover:text-forest"
-                    >
-                        <ArrowLeft className="size-5" strokeWidth={1.25} aria-hidden="true" />
-                    </Link>
-                    <div className="text-center">{wordmark('text-[15px]', 'ink')}</div>
-                    {backAction ?? <span aria-hidden="true" />}
-                </div>
+                <NavbarBackBar href={back.href} label={back.label} action={backAction} className="lg:hidden" />
             ) : (
                 <div className="flex items-center justify-between px-5 py-4 md:px-10 lg:hidden">
                     {wordmark('text-[15px]', mobileTone)}

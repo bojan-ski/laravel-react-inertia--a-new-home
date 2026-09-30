@@ -17,6 +17,7 @@ class LoginController extends Controller
     {
         return Inertia::render('Auth/Login', [
             'translations' => __('app.auth.login'),
+            'layout' => __('app.auth.layout'),
         ]);
     }
 

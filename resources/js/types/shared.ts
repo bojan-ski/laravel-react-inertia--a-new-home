@@ -26,6 +26,8 @@ export type CookieConsent = 'accepted' | 'rejected'
 
 export interface UiTranslations {
     dismiss: string
+    show_password: string
+    hide_password: string
 }
 
 export interface MessageNotificationTranslations {

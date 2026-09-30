@@ -7,6 +7,8 @@ export interface LoginTranslations {
     submit: string
     no_account: string
     create_one: string
+    email_placeholder: string
+    password_placeholder: string
 }
 
 export interface RegisterTranslations {
@@ -28,6 +30,9 @@ export interface RegisterTranslations {
     submit: string
     have_account: string
     sign_in: string
+    name_placeholder: string
+    email_placeholder: string
+    password_placeholder: string
 }
 
 export interface ForgotPasswordTranslations {
@@ -36,6 +41,7 @@ export interface ForgotPasswordTranslations {
     email: string
     submit: string
     back_to_login: string
+    email_placeholder: string
 }
 
 export interface ResetPasswordTranslations {
@@ -45,22 +51,45 @@ export interface ResetPasswordTranslations {
     password: string
     confirm_password: string
     submit: string
+    password_placeholder: string
+}
+
+export interface AuthLayoutTranslations {
+    back_home: string
+    copyright: string
+}
+
+export type AuthImage = 'sign-in' | 'register' | 'password'
+
+export interface AuthHeaderProps {
+    title: string
+    subtitle: string
+}
+
+export interface AuthSwitchPromptProps {
+    text: string
+    linkLabel: string
+    href: string
 }
 
 export interface LoginPageProps {
     translations: LoginTranslations
+    layout: AuthLayoutTranslations
 }
 
 export interface RegisterPageProps {
     translations: RegisterTranslations
+    layout: AuthLayoutTranslations
 }
 
 export interface ForgotPasswordPageProps {
     translations: ForgotPasswordTranslations
+    layout: AuthLayoutTranslations
 }
 
 export interface ResetPasswordPageProps {
     translations: ResetPasswordTranslations
+    layout: AuthLayoutTranslations
     token: string
     email: string
 }

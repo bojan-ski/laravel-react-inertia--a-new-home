@@ -14,7 +14,7 @@ export default function HoneypotField({ value, error, onChange }: HoneypotFieldP
                 />
             </div>
             {error && (
-                <p role="alert" className="text-sm text-status-rejected">
+                <p role="alert" className="text-[13px] text-ink">
                     {error}
                 </p>
             )}

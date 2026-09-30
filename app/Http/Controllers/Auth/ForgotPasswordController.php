@@ -15,6 +15,7 @@ class ForgotPasswordController extends Controller
     {
         return Inertia::render('Auth/ForgotPassword', [
             'translations' => __('app.auth.forgot_password'),
+            'layout' => __('app.auth.layout'),
         ]);
     }
 
