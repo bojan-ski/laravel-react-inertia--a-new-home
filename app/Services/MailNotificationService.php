@@ -97,6 +97,6 @@ class MailNotificationService
     {
         $listing->loadMissing(['owner', 'agency.user']);
 
-        return $listing->owner ?? $listing->agency?->user;
+        return $listing->ownerAccount();
     }
 }

@@ -57,11 +57,9 @@ class ConversationPolicy
             return false;
         }
 
-        if ($listing->user_id === null) {
-            return false;
-        }
+        $ownerAccount = $listing->ownerAccount();
 
-        return $listing->user_id !== $user->id;
+        return $ownerAccount !== null && $ownerAccount->id !== $user->id;
     }
 
     private function otherParticipantSuspended(User $user, Conversation $conversation): bool

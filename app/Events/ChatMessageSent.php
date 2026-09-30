@@ -30,13 +30,13 @@ class ChatMessageSent implements ShouldBroadcast
      */
     public function broadcastWith(): array
     {
-        $this->message->loadMissing('sender');
+        $this->message->loadMissing(['sender', 'conversation.owner.agency']);
 
         return [
             'id' => $this->message->id,
             'conversationId' => $this->message->conversation_id,
             'senderId' => $this->message->sender_id,
-            'senderName' => $this->message->sender->name,
+            'senderName' => $this->message->conversation->senderName($this->message),
             'body' => $this->message->body,
             'createdAt' => $this->message->created_at->toIso8601String(),
         ];
