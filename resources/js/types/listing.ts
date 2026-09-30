@@ -529,13 +529,6 @@ export interface ListingSaveButtonProps {
     className?: string
 }
 
-export interface ListingCardProps {
-    listing: ListingCardData
-    translations: ListingsCardTranslations
-    propertyTypeLabels: Record<string, string>
-    closedLabel?: string
-}
-
 export interface ListingsEmptyStateProps {
     translations: ListingsEmptyTranslations
     hasActiveFilters: boolean
