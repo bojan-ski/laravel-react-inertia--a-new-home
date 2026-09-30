@@ -26,6 +26,8 @@ class ListingService
 
     private const SIMILAR_PRICE_BAND = 0.3;
 
+    private const LATEST_LIMIT = 3;
+
     /**
      * Create a listing owned by a regular user.
      *
@@ -412,6 +414,22 @@ class ListingService
             ->get();
 
         return $this->toCardArrays($similar, $viewer)->all();
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    public function getLatestListings(): array
+    {
+        return Listing::actuallyPubliclyVisible()
+            ->with('images')
+            ->orderByDesc('approved_at')
+            ->orderByDesc('id')
+            ->limit(self::LATEST_LIMIT)
+            ->get()
+            ->map(fn (Listing $listing): array => $listing->toLatestArray())
+            ->values()
+            ->all();
     }
 
     private function toCardPaginator(LengthAwarePaginator $paginator, ?User $viewer): LengthAwarePaginator

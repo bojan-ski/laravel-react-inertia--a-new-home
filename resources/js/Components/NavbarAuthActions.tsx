@@ -4,8 +4,17 @@ import Button from '@/Components/UI/Button'
 import type { NavbarAuthActionsProps } from '@/types/navigation'
 import type { SharedProps } from '@/types/shared'
 
-export default function NavbarAuthActions({ user, variant, onNavigate }: NavbarAuthActionsProps) {
+const desktopToneClasses = {
+    ink: { signOut: 'text-ink-muted hover:text-forest', getStarted: 'text-ink hover:text-forest' },
+    paper: {
+        signOut: 'text-paper/75 hover:text-forest-200 focus-visible:outline-paper',
+        getStarted: 'text-paper hover:text-forest-200 focus-visible:outline-paper',
+    },
+}
+
+export default function NavbarAuthActions({ user, variant, tone = 'ink', onNavigate }: NavbarAuthActionsProps) {
     const { nav } = usePage<SharedProps>().props
+    const desktop = desktopToneClasses[tone]
 
     if (user) {
         return (
@@ -16,7 +25,7 @@ export default function NavbarAuthActions({ user, variant, onNavigate }: NavbarA
                 onClick={onNavigate}
                 className={
                     variant === 'desktop'
-                        ? 'text-ink-muted transition-colors duration-150 hover:text-forest'
+                        ? `transition-colors duration-150 ${desktop.signOut}`
                         : 'flex min-h-13 w-full items-center border-b border-rule text-left text-[17px] text-ink-muted transition-colors duration-150 hover:text-forest'
                 }
             >
@@ -29,7 +38,7 @@ export default function NavbarAuthActions({ user, variant, onNavigate }: NavbarA
         return (
             <Link
                 href="/register"
-                className="border-b border-current pb-0.5 font-medium text-ink transition-colors duration-150 hover:text-forest"
+                className={`border-b border-current pb-0.5 font-medium transition-colors duration-150 ${desktop.getStarted}`}
             >
                 {nav.get_started}
             </Link>

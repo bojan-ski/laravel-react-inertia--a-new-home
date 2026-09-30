@@ -1,14 +1,10 @@
 <?php
 
 use App\Http\Controllers\AgencyDirectoryController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Home', [
-        'landing' => __('app.landing'),
-    ]);
-})->name('home');
+Route::get('/', HomeController::class)->name('home');
 
 Route::get('/agencies', [AgencyDirectoryController::class, 'index'])->name('agencies.index');
 Route::get('/agencies/{agency:slug}', [AgencyDirectoryController::class, 'show'])->name('agencies.show');

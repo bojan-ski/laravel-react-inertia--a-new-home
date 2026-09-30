@@ -3,10 +3,16 @@ import MessagesNavLink from '@/Components/Conversations/MessagesNavLink'
 import type { NavbarLinkProps } from '@/types/navigation'
 import type { SharedProps } from '@/types/shared'
 
-export default function NavbarLink({ item, active, className, onNavigate }: NavbarLinkProps) {
+const toneClasses = {
+    ink: { base: 'hover:text-forest', active: 'text-forest', idle: 'text-ink' },
+    paper: { base: 'hover:text-forest-200 focus-visible:outline-paper', active: 'text-paper', idle: 'text-paper' },
+}
+
+export default function NavbarLink({ item, active, className, tone = 'ink', onNavigate }: NavbarLinkProps) {
     const { nav } = usePage<SharedProps>().props
-    const classes = `flex items-center transition-colors duration-150 hover:text-forest ${
-        active ? 'text-forest' : 'text-ink'
+    const palette = toneClasses[tone]
+    const classes = `flex items-center transition-colors duration-150 ${palette.base} ${
+        active ? palette.active : palette.idle
     } ${className}`
 
     if (item.key === 'messages') {

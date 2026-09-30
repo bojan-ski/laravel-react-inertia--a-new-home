@@ -1,79 +1,26 @@
-import { useEffect, useRef, useState } from 'react'
-import FeatureLabelList from '@/Components/Landing/FeatureLabelList'
+import { BadgeCheck, Heart, MessageCircle, Search } from 'lucide-react'
 import type { FeaturesProps } from '@/types/home'
 
+const icons = [Search, BadgeCheck, MessageCircle, Heart]
+
 export default function Features({ content }: FeaturesProps) {
-    const sectionRef = useRef<HTMLElement>(null)
-    const videoRef = useRef<HTMLVideoElement>(null)
-    const [activeIndex, setActiveIndex] = useState(0)
-    const count = content.items.length
-
-    useEffect(() => {
-        function handleScroll() {
-            const section = sectionRef.current
-            if (!section) {
-                return
-            }
-
-            const scrollable = section.offsetHeight - window.innerHeight
-            const scrolled = Math.min(Math.max(-section.getBoundingClientRect().top, 0), scrollable)
-            const progress = scrollable > 0 ? scrolled / scrollable : 0
-
-            setActiveIndex(Math.min(count - 1, Math.floor(progress * count)))
-        }
-
-        handleScroll()
-        window.addEventListener('scroll', handleScroll, { passive: true })
-
-        return () => window.removeEventListener('scroll', handleScroll)
-    }, [count])
-
-    useEffect(() => {
-        const video = videoRef.current
-        if (!video) {
-            return
-        }
-
-        const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-
-        function applyMotionPreference() {
-            if (motionQuery.matches) {
-                video!.pause()
-            } else {
-                void video!.play().catch(() => {})
-            }
-        }
-
-        applyMotionPreference()
-        motionQuery.addEventListener('change', applyMotionPreference)
-
-        return () => motionQuery.removeEventListener('change', applyMotionPreference)
-    }, [])
-
     return (
-        <section ref={sectionRef} id="features" className="relative h-[400vh]">
-            <div className="sticky top-0 h-screen overflow-hidden bg-surface-dark">
-                <video
-                    ref={videoRef}
-                    className="absolute inset-0 h-full w-full object-cover"
-                    src="/videos/features.mp4"
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                />
-                <div className="absolute inset-0 bg-black/65" />
+        <section className="mx-auto grid max-w-360 grid-cols-1 gap-9 px-5 pb-18 md:grid-cols-2 md:gap-x-12 md:px-10 lg:grid-cols-4 lg:gap-12 lg:px-16 lg:pb-40">
+            {content.items.map((item, index) => {
+                const Icon = icons[index] ?? Search
 
-                <div className="relative mx-auto flex h-full max-w-7xl flex-col justify-center px-6 md:px-12">
-                    <p className="mb-10 text-sm font-medium uppercase tracking-[0.2em] text-white/50">
-                        {content.eyebrow}
-                    </p>
-
-                    <FeatureLabelList items={content.items} activeIndex={activeIndex} />
-                </div>
-
-                <div className="absolute bottom-12 left-6 h-px w-64 bg-white/30 md:left-12" />
-            </div>
+                return (
+                    <div key={item.title} className="grid grid-cols-[40px_minmax(0,1fr)] gap-4 lg:flex lg:flex-col lg:gap-3.5">
+                        <Icon className="size-7 text-forest lg:size-8" strokeWidth={1} aria-hidden="true" />
+                        <div className="flex flex-col gap-1.5 lg:gap-3.5">
+                            <h3 className="text-lg font-medium lg:mt-3 lg:text-[19px]">{item.title}</h3>
+                            <p className="text-[15px] leading-[1.55] font-book text-ink/72 lg:leading-[1.6]">
+                                {item.description}
+                            </p>
+                        </div>
+                    </div>
+                )
+            })}
         </section>
     )
 }

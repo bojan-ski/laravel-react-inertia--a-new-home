@@ -330,6 +330,28 @@ class Listing extends Model
     /**
      * @return array<string, mixed>
      */
+    public function toLatestArray(): array
+    {
+        $image = $this->relationLoaded('images') ? $this->images->first() : null;
+
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'slug' => $this->slug,
+            'listingType' => $this->listing_type,
+            'price' => $this->price,
+            'currency' => $this->currency,
+            'city' => $this->city,
+            'country' => $this->country,
+            'imageUrl' => $image?->large_path
+                ? Storage::disk($image->disk)->url($image->large_path)
+                : null,
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
     public function toOwnerDashboardArray(): array
     {
         return [
