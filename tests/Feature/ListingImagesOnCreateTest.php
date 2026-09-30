@@ -36,8 +36,8 @@ class ListingImagesOnCreateTest extends TestCase
             'price' => 250000,
             'currency' => 'EUR',
             'description' => 'A bright loft in the city centre.',
-            'country' => 'United States',
-            'city' => 'Austin',
+            'country' => 'Austria',
+            'city' => 'Vienna',
         ], $overrides);
     }
 
@@ -139,6 +139,19 @@ class ListingImagesOnCreateTest extends TestCase
             ->get('/agency/listings/create')
             ->assertInertia(fn (Assert $page) => $page
                 ->where('translations.new_images', __('app.create_agency_listing.new_images')));
+    }
+
+    public function test_create_pages_receive_the_max_images_limit(): void
+    {
+        $this->actingAs(User::factory()->regularUser()->create())
+            ->get('/my-listings/create')
+            ->assertInertia(fn (Assert $page) => $page->where('maxImages', 10));
+
+        [$user] = $this->approvedAgencyOwner();
+
+        $this->actingAs($user)
+            ->get('/agency/listings/create')
+            ->assertInertia(fn (Assert $page) => $page->where('maxImages', 10));
     }
 
     public function test_agency_can_upload_and_delete_images_on_its_listing(): void

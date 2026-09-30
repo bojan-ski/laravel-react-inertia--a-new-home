@@ -1,12 +1,18 @@
-import { Head, Link, useForm } from '@inertiajs/react'
-import { ChevronLeft } from 'lucide-react'
+import { Head, useForm } from '@inertiajs/react'
 import type { FormEvent } from 'react'
 import ListingForm from '@/Components/Listings/ListingForm'
+import ListingFormHeader from '@/Components/Listings/ListingFormHeader'
 import NewListingImagePicker from '@/Components/Listings/NewListingImagePicker'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { CreateListingFormData, CreateListingPageProps } from '@/types/listing'
 
-export default function Create({ translations, propertyTypeLabels, amenityLabels }: CreateListingPageProps) {
+export default function Create({
+    translations,
+    propertyTypeLabels,
+    amenityLabels,
+    countryOptions,
+    maxImages,
+}: CreateListingPageProps) {
     const { data, setData, post, processing, errors } = useForm<CreateListingFormData>({
         title: '',
         listing_type: 'sale',
@@ -37,46 +43,36 @@ export default function Create({ translations, propertyTypeLabels, amenityLabels
         <PublicLayout back={{ href: '/profile', label: translations.back }} footer={false}>
             <Head title={translations.title} />
 
-            <div className="border-b border-border bg-surface">
-                <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-10 sm:flex-row sm:items-start sm:justify-between md:py-14">
-                    <div>
-                        <h1 className="font-display text-3xl font-semibold text-text sm:text-4xl">
-                            {translations.title}
-                        </h1>
-                        <p className="mt-2 text-text-soft">{translations.subtitle}</p>
-                    </div>
+            <ListingFormHeader
+                title={translations.title}
+                subtitle={translations.subtitle}
+                back={translations.back}
+                backHref="/profile"
+            />
 
-                    <Link
-                        href="/profile"
-                        className="hidden items-center gap-1.5 text-sm text-text-soft transition-colors hover:text-text lg:inline-flex"
-                    >
-                        <ChevronLeft className="size-4" />
-                        {translations.back}
-                    </Link>
-                </div>
-            </div>
-
-            <div className="mx-auto max-w-3xl px-6 py-10">
-                <ListingForm
-                    data={data}
-                    setData={setData}
-                    errors={errors}
-                    processing={processing}
-                    submitLabel={translations.submit}
-                    onSubmit={submit}
-                    translations={translations}
-                    propertyTypeLabels={propertyTypeLabels}
-                    amenityLabels={amenityLabels}
-                    footerSlot={
-                        <NewListingImagePicker
-                            files={data.images}
-                            onChange={(files) => setData('images', files)}
-                            errors={errors}
-                            translations={translations.new_images}
-                        />
-                    }
-                />
-            </div>
+            <ListingForm
+                data={data}
+                setData={setData}
+                errors={errors}
+                processing={processing}
+                submitLabel={translations.submit}
+                onSubmit={submit}
+                translations={translations}
+                propertyTypeLabels={propertyTypeLabels}
+                amenityLabels={amenityLabels}
+                countryOptions={countryOptions}
+                imagesNote={translations.new_images.helper.replace(':max', String(maxImages))}
+                imagesSection={
+                    <NewListingImagePicker
+                        files={data.images}
+                        onChange={(files) => setData('images', files)}
+                        errors={errors}
+                        maxImages={maxImages}
+                        translations={translations.new_images}
+                    />
+                }
+                barNote={translations.submit_note}
+            />
         </PublicLayout>
     )
 }

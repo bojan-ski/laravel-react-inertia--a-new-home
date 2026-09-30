@@ -1,14 +1,18 @@
-import { Link } from '@inertiajs/react'
+import FieldError from '@/Components/Forms/FieldError'
+import FormActionBar from '@/Components/Forms/FormActionBar'
+import FormSection from '@/Components/Forms/FormSection'
+import NumberedFormLayout from '@/Components/Forms/NumberedFormLayout'
+import Checkbox from '@/Components/UI/Checkbox'
+import ChipToggle from '@/Components/UI/ChipToggle'
+import SegmentedToggle from '@/Components/UI/SegmentedToggle'
+import SelectField from '@/Components/UI/SelectField'
+import TextAreaField from '@/Components/UI/TextAreaField'
 import TextField from '@/Components/UI/TextField'
 import type { ListingFormProps } from '@/types/listing'
 
-const PROPERTY_TYPES = [
-    'house', 'flat', 'apartment', 'cottage', 'villa',
-    'condo', 'land', 'commercial', 'other',
-]
+const SECTION_KEYS = ['basic', 'images', 'location', 'specs', 'amenities', 'contact'] as const
 
-const controlClasses =
-    'w-full rounded-lg border border-border bg-surface px-4 py-3 text-text outline-none transition-colors focus:border-brand'
+type SectionKey = (typeof SECTION_KEYS)[number]
 
 export default function ListingForm({
     data,
@@ -20,14 +24,27 @@ export default function ListingForm({
     translations,
     propertyTypeLabels,
     amenityLabels,
-    headerSlot,
-    footerSlot,
+    countryOptions,
+    imagesSection,
+    imagesNote,
+    barNote,
+    contactNote,
+    beforeSections,
     hideContactSection = false,
     cancelHref = '/profile',
 }: ListingFormProps) {
     const { sections, fields, listing_types } = translations
     const amenitiesError =
         errors.amenities ?? Object.entries(errors).find(([key]) => key.startsWith('amenities.'))?.[1]
+    const sectionLinks = SECTION_KEYS.map((key) => ({ id: `section-${key}`, label: sections[key] }))
+
+    function section(key: SectionKey) {
+        return {
+            id: `section-${key}`,
+            number: String(SECTION_KEYS.indexOf(key) + 1).padStart(2, '0'),
+            title: sections[key],
+        }
+    }
 
     function toggleAmenity(amenity: string, checked: boolean) {
         setData(
@@ -37,59 +54,51 @@ export default function ListingForm({
     }
 
     return (
-        <form onSubmit={onSubmit} className="space-y-12">
-            {headerSlot}
+        <form onSubmit={onSubmit}>
+            {beforeSections && (
+                <div className="flex flex-col gap-2 px-5 pt-6 md:px-10 lg:pt-0 lg:pb-2 xl:px-16">{beforeSections}</div>
+            )}
 
-            <section className="space-y-5">
-                <h2 className="font-display text-xl font-semibold text-text">{sections.basic}</h2>
+            <NumberedFormLayout
+                sections={sectionLinks}
+                indexLabel={translations.sections_label}
+                bar={
+                    <FormActionBar
+                        note={barNote}
+                        submitLabel={submitLabel}
+                        processing={processing}
+                        cancelHref={cancelHref}
+                        cancelLabel={translations.cancel}
+                    />
+                }
+            >
+                <FormSection {...section('basic')}>
+                    <div className="col-span-2">
+                        <TextField
+                            id="title"
+                            type="text"
+                            label={fields.title}
+                            value={data.title}
+                            onChange={(e) => setData('title', e.target.value)}
+                            error={errors.title}
+                        />
+                    </div>
 
-                <TextField
-                    id="title"
-                    type="text"
-                    label={fields.title}
-                    value={data.title}
-                    onChange={(e) => setData('title', e.target.value)}
-                    error={errors.title}
-                />
-
-                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                     <div className="flex flex-col gap-1.5">
-                        <label htmlFor="listing_type" className="text-sm font-medium text-text-soft">
-                            {fields.listing_type}
-                        </label>
-                        <select
-                            id="listing_type"
-                            className={controlClasses}
+                        <SegmentedToggle
+                            name="listing_type"
+                            legend={fields.listing_type}
+                            showLegend
+                            options={[
+                                { value: 'sale', label: listing_types.sale },
+                                { value: 'rent', label: listing_types.rent },
+                            ]}
                             value={data.listing_type}
-                            onChange={(e) => setData('listing_type', e.target.value)}
-                        >
-                            <option value="sale">{listing_types.sale}</option>
-                            <option value="rent">{listing_types.rent}</option>
-                        </select>
-                        {errors.listing_type && <p className="text-sm text-status-rejected">{errors.listing_type}</p>}
+                            onChange={(value) => setData('listing_type', value)}
+                        />
+                        <FieldError message={errors.listing_type} />
                     </div>
 
-                    <div className="flex flex-col gap-1.5">
-                        <label htmlFor="property_type" className="text-sm font-medium text-text-soft">
-                            {fields.property_type}
-                        </label>
-                        <select
-                            id="property_type"
-                            className={controlClasses}
-                            value={data.property_type}
-                            onChange={(e) => setData('property_type', e.target.value)}
-                        >
-                            {PROPERTY_TYPES.map((type) => (
-                                <option key={type} value={type}>
-                                    {propertyTypeLabels[type]}
-                                </option>
-                            ))}
-                        </select>
-                        {errors.property_type && <p className="text-sm text-status-rejected">{errors.property_type}</p>}
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                     <TextField
                         id="price"
                         type="number"
@@ -100,36 +109,60 @@ export default function ListingForm({
                         onChange={(e) => setData('price', e.target.value)}
                         error={errors.price}
                     />
-                    <div className="hidden md:block" aria-hidden="true" />
-                </div>
 
-                <div className="flex flex-col gap-1.5">
-                    <label htmlFor="description" className="text-sm font-medium text-text-soft">
-                        {fields.description}
-                    </label>
-                    <textarea
-                        id="description"
-                        rows={7}
-                        className={controlClasses}
-                        value={data.description}
-                        onChange={(e) => setData('description', e.target.value)}
-                    />
-                    {errors.description && <p className="text-sm text-status-rejected">{errors.description}</p>}
-                </div>
-            </section>
+                    <fieldset className="col-span-2 flex min-w-0 flex-col gap-1.5">
+                        <legend className="mb-2.5 text-xs tracking-[0.04em] text-ink-muted">
+                            {fields.property_type}
+                        </legend>
+                        <div className="flex flex-wrap gap-2">
+                            {Object.entries(propertyTypeLabels).map(([type, label]) => (
+                                <ChipToggle
+                                    key={type}
+                                    type="radio"
+                                    name="property_type"
+                                    value={type}
+                                    label={label}
+                                    checked={data.property_type === type}
+                                    onChange={() => setData('property_type', type)}
+                                />
+                            ))}
+                        </div>
+                        <FieldError message={errors.property_type} />
+                    </fieldset>
 
-            <section className="space-y-5 border-t border-border pt-12">
-                <h2 className="font-display text-xl font-semibold text-text">{sections.location}</h2>
+                    <div className="col-span-2">
+                        <TextAreaField
+                            id="description"
+                            rows={6}
+                            label={fields.description}
+                            value={data.description}
+                            onChange={(e) => setData('description', e.target.value)}
+                            error={errors.description}
+                        />
+                    </div>
+                </FormSection>
 
-                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                    <TextField
+                <FormSection {...section('images')} note={imagesNote}>
+                    {imagesSection}
+                </FormSection>
+
+                <FormSection {...section('location')}>
+                    <SelectField
                         id="country"
-                        type="text"
                         label={fields.country}
                         value={data.country}
                         onChange={(e) => setData('country', e.target.value)}
                         error={errors.country}
-                    />
+                    >
+                        <option value="" disabled>
+                            {fields.country_placeholder}
+                        </option>
+                        {countryOptions.map((country) => (
+                            <option key={country} value={country}>
+                                {country}
+                            </option>
+                        ))}
+                    </SelectField>
                     <TextField
                         id="city"
                         type="text"
@@ -138,18 +171,14 @@ export default function ListingForm({
                         onChange={(e) => setData('city', e.target.value)}
                         error={errors.city}
                     />
-                </div>
-
-                <TextField
-                    id="address_line"
-                    type="text"
-                    label={fields.address_line}
-                    value={data.address_line}
-                    onChange={(e) => setData('address_line', e.target.value)}
-                    error={errors.address_line}
-                />
-
-                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                    <TextField
+                        id="address_line"
+                        type="text"
+                        label={fields.address_line}
+                        value={data.address_line}
+                        onChange={(e) => setData('address_line', e.target.value)}
+                        error={errors.address_line}
+                    />
                     <TextField
                         id="postal_code"
                         type="text"
@@ -158,14 +187,9 @@ export default function ListingForm({
                         onChange={(e) => setData('postal_code', e.target.value)}
                         error={errors.postal_code}
                     />
-                    <div className="hidden md:block" aria-hidden="true" />
-                </div>
-            </section>
+                </FormSection>
 
-            <section className="space-y-5 border-t border-border pt-12">
-                <h2 className="font-display text-xl font-semibold text-text">{sections.specs}</h2>
-
-                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                <FormSection {...section('specs')}>
                     <TextField
                         id="bedrooms"
                         type="number"
@@ -184,7 +208,6 @@ export default function ListingForm({
                         onChange={(e) => setData('bathrooms', e.target.value)}
                         error={errors.bathrooms}
                     />
-
                     <TextField
                         id="area_value"
                         type="number"
@@ -195,7 +218,6 @@ export default function ListingForm({
                         onChange={(e) => setData('area_value', e.target.value)}
                         error={errors.area_value}
                     />
-
                     <TextField
                         id="year_built"
                         type="number"
@@ -206,88 +228,64 @@ export default function ListingForm({
                         onChange={(e) => setData('year_built', e.target.value)}
                         error={errors.year_built}
                     />
-                </div>
-            </section>
+                </FormSection>
 
-            <section className="space-y-5 border-t border-border pt-12">
-                <h2 className="font-display text-xl font-semibold text-text">{sections.amenities}</h2>
-
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                    {Object.entries(amenityLabels).map(([amenity, label]) => (
-                        <label
-                            key={amenity}
-                            className="flex min-h-11 cursor-pointer items-center gap-3 rounded-lg border border-border bg-surface px-4 py-2.5 text-sm text-text transition-colors hover:border-border-strong has-checked:border-brand"
-                        >
-                            <input
-                                type="checkbox"
-                                value={amenity}
-                                checked={data.amenities.includes(amenity)}
-                                onChange={(e) => toggleAmenity(amenity, e.target.checked)}
-                                className="size-4 shrink-0 accent-brand"
-                            />
-                            {label}
-                        </label>
-                    ))}
-                </div>
-
-                {amenitiesError && <p className="text-sm text-status-rejected">{amenitiesError}</p>}
-            </section>
-
-            {!hideContactSection && (
-                <section className="space-y-5 border-t border-border pt-12">
-                    <h2 className="font-display text-xl font-semibold text-text">{sections.contact}</h2>
-                    <p className="text-sm text-text-soft">{translations.contact_note}</p>
-
-                    <TextField
-                        id="contact_name"
-                        type="text"
-                        label={fields.contact_name}
-                        value={data.contact_name}
-                        onChange={(e) => setData('contact_name', e.target.value)}
-                        error={errors.contact_name}
-                    />
-
-                    <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                        <TextField
-                            id="contact_email"
-                            type="email"
-                            label={fields.contact_email}
-                            value={data.contact_email}
-                            onChange={(e) => setData('contact_email', e.target.value)}
-                            error={errors.contact_email}
-                        />
-                        <TextField
-                            id="contact_phone"
-                            type="text"
-                            label={fields.contact_phone}
-                            value={data.contact_phone}
-                            onChange={(e) => setData('contact_phone', e.target.value)}
-                            error={errors.contact_phone}
-                        />
+                <FormSection {...section('amenities')}>
+                    <div className="col-span-2 flex flex-col gap-2">
+                        <div className="grid grid-cols-1 gap-x-6 md:grid-cols-3">
+                            {Object.entries(amenityLabels).map(([amenity, label]) => (
+                                <Checkbox
+                                    key={amenity}
+                                    value={amenity}
+                                    checked={data.amenities.includes(amenity)}
+                                    onChange={(e) => toggleAmenity(amenity, e.target.checked)}
+                                    className="min-h-11 cursor-pointer border-b border-rule py-3 text-[15px] font-book"
+                                >
+                                    {label}
+                                </Checkbox>
+                            ))}
+                        </div>
+                        <FieldError message={amenitiesError} />
                     </div>
-                </section>
-            )}
+                </FormSection>
 
-            {footerSlot && <div className="border-t border-border pt-8">{footerSlot}</div>}
-
-            <div className="border-t border-border pt-8">
-                <div className="flex flex-col-reverse items-stretch gap-3 sm:flex-row sm:items-center sm:justify-end">
-                    <Link
-                        href={cancelHref}
-                        className="inline-flex items-center justify-center px-5 py-3 text-sm font-medium text-text-soft transition-colors hover:text-text"
-                    >
-                        {translations.cancel}
-                    </Link>
-                    <button
-                        type="submit"
-                        disabled={processing}
-                        className="inline-flex items-center justify-center rounded-full bg-brand px-6 py-3 text-sm font-semibold text-text-inverse transition-colors hover:bg-brand-dark disabled:opacity-60"
-                    >
-                        {submitLabel}
-                    </button>
-                </div>
-                <p className="mt-3 text-right text-sm text-text-muted">{translations.submit_note}</p>
-            </div>
+                {hideContactSection ? (
+                    <FormSection {...section('contact')} note={contactNote} />
+                ) : (
+                    <FormSection {...section('contact')} note={translations.contact_note}>
+                        <div className="col-span-2 lg:col-span-1">
+                            <TextField
+                                id="contact_name"
+                                type="text"
+                                label={fields.contact_name}
+                                value={data.contact_name}
+                                onChange={(e) => setData('contact_name', e.target.value)}
+                                error={errors.contact_name}
+                            />
+                        </div>
+                        <div className="col-span-2 lg:col-span-1">
+                            <TextField
+                                id="contact_email"
+                                type="email"
+                                label={fields.contact_email}
+                                value={data.contact_email}
+                                onChange={(e) => setData('contact_email', e.target.value)}
+                                error={errors.contact_email}
+                            />
+                        </div>
+                        <div className="col-span-2">
+                            <TextField
+                                id="contact_phone"
+                                type="text"
+                                label={fields.contact_phone}
+                                value={data.contact_phone}
+                                onChange={(e) => setData('contact_phone', e.target.value)}
+                                error={errors.contact_phone}
+                            />
+                        </div>
+                    </FormSection>
+                )}
+            </NumberedFormLayout>
         </form>
     )
 }

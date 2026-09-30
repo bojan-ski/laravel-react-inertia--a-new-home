@@ -29,13 +29,16 @@ export default function SegmentedToggle<T extends string>({
     onChange,
     size = 'md',
     tone = 'default',
+    showLegend = false,
     className = '',
 }: SegmentedToggleProps<T>) {
     const palette = toneClasses[tone]
 
     return (
         <fieldset className={`min-w-0 ${className}`}>
-            <legend className="sr-only">{legend}</legend>
+            <legend className={showLegend ? 'mb-2.5 text-xs tracking-[0.04em] text-ink-muted' : 'sr-only'}>
+                {legend}
+            </legend>
             <div className={`flex flex-wrap items-center ${sizeClasses[size]}`}>
                 {options.map((option) => {
                     const selected = option.value === value

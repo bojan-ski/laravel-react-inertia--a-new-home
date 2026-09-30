@@ -62,6 +62,43 @@ export interface HoneypotFieldProps {
     onChange: (value: string) => void
 }
 
+export interface FieldErrorProps {
+    message?: string
+}
+
+export interface FormSectionLink {
+    id: string
+    label: string
+}
+
+export interface NumberedFormLayoutProps {
+    sections: FormSectionLink[]
+    indexLabel: string
+    children: ReactNode
+    bar: ReactNode
+}
+
+export interface FormSectionIndexProps {
+    sections: FormSectionLink[]
+    label: string
+}
+
+export interface FormSectionProps {
+    id: string
+    number: string
+    title: string
+    note?: string
+    children?: ReactNode
+}
+
+export interface FormActionBarProps {
+    note: string
+    submitLabel: string
+    processing: boolean
+    cancelHref?: string
+    cancelLabel?: string
+}
+
 export interface AcceptanceCheckboxProps {
     id: string
     checked: boolean

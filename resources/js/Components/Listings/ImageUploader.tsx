@@ -1,10 +1,17 @@
 import { useState } from 'react'
-import type { ChangeEvent, FormEvent } from 'react'
-import { router, useForm } from '@inertiajs/react'
-import { Loader2, Trash2, Upload } from 'lucide-react'
+import type { ChangeEvent, KeyboardEvent } from 'react'
+import { router, useForm, usePage } from '@inertiajs/react'
+import { Loader2 } from 'lucide-react'
+import FieldError from '@/Components/Forms/FieldError'
+import ListingCoverTag from '@/Components/Listings/ListingCoverTag'
+import Button from '@/Components/UI/Button'
+import FlashBanner from '@/Components/UI/FlashBanner'
+import TextField from '@/Components/UI/TextField'
 import type { ImageUploaderProps, ImageUploadFormData } from '@/types/listing'
+import type { SharedProps } from '@/types/shared'
 
-export default function ImageUploader({ baseUrl, images, translations, canManage = true }: ImageUploaderProps) {
+export default function ImageUploader({ baseUrl, images, listingTitle, translations }: ImageUploaderProps) {
+    const { flash } = usePage<SharedProps>().props
     const [deletingId, setDeletingId] = useState<number | null>(null)
     const [fileInputKey, setFileInputKey] = useState(0)
 
@@ -17,8 +24,11 @@ export default function ImageUploader({ baseUrl, images, translations, canManage
         setData('image', event.target.files?.[0] ?? null)
     }
 
-    function submit(event: FormEvent<HTMLFormElement>) {
-        event.preventDefault()
+    function upload() {
+        if (data.image === null || processing) {
+            return
+        }
+
         post(baseUrl, {
             forceFormData: true,
             preserveScroll: true,
@@ -27,6 +37,13 @@ export default function ImageUploader({ baseUrl, images, translations, canManage
                 setFileInputKey((key) => key + 1)
             },
         })
+    }
+
+    function handleAltKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+        if (event.key === 'Enter') {
+            event.preventDefault()
+            upload()
+        }
     }
 
     function deleteImage(imageId: number) {
@@ -38,89 +55,82 @@ export default function ImageUploader({ baseUrl, images, translations, canManage
     }
 
     return (
-        <section>
-            <h2 className="font-display text-xl font-semibold text-text">{translations.heading}</h2>
-            <p className="mt-1 text-sm text-text-soft">
-                {images.length === 0 ? translations.helper_empty : translations.helper}
-            </p>
+        <>
+            {flash.success && <FlashBanner message={flash.success} variant="success" className="col-span-2" />}
 
             {images.length > 0 && (
-                <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-                    {images.map((image) => (
-                        <div
-                            key={image.id}
-                            className="relative aspect-4/3 overflow-hidden rounded-lg border border-border bg-surface-muted"
-                        >
-                            <img src={image.url} alt={image.altText} className="size-full object-cover" />
-
-                            {canManage && (
+                <ul className="col-span-2 grid grid-cols-2 gap-4 md:grid-cols-3">
+                    {images.map((image, index) => (
+                        <li key={image.id} className="flex min-w-0 flex-col gap-2.5">
+                            <div className="relative aspect-4/3 bg-sand">
+                                <img
+                                    src={image.url}
+                                    alt={image.altText ?? listingTitle}
+                                    className="absolute inset-0 size-full object-cover"
+                                />
+                                {index === 0 && <ListingCoverTag label={translations.cover} />}
+                            </div>
+                            <div className="flex items-center justify-between gap-3 text-[13px]">
+                                <span className={`truncate ${image.altText ? '' : 'text-ink-muted'}`}>
+                                    {image.altText ?? translations.no_alt}
+                                </span>
                                 <button
                                     type="button"
                                     onClick={() => deleteImage(image.id)}
                                     disabled={deletingId === image.id}
-                                    aria-label={translations.delete}
-                                    className="absolute right-2 top-2 flex size-8 items-center justify-center rounded-full bg-white/85 text-status-rejected shadow-sm transition-colors hover:bg-white disabled:opacity-70"
+                                    className="inline-flex shrink-0 items-center gap-1.5 text-ink-muted transition-colors duration-150 hover:text-forest disabled:opacity-45"
                                 >
-                                    {deletingId === image.id ? (
-                                        <Loader2 className="size-4 animate-spin" />
-                                    ) : (
-                                        <Trash2 className="size-4" />
+                                    {deletingId === image.id && (
+                                        <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
                                     )}
+                                    {translations.delete}
                                 </button>
-                            )}
-                        </div>
+                            </div>
+                        </li>
                     ))}
-                </div>
+                </ul>
             )}
 
-            {canManage && (
-                <form
-                    onSubmit={submit}
-                    className="mt-6 flex flex-col gap-4 rounded-xl border border-border bg-surface p-5"
-                >
-                    <div className="flex flex-col gap-2">
-                        <label className="inline-flex w-fit cursor-pointer items-center gap-2 rounded-lg border border-border-strong bg-surface-muted px-4 py-2 text-sm font-medium text-text transition-colors hover:bg-border/40">
-                            <Upload className="size-4" />
-                            {translations.choose_image}
-                            <input
-                                key={fileInputKey}
-                                type="file"
-                                accept="image/*"
-                                onChange={handleFileChange}
-                                className="sr-only"
-                            />
-                        </label>
-                        <span className="text-sm text-text-muted">{data.image?.name ?? translations.no_file}</span>
-                        {errors.image && <p className="text-sm text-status-rejected">{errors.image}</p>}
+            <div className="@container col-span-2">
+                <div className="flex flex-col gap-4 bg-sand px-6 py-5 @md:grid @md:grid-cols-[minmax(0,1fr)_auto] @md:items-end @md:gap-6 @min-[40rem]:grid-cols-[auto_minmax(0,1fr)_auto]">
+                    <div className="flex min-w-0 flex-col gap-1.5 @md:col-span-2 @min-[40rem]:col-span-1">
+                        <span className="text-xs text-ink-muted">{translations.image_label}</span>
+                        <div className="flex min-h-11 items-center gap-3.5 text-sm">
+                            <label className="shrink-0 cursor-pointer border border-ink px-3 py-2 transition-colors duration-150 hover:bg-ink/7 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-forest">
+                                {translations.choose_image}
+                                <input
+                                    key={fileInputKey}
+                                    type="file"
+                                    accept="image/jpeg,image/png,image/webp"
+                                    onChange={handleFileChange}
+                                    className="sr-only"
+                                />
+                            </label>
+                            <span className="min-w-0 truncate text-ink-muted">
+                                {data.image?.name ?? translations.no_file}
+                            </span>
+                        </div>
+                        <FieldError message={errors.image} />
                     </div>
 
-                    <div className="flex flex-col gap-1.5">
-                        <label htmlFor="alt_text" className="text-sm font-medium text-text">
-                            {translations.alt_label}
-                        </label>
-                        <input
-                            id="alt_text"
-                            type="text"
-                            value={data.alt_text}
-                            onChange={(event) => setData('alt_text', event.target.value)}
-                            placeholder={translations.alt_placeholder}
-                            className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text outline-none focus:border-brand"
-                        />
-                        {errors.alt_text && <p className="text-sm text-status-rejected">{errors.alt_text}</p>}
-                    </div>
+                    <TextField
+                        id="image_alt_text"
+                        type="text"
+                        label={translations.alt_label}
+                        placeholder={translations.alt_placeholder}
+                        value={data.alt_text}
+                        onChange={(event) => setData('alt_text', event.target.value)}
+                        onKeyDown={handleAltKeyDown}
+                        error={errors.alt_text}
+                    />
 
-                    <button
-                        type="submit"
-                        disabled={processing || data.image === null}
-                        className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand px-5 py-2.5 text-sm font-semibold text-text-inverse transition-colors hover:bg-brand-dark disabled:opacity-50 sm:w-fit"
-                    >
-                        {processing && <Loader2 className="size-4 animate-spin" />}
+                    <Button variant="secondary" onClick={upload} disabled={processing || data.image === null}>
                         {processing ? translations.uploading : translations.upload}
-                    </button>
+                    </Button>
+                </div>
+            </div>
 
-                    <p className="text-xs text-text-muted">{translations.format_note}</p>
-                </form>
-            )}
-        </section>
+            <p className="col-span-2 text-[13px] text-ink-muted">{translations.format_note}</p>
+        </>
     )
 }

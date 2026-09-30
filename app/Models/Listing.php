@@ -45,6 +45,8 @@ class Listing extends Model
 
     public const AREA_UNIT = 'm²';
 
+    public const MAX_NEW_IMAGES = 10;
+
     public const LIFETIME_DAYS = 90;
 
     public const EXPIRY_REMINDER_DAYS = 7;
@@ -57,6 +59,14 @@ class Listing extends Model
         'currency' => self::CURRENCY,
         'area_unit' => self::AREA_UNIT,
     ];
+
+    /**
+     * @return list<string>
+     */
+    public static function countryOptions(): array
+    {
+        return array_values(__('app.european_countries'));
+    }
 
     public function owner(): BelongsTo
     {
@@ -407,6 +417,22 @@ class Listing extends Model
     }
 
     /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function imagesForForm(): array
+    {
+        return $this->relationLoaded('images')
+            ? $this->images->map(fn (ListingImage $image): array => [
+                'id' => $image->id,
+                'url' => Storage::disk($image->disk)->url($image->large_path),
+                'thumbUrl' => Storage::disk($image->disk)->url($image->small_path),
+                'altText' => $image->alt_text ?: null,
+                'sortOrder' => $image->sort_order,
+            ])->all()
+            : [];
+    }
+
+    /**
      * @return array{contactName: ?string, contactEmail: ?string, contactPhone: ?string}
      */
     private function showContact(): array
@@ -485,7 +511,7 @@ class Listing extends Model
      */
     public function toFormArray(): array
     {
-        $images = $this->imagesForShow();
+        $images = $this->imagesForForm();
 
         return [
             'id' => $this->id,
