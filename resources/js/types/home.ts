@@ -8,30 +8,30 @@ export interface LandingFeature {
     description: string
 }
 
-export interface LandingStep {
-    number: string
-    title: string
-    description: string
+export interface LandingHero {
+    headline: string
+    listing_type_label: string
+    buy: string
+    rent: string
+    search_label: string
+    search_placeholder: string
+    search_submit: string
 }
 
-export interface LandingHero {
-    headline_line1: string
-    headline_line2: string
-    subheading: string
-    cta: string
+export interface LandingIntro {
+    kicker: string
+    lead: string
     stats: LandingStat[]
 }
 
 export interface LandingFeatures {
-    eyebrow: string
     items: LandingFeature[]
 }
 
-export interface LandingHowItWorks {
-    eyebrow: string
-    heading_line1: string
-    heading_line2: string
-    steps: LandingStep[]
+export interface LandingLatest {
+    heading: string
+    link: string
+    per_month: string
 }
 
 export interface LandingCta {
@@ -44,30 +44,49 @@ export interface LandingCta {
 export interface LandingTranslations {
     title: string
     hero: LandingHero
+    intro: LandingIntro
     features: LandingFeatures
-    how_it_works: LandingHowItWorks
+    latest: LandingLatest
     cta: LandingCta
+}
+
+export interface LatestListingData {
+    id: number
+    title: string
+    slug: string
+    listingType: string
+    price: string
+    currency: string
+    city: string
+    country: string
+    imageUrl: string | null
 }
 
 export interface HomePageProps {
     landing: LandingTranslations
+    latestListings: LatestListingData[]
 }
 
 export interface HeroProps {
     content: LandingHero
 }
 
+export interface IntroProps {
+    content: LandingIntro
+}
+
 export interface FeaturesProps {
     content: LandingFeatures
 }
 
-export interface FeatureLabelListProps {
-    items: LandingFeature[]
-    activeIndex: number
+export interface LatestHomesProps {
+    content: LandingLatest
+    listings: LatestListingData[]
 }
 
-export interface HowItWorksProps {
-    content: LandingHowItWorks
+export interface LatestHomeCardProps {
+    listing: LatestListingData
+    perMonth: string
 }
 
 export interface ClosingCtaProps {

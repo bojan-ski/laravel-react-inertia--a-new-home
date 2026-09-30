@@ -8,8 +8,6 @@ export const dashboardPaths: Record<UserRole, string> = {
 
 export interface NavTranslations {
     brand: string
-    features: string
-    how_it_works: string
     listings: string
     agencies: string
     favorites: string
@@ -37,20 +35,27 @@ export interface NavBack {
     label: string
 }
 
+export type NavbarVariant = 'default' | 'on-photo'
+
+export type NavTone = 'ink' | 'paper'
+
 export interface NavbarProps {
     back?: NavBack
+    variant?: NavbarVariant
 }
 
 export interface NavbarLinkProps {
     item: NavItem
     active: boolean
     className: string
+    tone?: NavTone
     onNavigate?: () => void
 }
 
 export interface NavbarAuthActionsProps {
     user: AuthUser | null
     variant: 'desktop' | 'panel'
+    tone?: NavTone
     onNavigate?: () => void
 }
 

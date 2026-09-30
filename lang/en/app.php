@@ -5,8 +5,6 @@ return [
 
     'nav' => [
         'brand' => 'New Beginning',
-        'features' => 'Features',
-        'how_it_works' => 'How It Works',
         'listings' => 'Listings',
         'agencies' => 'Agencies',
         'favorites' => 'Favorites',
@@ -101,10 +99,18 @@ return [
         'title' => 'Home',
 
         'hero' => [
-            'headline_line1' => 'Find Your Perfect',
-            'headline_line2' => 'New Beginning',
-            'subheading' => 'Discover verified properties for sale and rent. Connect directly with trusted owners on a moderated, premium marketplace.',
-            'cta' => 'Browse Properties',
+            'headline' => 'Find your perfect new beginning.',
+            'listing_type_label' => 'Listing type',
+            'buy' => 'Buy',
+            'rent' => 'Rent',
+            'search_label' => 'Search listings',
+            'search_placeholder' => 'Search by location, title…',
+            'search_submit' => 'Search',
+        ],
+
+        'intro' => [
+            'kicker' => 'New Beginning',
+            'lead' => 'Discover verified properties for sale and rent. Connect directly with trusted owners on a moderated, premium marketplace.',
             'stats' => [
                 ['value' => '10K+', 'label' => 'Listings'],
                 ['value' => '5K+', 'label' => 'Agencies'],
@@ -113,7 +119,6 @@ return [
         ],
 
         'features' => [
-            'eyebrow' => 'Features',
             'items' => [
                 ['title' => 'Smart Search', 'description' => 'Find exactly what you need with powerful filters.'],
                 ['title' => 'Verified Listings', 'description' => 'Every property is reviewed and approved before going live.'],
@@ -122,16 +127,10 @@ return [
             ],
         ],
 
-        'how_it_works' => [
-            'eyebrow' => 'How It Works',
-            'heading_line1' => 'Four simple steps',
-            'heading_line2' => 'to your new home',
-            'steps' => [
-                ['number' => '01', 'title' => 'Create Account', 'description' => 'Sign up as a buyer, seller, or agency in seconds.'],
-                ['number' => '02', 'title' => 'Explore', 'description' => 'Browse verified listings with smart filters.'],
-                ['number' => '03', 'title' => 'Connect', 'description' => 'Chat directly with property owners.'],
-                ['number' => '04', 'title' => 'Move In', 'description' => 'Find your perfect space and begin.'],
-            ],
+        'latest' => [
+            'heading' => 'Latest homes',
+            'link' => 'Browse Listings',
+            'per_month' => '/mo',
         ],
 
         'cta' => [

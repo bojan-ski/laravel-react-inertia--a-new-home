@@ -99,6 +99,7 @@ export interface SegmentedToggleProps<T extends string = string> {
     value: T
     onChange: (value: T) => void
     size?: 'sm' | 'md'
+    tone?: 'default' | 'on-photo'
     className?: string
 }
 
