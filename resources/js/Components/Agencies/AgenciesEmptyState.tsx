@@ -1,5 +1,6 @@
 import { router } from '@inertiajs/react'
-import { Building2 } from 'lucide-react'
+import Button from '@/Components/UI/Button'
+import EmptyState from '@/Components/UI/EmptyState'
 import type { AgenciesEmptyStateProps } from '@/types/agency'
 
 export default function AgenciesEmptyState({ translations, hasActiveSearch }: AgenciesEmptyStateProps) {
@@ -8,24 +9,17 @@ export default function AgenciesEmptyState({ translations, hasActiveSearch }: Ag
     }
 
     return (
-        <div className="flex flex-col items-center justify-center gap-3 py-24 text-center">
-            <Building2 className="size-10 text-text-muted" />
-            <p className="text-lg font-medium text-text-soft">{translations.headline}</p>
-
-            {hasActiveSearch ? (
-                <p className="text-sm text-text-muted">
-                    {translations.hint}{' '}
-                    <button
-                        type="button"
-                        onClick={reset}
-                        className="font-medium text-brand underline underline-offset-2 transition-colors hover:text-brand-dark"
-                    >
+        <EmptyState
+            title={translations.headline}
+            hint={hasActiveSearch ? translations.hint : translations.none}
+            action={
+                hasActiveSearch && (
+                    <Button variant="secondary" onClick={reset} className="mt-3">
                         {translations.reset}
-                    </button>
-                </p>
-            ) : (
-                <p className="text-sm text-text-muted">{translations.none}</p>
-            )}
-        </div>
+                    </Button>
+                )
+            }
+            className="mt-8 lg:mt-2"
+        />
     )
 }

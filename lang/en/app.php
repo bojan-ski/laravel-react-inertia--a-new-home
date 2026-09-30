@@ -342,8 +342,10 @@ return [
         'title' => 'Agencies',
         'heading' => 'Browse Agencies',
         'subtitle' => 'Explore approved agencies offering properties on the marketplace.',
-        'count_prefix' => 'Showing',
-        'count_suffix' => 'agencies',
+        'count_one' => 'Showing :count agency',
+        'count_other' => 'Showing :count agencies',
+        'properties_one' => 'property',
+        'properties_other' => 'properties',
         'view_agency' => 'View agency',
         'registration' => 'Reg. no. :number (:country)',
         'broker_register' => 'Broker reg. :number',
@@ -361,6 +363,7 @@ return [
         ],
 
         'search' => [
+            'label' => 'Search agencies',
             'placeholder' => 'Search by name, description, or location…',
             'submit' => 'Search',
             'reset' => 'Reset',

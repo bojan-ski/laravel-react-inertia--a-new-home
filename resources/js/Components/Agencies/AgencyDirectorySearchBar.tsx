@@ -3,8 +3,22 @@ import { router } from '@inertiajs/react'
 import { Search } from 'lucide-react'
 import type { AgencyDirectorySearchBarProps } from '@/types/agency'
 
-export default function AgencyDirectorySearchBar({ filters, translations }: AgencyDirectorySearchBarProps) {
+const inputClass =
+    'w-full min-w-0 appearance-none bg-transparent font-light placeholder:text-ink-faint focus-visible:outline-none [&::-webkit-search-cancel-button]:hidden'
+
+const lineFocusClass =
+    'has-[input:focus-visible]:outline-2 has-[input:focus-visible]:outline-offset-4 has-[input:focus-visible]:outline-forest'
+
+export default function AgencyDirectorySearchBar({ filters, translations, countLabel }: AgencyDirectorySearchBarProps) {
     const [search, setSearch] = useState(filters.search ?? '')
+    const [appliedSearch, setAppliedSearch] = useState(filters.search)
+
+    if (filters.search !== appliedSearch) {
+        setAppliedSearch(filters.search)
+        setSearch(filters.search ?? '')
+    }
+
+    const showReset = search !== '' || Boolean(filters.search)
 
     function submit(event: FormEvent) {
         event.preventDefault()
@@ -19,37 +33,68 @@ export default function AgencyDirectorySearchBar({ filters, translations }: Agen
         router.get('/agencies', {}, { preserveState: true, replace: true })
     }
 
-    return (
-        <div className="border-b border-border bg-surface">
-            <form onSubmit={submit} className="mx-auto max-w-7xl px-6 py-4">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                    <div className="relative sm:w-[70%]">
-                        <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-text-muted" />
-                        <input
-                            type="text"
-                            value={search}
-                            onChange={(event) => setSearch(event.target.value)}
-                            placeholder={translations.placeholder}
-                            className="w-full rounded-lg border border-border bg-surface py-2.5 pl-9 pr-4 text-sm text-text outline-none transition-colors focus:border-brand"
-                        />
-                    </div>
+    const resetButton = showReset && (
+        <button
+            type="button"
+            onClick={reset}
+            className="min-h-11 shrink-0 text-[13px] text-ink-muted transition-colors duration-150 hover:text-forest lg:min-h-10 lg:text-sm"
+        >
+            {translations.reset}
+        </button>
+    )
 
+    return (
+        <>
+            <form
+                role="search"
+                onSubmit={submit}
+                className="hidden items-center gap-6 border-y border-rule py-3.5 has-[input:focus-visible]:border-b-forest lg:flex"
+            >
+                <Search className="size-5 shrink-0" strokeWidth={1.25} aria-hidden="true" />
+                <label htmlFor="agencies-search" className="sr-only">
+                    {translations.label}
+                </label>
+                <input
+                    id="agencies-search"
+                    type="search"
+                    maxLength={255}
+                    value={search}
+                    onChange={(event) => setSearch(event.target.value)}
+                    placeholder={translations.placeholder}
+                    className={`min-h-10 flex-1 text-lg ${inputClass}`}
+                />
+                {resetButton}
+                <span className="shrink-0 text-sm text-ink-muted">{countLabel}</span>
+            </form>
+
+            <form role="search" onSubmit={submit} className="mt-2 lg:hidden">
+                <div className={`flex min-h-12 items-center gap-2.5 border-b border-ink ${lineFocusClass}`}>
+                    <label htmlFor="agencies-search-compact" className="sr-only">
+                        {translations.label}
+                    </label>
+                    <input
+                        id="agencies-search-compact"
+                        type="search"
+                        maxLength={255}
+                        value={search}
+                        onChange={(event) => setSearch(event.target.value)}
+                        placeholder={translations.placeholder}
+                        className={`text-base ${inputClass}`}
+                    />
                     <button
                         type="submit"
-                        className="rounded-lg bg-brand px-5 py-2.5 text-sm font-semibold text-text-inverse transition-colors hover:bg-brand-dark"
+                        aria-label={translations.submit}
+                        className="flex size-11 shrink-0 items-center justify-end transition-colors duration-150 hover:text-forest"
                     >
-                        {translations.submit}
-                    </button>
-
-                    <button
-                        type="button"
-                        onClick={reset}
-                        className="text-sm font-medium text-text-soft transition-colors hover:text-text"
-                    >
-                        {translations.reset}
+                        <Search className="size-5" strokeWidth={1.25} aria-hidden="true" />
                     </button>
                 </div>
+
+                <div className="mt-2 flex min-h-11 items-center justify-between gap-4">
+                    <span className="text-[13px] text-ink-muted">{countLabel}</span>
+                    {resetButton}
+                </div>
             </form>
-        </div>
+        </>
     )
 }

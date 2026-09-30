@@ -145,5 +145,5 @@ export interface KickerProps {
 
 export interface LogoTileProps {
     name: string
-    size?: 'md' | 'lg' | 'xl'
+    size?: 'md' | 'lg' | 'xl' | 'row' | 'hero'
 }

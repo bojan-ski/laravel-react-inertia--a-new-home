@@ -19,7 +19,7 @@ class AgencyDirectoryController extends Controller
     public function index(AgencyIndexRequest $request): Response
     {
         $agencies = $this->agencyService->getPublicAgencies($request)
-            ->through(fn (Agency $agency): array => $agency->toCardArray());
+            ->through(fn (Agency $agency): array => $agency->toDirectoryArray());
 
         return Inertia::render('Agencies/Index', [
             'agencies' => $agencies,

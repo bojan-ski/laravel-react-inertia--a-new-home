@@ -1,18 +1,24 @@
-import { Globe, Mail, Phone } from 'lucide-react'
+import { websiteHost } from '@/Components/Agencies/agencyFormat'
+import Kicker from '@/Components/UI/Kicker'
 import type { AgencyContactListProps } from '@/types/agency'
 
-export default function AgencyContactList({ agency }: AgencyContactListProps) {
+const linkClass =
+    'flex min-h-10 items-center text-[15px] wrap-break-word transition-colors duration-150 lg:min-h-0 lg:text-base'
+
+export default function AgencyContactList({ agency, heading }: AgencyContactListProps) {
     return (
-        <div className="flex flex-col gap-1.5 text-sm text-text-muted">
-            <a href={`mailto:${agency.email}`} className="flex items-center gap-2 transition-colors hover:text-text">
-                <Mail className="size-4 shrink-0" />
-                <span className="truncate">{agency.email}</span>
+        <div className="flex flex-col gap-1 lg:gap-4">
+            <Kicker as="h2" size="sm" className="mb-1.5 lg:mb-0 lg:text-xs">
+                {heading}
+            </Kicker>
+
+            <a href={`mailto:${agency.email}`} className={`${linkClass} hover:text-forest`}>
+                <span className="min-w-0">{agency.email}</span>
             </a>
 
             {agency.phone && (
-                <a href={`tel:${agency.phone}`} className="flex items-center gap-2 transition-colors hover:text-text">
-                    <Phone className="size-4 shrink-0" />
-                    <span className="truncate">{agency.phone}</span>
+                <a href={`tel:${agency.phone}`} className={`${linkClass} hover:text-forest`}>
+                    {agency.phone}
                 </a>
             )}
 
@@ -21,11 +27,17 @@ export default function AgencyContactList({ agency }: AgencyContactListProps) {
                     href={agency.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-brand transition-colors hover:text-brand-dark"
+                    className={`${linkClass} text-forest hover:text-forest-600`}
                 >
-                    <Globe className="size-4 shrink-0" />
-                    <span className="truncate">{agency.website}</span>
+                    <span className="min-w-0">
+                        {websiteHost(agency.website)}
+                        <span aria-hidden="true"> ↗</span>
+                    </span>
                 </a>
+            )}
+
+            {agency.address && (
+                <p className="text-[15px]/normal whitespace-pre-line text-ink/70">{agency.address}</p>
             )}
         </div>
     )
