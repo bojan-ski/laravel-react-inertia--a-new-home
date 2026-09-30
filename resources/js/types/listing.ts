@@ -48,6 +48,7 @@ export interface ListingExpiryData {
 export interface ListingExpiryNoteProps {
     listing: ListingExpiryData
     translations: ListingExpiryTranslations
+    className?: string
 }
 
 export interface ListingRenewButtonProps {

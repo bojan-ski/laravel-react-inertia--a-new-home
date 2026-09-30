@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { router } from '@inertiajs/react'
+import Button from '@/Components/UI/Button'
 import ConfirmDialog from '@/Components/UI/ConfirmDialog'
 import type { ListingCloseActionsProps } from '@/types/listing'
 
@@ -34,13 +35,13 @@ export default function ListingCloseActions({ listing, baseUrl, translations }: 
 
     return (
         <>
-            <button
-                type="button"
+            <Button
+                variant={isClosed ? 'strong-link' : 'link'}
                 onClick={() => setConfirmOpen(true)}
-                className="rounded-lg border border-border-strong px-3 py-1.5 text-sm font-medium text-text-soft transition-colors hover:border-brand hover:text-brand"
+                className={isClosed ? 'text-sm' : undefined}
             >
                 {buttonLabel}
-            </button>
+            </Button>
 
             <ConfirmDialog
                 open={confirmOpen}

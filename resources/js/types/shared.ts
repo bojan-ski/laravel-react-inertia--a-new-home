@@ -1,10 +1,11 @@
 import type { AdminNavTranslations } from '@/types/admin'
-import type { FooterTranslations, NavTranslations } from '@/types/navigation'
+import type { AccountTabsTranslations, FooterTranslations, NavTranslations } from '@/types/navigation'
 
 export interface SharedProps {
     name: string
     nav: NavTranslations
     ui: UiTranslations
+    accountTabs: AccountTabsTranslations | null
     footer: FooterTranslations
     adminNav: AdminNavTranslations
     auth: {

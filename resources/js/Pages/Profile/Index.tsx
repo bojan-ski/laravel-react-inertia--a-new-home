@@ -1,73 +1,63 @@
-import { Head, Link, usePage } from '@inertiajs/react'
-import { Plus, Settings } from 'lucide-react'
+import { Head, usePage } from '@inertiajs/react'
+import AccountPageHeader from '@/Components/Account/AccountPageHeader'
 import ProfileListingRow from '@/Components/Profile/ProfileListingRow'
+import Button from '@/Components/UI/Button'
+import EmptyState from '@/Components/UI/EmptyState'
 import FlashBanner from '@/Components/UI/FlashBanner'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { ProfileIndexPageProps } from '@/types/profile'
 import type { SharedProps } from '@/types/shared'
 
-export default function Index({ listings, translations, propertyTypeLabels }: ProfileIndexPageProps) {
+export default function Index({ listings, translations }: ProfileIndexPageProps) {
     const { flash } = usePage<SharedProps>().props
+
+    const newListing = (fullWidth: boolean) => (
+        <Button
+            href="/my-listings/create"
+            fullWidth={fullWidth}
+            trailing={<span aria-hidden="true">+</span>}
+            className={`min-h-13 ${fullWidth ? 'mt-3' : 'gap-10!'}`}
+        >
+            {translations.new_listing}
+        </Button>
+    )
 
     return (
         <PublicLayout>
             <Head title={translations.title} />
 
-            <div className="border-b border-border bg-surface">
-                <div className="mx-auto flex max-w-7xl flex-col gap-6 px-6 py-10 sm:flex-row sm:items-start sm:justify-between md:py-14">
-                    <div>
-                        <h1 className="font-display text-3xl font-semibold text-text sm:text-4xl">
-                            {translations.title}
-                        </h1>
-                        <p className="mt-2 text-text-soft">{translations.subtitle}</p>
-                    </div>
+            <AccountPageHeader
+                title={translations.title}
+                subtitle={translations.subtitle}
+                action={newListing(false)}
+                mobileAction={newListing(true)}
+            />
 
-                    <div className="flex flex-wrap items-center gap-3">
-                        <Link
-                            href="/profile/settings"
-                            className="inline-flex items-center gap-2 rounded-full border border-border-strong px-5 py-2.5 text-sm font-medium text-text-soft transition-colors hover:border-text hover:text-text"
-                        >
-                            <Settings className="size-4" />
-                            {translations.account_settings}
-                        </Link>
-                        <Link
-                            href="/my-listings/create"
-                            className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-text-inverse transition-colors hover:bg-brand-dark"
-                        >
-                            <Plus className="size-4" />
-                            {translations.new_listing}
-                        </Link>
+            <div className="px-5 pt-2 pb-20 md:px-10 xl:px-16">
+                {(flash.success || flash.error) && (
+                    <div className="pt-6">
+                        {flash.success && <FlashBanner message={flash.success} variant="success" />}
+                        {flash.error && <FlashBanner message={flash.error} variant="error" />}
                     </div>
-                </div>
-            </div>
-
-            <div className="mx-auto max-w-7xl px-6 py-8">
-                {flash.success && <FlashBanner message={flash.success} variant="success" />}
-                {flash.error && <FlashBanner message={flash.error} variant="error" />}
+                )}
 
                 {listings.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center gap-4 py-24 text-center">
-                        <p className="text-lg font-semibold text-text">{translations.empty.headline}</p>
-                        <p className="max-w-md text-text-soft">{translations.empty.subline}</p>
-                        <Link
-                            href="/my-listings/create"
-                            className="mt-2 inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3 text-sm font-semibold text-text-inverse transition-colors hover:bg-brand-dark"
-                        >
-                            <Plus className="size-4" />
-                            {translations.empty.cta}
-                        </Link>
-                    </div>
+                    <EmptyState
+                        className="mt-8"
+                        title={translations.empty.headline}
+                        hint={translations.empty.subline}
+                        action={
+                            <Button href="/my-listings/create" variant="secondary" size="sm" className="mt-2">
+                                {translations.empty.cta}
+                            </Button>
+                        }
+                    />
                 ) : (
-                    <div className="flex flex-col gap-4">
+                    <ul>
                         {listings.map((listing) => (
-                            <ProfileListingRow
-                                key={listing.id}
-                                listing={listing}
-                                translations={translations}
-                                propertyTypeLabels={propertyTypeLabels}
-                            />
+                            <ProfileListingRow key={listing.id} listing={listing} translations={translations} />
                         ))}
-                    </div>
+                    </ul>
                 )}
             </div>
         </PublicLayout>

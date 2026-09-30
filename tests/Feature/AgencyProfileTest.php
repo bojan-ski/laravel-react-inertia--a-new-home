@@ -6,6 +6,7 @@ use App\Models\Agency;
 use App\Models\Listing;
 use App\Models\User;
 use App\Policies\AgencyPolicy;
+use App\Services\ListingService;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
@@ -104,25 +105,49 @@ class AgencyProfileTest extends TestCase
 
         $this->agencyListing($agency, 'pendingReview');
         $this->agencyListing($agency, 'approved');
-        $this->agencyListing($agency, 'rejected');
         $this->agencyListing($agency, 'hidden');
+        app(ListingService::class)->reject($this->agencyListing($agency, 'pendingReview'), 'Missing photos.');
 
         $this->actingAs($user)
             ->get('/agency')
-            ->assertInertia(fn (Assert $page) => $page->has('listings', 4));
+            ->assertInertia(fn (Assert $page) => $page
+                ->has('listings', 4)
+                ->where('listings', fn ($listings) => collect($listings)->pluck('status')->sort()->values()->all()
+                    === ['approved', 'hidden', 'pending_review', 'rejected']));
     }
 
     public function test_rejected_listing_shows_rejection_reason(): void
     {
         $user = User::factory()->agency()->create();
         $agency = Agency::factory()->approved()->create(['user_id' => $user->id]);
+        $listing = $this->agencyListing($agency, 'pendingReview');
 
-        $this->agencyListing($agency, 'rejected', ['rejection_reason' => 'Incomplete details.']);
+        app(ListingService::class)->reject($listing, 'Incomplete details.');
+
+        $this->assertSoftDeleted($listing);
 
         $this->actingAs($user)
             ->get('/agency')
             ->assertInertia(fn (Assert $page) => $page
+                ->has('listings', 1)
+                ->where('listings.0.status', 'rejected')
                 ->where('listings.0.rejectionReason', 'Incomplete details.'));
+    }
+
+    public function test_owner_deleted_listing_stays_hidden_alongside_a_rejected_one(): void
+    {
+        $user = User::factory()->agency()->create();
+        $agency = Agency::factory()->approved()->create(['user_id' => $user->id]);
+
+        $rejected = $this->agencyListing($agency, 'pendingReview');
+        app(ListingService::class)->reject($rejected, 'Duplicate listing.');
+        app(ListingService::class)->delete($this->agencyListing($agency, 'pendingReview'));
+
+        $this->actingAs($user)
+            ->get('/agency')
+            ->assertInertia(fn (Assert $page) => $page
+                ->has('listings', 1)
+                ->where('listings.0.id', $rejected->id));
     }
 
     public function test_approved_status_renders_with_approval_timestamp(): void

@@ -24,6 +24,16 @@ return [
         'hide_password' => 'Hide password',
     ],
 
+    'account_tabs' => [
+        'label' => 'Account',
+        'my_listings' => 'My Listings',
+        'agency_profile' => 'Agency Profile',
+        'favorites' => 'Favorites',
+        'saved_searches' => 'Saved Searches',
+        'messages' => 'Messages',
+        'account_settings' => 'Account Settings',
+    ],
+
     'footer' => [
         'brand' => 'New Beginning',
         'tagline' => 'Your trusted property marketplace for buying, selling, and renting.',
@@ -377,8 +387,9 @@ return [
         'account_settings' => 'Account Settings',
         'new_listing' => 'New Listing',
         'created' => 'Created :date',
-        'rejection_reason_label' => 'Rejection reason',
+        'rejection_reason_label' => 'Rejection reason:',
         'per_month' => '/mo',
+        'edit' => 'Edit',
         'delete' => 'Delete listing',
         'flash_deleted' => 'Listing deleted.',
         'closed_on' => 'Closed :date',
@@ -399,8 +410,8 @@ return [
         'flash_renew_failed' => 'Only listings expiring within 7 days or already expired can be renewed.',
 
         'listing_types' => [
-            'sale' => 'Sale',
-            'rent' => 'Rent',
+            'sale' => 'For Sale',
+            'rent' => 'For Rent',
         ],
 
         'status' => [
@@ -497,6 +508,7 @@ return [
         'flash_added' => 'Listing saved to bookmarks.',
         'flash_removed' => 'Listing removed from bookmarks.',
         'saved_searches_link' => 'Saved searches',
+        'remove' => 'Remove from bookmarks',
         'empty' => [
             'headline' => "You haven't bookmarked any listings yet.",
             'cta' => 'Browse Listings',

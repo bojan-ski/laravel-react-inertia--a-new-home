@@ -1,4 +1,20 @@
-import type { ListingShowData } from '@/types/listing'
+import type { ListingExpiryData, ListingExpiryTranslations, ListingShowData } from '@/types/listing'
+
+const DAY_MS = 24 * 60 * 60 * 1000
+
+export function listingExpiryText(listing: ListingExpiryData, translations: ListingExpiryTranslations): string | null {
+    if (listing.status !== 'approved' || listing.isExpired || !listing.expiresAt) {
+        return null
+    }
+
+    if (!listing.canRenew) {
+        return translations.expires_on.replace(':date', formatDate(listing.expiresAt))
+    }
+
+    const days = Math.max(1, Math.ceil((new Date(listing.expiresAt).getTime() - Date.now()) / DAY_MS))
+
+    return days === 1 ? translations.expires_in_one : translations.expires_in.replace(':days', String(days))
+}
 
 export function hasListingContact(listing: ListingShowData): boolean {
     return Boolean(listing.contactName || listing.contactEmail || listing.contactPhone)

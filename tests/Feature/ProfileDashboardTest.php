@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Listing;
 use App\Models\User;
+use App\Services\ListingService;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
@@ -61,8 +62,11 @@ class ProfileDashboardTest extends TestCase
 
         Listing::factory()->pendingReview()->for($user, 'owner')->create();
         Listing::factory()->approved()->for($user, 'owner')->create();
-        Listing::factory()->rejected()->for($user, 'owner')->create();
         Listing::factory()->hidden()->for($user, 'owner')->create();
+        app(ListingService::class)->reject(
+            Listing::factory()->pendingReview()->for($user, 'owner')->create(),
+            'Missing photos.',
+        );
 
         $this->actingAs($user)
             ->get('/profile')
@@ -76,16 +80,35 @@ class ProfileDashboardTest extends TestCase
     public function test_rejected_listing_includes_its_rejection_reason(): void
     {
         $user = User::factory()->regularUser()->create();
+        $listing = Listing::factory()->pendingReview()->for($user, 'owner')->create();
 
-        Listing::factory()->rejected()->for($user, 'owner')->create([
-            'rejection_reason' => 'Photos are too low quality.',
-        ]);
+        app(ListingService::class)->reject($listing, 'Photos are too low quality.');
+
+        $this->assertSoftDeleted($listing);
 
         $this->actingAs($user)
             ->get('/profile')
             ->assertInertia(fn (Assert $page) => $page
+                ->has('listings', 1)
+                ->where('listings.0.id', $listing->id)
                 ->where('listings.0.status', 'rejected')
                 ->where('listings.0.rejectionReason', 'Photos are too low quality.')
+            );
+    }
+
+    public function test_taken_down_listing_is_shown_with_its_reason(): void
+    {
+        $user = User::factory()->regularUser()->create();
+        $listing = Listing::factory()->approved()->for($user, 'owner')->create();
+
+        app(ListingService::class)->takeDown($listing, 'Reported as a scam.');
+
+        $this->actingAs($user)
+            ->get('/profile')
+            ->assertInertia(fn (Assert $page) => $page
+                ->has('listings', 1)
+                ->where('listings.0.status', 'rejected')
+                ->where('listings.0.rejectionReason', 'Reported as a scam.')
             );
     }
 
@@ -95,13 +118,55 @@ class ProfileDashboardTest extends TestCase
 
         $visible = Listing::factory()->approved()->for($user, 'owner')->create();
         $deleted = Listing::factory()->approved()->for($user, 'owner')->create();
-        $deleted->delete();
+        app(ListingService::class)->delete($deleted);
 
         $this->actingAs($user)
             ->get('/profile')
             ->assertInertia(fn (Assert $page) => $page
                 ->has('listings', 1)
                 ->where('listings.0.id', $visible->id)
+            );
+    }
+
+    public function test_owner_deleted_pending_listing_stays_hidden_alongside_a_rejected_one(): void
+    {
+        $user = User::factory()->regularUser()->create();
+
+        $rejected = Listing::factory()->pendingReview()->for($user, 'owner')->create();
+        app(ListingService::class)->reject($rejected, 'Duplicate listing.');
+
+        $deleted = Listing::factory()->pendingReview()->for($user, 'owner')->create();
+        app(ListingService::class)->delete($deleted);
+
+        $this->actingAs($user)
+            ->get('/profile')
+            ->assertInertia(fn (Assert $page) => $page
+                ->has('listings', 1)
+                ->where('listings.0.id', $rejected->id)
+            );
+    }
+
+    public function test_purged_rejected_listing_is_not_shown(): void
+    {
+        $user = User::factory()->regularUser()->create();
+        $listing = Listing::factory()->pendingReview()->for($user, 'owner')->create();
+
+        app(ListingService::class)->reject($listing, 'Duplicate listing.');
+        $listing->forceDelete();
+
+        $this->actingAs($user)
+            ->get('/profile')
+            ->assertInertia(fn (Assert $page) => $page->has('listings', 0));
+    }
+
+    public function test_listing_types_read_for_sale_and_for_rent(): void
+    {
+        $this->actingAs(User::factory()->regularUser()->create())
+            ->get('/profile')
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('translations.listing_types.sale', 'For Sale')
+                ->where('translations.listing_types.rent', 'For Rent')
+                ->where('translations.edit', 'Edit')
             );
     }
 

@@ -12,6 +12,7 @@ class ProfileController extends Controller
     public function index(Request $request): Response
     {
         $listings = $request->user()->listings()
+            ->forOwnerDashboard()
             ->with('images')
             ->latest()
             ->get()
