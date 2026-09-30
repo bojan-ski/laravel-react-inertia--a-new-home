@@ -1531,9 +1531,17 @@ return [
             'subject' => 'Subject',
             'message' => 'Message',
         ],
+        'placeholders' => [
+            'email' => 'you@example.com',
+            'subject' => 'What is it about?',
+            'message' => 'Write your message…',
+        ],
         'submit' => 'Send Message',
         'sending' => 'Sending…',
         'flash' => 'Thanks — your message has been sent.',
+    ],
+    'static_page' => [
+        'index_label' => 'On this page',
     ],
     'emails' => [
         'user_suspended' => [

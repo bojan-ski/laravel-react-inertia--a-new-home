@@ -12,6 +12,11 @@ export interface ContactTranslations {
         subject: string
         message: string
     }
+    placeholders: {
+        email: string
+        subject: string
+        message: string
+    }
     submit: string
     sending: string
     flash: string

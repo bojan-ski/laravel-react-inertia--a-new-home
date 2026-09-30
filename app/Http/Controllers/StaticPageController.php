@@ -30,7 +30,9 @@ class StaticPageController extends Controller
     private function render(string $page): Response
     {
         return Inertia::render('Static/Show', [
+            'pageKey' => $page,
             'page' => __("pages.{$page}"),
+            'translations' => __('app.static_page'),
         ]);
     }
 }
