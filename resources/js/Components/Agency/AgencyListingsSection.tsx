@@ -1,79 +1,70 @@
-import { Link } from '@inertiajs/react'
-import { Plus } from 'lucide-react'
 import AgencyListingRow from '@/Components/Agency/AgencyListingRow'
+import { countLabel } from '@/Components/Listings/listingFormat'
+import Button from '@/Components/UI/Button'
+import EmptyState from '@/Components/UI/EmptyState'
 import type { AgencyListingsSectionProps } from '@/types/agency'
 
-export default function AgencyListingsSection({
-    listings,
-    translations,
-    propertyTypeLabels,
-    agencyStatus,
-}: AgencyListingsSectionProps) {
+export default function AgencyListingsSection({ listings, translations, agencyStatus }: AgencyListingsSectionProps) {
     const isApproved = agencyStatus === 'approved'
-    const countTemplate = listings.length === 1 ? translations.count_one : translations.count
-    const countLabel = countTemplate.replace(':count', listings.length.toString())
+    const plus = <span aria-hidden="true">+</span>
+    const newListingClasses = 'min-h-11 shrink-0 gap-4! lg:min-h-12 lg:gap-8!'
 
     return (
-        <section className="mt-10">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex items-center gap-3">
-                    <h2 className="font-display text-xl font-semibold text-text">{translations.heading}</h2>
-                    <span className="text-sm text-text-muted">{countLabel}</span>
+        <section aria-labelledby="agency-listings-heading">
+            <div className="flex items-center justify-between gap-4 lg:items-end">
+                <div className="flex min-w-0 flex-col gap-0.5 lg:gap-1.5">
+                    <h2
+                        id="agency-listings-heading"
+                        className="text-[30px] leading-tight font-airy tracking-[-0.02em] lg:text-[40px] lg:tracking-[-0.03em]"
+                    >
+                        {translations.heading}
+                    </h2>
+                    <p className="text-[13px] text-ink-muted lg:text-sm">
+                        {countLabel(listings.length, translations.count_one, translations.count)}
+                    </p>
                 </div>
 
-                <div className="flex flex-col items-start gap-1.5 sm:items-end">
-                    {isApproved ? (
-                        <Link
-                            href="/agency/listings/create"
-                            className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-text-inverse transition-colors hover:bg-brand-dark"
-                        >
-                            <Plus className="size-4" />
-                            {translations.new_listing}
-                        </Link>
-                    ) : (
-                        <>
-                            <span
-                                aria-disabled="true"
-                                className="inline-flex cursor-not-allowed items-center gap-2 rounded-full bg-surface-muted px-5 py-2.5 text-sm font-semibold text-text-muted"
-                            >
-                                <Plus className="size-4" />
-                                {translations.new_listing}
-                            </span>
-                            <p className="text-xs text-text-muted">{translations.new_listing_disabled_help}</p>
-                        </>
-                    )}
-                </div>
+                {isApproved ? (
+                    <Button href="/agency/listings/create" trailing={plus} className={newListingClasses}>
+                        {translations.new_listing}
+                    </Button>
+                ) : (
+                    <Button
+                        disabled
+                        trailing={plus}
+                        aria-describedby="agency-new-listing-help"
+                        className={newListingClasses}
+                    >
+                        {translations.new_listing}
+                    </Button>
+                )}
             </div>
 
+            {!isApproved && (
+                <p id="agency-new-listing-help" className="mt-2 text-sm text-ink-muted">
+                    {translations.new_listing_disabled_help}
+                </p>
+            )}
+
             {listings.length === 0 ? (
-                <div className="mt-6 flex flex-col items-center justify-center gap-2 rounded-xl border border-border bg-surface py-16 text-center">
-                    <p className="text-lg font-semibold text-text">
-                        {isApproved ? translations.empty_headline_approved : translations.empty_headline}
-                    </p>
-                    <p className="max-w-md text-text-soft">
-                        {isApproved ? translations.empty_subline_approved : translations.empty_subline}
-                    </p>
-                    {isApproved && (
-                        <Link
-                            href="/agency/listings/create"
-                            className="mt-4 inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-text-inverse transition-colors hover:bg-brand-dark"
-                        >
-                            <Plus className="size-4" />
-                            {translations.create_listing}
-                        </Link>
-                    )}
-                </div>
+                <EmptyState
+                    className="mt-4"
+                    title={isApproved ? translations.empty_headline_approved : translations.empty_headline}
+                    hint={isApproved ? translations.empty_subline_approved : translations.empty_subline}
+                    action={
+                        isApproved && (
+                            <Button href="/agency/listings/create" variant="secondary" size="sm" className="mt-2">
+                                {translations.create_listing}
+                            </Button>
+                        )
+                    }
+                />
             ) : (
-                <div className="mt-6 flex flex-col gap-4">
+                <ul className="mt-3 border-t border-rule lg:mt-4">
                     {listings.map((listing) => (
-                        <AgencyListingRow
-                            key={listing.id}
-                            listing={listing}
-                            translations={translations}
-                            propertyTypeLabels={propertyTypeLabels}
-                        />
+                        <AgencyListingRow key={listing.id} listing={listing} translations={translations} />
                     ))}
-                </div>
+                </ul>
             )}
         </section>
     )

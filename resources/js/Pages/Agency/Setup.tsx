@@ -1,7 +1,8 @@
-import { Head, Link, useForm } from '@inertiajs/react'
-import { Info } from 'lucide-react'
+import { Head, useForm } from '@inertiajs/react'
 import type { FormEvent } from 'react'
 import AgencyForm from '@/Components/Agency/AgencyForm'
+import ListingApprovedNotice from '@/Components/Listings/ListingApprovedNotice'
+import ListingFormHeader from '@/Components/Listings/ListingFormHeader'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { AgencyFormData, AgencySetupPageProps } from '@/types/agency'
 
@@ -29,43 +30,30 @@ export default function Setup({ translations, countries }: AgencySetupPageProps)
         <PublicLayout back={{ href: '/', label: translations.back }} footer={false}>
             <Head title={translations.title} />
 
-            <div className="border-b border-border bg-surface">
-                <div className="mx-auto max-w-7xl px-6 py-10 md:py-14">
-                    <h1 className="font-display text-3xl font-semibold text-text sm:text-4xl">
-                        {translations.title}
-                    </h1>
-                    <p className="mt-2 text-text-soft">{translations.subtitle}</p>
-                </div>
+            <ListingFormHeader
+                title={translations.title}
+                subtitle={translations.subtitle}
+                back={translations.back}
+                backHref="/"
+            />
+
+            <div className="px-5 pt-6 pb-2 md:px-10 lg:-mt-3 lg:pt-0 lg:pb-10 xl:px-16">
+                <ListingApprovedNotice message={translations.helper} />
             </div>
 
-            <div className="mx-auto max-w-2xl px-6 py-10">
-                <div className="flex items-start gap-3 rounded-lg border border-accent bg-accent-soft px-4 py-3">
-                    <Info className="mt-0.5 size-5 shrink-0 text-accent" />
-                    <p className="text-sm text-text">{translations.helper}</p>
-                </div>
-
-                <div className="mt-10">
-                    <AgencyForm
-                        data={data}
-                        setData={setData}
-                        errors={errors}
-                        processing={processing}
-                        submitLabel={translations.submit}
-                        onSubmit={submit}
-                        translations={translations}
-                        countries={countries}
-                        note={<p className="text-sm text-text-muted">{translations.submit_note}</p>}
-                        cancelSlot={
-                            <Link
-                                href="/"
-                                className="text-center text-sm text-text-soft transition-colors hover:text-text"
-                            >
-                                {translations.back}
-                            </Link>
-                        }
-                    />
-                </div>
-            </div>
+            <AgencyForm
+                data={data}
+                setData={setData}
+                errors={errors}
+                processing={processing}
+                submitLabel={translations.submit}
+                onSubmit={submit}
+                translations={translations}
+                countries={countries}
+                barNote={translations.submit_note}
+                cancelHref="/"
+                cancelLabel={translations.cancel}
+            />
         </PublicLayout>
     )
 }
