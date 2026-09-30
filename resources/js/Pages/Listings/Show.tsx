@@ -1,17 +1,26 @@
-import { Head, Link, usePage } from '@inertiajs/react'
-import { ChevronLeft, MapPin } from 'lucide-react'
-import ListingAmenities from '@/Components/Listings/ListingAmenities'
-import ListingDetailRow from '@/Components/Listings/ListingDetailRow'
+import { useState } from 'react'
+import { Head, usePage } from '@inertiajs/react'
+import ListingBookmarkHeart from '@/Components/Listings/ListingBookmarkHeart'
+import ListingContactBlock from '@/Components/Listings/ListingContactBlock'
+import ListingDetailActions from '@/Components/Listings/ListingDetailActions'
+import ListingDetailBlock from '@/Components/Listings/ListingDetailBlock'
+import ListingDetailHeader from '@/Components/Listings/ListingDetailHeader'
+import ListingDetailSections from '@/Components/Listings/ListingDetailSections'
 import ListingFacts from '@/Components/Listings/ListingFacts'
 import ListingGallery from '@/Components/Listings/ListingGallery'
+import ListingMobileBar from '@/Components/Listings/ListingMobileBar'
 import ListingSidebar from '@/Components/Listings/ListingSidebar'
+import { hasListingContact } from '@/Components/Listings/listingFormat'
 import MortgageCalculator from '@/Components/Listings/MortgageCalculator'
+import { useMortgageEstimate } from '@/Components/Listings/mortgage'
 import ReportListingButton from '@/Components/Listings/ReportListingButton'
 import SimilarListings from '@/Components/Listings/SimilarListings'
 import FlashBanner from '@/Components/UI/FlashBanner'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { ListingShowPageProps } from '@/types/listing'
 import type { SharedProps } from '@/types/shared'
+
+const gutterClass = 'px-5 md:px-10 lg:px-16'
 
 export default function Show({
     listing,
@@ -24,134 +33,131 @@ export default function Show({
     translations,
     reportTranslations,
 }: ListingShowPageProps) {
-    const { flash } = usePage<SharedProps>().props
+    const { flash, ui } = usePage<SharedProps>().props
+    const [dismissedFlash, setDismissedFlash] = useState<string | null>(null)
+    const mortgage = useMortgageEstimate(listing.price, mortgageDefaults)
     const show = translations.show
-    const hasSidebarFooter = Boolean(flash.success || flash.error || canReport)
+    const isSale = listing.listingType === 'sale'
     const propertyLabel = translations.filters.property_types[listing.propertyType] ?? listing.propertyType
-    const typeLabel = listing.listingType === 'rent' ? show.for_rent : show.for_sale
+    const flashMessage = flash.success ?? flash.error
+    const browseHref = `/listings?listingType=${listing.listingType}&propertyType=${listing.propertyType}`
 
-    const address = [listing.addressLine, listing.city, listing.country, listing.postalCode]
-        .filter(Boolean)
-        .join(', ')
+    const flashBanner = flashMessage && dismissedFlash !== flashMessage && (
+        <FlashBanner
+            message={flashMessage}
+            variant={flash.success ? 'success' : 'error'}
+            className=""
+            onDismiss={() => setDismissedFlash(flashMessage)}
+            dismissLabel={ui.dismiss}
+        />
+    )
+
+    const reportButton = canReport && <ReportListingButton listingId={listing.id} translations={reportTranslations} />
 
     return (
-        <PublicLayout back={{ href: '/listings', label: show.back }}>
+        <PublicLayout
+            back={{ href: '/listings', label: show.back }}
+            backAction={
+                canBookmark ? (
+                    <ListingBookmarkHeart listingId={listing.id} isBookmarked={isBookmarked} translations={show} />
+                ) : undefined
+            }
+        >
             <Head title={listing.title} />
 
-            <div className="mx-auto max-w-7xl px-6 py-8">
-                <Link
-                    href="/listings"
-                    className="hidden items-center gap-1 text-sm text-text-muted transition-colors hover:text-text lg:inline-flex"
-                >
-                    <ChevronLeft className="size-4" />
-                    {show.back}
-                </Link>
-
-                <div className="flex flex-col gap-3 lg:mt-6">
-                    <div className="flex flex-wrap gap-2">
-                        <span className="rounded-md bg-surface-dark px-2.5 py-1 text-xs font-medium text-text-inverse">
-                            {typeLabel}
-                        </span>
-                        <span className="rounded-md border border-border bg-surface px-2.5 py-1 text-xs font-medium text-text">
-                            {propertyLabel}
-                        </span>
+            <div className="mx-auto flex max-w-360 flex-col pb-30">
+                <div className="flex flex-col">
+                    <div className={`${gutterClass} pt-7 pb-6 lg:pt-8 lg:pb-12`}>
+                        <ListingDetailHeader listing={listing} translations={show} propertyLabel={propertyLabel} />
                     </div>
 
-                    <h1 className="font-display text-3xl font-semibold text-text sm:text-4xl">{listing.title}</h1>
-
-                    <div className="flex items-center gap-1.5 text-text-muted">
-                        <MapPin className="size-4" />
-                        <span>
-                            {listing.city}, {listing.country}
-                        </span>
-                    </div>
-                </div>
-
-                {listing.images.length > 0 && (
-                    <div className="mt-8">
+                    <div className="max-lg:order-first lg:px-16">
                         <ListingGallery images={listing.images} title={listing.title} translations={show.gallery} />
                     </div>
-                )}
-
-                <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-3">
-                    <div className="flex flex-col gap-10 lg:col-span-2">
-                        <ListingFacts listing={listing} translations={show} />
-
-                        <section>
-                            <h2 className="font-display text-xl font-semibold text-text">
-                                {show.description_heading}
-                            </h2>
-                            <p className="mt-4 max-w-prose whitespace-pre-line leading-8 text-text-soft">
-                                {listing.description}
-                            </p>
-                        </section>
-
-                        <ListingAmenities
-                            amenities={listing.amenities}
-                            labels={translations.amenities}
-                            heading={show.amenities_heading}
-                        />
-
-                        <section>
-                            <h2 className="font-display text-xl font-semibold text-text">{show.details_heading}</h2>
-                            <dl className="mt-4 flex flex-col gap-4">
-                                <ListingDetailRow label={show.detail_address} value={address} />
-                                <ListingDetailRow label={show.detail_property_type} value={propertyLabel} />
-                                <ListingDetailRow label={show.detail_listing_type} value={typeLabel} />
-                                {listing.yearBuilt !== null && (
-                                    <ListingDetailRow label={show.detail_year_built} value={String(listing.yearBuilt)} />
-                                )}
-                                {listing.approvedAt && (
-                                    <ListingDetailRow label={show.detail_listed} value={listing.approvedAt} />
-                                )}
-                            </dl>
-                        </section>
-
-                        {listing.listingType === 'sale' && (
-                            <MortgageCalculator
-                                price={listing.price}
-                                defaults={mortgageDefaults}
-                                translations={show.mortgage}
-                            />
-                        )}
-                    </div>
-
-                    <div className="lg:col-span-1">
-                        <ListingSidebar
-                            listing={listing}
-                            isBookmarked={isBookmarked}
-                            canBookmark={canBookmark}
-                            canStartChat={canStartChat}
-                            translations={show}
-                            footerSlot={
-                                hasSidebarFooter && (
-                                    <div className="flex flex-col gap-4">
-                                        {flash.success && (
-                                            <FlashBanner message={flash.success} variant="success" className="" />
-                                        )}
-                                        {flash.error && (
-                                            <FlashBanner message={flash.error} variant="error" className="" />
-                                        )}
-                                        {canReport && (
-                                            <ReportListingButton
-                                                listingId={listing.id}
-                                                translations={reportTranslations}
-                                            />
-                                        )}
-                                    </div>
-                                )
-                            }
-                        />
-                    </div>
                 </div>
 
-                <SimilarListings
-                    listings={similarListings}
-                    translations={show.similar}
-                    cardTranslations={translations.card}
-                    propertyTypeLabels={translations.filters.property_types}
-                />
+                {flashBanner && <div className={`${gutterClass} pb-6 lg:hidden`}>{flashBanner}</div>}
+
+                <div className={`${gutterClass} lg:pt-14`}>
+                    <ListingFacts listing={listing} translations={show} />
+                </div>
+
+                <div className={`${gutterClass} pt-10 pb-12 lg:pt-20 lg:pb-30`}>
+                    <ListingDetailSections
+                        listing={listing}
+                        translations={show}
+                        propertyLabel={propertyLabel}
+                        amenityLabels={translations.amenities}
+                        mortgage={
+                            isSale && (
+                                <>
+                                    <ListingDetailBlock heading={show.mortgage.heading} className="hidden lg:grid">
+                                        <MortgageCalculator
+                                            mortgage={mortgage}
+                                            termOptions={mortgageDefaults.term_options}
+                                            translations={show.mortgage}
+                                            variant="full"
+                                        />
+                                    </ListingDetailBlock>
+                                    <div className="lg:hidden">
+                                        <MortgageCalculator
+                                            mortgage={mortgage}
+                                            termOptions={mortgageDefaults.term_options}
+                                            translations={show.mortgage}
+                                            variant="compact"
+                                        />
+                                    </div>
+                                </>
+                            )
+                        }
+                        footer={
+                            (hasListingContact(listing) || canReport) && (
+                                <section className="flex flex-col gap-2.5 lg:hidden">
+                                    <ListingContactBlock listing={listing} translations={show} />
+                                    {reportButton}
+                                </section>
+                            )
+                        }
+                        sidebar={
+                            <ListingSidebar
+                                listing={listing}
+                                translations={show}
+                                className="hidden lg:flex"
+                                actions={
+                                    <>
+                                        <ListingDetailActions
+                                            listingId={listing.id}
+                                            isBookmarked={isBookmarked}
+                                            canBookmark={canBookmark}
+                                            canStartChat={canStartChat}
+                                            translations={show}
+                                        />
+                                        {flashBanner}
+                                    </>
+                                }
+                                footer={reportButton}
+                            />
+                        }
+                    />
+                </div>
+
+                <div className={gutterClass}>
+                    <SimilarListings
+                        listings={similarListings}
+                        translations={show.similar}
+                        perMonth={translations.card.per_month}
+                        browseHref={browseHref}
+                    />
+                </div>
             </div>
+
+            {canStartChat && (
+                <ListingMobileBar
+                    listing={listing}
+                    translations={show}
+                    monthlyPayment={isSale ? (mortgage.estimate?.monthlyPayment ?? null) : null}
+                />
+            )}
         </PublicLayout>
     )
 }

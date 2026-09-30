@@ -22,7 +22,7 @@ class ListingService
 
     private const PER_PAGE = 12;
 
-    private const SIMILAR_LIMIT = 4;
+    private const SIMILAR_LIMIT = 3;
 
     private const SIMILAR_PRICE_BAND = 0.3;
 

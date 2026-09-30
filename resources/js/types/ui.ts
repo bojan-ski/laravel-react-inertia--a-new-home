@@ -114,7 +114,7 @@ export interface SegmentedToggleProps<T extends string = string> {
     options: ToggleOption<T>[]
     value: T
     onChange: (value: T) => void
-    size?: 'sm' | 'bar' | 'md'
+    size?: 'sm' | 'bar' | 'md' | 'wide' | 'spread'
     tone?: 'default' | 'on-photo'
     className?: string
 }

@@ -1,55 +1,48 @@
-import { Bath, BedDouble, CalendarDays, Maximize } from 'lucide-react'
 import { formatArea } from '@/Components/Listings/listingFormat'
 import type { ListingFactsProps } from '@/types/listing'
 
-export default function ListingFacts({ listing, translations }: ListingFactsProps) {
-    const hasFacts =
-        listing.bedrooms !== null ||
-        listing.bathrooms !== null ||
-        listing.areaValue !== null ||
-        listing.yearBuilt !== null
+const columnClasses = ['', 'grid-cols-1', 'grid-cols-2', 'grid-cols-3', 'grid-cols-4']
 
-    if (!hasFacts) {
+export default function ListingFacts({ listing, translations }: ListingFactsProps) {
+    const facts = [
+        listing.bedrooms !== null && {
+            key: 'bedrooms',
+            value: String(listing.bedrooms),
+            label: listing.bedrooms === 1 ? translations.bed : translations.beds,
+        },
+        listing.bathrooms !== null && {
+            key: 'bathrooms',
+            value: String(listing.bathrooms),
+            label: listing.bathrooms === 1 ? translations.bath : translations.baths,
+        },
+        listing.areaValue !== null && {
+            key: 'area',
+            value: formatArea(listing.areaValue, null),
+            label: listing.areaUnit ?? '',
+        },
+        listing.yearBuilt !== null && {
+            key: 'year',
+            value: String(listing.yearBuilt),
+            label: translations.detail_year_built,
+        },
+    ].filter((fact) => fact !== false)
+
+    if (facts.length === 0) {
         return null
     }
 
     return (
-        <div className="flex flex-wrap gap-x-10 gap-y-4 border-y border-border py-6">
-            {listing.bedrooms !== null && (
-                <div className="flex items-center gap-3">
-                    <BedDouble className="size-5 text-text-muted" />
-                    <span className="text-text">
-                        <span className="font-semibold">{listing.bedrooms}</span>{' '}
-                        {listing.bedrooms === 1 ? translations.bed : translations.beds}
-                    </span>
+        <dl className={`grid border-y border-rule ${columnClasses[facts.length]}`}>
+            {facts.map((fact) => (
+                <div key={fact.key} className="flex flex-col-reverse justify-end gap-0.5 py-4 lg:gap-1.5 lg:py-7">
+                    <dt className="text-[10px] tracking-widest text-ink/62 uppercase lg:text-xs lg:tracking-[0.12em]">
+                        {fact.label}
+                    </dt>
+                    <dd className="text-2xl font-airy lg:text-5xl lg:font-extralight lg:tracking-[-0.03em]">
+                        {fact.value}
+                    </dd>
                 </div>
-            )}
-
-            {listing.bathrooms !== null && (
-                <div className="flex items-center gap-3">
-                    <Bath className="size-5 text-text-muted" />
-                    <span className="text-text">
-                        <span className="font-semibold">{listing.bathrooms}</span>{' '}
-                        {listing.bathrooms === 1 ? translations.bath : translations.baths}
-                    </span>
-                </div>
-            )}
-
-            {listing.areaValue !== null && (
-                <div className="flex items-center gap-3">
-                    <Maximize className="size-5 text-text-muted" />
-                    <span className="font-semibold text-text">{formatArea(listing.areaValue, listing.areaUnit)}</span>
-                </div>
-            )}
-
-            {listing.yearBuilt !== null && (
-                <div className="flex items-center gap-3">
-                    <CalendarDays className="size-5 text-text-muted" />
-                    <span className="font-semibold text-text">
-                        {translations.built.replace(':year', String(listing.yearBuilt))}
-                    </span>
-                </div>
-            )}
-        </div>
+            ))}
+        </dl>
     )
 }

@@ -1,17 +1,22 @@
 import { Link } from '@inertiajs/react'
 import ListingImagePlaceholder from '@/Components/Listings/ListingImagePlaceholder'
 import { formatPrice } from '@/Components/Listings/listingFormat'
-import type { LatestHomeCardProps } from '@/types/home'
+import type { ListingTeaserCardProps } from '@/types/listing'
 
-export default function LatestHomeCard({ listing, perMonth }: LatestHomeCardProps) {
+const aspectClasses = {
+    '3/4': 'aspect-3/4',
+    '4/3': 'aspect-4/3',
+}
+
+export default function ListingTeaserCard({ listing, perMonth, aspect, mobileWidth }: ListingTeaserCardProps) {
     const price = `${formatPrice(listing.price, listing.currency)}${listing.listingType === 'rent' ? ` ${perMonth}` : ''}`
 
     return (
         <Link
             href={`/listings/${listing.slug}`}
-            className="flex w-68 flex-none snap-start flex-col gap-3 lg:w-auto lg:gap-4"
+            className={`flex flex-none snap-start flex-col gap-3 lg:w-auto lg:gap-4 ${mobileWidth}`}
         >
-            <div className="aspect-3/4 overflow-hidden">
+            <div className={`${aspectClasses[aspect]} overflow-hidden`}>
                 {listing.imageUrl ? (
                     <img src={listing.imageUrl} alt={listing.title} loading="lazy" className="size-full object-cover" />
                 ) : (

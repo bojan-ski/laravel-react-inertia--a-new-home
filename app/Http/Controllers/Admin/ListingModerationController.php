@@ -44,7 +44,7 @@ class ListingModerationController extends Controller
     {
         Gate::authorize('review', $listing);
 
-        $listing->load(['images', 'owner:id,name,email', 'agency:id,name,email', 'openReports.reportedBy:id,name']);
+        $listing->load(['images', 'owner:id,name,email', 'agency:id,user_id,name,slug,email,phone,status,approved_at', 'agency.user:id,status', 'openReports.reportedBy:id,name']);
 
         $hasOpenReports = ! $listing->trashed() && $listing->openReports->isNotEmpty();
 

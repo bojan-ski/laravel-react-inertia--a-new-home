@@ -13,7 +13,7 @@ const wordmarkToneClasses: Record<NavTone, string> = {
     paper: 'text-paper hover:text-forest-200 focus-visible:outline-paper',
 }
 
-export default function Navbar({ back, variant = 'default' }: NavbarProps) {
+export default function Navbar({ back, backAction, variant = 'default' }: NavbarProps) {
     const page = usePage<SharedProps>()
     const { nav } = page.props
     const user = page.props.auth?.user ?? null
@@ -85,7 +85,7 @@ export default function Navbar({ back, variant = 'default' }: NavbarProps) {
                         <ArrowLeft className="size-5" strokeWidth={1.25} aria-hidden="true" />
                     </Link>
                     <div className="text-center">{wordmark('text-[15px]', 'ink')}</div>
-                    <span aria-hidden="true" />
+                    {backAction ?? <span aria-hidden="true" />}
                 </div>
             ) : (
                 <div className="flex items-center justify-between px-5 py-4 md:px-10 lg:hidden">

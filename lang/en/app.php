@@ -243,6 +243,7 @@ return [
             'bath' => 'Bath',
             'baths' => 'Baths',
             'built' => 'Built :year',
+            'listed' => 'Listed :date',
             'description_heading' => 'Description',
             'amenities_heading' => 'Amenities',
             'details_heading' => 'Property Details',
@@ -256,20 +257,25 @@ return [
             'saved' => 'Saved',
             'start_chat' => 'Start Chat',
             'contact_heading' => 'Contact',
+            'view_agency' => 'View agency',
+            'month_estimate' => ':amount / month est.',
 
             'gallery' => [
                 'open' => 'View photo :current of :total, fullscreen',
-                'expand' => 'Expand',
+                'all_photos' => 'All :count photos',
                 'dialog_label' => 'Photo gallery',
                 'close' => 'Close gallery',
+                'close_text' => 'Close',
                 'previous' => 'Previous photo',
                 'next' => 'Next photo',
                 'counter' => ':current / :total',
+                'thumbnail' => 'Show photo :current of :total',
             ],
 
             'similar' => [
                 'heading' => 'Similar Properties',
                 'loading' => 'Loading similar properties',
+                'browse' => 'Browse Listings',
             ],
 
             'mortgage' => [
@@ -279,6 +285,7 @@ return [
                 'interest_rate' => 'Interest rate (% per year)',
                 'term' => 'Term',
                 'term_option' => ':years years',
+                'term_option_short' => ':years yrs',
                 'monthly_payment' => 'Estimated monthly payment',
                 'per_month' => 'per month',
                 'loan_amount' => 'Loan amount: :amount',

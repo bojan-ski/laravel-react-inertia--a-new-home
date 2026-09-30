@@ -1,124 +1,158 @@
-import { useId, useState } from 'react'
+import { useId } from 'react'
 import { formatPrice } from '@/Components/Listings/listingFormat'
-import { estimateMortgage, parseAmount } from '@/Components/Listings/mortgage'
-import type { MortgageCalculatorTranslations, MortgageDefaults } from '@/types/listing'
+import Kicker from '@/Components/UI/Kicker'
+import SegmentedToggle from '@/Components/UI/SegmentedToggle'
+import type { MortgageCalculatorProps } from '@/types/listing'
 
-const controlClass =
-    'w-full rounded-lg border border-border bg-surface px-4 py-2.5 text-sm text-text outline-none transition-colors focus:border-brand'
-
-export interface MortgageCalculatorProps {
-    price: string
-    defaults: MortgageDefaults
-    translations: MortgageCalculatorTranslations
+interface MortgageFieldProps {
+    id: string
+    label: string
+    value: string
+    onChange: (value: string) => void
+    step: string
+    compact: boolean
 }
 
-export default function MortgageCalculator({ price, defaults, translations }: MortgageCalculatorProps) {
-    const id = useId()
-    const [priceInput, setPriceInput] = useState(String(Number(price)))
-    const [downPaymentInput, setDownPaymentInput] = useState(String(defaults.down_payment_percent))
-    const [rateInput, setRateInput] = useState(String(defaults.interest_rate))
-    const [termYears, setTermYears] = useState(defaults.term_years)
-
-    const estimate = estimateMortgage(
-        parseAmount(priceInput),
-        parseAmount(downPaymentInput),
-        parseAmount(rateInput),
-        termYears,
+function MortgageField({ id, label, value, onChange, step, compact }: MortgageFieldProps) {
+    return (
+        <div className="flex min-w-0 flex-col gap-1 lg:gap-1.5">
+            <label htmlFor={id} className="text-xs text-ink-muted">
+                {label}
+            </label>
+            <input
+                id={id}
+                type="number"
+                min="0"
+                step={step}
+                inputMode="decimal"
+                value={value}
+                onChange={(event) => onChange(event.target.value)}
+                className={`w-full min-w-0 border-b border-ink bg-transparent font-light text-ink transition-colors duration-150 focus:border-forest ${
+                    compact ? 'min-h-10 text-[17px]' : 'py-1.5 text-xl'
+                }`}
+            />
+        </div>
     )
+}
 
+export default function MortgageCalculator({ mortgage, termOptions, translations, variant }: MortgageCalculatorProps) {
+    const id = useId()
+    const compact = variant === 'compact'
+    const { estimate } = mortgage
     const format = (value: number) => formatPrice(String(value), 'EUR')
     const unavailable = translations.unavailable
+    const monthly = estimate ? format(estimate.monthlyPayment) : unavailable
+
+    const downPaymentField = (
+        <MortgageField
+            id={`${id}-down-payment`}
+            label={translations.down_payment}
+            value={mortgage.downPaymentInput}
+            onChange={mortgage.setDownPaymentInput}
+            step="1"
+            compact={compact}
+        />
+    )
+
+    const rateField = (
+        <MortgageField
+            id={`${id}-rate`}
+            label={translations.interest_rate}
+            value={mortgage.rateInput}
+            onChange={mortgage.setRateInput}
+            step="0.1"
+            compact={compact}
+        />
+    )
+
+    const termToggle = (
+        <SegmentedToggle
+            name={`${id}-term`}
+            legend={translations.term}
+            options={termOptions.map((years) => ({
+                value: String(years),
+                label: (compact ? translations.term_option_short : translations.term_option).replace(
+                    ':years',
+                    String(years),
+                ),
+            }))}
+            value={String(mortgage.termYears)}
+            onChange={(value) => mortgage.setTermYears(Number(value))}
+            size={compact ? 'spread' : 'wide'}
+        />
+    )
+
+    if (compact) {
+        return (
+            <section className="flex flex-col gap-4.5 bg-sand px-5 py-6">
+                <Kicker as="h2" size="sm">
+                    {translations.heading}
+                </Kicker>
+
+                <div className="flex flex-col gap-1" aria-live="polite">
+                    <span className="text-xs text-ink-muted">{translations.monthly_payment}</span>
+                    <span className="text-[40px] leading-none font-extralight tracking-[-0.03em]">{monthly}</span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                    {downPaymentField}
+                    {rateField}
+                </div>
+
+                {termToggle}
+
+                <p className="text-xs text-ink/62">{translations.disclaimer}</p>
+            </section>
+        )
+    }
 
     return (
-        <section className="rounded-2xl border border-border bg-surface p-6">
-            <h2 className="font-display text-xl font-semibold text-text">{translations.heading}</h2>
-
-            <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="flex flex-col gap-1.5">
-                    <label htmlFor={`${id}-price`} className="text-sm font-medium text-text">
-                        {translations.price}
-                    </label>
-                    <input
-                        id={`${id}-price`}
-                        type="number"
-                        min="0"
-                        step="1000"
-                        inputMode="decimal"
-                        value={priceInput}
-                        onChange={(event) => setPriceInput(event.target.value)}
-                        className={controlClass}
-                    />
-                </div>
-
-                <div className="flex flex-col gap-1.5">
-                    <label htmlFor={`${id}-down-payment`} className="text-sm font-medium text-text">
-                        {translations.down_payment}
-                    </label>
-                    <input
-                        id={`${id}-down-payment`}
-                        type="number"
-                        min="0"
-                        max="100"
-                        step="1"
-                        inputMode="decimal"
-                        value={downPaymentInput}
-                        onChange={(event) => setDownPaymentInput(event.target.value)}
-                        className={controlClass}
-                    />
-                </div>
-
-                <div className="flex flex-col gap-1.5">
-                    <label htmlFor={`${id}-rate`} className="text-sm font-medium text-text">
-                        {translations.interest_rate}
-                    </label>
-                    <input
-                        id={`${id}-rate`}
-                        type="number"
-                        min="0"
-                        step="0.1"
-                        inputMode="decimal"
-                        value={rateInput}
-                        onChange={(event) => setRateInput(event.target.value)}
-                        className={controlClass}
-                    />
-                </div>
-
-                <div className="flex flex-col gap-1.5">
-                    <label htmlFor={`${id}-term`} className="text-sm font-medium text-text">
-                        {translations.term}
-                    </label>
-                    <select
-                        id={`${id}-term`}
-                        value={termYears}
-                        onChange={(event) => setTermYears(Number(event.target.value))}
-                        className={controlClass}
-                    >
-                        {defaults.term_options.map((years) => (
-                            <option key={years} value={years}>
-                                {translations.term_option.replace(':years', String(years))}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+        <div className="flex flex-col gap-8 bg-sand p-9">
+            <div className="grid grid-cols-3 gap-6">
+                <MortgageField
+                    id={`${id}-price`}
+                    label={translations.price}
+                    value={mortgage.priceInput}
+                    onChange={mortgage.setPriceInput}
+                    step="1000"
+                    compact={false}
+                />
+                {downPaymentField}
+                {rateField}
             </div>
 
-            <div className="mt-6 border-t border-border pt-5" aria-live="polite">
-                <p className="text-sm text-text-muted">{translations.monthly_payment}</p>
-                <p className="mt-1 flex items-baseline gap-2">
-                    <span className="font-display text-3xl font-semibold text-text">
-                        {estimate ? format(estimate.monthlyPayment) : unavailable}
+            <div className="flex flex-col gap-2.5">
+                <span className="text-xs text-ink-muted" aria-hidden="true">
+                    {translations.term}
+                </span>
+                {termToggle}
+            </div>
+
+            <div
+                className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3 border-t border-rule pt-7"
+                aria-live="polite"
+            >
+                <div className="flex flex-col gap-1.5">
+                    <span className="text-xs text-ink-muted">{translations.monthly_payment}</span>
+                    <span className="text-[56px] leading-none font-extralight tracking-[-0.03em]">
+                        {monthly}
+                        <span className="text-base font-book tracking-normal"> {translations.per_month}</span>
                     </span>
-                    <span className="text-sm text-text-muted">{translations.per_month}</span>
-                </p>
-                <div className="mt-2 flex flex-col gap-0.5 text-sm text-text-muted">
-                    <span>{translations.loan_amount.replace(':amount', estimate ? format(estimate.loanAmount) : unavailable)}</span>
+                </div>
+                <div className="flex flex-col gap-1 text-right text-sm text-ink/72">
                     <span>
-                        {translations.total_interest.replace(':amount', estimate ? format(estimate.totalInterest) : unavailable)}
+                        {translations.loan_amount.replace(':amount', estimate ? format(estimate.loanAmount) : unavailable)}
+                    </span>
+                    <span>
+                        {translations.total_interest.replace(
+                            ':amount',
+                            estimate ? format(estimate.totalInterest) : unavailable,
+                        )}
                     </span>
                 </div>
             </div>
 
-            <p className="mt-4 text-xs text-text-muted">{translations.disclaimer}</p>
-        </section>
+            <p className="text-[13px] text-ink/62">{translations.disclaimer}</p>
+        </div>
     )
 }

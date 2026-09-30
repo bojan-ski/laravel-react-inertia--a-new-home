@@ -4,6 +4,8 @@ const sizeClasses = {
     sm: 'gap-4.5 text-sm',
     bar: 'gap-4.5 text-[15px]',
     md: 'gap-6 text-base',
+    wide: 'gap-6 text-[15px]',
+    spread: 'justify-between gap-2 text-sm *:inline-flex *:min-h-10 *:items-center',
 }
 
 const toneClasses = {

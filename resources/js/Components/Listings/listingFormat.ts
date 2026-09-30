@@ -1,3 +1,9 @@
+import type { ListingShowData } from '@/types/listing'
+
+export function hasListingContact(listing: ListingShowData): boolean {
+    return Boolean(listing.contactName || listing.contactEmail || listing.contactPhone)
+}
+
 const currencySymbols: Record<string, string> = {
     EUR: '€',
 }
@@ -28,7 +34,7 @@ export function formatDate(iso: string | null, style: 'short' | 'long' = 'short'
         return ''
     }
 
-    return new Date(iso).toLocaleDateString('en-US', {
+    return new Date(iso).toLocaleDateString('en-GB', {
         month: style,
         day: 'numeric',
         year: 'numeric',

@@ -64,6 +64,25 @@ class AdminListingReviewTest extends TestCase
             );
     }
 
+    public function test_agency_listing_review_carries_the_agency_contact_and_link(): void
+    {
+        $agency = Agency::factory()->approved()->create([
+            'name' => 'Prime Estates',
+            'email' => 'hello@prime.test',
+            'phone' => '+381 11 555 0101',
+        ]);
+        $listing = Listing::factory()->pendingReview()->create(['user_id' => null, 'agency_id' => $agency->id]);
+
+        $this->actingAs(User::factory()->admin()->create())
+            ->get("/admin/listings/{$listing->id}")
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('listing.contactName', 'Prime Estates')
+                ->where('listing.contactEmail', 'hello@prime.test')
+                ->where('listing.contactPhone', '+381 11 555 0101')
+                ->where('listing.agency', ['name' => 'Prime Estates', 'slug' => $agency->slug])
+            );
+    }
+
     public function test_approved_listing_can_be_viewed_but_not_moderated(): void
     {
         $listing = Listing::factory()->approved()->create();

@@ -39,7 +39,7 @@ class ListingController extends Controller
     {
         abort_unless($listing->isActuallyPubliclyVisible(), 404);
 
-        $listing->load('images');
+        $listing->load(['images', 'owner', 'agency.user']);
 
         $user = $request->user();
 

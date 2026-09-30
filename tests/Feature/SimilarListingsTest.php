@@ -95,10 +95,10 @@ class SimilarListingsTest extends TestCase
         $otherCityExact = $this->listing(['price' => 300000, 'city' => 'Novi Sad']);
         $sameCityFar = $this->listing(['price' => 380000, 'city' => 'Belgrade']);
         $sameCityClose = $this->listing(['price' => 310000, 'city' => 'Belgrade']);
-        $otherCityFar = $this->listing(['price' => 250000, 'city' => 'Novi Sad']);
+        $this->listing(['price' => 250000, 'city' => 'Novi Sad']);
 
         $this->assertSame(
-            [$sameCityClose->id, $sameCityFar->id, $otherCityExact->id, $otherCityFar->id],
+            [$sameCityClose->id, $sameCityFar->id, $otherCityExact->id],
             $this->similarIds($listing),
         );
     }
@@ -112,7 +112,7 @@ class SimilarListingsTest extends TestCase
         $this->assertSame([$newer->id, $older->id], $this->similarIds($listing));
     }
 
-    public function test_at_most_four_listings_are_returned(): void
+    public function test_at_most_three_listings_are_returned(): void
     {
         $listing = $this->listing();
 
@@ -120,7 +120,7 @@ class SimilarListingsTest extends TestCase
             $this->listing(['price' => 300000 + $step * 1000]);
         }
 
-        $this->assertCount(4, $this->similarIds($listing));
+        $this->assertCount(3, $this->similarIds($listing));
     }
 
     public function test_listings_that_are_not_publicly_visible_never_appear(): void
@@ -213,7 +213,7 @@ class SimilarListingsTest extends TestCase
         $withTwo = $countQueries();
 
         $addCards(303000);
-        $this->assertCount(4, $this->similarIds($listing, $viewer));
+        $this->assertCount(3, $this->similarIds($listing, $viewer));
         $this->assertSame($withTwo, $countQueries());
     }
 

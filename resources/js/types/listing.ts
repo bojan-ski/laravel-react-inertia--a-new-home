@@ -160,6 +160,7 @@ export interface ListingsShowTranslations {
     bath: string
     baths: string
     built: string
+    listed: string
     description_heading: string
     amenities_heading: string
     details_heading: string
@@ -173,6 +174,8 @@ export interface ListingsShowTranslations {
     saved: string
     start_chat: string
     contact_heading: string
+    view_agency: string
+    month_estimate: string
     gallery: ListingGalleryTranslations
     similar: SimilarListingsTranslations
     mortgage: MortgageCalculatorTranslations
@@ -180,17 +183,20 @@ export interface ListingsShowTranslations {
 
 export interface ListingGalleryTranslations {
     open: string
-    expand: string
+    all_photos: string
     dialog_label: string
     close: string
+    close_text: string
     previous: string
     next: string
     counter: string
+    thumbnail: string
 }
 
 export interface SimilarListingsTranslations {
     heading: string
     loading: string
+    browse: string
 }
 
 export interface MortgageCalculatorTranslations {
@@ -200,6 +206,7 @@ export interface MortgageCalculatorTranslations {
     interest_rate: string
     term: string
     term_option: string
+    term_option_short: string
     monthly_payment: string
     per_month: string
     loan_amount: string
@@ -219,6 +226,25 @@ export interface MortgageEstimate {
     loanAmount: number
     monthlyPayment: number
     totalInterest: number
+}
+
+export interface MortgageState {
+    priceInput: string
+    setPriceInput: (value: string) => void
+    downPaymentInput: string
+    setDownPaymentInput: (value: string) => void
+    rateInput: string
+    setRateInput: (value: string) => void
+    termYears: number
+    setTermYears: (years: number) => void
+    estimate: MortgageEstimate | null
+}
+
+export interface MortgageCalculatorProps {
+    mortgage: MortgageState
+    termOptions: number[]
+    translations: MortgageCalculatorTranslations
+    variant: 'full' | 'compact'
 }
 
 export interface ListingsTranslations {
@@ -249,8 +275,14 @@ export interface ListingsIndexPageProps {
 export interface ListingImageData {
     id: number
     url: string
+    thumbUrl: string
     altText: string
     sortOrder: number
+}
+
+export interface ListingAgencyLink {
+    name: string
+    slug: string
 }
 
 export interface ListingShowData {
@@ -274,6 +306,7 @@ export interface ListingShowData {
     contactName: string | null
     contactEmail: string | null
     contactPhone: string | null
+    agency: ListingAgencyLink | null
     amenities: string[]
     approvedAt: string | null
     images: ListingImageData[]
@@ -333,13 +366,61 @@ export interface ListingFactsProps {
     translations: ListingsShowTranslations
 }
 
+export interface ListingDetailHeaderProps {
+    listing: ListingShowData
+    translations: ListingsShowTranslations
+    propertyLabel: string
+    showBack?: boolean
+}
+
+export interface ListingDetailSectionsProps {
+    listing: ListingShowData
+    translations: ListingsShowTranslations
+    propertyLabel: string
+    amenityLabels: Record<string, string>
+    mortgage?: ReactNode
+    sidebar: ReactNode
+    footer?: ReactNode
+}
+
+export interface ListingDetailBlockProps {
+    heading: string
+    headingClassName?: string
+    className?: string
+    children: ReactNode
+}
+
 export interface ListingSidebarProps {
     listing: ListingShowData
+    translations: ListingsShowTranslations
+    actions?: ReactNode
+    footer?: ReactNode
+    className?: string
+}
+
+export interface ListingDetailActionsProps {
+    listingId: number
     isBookmarked: boolean
     canBookmark: boolean
     canStartChat: boolean
     translations: ListingsShowTranslations
-    footerSlot?: ReactNode
+}
+
+export interface ListingBookmarkHeartProps {
+    listingId: number
+    isBookmarked: boolean
+    translations: ListingsShowTranslations
+}
+
+export interface ListingMobileBarProps {
+    listing: ListingShowData
+    translations: ListingsShowTranslations
+    monthlyPayment: number | null
+}
+
+export interface ListingContactBlockProps {
+    listing: ListingShowData
+    translations: ListingsShowTranslations
 }
 
 export interface ListingDetailRowProps {
@@ -350,7 +431,29 @@ export interface ListingDetailRowProps {
 export interface ListingAmenitiesProps {
     amenities: string[]
     labels: Record<string, string>
-    heading: string
+}
+
+export interface ListingDescriptionProps {
+    description: string
+}
+
+export interface ListingTeaserData {
+    id: number
+    title: string
+    slug: string
+    listingType: string
+    price: string
+    currency: string
+    city: string
+    country: string
+    imageUrl: string | null
+}
+
+export interface ListingTeaserCardProps {
+    listing: ListingTeaserData
+    perMonth: string
+    aspect: '3/4' | '4/3'
+    mobileWidth: string
 }
 
 export type SetListingFilter = <K extends keyof ListingFilters>(key: K, value: ListingFilters[K]) => void

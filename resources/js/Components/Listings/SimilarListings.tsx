@@ -1,43 +1,41 @@
-import { Deferred } from '@inertiajs/react'
-import ListingCard from '@/Components/Listings/ListingCard'
-import type { ListingCardData, ListingsCardTranslations, SimilarListingsTranslations } from '@/types/listing'
+import { Deferred, Link } from '@inertiajs/react'
+import ListingTeaserCard from '@/Components/Listings/ListingTeaserCard'
+import type { ListingCardData, SimilarListingsTranslations } from '@/types/listing'
 
-const SKELETON_CARDS = 4
+const SKELETON_CARDS = 3
 
-const gridClass = 'mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4'
+const scrollerClass =
+    '-mr-5 flex snap-x snap-mandatory gap-3.5 overflow-x-auto pr-5 md:-mr-10 md:pr-10 lg:mr-0 lg:grid lg:grid-cols-3 lg:gap-8 lg:overflow-visible lg:pr-0'
 
 export interface SimilarListingsProps {
     listings: ListingCardData[] | undefined
     translations: SimilarListingsTranslations
-    cardTranslations: ListingsCardTranslations
-    propertyTypeLabels: Record<string, string>
+    perMonth: string
+    browseHref: string
 }
 
-export default function SimilarListings({
-    listings,
-    translations,
-    cardTranslations,
-    propertyTypeLabels,
-}: SimilarListingsProps) {
-    const heading = <h2 className="font-display text-2xl font-semibold text-text">{translations.heading}</h2>
+export default function SimilarListings({ listings, translations, perMonth, browseHref }: SimilarListingsProps) {
+    const header = (
+        <div className="flex items-baseline justify-between gap-4 border-t border-rule pt-10 lg:pt-16">
+            <h2 className="text-[32px] leading-[normal] font-extralight tracking-[-0.03em] lg:text-[56px] lg:tracking-[-0.035em]">
+                {translations.heading}
+            </h2>
+            <Link href={browseHref} className="hidden shrink-0 border-b border-current pb-1 text-sm lg:inline-block">
+                {translations.browse}
+            </Link>
+        </div>
+    )
 
     const skeleton = (
-        <section className="mt-16" aria-busy="true">
-            {heading}
+        <section className="flex flex-col gap-5 lg:gap-10" aria-busy="true">
+            {header}
             <p className="sr-only">{translations.loading}</p>
-            <div className={gridClass}>
+            <div className={scrollerClass}>
                 {Array.from({ length: SKELETON_CARDS }, (_, index) => (
-                    <div
-                        key={index}
-                        className="flex animate-pulse flex-col overflow-hidden rounded-xl border border-border bg-surface"
-                    >
-                        <div className="aspect-4/3 bg-surface-muted" />
-                        <div className="flex flex-col gap-3 p-4">
-                            <div className="h-3 w-1/2 rounded bg-surface-muted" />
-                            <div className="h-4 w-3/4 rounded bg-surface-muted" />
-                            <div className="h-3 w-1/3 rounded bg-surface-muted" />
-                            <div className="mt-2 h-5 w-2/5 rounded bg-surface-muted" />
-                        </div>
+                    <div key={index} className="flex w-62.5 flex-none animate-pulse flex-col gap-3 lg:w-auto lg:gap-4">
+                        <div className="aspect-4/3 bg-sand" />
+                        <div className="h-4 w-3/4 bg-sand" />
+                        <div className="h-3.5 w-1/2 bg-sand" />
                     </div>
                 ))}
             </div>
@@ -47,15 +45,16 @@ export default function SimilarListings({
     return (
         <Deferred data="similarListings" fallback={skeleton}>
             {listings && listings.length > 0 ? (
-                <section className="mt-16">
-                    {heading}
-                    <div className={gridClass}>
+                <section className="flex flex-col gap-5 lg:gap-10">
+                    {header}
+                    <div className={scrollerClass}>
                         {listings.map((listing) => (
-                            <ListingCard
+                            <ListingTeaserCard
                                 key={listing.id}
                                 listing={listing}
-                                translations={cardTranslations}
-                                propertyTypeLabels={propertyTypeLabels}
+                                perMonth={perMonth}
+                                aspect="4/3"
+                                mobileWidth="w-62.5"
                             />
                         ))}
                     </div>
