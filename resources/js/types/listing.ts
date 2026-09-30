@@ -3,6 +3,7 @@ import type { ListingReportTranslations } from '@/types/listing-report'
 import type { ConfirmActionTranslations } from '@/types/moderation'
 import type { Paginator, PaginationLabels } from '@/types/pagination'
 import type { SaveSearchTranslations } from '@/types/saved-search'
+import type { ToggleOption } from '@/types/ui'
 
 export type ListingStatusValue = 'pending_review' | 'approved' | 'rejected' | 'hidden' | 'sold' | 'rented'
 
@@ -93,10 +94,23 @@ export interface ListingFilters {
 
 export interface ListingsFilterTranslations {
     search_placeholder: string
+    search_label: string
+    listing_type_label: string
     all: string
     buy: string
     rent: string
+    property_type_label: string
     all_types: string
+    price: string
+    beds: string
+    baths: string
+    sort_label: string
+    filters: string
+    filters_count: string
+    apply: string
+    clear: string
+    clear_all: string
+    close: string
     search: string
     reset: string
     more_filters: string
@@ -112,6 +126,7 @@ export interface ListingsFilterTranslations {
     amenities_label: string
     property_types: Record<string, string>
     sorts: Record<string, string>
+    sorts_short: Record<string, string>
 }
 
 export interface ListingsCardTranslations {
@@ -120,6 +135,12 @@ export interface ListingsCardTranslations {
     per_month: string
     beds: string
     baths: string
+    bedroom: string
+    bedrooms: string
+    bathroom: string
+    bathrooms: string
+    bd: string
+    ba: string
     save: string
     saved: string
 }
@@ -202,8 +223,10 @@ export interface MortgageEstimate {
 
 export interface ListingsTranslations {
     title: string
-    count_prefix: string
-    count_suffix: string
+    count: string
+    count_one: string
+    count_short: string
+    count_short_one: string
     filters: ListingsFilterTranslations
     card: ListingsCardTranslations
     empty: ListingsEmptyTranslations
@@ -330,6 +353,8 @@ export interface ListingAmenitiesProps {
     heading: string
 }
 
+export type SetListingFilter = <K extends keyof ListingFilters>(key: K, value: ListingFilters[K]) => void
+
 export interface ListingFilterBarProps {
     filters: ListingFilters
     translations: ListingsFilterTranslations
@@ -337,11 +362,56 @@ export interface ListingFilterBarProps {
     actionsSlot?: ReactNode
 }
 
-export interface ListingMoreFiltersProps {
+export interface ListingFilterFieldsProps {
     form: ListingFilters
-    set: <K extends keyof ListingFilters>(key: K, value: ListingFilters[K]) => void
+    set: SetListingFilter
+    translations: ListingsFilterTranslations
+    idPrefix: string
+}
+
+export interface ListingAmenityChipsProps extends ListingFilterFieldsProps {
+    amenityLabels: Record<string, string>
+}
+
+export type ListingMoreFiltersProps = ListingAmenityChipsProps
+
+export interface ListingTextSelectProps {
+    id: string
+    label: string
+    value: string
+    onChange: (value: string) => void
+    options: ToggleOption[]
+    active?: boolean
+    className?: string
+}
+
+export interface ListingFilterActionsProps {
+    clearLabel: string
+    onClear: () => void
+    applyLabel: string
+    applyForm?: string
+}
+
+export interface ListingFiltersSheetProps {
+    open: boolean
+    onClose: () => void
+    filters: ListingFilters
     translations: ListingsFilterTranslations
     amenityLabels: Record<string, string>
+    onApply: (filters: ListingFilters) => void
+    onClearAll: () => void
+}
+
+export interface ListingRowProps {
+    listing: ListingCardData
+    translations: ListingsCardTranslations
+    propertyTypeLabels: Record<string, string>
+}
+
+export interface ListingSaveButtonProps {
+    listing: ListingCardData
+    translations: ListingsCardTranslations
+    className?: string
 }
 
 export interface ListingCardProps {

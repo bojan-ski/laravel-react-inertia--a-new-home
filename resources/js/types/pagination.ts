@@ -35,4 +35,5 @@ export interface PageLinkProps {
 export interface PaginationProps {
     paginator: Paginator<unknown>
     labels: PaginationLabels
+    className?: string
 }

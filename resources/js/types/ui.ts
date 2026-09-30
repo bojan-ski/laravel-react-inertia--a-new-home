@@ -25,8 +25,24 @@ export interface DialogProps {
     onClose: () => void
     title: string
     description?: ReactNode
-    size?: 'confirm' | 'form'
+    size?: 'confirm' | 'form' | 'sheet'
     initialFocusRef?: RefObject<HTMLElement | null>
+    closeLabel?: string
+    footer?: ReactNode
+    children: ReactNode
+}
+
+export type SheetPanelProps = Omit<DialogProps, 'open' | 'size' | 'description'>
+
+export interface PopoverProps {
+    id: string
+    label: ReactNode
+    open: boolean
+    onOpenChange: (open: boolean) => void
+    active?: boolean
+    align?: 'start' | 'end'
+    width?: 'sm' | 'md'
+    chevron?: boolean
     children: ReactNode
 }
 
@@ -98,7 +114,7 @@ export interface SegmentedToggleProps<T extends string = string> {
     options: ToggleOption<T>[]
     value: T
     onChange: (value: T) => void
-    size?: 'sm' | 'md'
+    size?: 'sm' | 'bar' | 'md'
     tone?: 'default' | 'on-photo'
     className?: string
 }

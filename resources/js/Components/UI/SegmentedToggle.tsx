@@ -2,6 +2,7 @@ import type { SegmentedToggleProps } from '@/types/ui'
 
 const sizeClasses = {
     sm: 'gap-4.5 text-sm',
+    bar: 'gap-4.5 text-[15px]',
     md: 'gap-6 text-base',
 }
 
