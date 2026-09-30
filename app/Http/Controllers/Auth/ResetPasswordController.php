@@ -19,6 +19,7 @@ class ResetPasswordController extends Controller
     {
         return Inertia::render('Auth/ResetPassword', [
             'translations' => __('app.auth.reset_password'),
+            'layout' => __('app.auth.layout'),
             'token' => $token,
             'email' => request()->string('email')->value(),
         ]);

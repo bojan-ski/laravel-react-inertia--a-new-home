@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import type { AuthImage, AuthLayoutTranslations } from '@/types/auth'
 import type { NavBack, NavbarVariant } from '@/types/navigation'
 
 export interface AppShellProps {
@@ -15,6 +16,8 @@ export interface PublicLayoutProps {
 
 export interface AuthLayoutProps {
     children: ReactNode
+    translations: AuthLayoutTranslations
+    image: AuthImage
 }
 
 export interface AdminLayoutProps {

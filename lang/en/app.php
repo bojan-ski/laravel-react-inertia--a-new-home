@@ -20,6 +20,8 @@ return [
 
     'ui' => [
         'dismiss' => 'Dismiss',
+        'show_password' => 'Show password',
+        'hide_password' => 'Hide password',
     ],
 
     'footer' => [
@@ -45,6 +47,11 @@ return [
     ],
 
     'auth' => [
+        'layout' => [
+            'back_home' => 'Back to New Beginning',
+            'copyright' => '© :year New Beginning',
+        ],
+
         'login' => [
             'title' => 'Sign In',
             'subtitle' => 'Welcome back.',
@@ -54,6 +61,8 @@ return [
             'submit' => 'Sign In',
             'no_account' => "Don't have an account?",
             'create_one' => 'Create one',
+            'email_placeholder' => 'you@example.com',
+            'password_placeholder' => '••••••••',
         ],
 
         'register' => [
@@ -75,6 +84,9 @@ return [
             'submit' => 'Create Account',
             'have_account' => 'Already have an account?',
             'sign_in' => 'Sign in',
+            'name_placeholder' => 'Full name',
+            'email_placeholder' => 'you@example.com',
+            'password_placeholder' => '••••••••',
         ],
 
         'forgot_password' => [
@@ -83,6 +95,7 @@ return [
             'email' => 'Email Address',
             'submit' => 'Send Reset Link',
             'back_to_login' => '← Back to sign in',
+            'email_placeholder' => 'you@example.com',
         ],
 
         'reset_password' => [
@@ -92,6 +105,7 @@ return [
             'password' => 'New Password',
             'confirm_password' => 'Confirm New Password',
             'submit' => 'Reset Password',
+            'password_placeholder' => '••••••••',
         ],
     ],
 

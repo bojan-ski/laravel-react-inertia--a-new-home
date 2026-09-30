@@ -36,6 +36,11 @@ export interface NavBack {
     label: string
 }
 
+export interface NavbarBackBarProps extends NavBack {
+    action?: ReactNode
+    className?: string
+}
+
 export type NavbarVariant = 'default' | 'on-photo'
 
 export type NavTone = 'ink' | 'paper'

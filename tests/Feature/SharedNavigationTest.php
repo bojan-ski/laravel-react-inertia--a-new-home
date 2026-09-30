@@ -30,6 +30,14 @@ class SharedNavigationTest extends TestCase
                 ->where('ui.dismiss', __('app.ui.dismiss')));
     }
 
+    public function test_password_visibility_labels_are_shared_to_guests(): void
+    {
+        $this->get('/login')
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('ui.show_password', __('app.ui.show_password'))
+                ->where('ui.hide_password', __('app.ui.hide_password')));
+    }
+
     /**
      * @return array<string, array{string, string}>
      */

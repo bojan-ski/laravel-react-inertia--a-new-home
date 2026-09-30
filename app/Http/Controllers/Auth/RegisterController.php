@@ -17,6 +17,7 @@ class RegisterController extends Controller
     {
         return Inertia::render('Auth/Register', [
             'translations' => __('app.auth.register'),
+            'layout' => __('app.auth.layout'),
         ]);
     }
 
