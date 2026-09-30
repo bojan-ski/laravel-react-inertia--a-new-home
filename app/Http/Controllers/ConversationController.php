@@ -37,6 +37,7 @@ class ConversationController extends Controller
             'listing:id,title,slug,status',
             'buyer:id,name',
             'owner:id,name',
+            'owner.agency:id,user_id,name',
             'messages.sender:id,name',
         ]);
 

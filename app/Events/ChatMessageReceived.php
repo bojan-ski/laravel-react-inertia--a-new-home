@@ -34,11 +34,11 @@ class ChatMessageReceived implements ShouldBroadcast
      */
     public function broadcastWith(): array
     {
-        $this->message->loadMissing(['sender', 'conversation']);
+        $this->message->loadMissing(['sender', 'conversation.owner.agency']);
 
         return [
             'conversationId' => $this->message->conversation_id,
-            'senderName' => $this->message->sender?->name ?? __('app.conversations.deleted_user'),
+            'senderName' => $this->message->conversation?->senderName($this->message) ?? __('app.conversations.deleted_user'),
             'preview' => Str::limit($this->message->body, 80),
             'listingTitle' => $this->message->conversation?->listing_title,
         ];

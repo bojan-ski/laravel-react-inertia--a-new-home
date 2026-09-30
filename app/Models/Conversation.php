@@ -72,6 +72,28 @@ class Conversation extends Model
         return $this->buyer_id === $user->id ? 'buyer_last_read_at' : 'owner_last_read_at';
     }
 
+    public function participantName(?User $participant): string
+    {
+        if ($participant === null) {
+            return __('app.conversations.deleted_user');
+        }
+
+        if ($participant->id === $this->owner_id && $participant->relationLoaded('agency') && $participant->agency !== null) {
+            return $participant->agency->name;
+        }
+
+        return $participant->name;
+    }
+
+    public function senderName(ChatMessage $message): string
+    {
+        $sender = $message->sender_id !== null && $message->sender_id === $this->owner_id
+            ? $this->owner
+            : $message->sender;
+
+        return $this->participantName($sender);
+    }
+
     /**
      * @return array<string, mixed>
      */
@@ -92,7 +114,7 @@ class Conversation extends Model
     {
         return [
             'id' => $other?->id,
-            'name' => $other?->name ?? __('app.conversations.deleted_user'),
+            'name' => $this->participantName($other),
         ];
     }
 
@@ -131,7 +153,7 @@ class Conversation extends Model
             'messages' => $this->messages->map(fn (ChatMessage $message): array => [
                 'id' => $message->id,
                 'senderId' => $message->sender_id,
-                'senderName' => $message->sender?->name ?? __('app.conversations.deleted_user'),
+                'senderName' => $this->senderName($message),
                 'body' => $message->body,
                 'createdAt' => $message->created_at->toIso8601String(),
             ])->all(),

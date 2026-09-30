@@ -25,7 +25,7 @@ class ConversationService
     {
         $conversation = Conversation::firstOrCreate(
             ['listing_id' => $listing->id, 'buyer_id' => $buyer->id],
-            ['owner_id' => $listing->user_id, 'listing_title' => $listing->title],
+            ['owner_id' => $listing->ownerAccount()?->id, 'listing_title' => $listing->title],
         );
 
         if ($conversation->wasRecentlyCreated && filled($message)) {
@@ -84,7 +84,7 @@ class ConversationService
                 $query->where('buyer_id', $user->id)
                     ->orWhere('owner_id', $user->id);
             })
-            ->with(['listing:id,title,slug,status', 'buyer:id,name,status', 'owner:id,name,status', 'latestMessage'])
+            ->with(['listing:id,title,slug,status', 'buyer:id,name,status', 'owner:id,name,status', 'owner.agency:id,user_id,name', 'latestMessage'])
             ->withCount(['messages as unread_count' => fn (Builder $query) => $this->whereUnreadFor($query, $user)])
             ->orderByDesc('updated_at')
             ->get()

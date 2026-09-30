@@ -267,6 +267,11 @@ class Listing extends Model
         return $this->listing_type === 'rent' ? ListingStatus::Rented : ListingStatus::Sold;
     }
 
+    public function ownerAccount(): ?User
+    {
+        return $this->owner ?? $this->agency?->user;
+    }
+
     public function ownerName(): ?string
     {
         if ($this->relationLoaded('owner') && $this->owner !== null) {

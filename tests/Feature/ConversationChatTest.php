@@ -117,7 +117,7 @@ class ConversationChatTest extends TestCase
         $this->assertDatabaseCount('conversations', 0);
     }
 
-    public function test_user_cannot_start_conversation_on_agency_owned_listing(): void
+    public function test_user_can_start_conversation_on_agency_owned_listing_with_the_agency_account(): void
     {
         $agency = Agency::factory()->approved()->create();
         $listing = Listing::factory()->approved()->create([
@@ -128,9 +128,12 @@ class ConversationChatTest extends TestCase
 
         $this->actingAs($buyer)
             ->post("/listings/{$listing->id}/conversations")
-            ->assertForbidden();
+            ->assertRedirect();
 
-        $this->assertDatabaseCount('conversations', 0);
+        $conversation = Conversation::firstOrFail();
+
+        $this->assertSame($buyer->id, $conversation->buyer_id);
+        $this->assertSame($agency->user_id, $conversation->owner_id);
     }
 
     public function test_user_cannot_start_conversation_on_non_public_listing(): void
