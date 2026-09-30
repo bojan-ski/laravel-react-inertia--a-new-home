@@ -6,7 +6,16 @@ export interface ConversationListingSummary {
     title: string
     slug: string | null
     status: ListingStatusValue | null
+    imageUrl: string | null
+    city: string | null
+    price: string | null
+    currency: string | null
+    listingType: 'sale' | 'rent' | null
+    isExpired: boolean
+    isAvailable: boolean
 }
+
+export type ConversationListingLabel = ClosedListingStatusValue | 'expired'
 
 export interface ConversationParticipant {
     id: number | null
@@ -26,6 +35,7 @@ export interface ConversationInboxItem {
     listing: ConversationListingSummary
     otherParticipant: ConversationParticipant
     lastMessage: {
+        senderId: number | null
         body: string
         createdAt: string
     } | null
@@ -91,7 +101,12 @@ export interface ConversationsTranslations {
     deleted_user: string
     listing_removed: string
     unread: string
-    listing_status: Record<ClosedListingStatusValue, string>
+    select_prompt: string
+    you_prefix: string
+    per_month: string
+    today: string
+    yesterday: string
+    listing_status: Record<ConversationListingLabel, string>
     empty: ConversationsEmptyTranslations
     thread: ConversationsThreadTranslations
     report: ReportMessageTranslations
@@ -105,13 +120,34 @@ export interface ConversationsIndexPageProps {
 
 export interface ConversationShowPageProps {
     conversation: ConversationShowData
+    conversations: ConversationInboxItem[]
     canReply: boolean
     translations: ConversationsTranslations
     [key: string]: unknown
 }
 
+export interface ConversationInboxProps {
+    conversations: ConversationInboxItem[]
+    translations: ConversationsTranslations
+    selectedId?: number
+    titleAs?: 'h1' | 'h2'
+    className?: string
+}
+
 export interface ConversationRowProps {
     conversation: ConversationInboxItem
+    translations: ConversationsTranslations
+    currentUserId: number | null
+    selected: boolean
+}
+
+export interface ConversationThumbnailProps {
+    listing: ConversationListingSummary
+    className: string
+}
+
+export interface ThreadHeaderProps {
+    conversation: ConversationShowData
     translations: ConversationsTranslations
 }
 
@@ -121,6 +157,11 @@ export interface MessageBubbleProps {
     showName: boolean
     reportLabel?: string
     onReport?: () => void
+}
+
+export interface DaySeparatorLabels {
+    today: string
+    yesterday: string
 }
 
 export interface MessageComposerProps {

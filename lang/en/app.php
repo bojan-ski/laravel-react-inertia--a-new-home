@@ -598,9 +598,15 @@ return [
         'deleted_user' => 'Deleted user',
         'listing_removed' => 'Listing no longer available',
         'unread' => ':count new',
+        'select_prompt' => 'Select a conversation',
+        'you_prefix' => 'You:',
+        'per_month' => ' /mo',
+        'today' => 'Today',
+        'yesterday' => 'Yesterday',
         'listing_status' => [
             'sold' => 'Sold',
             'rented' => 'Rented',
+            'expired' => 'Expired',
         ],
         'empty' => [
             'headline' => 'No conversations yet.',

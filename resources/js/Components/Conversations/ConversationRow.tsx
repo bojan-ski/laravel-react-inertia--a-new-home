@@ -1,48 +1,51 @@
 import { Link } from '@inertiajs/react'
-import { ExternalLink } from 'lucide-react'
-import { formatRelativeTime } from '@/Components/Conversations/formatRelativeTime'
+import ConversationThumbnail from '@/Components/Conversations/ConversationThumbnail'
+import { formatInboxTime } from '@/Components/Conversations/chatTime'
+import { conversationListingLine } from '@/Components/Conversations/conversationListing'
 import type { ConversationRowProps } from '@/types/conversation'
 
-export default function ConversationRow({ conversation, translations }: ConversationRowProps) {
+export default function ConversationRow({ conversation, translations, currentUserId, selected }: ConversationRowProps) {
     const hasUnread = conversation.unreadCount > 0
-    const isClosed = conversation.listing.status === 'sold' || conversation.listing.status === 'rented'
+    const lastMessage = conversation.lastMessage
+    const isOwnLastMessage = lastMessage !== null && currentUserId !== null && lastMessage.senderId === currentUserId
 
     return (
-        <div
-            className={`flex items-start gap-4 rounded-xl border bg-surface p-4 transition-colors hover:border-border-strong ${
-                hasUnread ? 'border-brand/40' : 'border-border'
-            }`}
-        >
-            <Link href={`/conversations/${conversation.id}`} className="min-w-0 flex-1">
-                <p className={`truncate text-text ${hasUnread ? 'font-bold' : 'font-semibold'}`}>
-                    {conversation.listing.title}
-                </p>
-                <p className="mt-0.5 text-sm text-text-muted">{conversation.otherParticipant.name}</p>
-                {conversation.lastMessage && (
-                    <p className={`mt-1 truncate text-sm ${hasUnread ? 'font-medium text-text' : 'text-text-soft'}`}>
-                        {conversation.lastMessage.body}
-                    </p>
-                )}
-            </Link>
+        <li>
+            <Link
+                href={`/conversations/${conversation.id}`}
+                aria-current={selected ? 'page' : undefined}
+                className={`grid grid-cols-[56px_minmax(0,1fr)_auto] gap-3.5 border-t focus-visible:-outline-offset-2 border-rule py-4 pr-5 pl-5 transition-colors duration-150 md:pr-10 md:pl-10 lg:grid-cols-[64px_minmax(0,1fr)_auto] lg:gap-4 lg:py-4.5 lg:pr-8 xl:pl-16 ${
+                    selected ? 'bg-forest-50' : 'hover:bg-forest-50/70'
+                }`}
+            >
+                <ConversationThumbnail listing={conversation.listing} className="size-14 lg:size-16" />
 
-            <div className="flex shrink-0 flex-col items-end gap-2">
-                <span className="text-xs text-text-muted">{formatRelativeTime(conversation.updatedAt)}</span>
-                {hasUnread && (
-                    <span className="rounded-full bg-brand px-2 py-0.5 text-xs font-semibold text-text-inverse">
-                        {translations.unread.replace(':count', String(conversation.unreadCount))}
+                <div className="flex min-w-0 flex-col gap-0.5 lg:gap-0.75">
+                    <p className={`truncate text-[15px] ${hasUnread ? 'font-semibold' : ''}`}>
+                        {conversation.otherParticipant.name}
+                    </p>
+                    <p className="truncate text-xs text-ink-muted lg:text-[13px]">
+                        {conversationListingLine(conversation.listing, translations)}
+                    </p>
+                    {lastMessage && (
+                        <p className="mt-0.5 truncate text-[13px] font-book lg:text-sm">
+                            {isOwnLastMessage && `${translations.you_prefix} `}
+                            {lastMessage.body}
+                        </p>
+                    )}
+                </div>
+
+                <div className="flex flex-col items-end gap-1.5 lg:gap-2">
+                    <span className="text-[11px] whitespace-nowrap text-ink/60 lg:text-xs">
+                        {formatInboxTime(lastMessage?.createdAt ?? conversation.updatedAt, translations.yesterday)}
                     </span>
-                )}
-                {conversation.listing.slug && !isClosed && (
-                    <Link
-                        href={`/listings/${conversation.listing.slug}`}
-                        className="text-text-muted transition-colors hover:text-brand"
-                        title={translations.view_listing}
-                        aria-label={translations.view_listing}
-                    >
-                        <ExternalLink className="size-4" />
-                    </Link>
-                )}
-            </div>
-        </div>
+                    {hasUnread && (
+                        <span className="bg-forest px-1.5 py-0.5 text-[11px] whitespace-nowrap text-paper lg:px-1.75">
+                            {translations.unread.replace(':count', String(conversation.unreadCount))}
+                        </span>
+                    )}
+                </div>
+            </Link>
+        </li>
     )
 }

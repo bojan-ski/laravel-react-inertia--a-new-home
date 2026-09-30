@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Storage;
 
 #[Fillable(['listing_id', 'listing_title', 'buyer_id', 'owner_id'])]
 class Conversation extends Model
@@ -99,11 +100,23 @@ class Conversation extends Model
      */
     private function listingSummary(): array
     {
+        $listing = $this->listing;
+        $image = $listing?->relationLoaded('images') ? $listing->images->first() : null;
+
         return [
-            'id' => $this->listing?->id,
-            'title' => $this->listing?->title ?? $this->listing_title ?? __('app.conversations.listing_removed'),
-            'slug' => $this->listing?->slug,
-            'status' => $this->listing?->status?->value,
+            'id' => $listing?->id,
+            'title' => $listing?->title ?? $this->listing_title ?? __('app.conversations.listing_removed'),
+            'slug' => $listing?->slug,
+            'status' => $listing?->status?->value,
+            'imageUrl' => $image?->small_path
+                ? Storage::disk($image->disk)->url($image->small_path)
+                : null,
+            'city' => $listing?->city,
+            'price' => $listing?->price,
+            'currency' => $listing?->currency,
+            'listingType' => $listing?->listing_type,
+            'isExpired' => $listing?->isExpired() ?? false,
+            'isAvailable' => $listing?->isPubliclyVisible() ?? false,
         ];
     }
 
@@ -131,6 +144,7 @@ class Conversation extends Model
             'listing' => $this->listingSummary(),
             'otherParticipant' => $this->participantSummary($other),
             'lastMessage' => $lastMessage !== null ? [
+                'senderId' => $lastMessage->sender_id,
                 'body' => $lastMessage->body,
                 'createdAt' => $lastMessage->created_at->toIso8601String(),
             ] : null,
