@@ -84,11 +84,6 @@ export interface LatestHomesProps {
     listings: LatestListingData[]
 }
 
-export interface LatestHomeCardProps {
-    listing: LatestListingData
-    perMonth: string
-}
-
 export interface ClosingCtaProps {
     content: LandingCta
 }

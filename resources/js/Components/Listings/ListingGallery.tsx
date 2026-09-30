@@ -1,65 +1,118 @@
 import { useCallback, useState } from 'react'
-import { Maximize2 } from 'lucide-react'
 import ListingLightbox from '@/Components/Listings/ListingLightbox'
-import type { ListingGalleryProps } from '@/types/listing'
+import { useSwipe } from '@/Components/Listings/useSwipe'
+import type { ListingGalleryProps, ListingImageData } from '@/types/listing'
 
 export default function ListingGallery({ images, title, translations }: ListingGalleryProps) {
-    const [activeIndex, setActiveIndex] = useState(0)
-    const [isLightboxOpen, setIsLightboxOpen] = useState(false)
-    const closeLightbox = useCallback(() => setIsLightboxOpen(false), [])
+    const [slideIndex, setSlideIndex] = useState(0)
+    const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
+    const closeLightbox = useCallback(() => setLightboxIndex(null), [])
+    const total = images.length
+    const hasMany = total > 1
 
-    if (images.length === 0) {
+    function showPrevious() {
+        setSlideIndex((current) => (current - 1 + total) % total)
+    }
+
+    function showNext() {
+        setSlideIndex((current) => (current + 1) % total)
+    }
+
+    const swipe = useSwipe(showPrevious, showNext, hasMany)
+
+    if (total === 0) {
         return null
     }
 
-    const active = images[activeIndex] ?? images[0]
+    const label = (index: number) =>
+        translations.open.replace(':current', String(index + 1)).replace(':total', String(total))
+    const slide = images[slideIndex] ?? images[0]
+    const tiles = images.slice(0, 3)
+    const photo = (image: ListingImageData, index: number) => (
+        <button
+            type="button"
+            onClick={() => setLightboxIndex(index)}
+            aria-label={label(index)}
+            className="block size-full cursor-zoom-in overflow-hidden bg-sand"
+        >
+            <img src={image.url} alt={image.altText || title} className="size-full object-cover" />
+        </button>
+    )
 
     return (
-        <div className="flex flex-col gap-4">
-            <button
-                type="button"
-                onClick={() => setIsLightboxOpen(true)}
-                aria-label={translations.open
-                    .replace(':current', String(activeIndex + 1))
-                    .replace(':total', String(images.length))}
-                className="group relative aspect-video w-full cursor-zoom-in overflow-hidden rounded-2xl border border-border bg-surface-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-            >
-                <img src={active.url} alt={active.altText || title} className="size-full object-cover" />
-                <span className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-1.5 text-xs font-medium text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 pointer-coarse:opacity-100">
-                    <Maximize2 className="size-3.5" />
-                    {translations.expand}
-                </span>
-            </button>
+        <>
+            <div className="relative h-75 touch-pan-y overflow-hidden bg-sand md:h-110 lg:hidden" {...swipe}>
+                <button
+                    type="button"
+                    onClick={() => setLightboxIndex(slideIndex)}
+                    aria-label={label(slideIndex)}
+                    className="block size-full cursor-zoom-in"
+                >
+                    <img
+                        src={slide.url}
+                        alt={slide.altText || title}
+                        draggable={false}
+                        className="size-full object-cover select-none"
+                    />
+                </button>
 
-            {images.length > 1 && (
-                <div className="flex gap-3 overflow-x-auto pb-1">
-                    {images.map((image, index) => (
+                {hasMany && (
+                    <>
                         <button
-                            key={image.id}
                             type="button"
-                            onClick={() => setActiveIndex(index)}
-                            aria-current={index === activeIndex}
-                            className={`aspect-4/3 h-20 shrink-0 overflow-hidden rounded-lg border transition-colors ${
-                                index === activeIndex
-                                    ? 'border-brand ring-2 ring-brand/30'
-                                    : 'border-border hover:border-border-strong'
-                            }`}
-                        >
-                            <img src={image.url} alt={image.altText || title} className="size-full object-cover" />
-                        </button>
+                            onClick={showPrevious}
+                            aria-label={translations.previous}
+                            className="absolute top-0 bottom-10 left-0 w-[30%] cursor-w-resize"
+                        />
+                        <button
+                            type="button"
+                            onClick={showNext}
+                            aria-label={translations.next}
+                            className="absolute top-0 right-0 bottom-10 w-[30%] cursor-e-resize"
+                        />
+                    </>
+                )}
+
+                <span
+                    className="pointer-events-none absolute right-3 bottom-3 bg-paper px-2.5 py-1.5 text-xs text-ink tabular-nums"
+                    aria-live="polite"
+                >
+                    {translations.counter.replace(':current', String(slideIndex + 1)).replace(':total', String(total))}
+                </span>
+            </div>
+
+            {total === 1 ? (
+                <div className="hidden h-140 lg:block xl:h-174">{photo(images[0], 0)}</div>
+            ) : (
+                <div className="hidden grid-cols-[minmax(0,8fr)_minmax(0,4fr)] grid-rows-[280px_280px] gap-4 lg:grid xl:grid-rows-[340px_340px]">
+                    {tiles.map((image, index) => (
+                        <div key={image.id} className={`relative ${index === 0 || total === 2 ? 'row-span-2' : ''}`}>
+                            {photo(image, index)}
+
+                            {index === 2 && total > 3 && (
+                                <button
+                                    type="button"
+                                    onClick={() => setLightboxIndex(0)}
+                                    className="absolute right-4 bottom-4 flex gap-6 bg-paper px-4 py-3 text-sm text-ink transition-colors duration-150 hover:bg-sand"
+                                >
+                                    {translations.all_photos.replace(':count', String(total))}
+                                    <span aria-hidden="true">↗</span>
+                                </button>
+                            )}
+                        </div>
                     ))}
                 </div>
             )}
 
-            {isLightboxOpen && (
+            {lightboxIndex !== null && (
                 <ListingLightbox
                     images={images}
                     title={title}
-                    initialIndex={activeIndex}
+                    initialIndex={lightboxIndex}
                     onClose={closeLightbox}
                     translations={translations}
                 />
             )}
-        </div>
+        </>
     )
 }

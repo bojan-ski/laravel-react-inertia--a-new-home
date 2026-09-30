@@ -1,4 +1,3 @@
-import { Flag } from 'lucide-react'
 import { useState } from 'react'
 import ReportListingDialog from '@/Components/Listings/ReportListingDialog'
 import type { ReportListingButtonProps } from '@/types/listing-report'
@@ -11,9 +10,8 @@ export default function ReportListingButton({ listingId, translations }: ReportL
             <button
                 type="button"
                 onClick={() => setOpen(true)}
-                className="inline-flex items-center gap-1.5 text-xs text-text-muted transition-colors hover:text-status-rejected"
+                className="inline-flex min-h-8 items-center self-start text-[13px] text-ink/60 transition-colors duration-150 hover:text-forest"
             >
-                <Flag className="size-3.5" />
                 {translations.action}
             </button>
 

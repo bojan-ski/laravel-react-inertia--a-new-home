@@ -394,10 +394,52 @@ class Listing extends Model
             ? $this->images->map(fn (ListingImage $image): array => [
                 'id' => $image->id,
                 'url' => Storage::disk($image->disk)->url($image->large_path),
+                'thumbUrl' => Storage::disk($image->disk)->url($image->small_path),
                 'altText' => $image->alt_text ?: $this->title,
                 'sortOrder' => $image->sort_order,
             ])->all()
             : [];
+    }
+
+    /**
+     * @return array{contactName: ?string, contactEmail: ?string, contactPhone: ?string}
+     */
+    private function showContact(): array
+    {
+        if ($this->agency_id !== null) {
+            $agency = $this->relationLoaded('agency') ? $this->agency : null;
+
+            return [
+                'contactName' => $agency?->name,
+                'contactEmail' => $agency?->email,
+                'contactPhone' => $agency?->phone,
+            ];
+        }
+
+        $owner = $this->relationLoaded('owner') ? $this->owner : null;
+
+        return [
+            'contactName' => $this->contact_name ?: $owner?->name,
+            'contactEmail' => $this->contact_email ?: $owner?->email,
+            'contactPhone' => $this->contact_phone ?: null,
+        ];
+    }
+
+    /**
+     * @return array{name: string, slug: string}|null
+     */
+    private function publicAgencyLink(): ?array
+    {
+        $agency = $this->relationLoaded('agency') ? $this->agency : null;
+
+        if ($agency === null || ! $agency->isActuallyPubliclyVisible()) {
+            return null;
+        }
+
+        return [
+            'name' => $agency->name,
+            'slug' => $agency->slug,
+        ];
     }
 
     /**
@@ -425,11 +467,10 @@ class Listing extends Model
             'areaValue' => $this->area_value,
             'areaUnit' => $this->area_unit,
             'yearBuilt' => $this->year_built,
-            'contactName' => $this->contact_name,
-            'contactEmail' => $this->contact_email,
-            'contactPhone' => $this->contact_phone,
+            ...$this->showContact(),
+            'agency' => $this->publicAgencyLink(),
             'amenities' => $this->amenityValues(),
-            'approvedAt' => $this->approved_at?->format('F j, Y'),
+            'approvedAt' => $this->approved_at?->toIso8601String(),
             'images' => $images,
         ];
     }

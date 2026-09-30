@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react'
-import LatestHomeCard from '@/Components/Landing/LatestHomeCard'
+import ListingTeaserCard from '@/Components/Listings/ListingTeaserCard'
 import type { LatestHomesProps } from '@/types/home'
 
 export default function LatestHomes({ content, listings }: LatestHomesProps) {
@@ -20,7 +20,13 @@ export default function LatestHomes({ content, listings }: LatestHomesProps) {
 
             <div className="flex snap-x snap-mandatory gap-3.5 overflow-x-auto pr-5 md:pr-10 lg:grid lg:grid-cols-3 lg:gap-8 lg:overflow-visible lg:pr-0">
                 {listings.map((listing) => (
-                    <LatestHomeCard key={listing.id} listing={listing} perMonth={content.per_month} />
+                    <ListingTeaserCard
+                        key={listing.id}
+                        listing={listing}
+                        perMonth={content.per_month}
+                        aspect="3/4"
+                        mobileWidth="w-68"
+                    />
                 ))}
             </div>
         </section>

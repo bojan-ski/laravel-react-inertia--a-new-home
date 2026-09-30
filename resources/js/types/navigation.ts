@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import type { AuthUser, UserRole } from '@/types/shared'
 
 export const dashboardPaths: Record<UserRole, string> = {
@@ -41,6 +42,7 @@ export type NavTone = 'ink' | 'paper'
 
 export interface NavbarProps {
     back?: NavBack
+    backAction?: ReactNode
     variant?: NavbarVariant
 }
 

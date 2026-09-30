@@ -8,6 +8,7 @@ export interface AppShellProps {
 export interface PublicLayoutProps {
     children: ReactNode
     back?: NavBack
+    backAction?: ReactNode
     footer?: boolean
     navVariant?: NavbarVariant
 }
