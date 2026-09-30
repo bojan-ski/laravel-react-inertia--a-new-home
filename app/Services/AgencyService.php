@@ -9,6 +9,7 @@ use App\Models\Agency;
 use App\Models\User;
 use App\Services\Concerns\AppliesLikeSearch;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
@@ -24,7 +25,8 @@ class AgencyService
     {
         $search = $request->filters()['search'];
 
-        $query = Agency::actuallyPubliclyVisible();
+        $query = Agency::actuallyPubliclyVisible()
+            ->withCount(['listings as public_listings_count' => fn (Builder $query) => $query->actuallyPubliclyVisible()]);
 
         if ($search !== '') {
             $this->applyLikeSearch($query, $search, ['name', 'description', 'address']);

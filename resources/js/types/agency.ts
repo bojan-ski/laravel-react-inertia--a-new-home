@@ -4,6 +4,7 @@ import type {
     ListingCloseTranslations,
     ListingExpiryTranslations,
     ListingStatusValue,
+    ListingsCardTranslations,
     ListingsTranslations,
 } from '@/types/listing'
 import type { ConfirmActionTranslations } from '@/types/moderation'
@@ -270,11 +271,16 @@ export interface AgencyCardData extends AgencyRegistrationDetails {
     approvedAt: string | null
 }
 
+export interface AgencyDirectoryData extends AgencyCardData {
+    listingsCount: number
+}
+
 export interface AgenciesFilters {
     search: string | null
 }
 
 export interface AgenciesSearchTranslations {
+    label: string
     placeholder: string
     submit: string
     reset: string
@@ -291,8 +297,10 @@ export interface AgenciesDirectoryTranslations extends AgencyRegistrationLabels 
     title: string
     heading: string
     subtitle: string
-    count_prefix: string
-    count_suffix: string
+    count_one: string
+    count_other: string
+    properties_one: string
+    properties_other: string
     view_agency: string
     show: AgencyPublicPageTranslations
     search: AgenciesSearchTranslations
@@ -312,7 +320,7 @@ export interface AgencyPublicPageTranslations {
 }
 
 export interface AgenciesIndexPageProps {
-    agencies: Paginator<AgencyCardData>
+    agencies: Paginator<AgencyDirectoryData>
     filters: AgenciesFilters
     translations: AgenciesDirectoryTranslations
 }
@@ -325,18 +333,25 @@ export interface AgencyPublicPageProps {
 }
 
 export interface AgencyCardProps {
-    agency: AgencyCardData
-    viewLabel: string
-    registrationLabels: AgencyRegistrationLabels
+    agency: AgencyDirectoryData
+    translations: AgenciesDirectoryTranslations
 }
 
 export interface AgencyContactListProps {
     agency: AgencyCardData
+    heading: string
+}
+
+export interface AgencyListingCardProps {
+    listing: ListingCardData
+    translations: ListingsCardTranslations
+    propertyTypeLabels: Record<string, string>
 }
 
 export interface AgencyDirectorySearchBarProps {
     filters: AgenciesFilters
     translations: AgenciesSearchTranslations
+    countLabel: string
 }
 
 export interface AgenciesEmptyStateProps {

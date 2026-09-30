@@ -8,6 +8,29 @@ export function formatRegistration(template: string, number: string | null, coun
     return template.replace(':number', number).replace(':country', country)
 }
 
+export function formatMonthYear(iso: string): string {
+    return new Date(iso).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })
+}
+
+export function websiteHost(url: string): string {
+    return url
+        .trim()
+        .replace(/^[a-z][a-z0-9+.-]*:\/\//i, '')
+        .replace(/^www\./i, '')
+        .replace(/\/+$/, '')
+}
+
+export function descriptionParagraphs(description: string | null): string[] {
+    if (!description) {
+        return []
+    }
+
+    return description
+        .split(/\n\s*\n/)
+        .map((paragraph) => paragraph.trim())
+        .filter((paragraph) => paragraph !== '')
+}
+
 export function agencyRegistrationLines(agency: AgencyRegistrationDetails, labels: AgencyRegistrationLabels): string[] {
     return [
         formatRegistration(labels.registration, agency.registrationNumber, agency.registrationCountry),

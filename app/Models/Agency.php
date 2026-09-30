@@ -171,6 +171,17 @@ class Agency extends Model
     /**
      * @return array<string, mixed>
      */
+    public function toDirectoryArray(): array
+    {
+        return [
+            ...$this->toCardArray(),
+            'listingsCount' => (int) $this->public_listings_count,
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
     public function toModerationArray(): array
     {
         return [

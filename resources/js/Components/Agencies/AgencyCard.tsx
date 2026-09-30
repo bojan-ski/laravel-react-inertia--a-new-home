@@ -1,54 +1,55 @@
 import { Link } from '@inertiajs/react'
-import { ArrowRight, BadgeCheck, MapPin } from 'lucide-react'
-import AgencyContactList from '@/Components/Agencies/AgencyContactList'
-import { agencyRegistrationLines } from '@/Components/Agencies/agencyFormat'
+import LogoTile from '@/Components/UI/LogoTile'
 import type { AgencyCardProps } from '@/types/agency'
 
-export default function AgencyCard({ agency, viewLabel, registrationLabels }: AgencyCardProps) {
-    const href = `/agencies/${agency.slug}`
-    const registration = agencyRegistrationLines(agency, registrationLabels)
+export default function AgencyCard({ agency, translations }: AgencyCardProps) {
+    const propertiesLabel = agency.listingsCount === 1 ? translations.properties_one : translations.properties_other
 
     return (
-        <article className="flex flex-col rounded-xl border border-border bg-surface p-6 shadow-sm transition-shadow hover:shadow-md">
-            <h2 className="line-clamp-2 font-display text-xl font-semibold text-text">
-                <Link href={href} className="transition-colors hover:text-brand">
-                    {agency.name}
-                </Link>
-            </h2>
+        <li className="relative grid grid-cols-[56px_minmax(0,1fr)] gap-3.5 border-t border-rule py-5 transition-colors duration-150 hover:bg-sand/55 lg:grid-cols-[88px_minmax(0,3fr)_minmax(0,4fr)_140px_150px] lg:items-center lg:gap-6 lg:border-t-0 lg:border-b lg:py-7 xl:gap-10">
+            <LogoTile name={agency.name} size="row" />
 
-            {agency.address && (
-                <p className="mt-1.5 flex items-start gap-1.5 text-sm text-text-muted">
-                    <MapPin className="mt-0.5 size-4 shrink-0" />
-                    <span>{agency.address}</span>
-                </p>
-            )}
+            <div className="flex min-w-0 flex-col gap-1 lg:gap-1.5">
+                <h2 className="text-lg wrap-break-word lg:text-[28px] lg:leading-tight lg:font-light lg:tracking-[-0.02em]">
+                    <Link
+                        href={`/agencies/${agency.slug}`}
+                        className="transition-colors duration-150 after:absolute after:inset-0 hover:text-forest"
+                    >
+                        {agency.name}
+                    </Link>
+                </h2>
 
-            {registration.length > 0 && (
-                <p className="mt-1 flex items-start gap-1.5 text-xs text-text-muted">
-                    <BadgeCheck className="size-4 shrink-0" />
-                    <span className="flex flex-wrap gap-x-3 gap-y-0.5">
-                        {registration.map((line) => (
-                            <span key={line}>{line}</span>
-                        ))}
+                <p className="flex min-w-0 text-[13px] text-ink-muted lg:hidden">
+                    {agency.address && (
+                        <>
+                            <span className="truncate">{agency.address}</span>
+                            <span className="shrink-0 whitespace-pre"> · </span>
+                        </>
+                    )}
+                    <span className="shrink-0">
+                        {agency.listingsCount} {propertiesLabel}
                     </span>
                 </p>
-            )}
 
-            {agency.description && (
-                <p className="mt-4 line-clamp-3 text-sm leading-relaxed text-text-soft">{agency.description}</p>
-            )}
+                {agency.address && <p className="hidden truncate text-sm text-ink-muted lg:block">{agency.address}</p>}
 
-            <div className="mt-5 border-t border-border pt-4">
-                <AgencyContactList agency={agency} />
+                {agency.description && (
+                    <p className="mt-1 line-clamp-3 text-[13px]/normal font-book text-ink/75 lg:hidden">
+                        {agency.description}
+                    </p>
+                )}
             </div>
 
-            <Link
-                href={href}
-                className="mt-5 inline-flex items-center gap-1.5 self-start text-sm font-semibold text-brand transition-colors hover:text-brand-dark"
-            >
-                {viewLabel}
-                <ArrowRight className="size-4" />
-            </Link>
-        </article>
+            <p className="hidden text-[15px]/[1.6] font-book text-ink/75 lg:line-clamp-3">{agency.description}</p>
+
+            <div className="hidden lg:flex lg:flex-col lg:gap-0.5">
+                <span className="text-4xl leading-none font-extralight tracking-[-0.02em]">{agency.listingsCount}</span>
+                <span className="text-xs tracking-[0.1em] text-ink/60 uppercase">{propertiesLabel}</span>
+            </div>
+
+            <span aria-hidden="true" className="hidden text-right text-sm text-forest lg:block">
+                {translations.view_agency} →
+            </span>
+        </li>
     )
 }
