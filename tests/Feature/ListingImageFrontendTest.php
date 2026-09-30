@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Agency;
 use App\Models\Listing;
 use App\Models\ListingImage;
 use App\Models\User;
@@ -152,6 +153,45 @@ class ListingImageFrontendTest extends TestCase
                 ->component('Listings/Edit')
                 ->has('listing.images', 1)
                 ->where('listing.images.0.url', $expected)
+            );
+    }
+
+    public function test_edit_page_receives_stored_alt_text_without_title_fallback(): void
+    {
+        $owner = User::factory()->regularUser()->create();
+        $listing = Listing::factory()->approved()->for($owner, 'owner')->create(['title' => 'Seaside Villa']);
+        ListingImage::factory()->for($listing)->create(['alt_text' => 'Terrace at dusk', 'sort_order' => 0]);
+        ListingImage::factory()->for($listing)->create(['alt_text' => null, 'sort_order' => 1]);
+
+        $this->actingAs($owner)
+            ->get("/my-listings/{$listing->id}/edit")
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('Listings/Edit')
+                ->where('listing.images.0.altText', 'Terrace at dusk')
+                ->where('listing.images.1.altText', null)
+            );
+    }
+
+    public function test_agency_edit_page_receives_stored_alt_text_without_title_fallback(): void
+    {
+        $user = User::factory()->agency()->create();
+        $agency = Agency::factory()->approved()->create(['user_id' => $user->id]);
+        $listing = Listing::factory()->pendingReview()->create([
+            'user_id' => null,
+            'agency_id' => $agency->id,
+            'title' => 'Harbour Loft',
+        ]);
+        ListingImage::factory()->for($listing)->create(['alt_text' => 'Harbour view', 'sort_order' => 0]);
+        ListingImage::factory()->for($listing)->create(['alt_text' => null, 'sort_order' => 1]);
+
+        $this->actingAs($user)
+            ->get("/agency/listings/{$listing->id}/edit")
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('Agency/Listings/Edit')
+                ->where('listing.images.0.altText', 'Harbour view')
+                ->where('listing.images.1.altText', null)
             );
     }
 

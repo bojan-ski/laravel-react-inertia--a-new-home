@@ -24,6 +24,8 @@ class AgencyListingController extends Controller
             'translations' => __('app.create_agency_listing'),
             'propertyTypeLabels' => __('app.listings.filters.property_types'),
             'amenityLabels' => __('app.listings.amenities'),
+            'countryOptions' => Listing::countryOptions(),
+            'maxImages' => Listing::MAX_NEW_IMAGES,
         ]);
     }
 
@@ -49,6 +51,7 @@ class AgencyListingController extends Controller
             'translations' => __('app.edit_agency_listing'),
             'propertyTypeLabels' => __('app.listings.filters.property_types'),
             'amenityLabels' => __('app.listings.amenities'),
+            'countryOptions' => Listing::countryOptions(),
         ]);
     }
 

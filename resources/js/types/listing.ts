@@ -347,13 +347,24 @@ export interface ImageManagementTranslations {
     upload: string
     uploading: string
     format_note: string
+    cover: string
+    no_alt: string
+    image_label: string
+}
+
+export interface ListingFormImageData {
+    id: number
+    url: string
+    thumbUrl: string
+    altText: string | null
+    sortOrder: number
 }
 
 export interface ImageUploaderProps {
     baseUrl: string
-    images: ListingImageData[]
+    images: ListingFormImageData[]
+    listingTitle: string
     translations: ImageManagementTranslations
-    canManage?: boolean
 }
 
 export type ImageUploadFormData = {
@@ -556,6 +567,7 @@ export interface ListingFormFieldLabels {
     price: string
     description: string
     country: string
+    country_placeholder: string
     city: string
     address_line: string
     postal_code: string
@@ -572,8 +584,10 @@ export interface ListingFormTranslations {
     cancel: string
     submit_note: string
     contact_note: string
+    sections_label: string
     sections: {
         basic: string
+        images: string
         location: string
         specs: string
         amenities: string
@@ -593,6 +607,7 @@ export interface NewListingImagesTranslations {
     remove: string
     count: string
     format_note: string
+    cover: string
 }
 
 export type CreateListingFormData = ListingFormData & {
@@ -603,6 +618,7 @@ export interface NewListingImagePickerProps {
     files: File[]
     onChange: (files: File[]) => void
     errors: Partial<Record<string, string>>
+    maxImages: number
     translations: NewListingImagesTranslations
 }
 
@@ -618,6 +634,8 @@ export interface CreateListingPageProps {
     translations: CreateListingTranslations
     propertyTypeLabels: Record<string, string>
     amenityLabels: Record<string, string>
+    countryOptions: string[]
+    maxImages: number
     [key: string]: unknown
 }
 
@@ -643,7 +661,7 @@ export interface EditListingData {
     contactEmail: string | null
     contactPhone: string | null
     amenities: string[]
-    images: ListingImageData[]
+    images: ListingFormImageData[]
 }
 
 export interface EditListingTranslations extends ListingFormTranslations {
@@ -652,6 +670,7 @@ export interface EditListingTranslations extends ListingFormTranslations {
     back: string
     submit: string
     approved_notice: string
+    bar_note_approved: string
     images: ImageManagementTranslations
 }
 
@@ -660,6 +679,7 @@ export interface EditListingPageProps {
     translations: EditListingTranslations
     propertyTypeLabels: Record<string, string>
     amenityLabels: Record<string, string>
+    countryOptions: string[]
     [key: string]: unknown
 }
 
@@ -673,10 +693,29 @@ export interface ListingFormProps {
     translations: ListingFormTranslations
     propertyTypeLabels: Record<string, string>
     amenityLabels: Record<string, string>
-    headerSlot?: ReactNode
-    footerSlot?: ReactNode
+    countryOptions: string[]
+    imagesSection: ReactNode
+    imagesNote: string
+    barNote: string
+    contactNote?: string
+    beforeSections?: ReactNode
     hideContactSection?: boolean
     cancelHref?: string
+}
+
+export interface ListingFormHeaderProps {
+    title: string
+    subtitle: string
+    back: string
+    backHref: string
+}
+
+export interface ListingApprovedNoticeProps {
+    message: string
+}
+
+export interface ListingCoverTagProps {
+    label: string
 }
 
 export interface CreateAgencyListingTranslations extends ListingFormTranslations {
@@ -692,6 +731,8 @@ export interface CreateAgencyListingPageProps {
     translations: CreateAgencyListingTranslations
     propertyTypeLabels: Record<string, string>
     amenityLabels: Record<string, string>
+    countryOptions: string[]
+    maxImages: number
     [key: string]: unknown
 }
 
@@ -701,6 +742,7 @@ export interface EditAgencyListingTranslations extends ListingFormTranslations {
     back: string
     submit: string
     approved_notice: string
+    bar_note_approved: string
     contact_inheritance_note: string
     images: ImageManagementTranslations
 }
@@ -710,5 +752,6 @@ export interface EditAgencyListingPageProps {
     translations: EditAgencyListingTranslations
     propertyTypeLabels: Record<string, string>
     amenityLabels: Record<string, string>
+    countryOptions: string[]
     [key: string]: unknown
 }

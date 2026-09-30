@@ -116,6 +116,7 @@ export interface SegmentedToggleProps<T extends string = string> {
     onChange: (value: T) => void
     size?: 'sm' | 'bar' | 'md' | 'wide' | 'spread'
     tone?: 'default' | 'on-photo'
+    showLegend?: boolean
     className?: string
 }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Concerns;
 
 use App\Enums\Amenity;
+use App\Models\Listing;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Validation\Rule;
 
@@ -12,8 +13,6 @@ trait ValidatesListingFields
         'house', 'flat', 'apartment', 'cottage', 'villa',
         'condo', 'land', 'commercial', 'other',
     ];
-
-    private const MAX_NEW_IMAGES = 10;
 
     /**
      * @return array<string, ValidationRule|array<mixed>|string>
@@ -26,7 +25,7 @@ trait ValidatesListingFields
             'property_type' => ['required', 'string', Rule::in(self::PROPERTY_TYPES)],
             'price' => ['required', 'numeric', 'min:0'],
             'description' => ['required', 'string', 'max:10000'],
-            'country' => ['required', 'string', 'max:255'],
+            'country' => ['required', 'string', Rule::in(Listing::countryOptions())],
             'city' => ['required', 'string', 'max:255'],
             'address_line' => ['nullable', 'string', 'max:255'],
             'postal_code' => ['nullable', 'string', 'max:50'],
@@ -45,7 +44,7 @@ trait ValidatesListingFields
     protected function newImageRules(): array
     {
         return [
-            'images' => ['nullable', 'array', 'max:'.self::MAX_NEW_IMAGES],
+            'images' => ['nullable', 'array', 'max:'.Listing::MAX_NEW_IMAGES],
             'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
         ];
     }
