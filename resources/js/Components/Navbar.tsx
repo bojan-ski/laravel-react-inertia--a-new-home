@@ -14,7 +14,7 @@ const wordmarkToneClasses: Record<NavTone, string> = {
     paper: 'text-paper hover:text-forest-200 focus-visible:outline-paper',
 }
 
-export default function Navbar({ back, backAction, variant = 'default' }: NavbarProps) {
+export default function Navbar({ back, backAction, variant = 'default', ruled = false }: NavbarProps) {
     const page = usePage<SharedProps>()
     const { nav } = page.props
     const user = page.props.auth?.user ?? null
@@ -58,7 +58,7 @@ export default function Navbar({ back, backAction, variant = 'default' }: Navbar
         : 'bg-paper text-ink'
 
     return (
-        <header className={headerClasses}>
+        <header className={`${headerClasses} ${ruled ? 'lg:border-b lg:border-rule' : ''}`}>
             <div className="mx-auto hidden max-w-360 items-center justify-between px-16 py-9 lg:flex">
                 {wordmark('text-[17px]', desktopTone)}
 

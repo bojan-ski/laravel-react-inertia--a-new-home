@@ -503,4 +503,66 @@ class ConversationChatTest extends TestCase
     {
         $this->get('/conversations')->assertRedirect('/login');
     }
+
+    public function test_show_carries_the_viewers_inbox_in_index_order(): void
+    {
+        $buyer = User::factory()->regularUser()->create();
+        $ownerA = User::factory()->regularUser()->create();
+        $ownerB = User::factory()->regularUser()->create();
+
+        $convA = Conversation::factory()->create([
+            'listing_id' => $this->ownedListing($ownerA)->id,
+            'buyer_id' => $buyer->id,
+            'owner_id' => $ownerA->id,
+        ]);
+        $convB = Conversation::factory()->create([
+            'listing_id' => $this->ownedListing($ownerB)->id,
+            'buyer_id' => $buyer->id,
+            'owner_id' => $ownerB->id,
+        ]);
+        Conversation::factory()->create();
+
+        $this->travel(10)->minutes();
+        $this->actingAs($buyer)->post("/conversations/{$convA->id}/messages", ['body' => 'Bump']);
+
+        $indexIds = collect($this->actingAs($buyer)->get('/conversations')->inertiaProps('conversations'))->pluck('id')->all();
+
+        $this->assertSame([$convA->id, $convB->id], $indexIds);
+
+        $this->actingAs($buyer)
+            ->get("/conversations/{$convB->id}")
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('Conversations/Show')
+                ->has('conversations', 2)
+                ->where('conversations.0.id', $convA->id)
+                ->where('conversations.1.id', $convB->id));
+    }
+
+    public function test_show_inbox_reports_the_open_conversation_as_read(): void
+    {
+        $owner = User::factory()->regularUser()->create();
+        $buyer = User::factory()->regularUser()->create();
+        $conversation = Conversation::factory()->create([
+            'listing_id' => $this->ownedListing($owner)->id,
+            'buyer_id' => $buyer->id,
+            'owner_id' => $owner->id,
+        ]);
+        ChatMessage::factory()->count(2)->create([
+            'conversation_id' => $conversation->id,
+            'sender_id' => $owner->id,
+        ]);
+
+        $this->travel(1)->minutes();
+
+        $this->actingAs($buyer)
+            ->get('/conversations')
+            ->assertInertia(fn (Assert $page) => $page->where('conversations.0.unreadCount', 2));
+
+        $this->actingAs($buyer)
+            ->get("/conversations/{$conversation->id}")
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('conversations.0.id', $conversation->id)
+                ->where('conversations.0.unreadCount', 0));
+    }
 }

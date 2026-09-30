@@ -49,6 +49,7 @@ export interface NavbarProps {
     back?: NavBack
     backAction?: ReactNode
     variant?: NavbarVariant
+    ruled?: boolean
 }
 
 export interface NavbarLinkProps {

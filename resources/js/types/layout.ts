@@ -12,6 +12,7 @@ export interface PublicLayoutProps {
     backAction?: ReactNode
     footer?: boolean
     navVariant?: NavbarVariant
+    fill?: 'always' | 'desktop'
 }
 
 export interface AuthLayoutProps {

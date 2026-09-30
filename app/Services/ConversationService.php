@@ -15,6 +15,15 @@ use Illuminate\Support\Collection;
 class ConversationService
 {
     /**
+     * Eager loads behind a conversation's listing summary, shared by the inbox
+     * and the thread so both payloads read the same columns.
+     */
+    public const LISTING_SUMMARY_RELATIONS = [
+        'listing:id,title,slug,status,listing_type,price,currency,city,approved_at,expires_at',
+        'listing.images:id,listing_id,disk,small_path,sort_order',
+    ];
+
+    /**
      * Return the buyer's existing conversation for the listing, or create one.
      *
      * The owner is denormalised from the listing so inbox queries never need to
@@ -84,7 +93,7 @@ class ConversationService
                 $query->where('buyer_id', $user->id)
                     ->orWhere('owner_id', $user->id);
             })
-            ->with(['listing:id,title,slug,status', 'buyer:id,name,status', 'owner:id,name,status', 'owner.agency:id,user_id,name', 'latestMessage'])
+            ->with([...self::LISTING_SUMMARY_RELATIONS, 'buyer:id,name,status', 'owner:id,name,status', 'owner.agency:id,user_id,name', 'latestMessage'])
             ->withCount(['messages as unread_count' => fn (Builder $query) => $this->whereUnreadFor($query, $user)])
             ->orderByDesc('updated_at')
             ->get()

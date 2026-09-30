@@ -34,7 +34,7 @@ class ConversationController extends Controller
         $this->conversationService->markRead($conversation, $request->user());
 
         $conversation->load([
-            'listing:id,title,slug,status',
+            ...ConversationService::LISTING_SUMMARY_RELATIONS,
             'buyer:id,name',
             'owner:id,name',
             'owner.agency:id,user_id,name',
@@ -43,6 +43,7 @@ class ConversationController extends Controller
 
         return Inertia::render('Conversations/Show', [
             'conversation' => $conversation->toShowArray($request->user()),
+            'conversations' => fn () => $this->conversationService->getInboxFor($request->user()),
             'canReply' => Gate::allows('sendMessage', $conversation),
             'translations' => __('app.conversations'),
         ]);
