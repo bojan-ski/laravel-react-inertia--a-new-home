@@ -93,6 +93,7 @@ export interface AccountTab {
 export interface AccountPageHeaderProps {
     title: string
     subtitle: string
+    leading?: ReactNode
     action?: ReactNode
     mobileAction?: ReactNode
 }

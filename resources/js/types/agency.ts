@@ -1,4 +1,4 @@
-import type { FormEvent, ReactNode } from 'react'
+import type { FormEvent } from 'react'
 import type {
     ListingCardData,
     ListingCloseTranslations,
@@ -35,11 +35,15 @@ export interface AgencyFormSections {
 
 export interface AgencyFormFields {
     name: string
+    name_placeholder: string
     description: string
+    description_placeholder: string
     email: string
+    email_placeholder: string
     email_note: string
     phone: string
     website: string
+    website_placeholder: string
     address: string
     legal_name: string
     vat_id: string
@@ -79,8 +83,9 @@ export interface AgencyFormProps {
     onSubmit: (event: FormEvent<HTMLFormElement>) => void
     translations: AgencyFormTranslations
     countries: Record<string, string>
-    note?: ReactNode
-    cancelSlot?: ReactNode
+    barNote: string
+    cancelHref: string
+    cancelLabel: string
 }
 
 export interface AgencySetupTranslations extends AgencyFormTranslations {
@@ -89,6 +94,7 @@ export interface AgencySetupTranslations extends AgencyFormTranslations {
     helper: string
     submit: string
     back: string
+    cancel: string
     submit_note: string
     flash: string
 }
@@ -125,6 +131,7 @@ export interface AgencyDashboardListing {
     currency: string
     city: string
     country: string
+    imageUrl: string | null
     createdAt: string | null
     approvedAt: string | null
     rejectionReason: string | null
@@ -139,6 +146,7 @@ export interface AgencyStatusCopy {
     body: string
     note?: string
     approved_on?: string
+    reason?: string
 }
 
 export interface AgencyShowProfileTranslations {
@@ -172,6 +180,7 @@ export interface AgencyShowListingsTranslations extends ListingCloseTranslations
     new_listing: string
     new_listing_disabled_help: string
     create_listing: string
+    edit: string
     delete: string
     empty_headline: string
     empty_subline: string
@@ -203,7 +212,6 @@ export interface AgencyShowPageProps {
     pendingChange: AgencyPendingChange | null
     listings: AgencyDashboardListing[]
     translations: AgencyShowTranslations
-    propertyTypeLabels: Record<string, string>
 }
 
 export interface AgencyStatusPanelProps {
@@ -219,14 +227,12 @@ export interface AgencyProfileSectionProps {
 export interface AgencyListingsSectionProps {
     listings: AgencyDashboardListing[]
     translations: AgencyShowListingsTranslations
-    propertyTypeLabels: Record<string, string>
     agencyStatus: AgencyStatusValue
 }
 
 export interface AgencyListingRowProps {
     listing: AgencyDashboardListing
     translations: AgencyShowListingsTranslations
-    propertyTypeLabels: Record<string, string>
 }
 
 export interface AgencyEditData extends AgencyBusinessDetails {
@@ -249,6 +255,8 @@ export interface AgencyEditTranslations extends AgencyFormTranslations {
     status_note: string
     review_note: string
     pending_notice: string
+    bar_note_approved: string
+    bar_note_pending: string
     flash: string
 }
 

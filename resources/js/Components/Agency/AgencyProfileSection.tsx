@@ -1,61 +1,71 @@
 import type { ReactNode } from 'react'
-import { formatRegistration } from '@/Components/Agencies/agencyFormat'
+import { formatRegistration, websiteHost } from '@/Components/Agencies/agencyFormat'
 import type { AgencyProfileSectionProps } from '@/types/agency'
 
-function Row({ label, children }: { label: string; children: ReactNode }) {
+export interface AgencyDetailRowProps {
+    label: string
+    children: ReactNode
+    multiline?: boolean
+}
+
+function Row({ label, children, multiline = false }: AgencyDetailRowProps) {
     return (
-        <div className="flex flex-col gap-1 border-t border-border py-4 first:border-t-0 first:pt-0 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
-            <dt className="text-sm text-text-muted sm:w-40 sm:shrink-0">{label}</dt>
-            <dd className="text-text sm:flex-1 sm:text-right">{children}</dd>
+        <div className="flex justify-between gap-4 border-b border-rule py-3 text-sm lg:grid lg:grid-cols-[200px_minmax(0,1fr)] lg:gap-6 lg:py-3.5 lg:text-[15px]">
+            <dt className="shrink-0 text-ink-muted">{label}</dt>
+            <dd className={`min-w-0 text-right wrap-break-word lg:text-left ${multiline ? 'whitespace-pre-line' : ''}`}>
+                {children}
+            </dd>
         </div>
     )
 }
 
 export default function AgencyProfileSection({ agency, translations }: AgencyProfileSectionProps) {
+    const notSet = <span className="text-ink-muted">{translations.not_set}</span>
+    const missing = <span className="text-ink-muted">{translations.missing}</span>
+    const registration = formatRegistration(
+        translations.registration_value,
+        agency.registrationNumber,
+        agency.registrationCountry,
+    )
+
     return (
-        <section className="rounded-xl border border-border bg-surface p-6 sm:p-8">
-            <h2 className="font-display text-xl font-semibold text-text">{translations.heading}</h2>
-            <p className="mt-1 text-sm text-text-soft">{translations.note}</p>
+        <section aria-labelledby="agency-details-heading">
+            <h2
+                id="agency-details-heading"
+                className="mb-3 text-[30px] leading-tight font-airy tracking-[-0.02em] lg:mb-2 lg:text-[40px] lg:tracking-[-0.03em]"
+            >
+                {translations.heading}
+            </h2>
+            <p className="mb-4 hidden text-sm text-ink-muted lg:block">{translations.note}</p>
 
-            <dl className="mt-6">
+            <dl className="lg:border-t lg:border-rule">
                 <Row label={translations.name}>{agency.name}</Row>
-
-                {agency.description && <Row label={translations.description}>{agency.description}</Row>}
-
+                <Row label={translations.description} multiline>
+                    {agency.description ?? notSet}
+                </Row>
                 <Row label={translations.email}>{agency.email}</Row>
-
-                {agency.phone && <Row label={translations.phone}>{agency.phone}</Row>}
-
-                {agency.website && (
-                    <Row label={translations.website}>
+                <Row label={translations.phone}>{agency.phone ?? notSet}</Row>
+                <Row label={translations.website}>
+                    {agency.website ? (
                         <a
                             href={agency.website}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-brand transition-colors hover:text-brand-dark"
+                            className="transition-colors duration-150 hover:text-forest"
                         >
-                            {agency.website}
+                            {websiteHost(agency.website)}
                         </a>
-                    </Row>
-                )}
-
-                {agency.address && <Row label={translations.address}>{agency.address}</Row>}
-
-                <Row label={translations.legal_name}>{agency.legalName ?? translations.missing}</Row>
-
-                <Row label={translations.registration}>
-                    {formatRegistration(
-                        translations.registration_value,
-                        agency.registrationNumber,
-                        agency.registrationCountry,
-                    ) ?? translations.missing}
+                    ) : (
+                        notSet
+                    )}
                 </Row>
-
-                <Row label={translations.vat_id}>{agency.vatId ?? translations.not_set}</Row>
-
-                <Row label={translations.broker_register_number}>
-                    {agency.brokerRegisterNumber ?? translations.not_set}
+                <Row label={translations.address} multiline>
+                    {agency.address ?? notSet}
                 </Row>
+                <Row label={translations.legal_name}>{agency.legalName ?? missing}</Row>
+                <Row label={translations.registration}>{registration ?? missing}</Row>
+                <Row label={translations.vat_id}>{agency.vatId ?? notSet}</Row>
+                <Row label={translations.broker_register_number}>{agency.brokerRegisterNumber ?? notSet}</Row>
             </dl>
         </section>
     )

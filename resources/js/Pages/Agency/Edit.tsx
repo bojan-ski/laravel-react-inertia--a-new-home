@@ -1,7 +1,10 @@
-import { Head, Link, useForm } from '@inertiajs/react'
-import { ChevronLeft, Clock } from 'lucide-react'
+import { Head, useForm } from '@inertiajs/react'
 import type { FormEvent } from 'react'
 import AgencyForm from '@/Components/Agency/AgencyForm'
+import ListingApprovedNotice from '@/Components/Listings/ListingApprovedNotice'
+import ListingFormHeader from '@/Components/Listings/ListingFormHeader'
+import { formatDate } from '@/Components/Listings/listingFormat'
+import FlashBanner from '@/Components/UI/FlashBanner'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { AgencyEditPageProps, AgencyFormData } from '@/types/agency'
 
@@ -26,7 +29,6 @@ export default function Edit({ agency, pendingChange, translations, countries }:
     })
 
     const isApproved = agency.status === 'approved'
-    const submittedOn = pendingChange ? new Date(pendingChange.submittedAt).toLocaleDateString() : null
 
     function submit(e: FormEvent<HTMLFormElement>) {
         e.preventDefault()
@@ -37,57 +39,41 @@ export default function Edit({ agency, pendingChange, translations, countries }:
         <PublicLayout back={{ href: '/agency', label: translations.back }} footer={false}>
             <Head title={translations.title} />
 
-            <div className="border-b border-border bg-surface">
-                <div className="mx-auto flex max-w-2xl flex-col gap-4 px-6 py-10 sm:flex-row sm:items-start sm:justify-between md:py-14">
-                    <div>
-                        <h1 className="font-display text-3xl font-semibold text-text sm:text-4xl">
-                            {translations.title}
-                        </h1>
-                        <p className="mt-2 text-text-soft">{translations.subtitle}</p>
-                    </div>
+            <ListingFormHeader
+                title={translations.title}
+                subtitle={translations.subtitle}
+                back={translations.back}
+                backHref="/agency"
+            />
 
-                    <Link
-                        href="/agency"
-                        className="hidden items-center gap-1 text-sm text-text-soft transition-colors hover:text-text lg:inline-flex"
-                    >
-                        <ChevronLeft className="size-4" />
-                        {translations.back}
-                    </Link>
-                </div>
-            </div>
-
-            <div className="mx-auto max-w-2xl px-6 py-10">
-                {submittedOn && (
-                    <div className="mb-8 flex items-start gap-3 rounded-lg border border-accent bg-accent-soft px-5 py-4 text-text">
-                        <Clock className="mt-0.5 size-5 shrink-0 text-accent" />
-                        <p className="text-sm">{translations.pending_notice.replace(':date', submittedOn)}</p>
-                    </div>
+            <div className="px-5 pt-6 pb-2 md:px-10 lg:-mt-3 lg:pt-0 lg:pb-10 xl:px-16">
+                {pendingChange ? (
+                    <FlashBanner
+                        message={translations.pending_notice.replace(
+                            ':date',
+                            formatDate(pendingChange.submittedAt, 'long'),
+                        )}
+                        variant="info"
+                        className=""
+                    />
+                ) : (
+                    <ListingApprovedNotice message={isApproved ? translations.review_note : translations.status_note} />
                 )}
-
-                <AgencyForm
-                    data={data}
-                    setData={setData}
-                    errors={errors}
-                    processing={processing}
-                    submitLabel={translations.submit}
-                    onSubmit={submit}
-                    translations={translations}
-                    countries={countries}
-                    note={
-                        <p className="text-sm text-text-soft">
-                            {isApproved ? translations.review_note : translations.status_note}
-                        </p>
-                    }
-                    cancelSlot={
-                        <Link
-                            href="/agency"
-                            className="text-center text-sm text-text-soft transition-colors hover:text-text"
-                        >
-                            {translations.cancel}
-                        </Link>
-                    }
-                />
             </div>
+
+            <AgencyForm
+                data={data}
+                setData={setData}
+                errors={errors}
+                processing={processing}
+                submitLabel={translations.submit}
+                onSubmit={submit}
+                translations={translations}
+                countries={countries}
+                barNote={isApproved ? translations.bar_note_approved : translations.bar_note_pending}
+                cancelHref="/agency"
+                cancelLabel={translations.cancel}
+            />
         </PublicLayout>
     )
 }

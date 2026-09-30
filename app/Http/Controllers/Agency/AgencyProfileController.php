@@ -54,7 +54,6 @@ class AgencyProfileController extends Controller
             'pendingChange' => $agency->pendingChange?->toOwnerArray(),
             'listings' => $listings,
             'translations' => __('app.agency_show'),
-            'propertyTypeLabels' => __('app.listings.filters.property_types'),
         ]);
     }
 
