@@ -74,6 +74,28 @@ export interface NavbarMobilePanelProps {
     onClose: () => void
 }
 
+export interface AccountTabsTranslations {
+    label: string
+    my_listings: string
+    agency_profile: string
+    favorites: string
+    saved_searches: string
+    messages: string
+    account_settings: string
+}
+
+export interface AccountTab {
+    label: string
+    href: string
+}
+
+export interface AccountPageHeaderProps {
+    title: string
+    subtitle: string
+    action?: ReactNode
+    mobileAction?: ReactNode
+}
+
 export interface FooterTranslations {
     brand: string
     tagline: string

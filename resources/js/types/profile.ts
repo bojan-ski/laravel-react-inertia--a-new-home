@@ -38,6 +38,7 @@ export interface ProfileTranslations extends ListingCloseTranslations, ListingEx
     created: string
     rejection_reason_label: string
     per_month: string
+    edit: string
     delete: string
     listing_types: Record<string, string>
     status: ProfileStatusLabels
@@ -55,7 +56,6 @@ export interface ProfileIndexPageProps {
 export interface ProfileListingRowProps {
     listing: ProfileListingData
     translations: ProfileTranslations
-    propertyTypeLabels: Record<string, string>
 }
 
 export interface ProfileSettingsDeleteTranslations {

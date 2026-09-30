@@ -1,9 +1,11 @@
 import { Head, Link, useForm, usePage } from '@inertiajs/react'
-import { ChevronLeft } from 'lucide-react'
 import { type FormEvent, useEffect, useState } from 'react'
+import AccountPageHeader from '@/Components/Account/AccountPageHeader'
+import FormSection from '@/Components/Forms/FormSection'
+import Button from '@/Components/UI/Button'
 import ConfirmDialog from '@/Components/UI/ConfirmDialog'
 import FlashBanner from '@/Components/UI/FlashBanner'
-import TextField from '@/Components/UI/TextField'
+import PasswordField from '@/Components/UI/PasswordField'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { ProfileSettingsPageProps } from '@/types/profile'
 import type { SharedProps } from '@/types/shared'
@@ -52,115 +54,109 @@ export default function Settings({ translations, backHref, passwordUrl, deleteUr
         <PublicLayout>
             <Head title={translations.title} />
 
-            <div className="border-b border-border bg-surface">
-                <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-10 sm:flex-row sm:items-start sm:justify-between md:py-14">
-                    <div>
-                        <h1 className="font-display text-3xl font-semibold text-text sm:text-4xl">
-                            {translations.title}
-                        </h1>
-                        <p className="mt-2 text-text-soft">{translations.subtitle}</p>
-                    </div>
-
-                    <Link
-                        href={backHref}
-                        className="inline-flex items-center gap-1.5 text-sm text-text-soft transition-colors hover:text-text"
-                    >
-                        <ChevronLeft className="size-4" />
+            <AccountPageHeader
+                title={translations.title}
+                subtitle={translations.subtitle}
+                action={
+                    <Link href={backHref} className="text-sm text-ink-muted transition-colors duration-150 hover:text-forest">
+                        <span aria-hidden="true">←&nbsp;</span>
                         {translations.back}
                     </Link>
-                </div>
-            </div>
+                }
+            />
 
-            <div className="mx-auto max-w-2xl px-6 py-10">
-                {banner && (
-                    <FlashBanner
-                        message={banner}
-                        variant="success"
-                        className="mb-8"
-                        onDismiss={() => setBanner(null)}
-                        dismissLabel={ui.dismiss}
-                    />
-                )}
+            <div className="px-5 pb-16 md:px-10 xl:px-16">
+                <div className="border-b border-rule [&>section:first-child]:border-t-0">
+                    <FormSection
+                        id="password"
+                        number="01"
+                        title={translations.password.heading}
+                        note={translations.password.note}
+                    >
+                        <form onSubmit={submitPassword} className="col-span-2 flex max-w-140 flex-col gap-6.5">
+                            {banner && (
+                                <FlashBanner
+                                    message={banner}
+                                    variant="success"
+                                    className=""
+                                    onDismiss={() => setBanner(null)}
+                                    dismissLabel={ui.dismiss}
+                                />
+                            )}
 
-                <div className="space-y-12">
-                    <section>
-                        <h2 className="font-display text-xl font-semibold text-text">{translations.password.heading}</h2>
-                        <p className="mt-1 text-sm text-text-soft">{translations.password.note}</p>
-
-                        <form onSubmit={submitPassword} className="mt-6 flex flex-col gap-5">
-                            <TextField
+                            <PasswordField
                                 id="current_password"
-                                type="password"
                                 label={translations.password.current}
                                 autoComplete="current-password"
                                 value={passwordForm.data.current_password}
                                 onChange={(e) => passwordForm.setData('current_password', e.target.value)}
                                 error={passwordForm.errors.current_password}
+                                showLabel={ui.show_password}
+                                hideLabel={ui.hide_password}
                             />
 
-                            <TextField
-                                id="password"
-                                type="password"
+                            <PasswordField
+                                id="new_password"
                                 label={translations.password.new}
                                 autoComplete="new-password"
                                 value={passwordForm.data.password}
                                 onChange={(e) => passwordForm.setData('password', e.target.value)}
                                 error={passwordForm.errors.password}
+                                showLabel={ui.show_password}
+                                hideLabel={ui.hide_password}
                             />
 
-                            <TextField
+                            <PasswordField
                                 id="password_confirmation"
-                                type="password"
                                 label={translations.password.confirm}
                                 autoComplete="new-password"
                                 value={passwordForm.data.password_confirmation}
                                 onChange={(e) => passwordForm.setData('password_confirmation', e.target.value)}
                                 error={passwordForm.errors.password_confirmation}
+                                showLabel={ui.show_password}
+                                hideLabel={ui.hide_password}
                             />
 
-                            <div>
-                                <button
-                                    type="submit"
-                                    disabled={passwordForm.processing}
-                                    className="w-full rounded-lg bg-brand px-5 py-3 text-sm font-semibold text-text-inverse transition-colors hover:bg-brand-dark disabled:opacity-60 sm:w-auto"
-                                >
-                                    {translations.password.submit}
-                                </button>
-                            </div>
+                            <Button
+                                type="submit"
+                                disabled={passwordForm.processing}
+                                trailing={<span aria-hidden="true">→</span>}
+                                className="min-h-13 gap-10! self-start"
+                            >
+                                {translations.password.submit}
+                            </Button>
                         </form>
-                    </section>
+                    </FormSection>
 
-                    <div className="border-t border-border" />
-
-                    <section className="rounded-2xl border border-status-rejected/30 bg-status-rejected/5 p-6">
-                        <h2 className="font-display text-xl font-semibold text-status-rejected">
-                            {translations.delete.heading}
-                        </h2>
-                        <p className="mt-1 text-sm leading-relaxed text-text-soft">{translations.delete.note}</p>
-
-                        <form onSubmit={requestDelete} className="mt-6 flex flex-col gap-5">
-                            <TextField
+                    <FormSection
+                        id="delete-account"
+                        number="02"
+                        title={translations.delete.heading}
+                        note={translations.delete.note}
+                    >
+                        <form onSubmit={requestDelete} className="col-span-2 flex max-w-140 flex-col gap-6.5">
+                            <PasswordField
                                 id="delete_password"
-                                type="password"
                                 label={translations.delete.password}
                                 autoComplete="current-password"
                                 value={deleteForm.data.password}
                                 onChange={(e) => deleteForm.setData('password', e.target.value)}
                                 error={deleteForm.errors.password}
                                 required
+                                showLabel={ui.show_password}
+                                hideLabel={ui.hide_password}
                             />
 
-                            <div>
-                                <button
-                                    type="submit"
-                                    disabled={deleteForm.processing}
-                                    className="w-full rounded-lg bg-status-rejected px-5 py-3 text-sm font-semibold text-text-inverse transition-opacity hover:opacity-90 disabled:opacity-60 sm:w-auto"
-                                >
-                                    {translations.delete.submit}
-                                </button>
-                            </div>
+                            <Button
+                                type="submit"
+                                variant="ink-outline"
+                                disabled={deleteForm.processing}
+                                className="min-h-13 self-start"
+                            >
+                                {translations.delete.submit}
+                            </Button>
                         </form>
-                    </section>
+                    </FormSection>
                 </div>
             </div>
 

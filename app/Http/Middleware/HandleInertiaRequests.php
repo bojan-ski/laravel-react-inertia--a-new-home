@@ -60,6 +60,7 @@ class HandleInertiaRequests extends Middleware
             'name' => fn () => __('app.name'),
             'nav' => fn () => __('app.nav'),
             'ui' => fn () => __('app.ui'),
+            'accountTabs' => fn () => $user ? __('app.account_tabs') : null,
             'footer' => fn () => __('app.footer'),
             'adminNav' => fn () => __('app.admin.nav'),
             'unreadMessages' => fn () => $user ? app(ConversationService::class)->unreadCountFor($user) : 0,

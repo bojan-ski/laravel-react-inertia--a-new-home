@@ -18,6 +18,7 @@ export default function AgencyListingRow({ listing, translations, propertyTypeLa
     const propertyLabel = propertyTypeLabels[listing.propertyType] ?? listing.propertyType
     const createdDate = formatDate(listing.createdAt)
     const isClosed = listing.status === 'sold' || listing.status === 'rented'
+    const isRejected = listing.status === 'rejected'
     const closedDate = isClosed && listing.closedAt ? formatDate(listing.closedAt) : null
 
     function handleDelete() {
@@ -35,7 +36,7 @@ export default function AgencyListingRow({ listing, translations, propertyTypeLa
         <div className="rounded-xl border border-border bg-surface p-4 sm:p-5">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div className="min-w-0">
-                    {isClosed ? (
+                    {isClosed || isRejected ? (
                         <p className="font-semibold text-text">{listing.title}</p>
                     ) : (
                         <Link
@@ -60,7 +61,7 @@ export default function AgencyListingRow({ listing, translations, propertyTypeLa
                             {closedDate && ` • ${translations.closed_on.replace(':date', closedDate)}`}
                         </p>
                     )}
-                    <ListingExpiryNote listing={listing} translations={translations} />
+                    <ListingExpiryNote listing={listing} translations={translations} className="mt-1 block" />
                 </div>
 
                 <div className="flex items-center justify-between gap-3 sm:flex-col sm:items-end">
@@ -72,14 +73,16 @@ export default function AgencyListingRow({ listing, translations, propertyTypeLa
                     <div className="flex items-center gap-2">
                         <ListingRenewButton listing={listing} baseUrl="/agency/listings" translations={translations} />
                         <ListingCloseActions listing={listing} baseUrl="/agency/listings" translations={translations} />
-                        <button
-                            type="button"
-                            onClick={() => setConfirmOpen(true)}
-                            aria-label={translations.delete}
-                            className="rounded-lg p-2 text-text-muted transition-colors hover:bg-status-rejected/10 hover:text-status-rejected"
-                        >
-                            <Trash2 className="size-4" />
-                        </button>
+                        {!isRejected && (
+                            <button
+                                type="button"
+                                onClick={() => setConfirmOpen(true)}
+                                aria-label={translations.delete}
+                                className="rounded-lg p-2 text-text-muted transition-colors hover:bg-status-rejected/10 hover:text-status-rejected"
+                            >
+                                <Trash2 className="size-4" />
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>

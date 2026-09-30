@@ -43,6 +43,7 @@ class AgencyProfileController extends Controller
         Gate::authorize('view', $agency);
 
         $listings = $agency->listings()
+            ->forOwnerDashboard()
             ->with('images')
             ->latest()
             ->get()

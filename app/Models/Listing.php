@@ -167,6 +167,15 @@ class Listing extends Model
         $query->whereBelongsTo($user, 'owner');
     }
 
+    #[Scope]
+    protected function forOwnerDashboard(Builder $query): void
+    {
+        $query->withTrashed()
+            ->where(fn (Builder $query) => $query
+                ->whereNull($this->getQualifiedDeletedAtColumn())
+                ->orWhere('status', ListingStatus::Rejected->value));
+    }
+
     public function isPendingReview(): bool
     {
         return $this->status === ListingStatus::PendingReview;

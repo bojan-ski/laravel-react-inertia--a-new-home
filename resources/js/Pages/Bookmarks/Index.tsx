@@ -1,8 +1,14 @@
-import { Head, Link } from '@inertiajs/react'
-import { Heart, Search } from 'lucide-react'
-import ListingCard from '@/Components/Listings/ListingCard'
+import { Head, Link, usePage } from '@inertiajs/react'
+import AccountPageHeader from '@/Components/Account/AccountPageHeader'
+import BookmarkCard from '@/Components/Bookmarks/BookmarkCard'
+import Button from '@/Components/UI/Button'
+import EmptyState from '@/Components/UI/EmptyState'
+import FlashBanner from '@/Components/UI/FlashBanner'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { BookmarksIndexPageProps } from '@/types/bookmark'
+import type { SharedProps } from '@/types/shared'
+
+const gridClasses = 'grid grid-cols-1 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4'
 
 export default function Index({
     listings,
@@ -11,88 +17,92 @@ export default function Index({
     translations,
     listingTranslations,
 }: BookmarksIndexPageProps) {
+    const { flash } = usePage<SharedProps>().props
     const countNoun = listings.length === 1 ? translations.count_one : translations.count_other
+    const perMonth = listingTranslations.card.per_month
 
     return (
         <PublicLayout>
             <Head title={translations.title} />
 
-            <div className="border-b border-border bg-surface">
-                <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-10 sm:flex-row sm:items-end sm:justify-between">
-                    <div>
-                        <h1 className="font-display text-3xl font-semibold text-text">{translations.title}</h1>
-                        <p className="mt-2 text-text-soft">{translations.subtitle}</p>
-                    </div>
-
-                    {canManageSavedSearches && (
+            <AccountPageHeader
+                title={translations.title}
+                subtitle={translations.subtitle}
+                action={
+                    canManageSavedSearches && (
                         <Link
                             href="/saved-searches"
-                            className="flex items-center gap-1.5 self-start rounded-lg border border-border-strong px-4 py-2.5 text-sm font-medium text-text-soft transition-colors hover:border-text hover:text-text sm:self-auto"
+                            className="border-b border-current pb-1 text-sm transition-colors duration-150 hover:text-forest"
                         >
-                            <Search className="size-4" />
-                            {translations.saved_searches_link}
+                            {translations.saved_searches_link} <span aria-hidden="true">→</span>
                         </Link>
-                    )}
-                </div>
-            </div>
+                    )
+                }
+            />
 
-            <div className="mx-auto max-w-7xl px-6 py-8">
-                {listings.length === 0 && closedListings.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center gap-4 py-24 text-center">
-                        <Heart className="size-10 text-text-muted" />
-                        <p className="text-lg text-text-soft">{translations.empty.headline}</p>
-                        <Link
-                            href="/listings"
-                            className="rounded-full bg-brand px-6 py-3 text-sm font-semibold text-text-inverse transition-colors hover:bg-brand-dark"
-                        >
-                            {translations.empty.cta}
-                        </Link>
-                    </div>
+            <div className="flex flex-col gap-8 px-5 pt-8 pb-20 md:px-10 xl:px-16">
+                {flash.success && <FlashBanner message={flash.success} variant="success" className="" />}
+
+                {listings.length === 0 ? (
+                    <EmptyState
+                        title={translations.empty.headline}
+                        action={
+                            <Button href="/listings" variant="secondary" size="sm" className="mt-2">
+                                {translations.empty.cta}
+                            </Button>
+                        }
+                    />
                 ) : (
                     <>
-                        {listings.length > 0 && (
-                            <>
-                                <p className="text-sm text-text-muted">
-                                    {translations.count_prefix} <strong className="text-text">{listings.length}</strong>{' '}
-                                    {countNoun}
-                                </p>
+                        <p className="text-sm text-ink-muted">
+                            {translations.count_prefix} {listings.length} {countNoun}
+                        </p>
 
-                                <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                                    {listings.map((listing) => (
-                                        <ListingCard
-                                            key={listing.id}
-                                            listing={listing}
-                                            translations={listingTranslations.card}
-                                            propertyTypeLabels={listingTranslations.filters.property_types}
-                                        />
-                                    ))}
-                                </div>
-                            </>
-                        )}
-
-                        {closedListings.length > 0 && (
-                            <section className={listings.length > 0 ? 'mt-12 border-t border-border pt-10' : ''}>
-                                <h2 className="text-xl font-semibold text-text">{translations.closed.heading}</h2>
-                                <p className="mt-1 text-sm text-text-muted">{translations.closed.subtitle}</p>
-
-                                <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                                    {closedListings.map((listing) => (
-                                        <ListingCard
-                                            key={listing.id}
-                                            listing={listing}
-                                            translations={listingTranslations.card}
-                                            propertyTypeLabels={listingTranslations.filters.property_types}
-                                            closedLabel={
-                                                listing.status === 'approved'
-                                                    ? translations.closed.expired
-                                                    : translations.closed.status[listing.status]
-                                            }
-                                        />
-                                    ))}
-                                </div>
-                            </section>
-                        )}
+                        <div className={`${gridClasses} sm:gap-y-12`}>
+                            {listings.map((listing) => (
+                                <BookmarkCard
+                                    key={listing.id}
+                                    listing={listing}
+                                    variant="active"
+                                    perMonth={perMonth}
+                                    removeLabel={translations.remove}
+                                />
+                            ))}
+                        </div>
                     </>
+                )}
+
+                {closedListings.length > 0 && (
+                    <section aria-labelledby="closed-bookmarks-heading" className="flex flex-col gap-2 lg:gap-8">
+                        <div className="mt-4 flex flex-col gap-1.5 border-t border-rule pt-8 lg:mt-8 lg:gap-2 lg:pt-12">
+                            <h2
+                                id="closed-bookmarks-heading"
+                                className="text-[28px] font-airy tracking-[-0.02em] lg:text-[40px] lg:tracking-[-0.03em]"
+                            >
+                                {translations.closed.heading}
+                            </h2>
+                            <p className="text-[13px] leading-normal text-ink-muted lg:text-[15px]">
+                                {translations.closed.subtitle}
+                            </p>
+                        </div>
+
+                        <div className={`${gridClasses} sm:gap-y-6`}>
+                            {closedListings.map((listing) => (
+                                <BookmarkCard
+                                    key={listing.id}
+                                    listing={listing}
+                                    variant="closed"
+                                    closedLabel={
+                                        listing.status === 'approved'
+                                            ? translations.closed.expired
+                                            : translations.closed.status[listing.status]
+                                    }
+                                    perMonth={perMonth}
+                                    removeLabel={translations.remove}
+                                />
+                            ))}
+                        </div>
+                    </section>
                 )}
             </div>
         </PublicLayout>

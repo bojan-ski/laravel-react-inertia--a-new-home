@@ -357,13 +357,13 @@ class ListingWorkflowTest extends TestCase
             );
     }
 
-    public function test_soft_deleted_listings_of_any_status_are_excluded_from_owner_dashboard(): void
+    public function test_owner_deleted_listings_are_excluded_from_owner_dashboard(): void
     {
         $owner = $this->regularOwner();
 
         $live = Listing::factory()->pendingReview()->for($owner, 'owner')->create();
 
-        foreach (['approved', 'pendingReview', 'hidden', 'rejected'] as $state) {
+        foreach (['approved', 'pendingReview', 'hidden', 'sold'] as $state) {
             Listing::factory()->{$state}()->for($owner, 'owner')->create()->delete();
         }
 

@@ -22,6 +22,14 @@ class BookmarkPageTest extends TestCase
             ->assertInertia(fn (Assert $page) => $page->component('Bookmarks/Index'));
     }
 
+    public function test_page_receives_the_heart_remove_label(): void
+    {
+        $this->actingAs(User::factory()->regularUser()->create())
+            ->get('/bookmarks')
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('translations.remove', 'Remove from bookmarks'));
+    }
+
     public function test_guest_is_redirected_to_login(): void
     {
         $this->get('/bookmarks')->assertRedirect('/login');

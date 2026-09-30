@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { router } from '@inertiajs/react'
+import Button from '@/Components/UI/Button'
 import type { ListingRenewButtonProps } from '@/types/listing'
 
 export default function ListingRenewButton({ listing, baseUrl, translations }: ListingRenewButtonProps) {
@@ -22,13 +23,8 @@ export default function ListingRenewButton({ listing, baseUrl, translations }: L
     }
 
     return (
-        <button
-            type="button"
-            onClick={handleRenew}
-            disabled={processing}
-            className="rounded-lg bg-brand px-3 py-1.5 text-sm font-semibold text-text-inverse transition-colors hover:bg-brand-dark disabled:opacity-60"
-        >
+        <Button variant="secondary" size="sm" onClick={handleRenew} disabled={processing} className="px-3.5! text-[13px]!">
             {translations.renew}
-        </button>
+        </Button>
     )
 }

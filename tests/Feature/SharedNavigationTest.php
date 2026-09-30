@@ -38,6 +38,23 @@ class SharedNavigationTest extends TestCase
                 ->where('ui.hide_password', __('app.ui.hide_password')));
     }
 
+    public function test_account_tabs_are_shared_to_signed_in_users(): void
+    {
+        $this->actingAs(User::factory()->regularUser()->create())
+            ->get('/bookmarks')
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('accountTabs', __('app.account_tabs'))
+                ->where('accountTabs.my_listings', 'My Listings')
+                ->where('accountTabs.agency_profile', 'Agency Profile')
+                ->where('accountTabs.label', 'Account'));
+    }
+
+    public function test_account_tabs_are_not_shared_to_guests(): void
+    {
+        $this->get('/listings')
+            ->assertInertia(fn (Assert $page) => $page->where('accountTabs', null));
+    }
+
     /**
      * @return array<string, array{string, string}>
      */

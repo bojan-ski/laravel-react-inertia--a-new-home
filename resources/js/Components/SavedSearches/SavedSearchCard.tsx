@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { Link, router, useForm } from '@inertiajs/react'
+import { router, useForm } from '@inertiajs/react'
 import type { FormEvent } from 'react'
-import { Bell, BellOff, Pencil, Trash2 } from 'lucide-react'
 import { formatDate } from '@/Components/Listings/listingFormat'
+import Button from '@/Components/UI/Button'
 import ConfirmDialog from '@/Components/UI/ConfirmDialog'
+import TextField from '@/Components/UI/TextField'
 import type { SavedSearchCardProps } from '@/types/saved-search'
 
 export default function SavedSearchCard({ search, translations }: SavedSearchCardProps) {
@@ -57,104 +58,89 @@ export default function SavedSearchCard({ search, translations }: SavedSearchCar
     }
 
     const chips = search.summary.length > 0 ? search.summary : [translations.no_filters]
+    const on = search.alertsEnabled
 
     return (
-        <article className="flex flex-col gap-4 rounded-xl border border-border bg-surface p-5 shadow-sm sm:p-6">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <li className="flex flex-col gap-3.5 border-b border-rule py-6 lg:grid lg:grid-cols-[minmax(0,1fr)_240px_280px] lg:items-center lg:gap-10 lg:py-8">
+            <div className="flex min-w-0 flex-col gap-3">
                 {renaming ? (
-                    <form onSubmit={submitRename} className="flex flex-1 flex-col gap-2">
-                        <label htmlFor={`saved-search-name-${search.id}`} className="sr-only">
-                            {translations.rename_label}
-                        </label>
-                        <div className="flex flex-col gap-2 sm:flex-row">
-                            <input
-                                id={`saved-search-name-${search.id}`}
-                                type="text"
-                                value={data.name}
-                                onChange={(event) => setData('name', event.target.value)}
-                                maxLength={100}
-                                autoFocus
-                                className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-text outline-none transition-colors focus:border-brand"
-                            />
-                            <div className="flex gap-2">
-                                <button
-                                    type="submit"
-                                    disabled={processing}
-                                    className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-text-inverse transition-colors hover:bg-brand-dark disabled:opacity-50"
-                                >
-                                    {translations.save_name}
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={cancelRename}
-                                    disabled={processing}
-                                    className="rounded-lg border border-border-strong px-4 py-2 text-sm font-medium text-text-soft transition-colors hover:border-text hover:text-text disabled:opacity-50"
-                                >
-                                    {translations.cancel}
-                                </button>
-                            </div>
+                    <form onSubmit={submitRename} className="flex flex-col gap-3">
+                        <TextField
+                            id={`saved-search-name-${search.id}`}
+                            label={translations.rename_label}
+                            value={data.name}
+                            onChange={(event) => setData('name', event.target.value)}
+                            maxLength={100}
+                            autoFocus
+                            error={errors.name}
+                        />
+                        <div className="flex gap-3">
+                            <Button type="submit" size="sm" disabled={processing}>
+                                {translations.save_name}
+                            </Button>
+                            <Button variant="secondary" size="sm" onClick={cancelRename} disabled={processing}>
+                                {translations.cancel}
+                            </Button>
                         </div>
-                        {errors.name && <p className="text-sm text-status-rejected">{errors.name}</p>}
                     </form>
                 ) : (
-                    <div className="flex min-w-0 items-start gap-2">
-                        <h2 className="wrap-break-word text-lg font-semibold text-text">{search.name}</h2>
-                        <button
-                            type="button"
-                            onClick={startRename}
-                            aria-label={translations.rename}
-                            className="mt-1 shrink-0 text-text-muted transition-colors hover:text-text"
-                        >
-                            <Pencil className="size-4" />
-                        </button>
-                    </div>
+                    <h2 className="text-[22px] leading-tight font-light tracking-[-0.015em] wrap-break-word lg:text-[28px]">
+                        {search.name}
+                    </h2>
                 )}
 
-                <button
-                    type="button"
-                    onClick={toggleAlerts}
-                    disabled={toggling}
-                    aria-pressed={search.alertsEnabled}
-                    className={`flex shrink-0 items-center gap-2 self-start rounded-full border px-3 py-1.5 text-sm font-medium transition-colors disabled:opacity-50 ${
-                        search.alertsEnabled
-                            ? 'border-brand bg-brand-soft text-brand'
-                            : 'border-border text-text-soft hover:text-text'
-                    }`}
-                >
-                    {search.alertsEnabled ? <Bell className="size-4" /> : <BellOff className="size-4" />}
-                    {translations.alerts_label}: {search.alertsEnabled ? translations.alerts_on : translations.alerts_off}
-                </button>
+                <ul className="flex flex-wrap gap-1.5">
+                    {chips.map((chip, index) => (
+                        <li key={`${index}-${chip}`} className="border border-rule px-2.5 py-1.25 text-[13px]">
+                            {chip}
+                        </li>
+                    ))}
+                </ul>
+
+                <p className="text-[13px] text-ink-muted">
+                    {translations.created.replace(':date', formatDate(search.createdAt))}
+                </p>
             </div>
 
-            <ul className="flex flex-wrap gap-2">
-                {chips.map((chip, index) => (
-                    <li key={`${index}-${chip}`} className="rounded-full bg-surface-muted px-3 py-1 text-sm text-text-soft">
-                        {chip}
-                    </li>
-                ))}
-            </ul>
+            <button
+                type="button"
+                role="switch"
+                aria-checked={on}
+                onClick={toggleAlerts}
+                disabled={toggling}
+                className="flex min-h-11 items-center gap-3 self-start text-sm text-ink disabled:cursor-not-allowed disabled:opacity-45 lg:self-center"
+            >
+                <span
+                    aria-hidden="true"
+                    className={`flex h-5.5 w-10 shrink-0 border border-ink p-0.75 transition-colors duration-150 ${
+                        on ? 'justify-end bg-forest' : 'justify-start'
+                    }`}
+                >
+                    <span className={`size-3.5 ${on ? 'bg-paper' : 'bg-ink'}`} />
+                </span>
+                <span>
+                    {translations.alerts_label}
+                    <span aria-hidden="true"> · {on ? translations.alerts_on : translations.alerts_off}</span>
+                </span>
+            </button>
 
-            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
-                <p className="text-sm text-text-muted">
-                    {translations.created.replace(':date', formatDate(search.createdAt, 'long'))}
-                </p>
-
-                <div className="flex items-center gap-4">
-                    <Link
-                        href={search.url}
-                        className="text-sm font-semibold text-brand transition-colors hover:text-brand-dark"
-                    >
-                        {translations.view_listings}
-                    </Link>
-                    <button
-                        type="button"
-                        onClick={() => setConfirmingDelete(true)}
-                        className="flex items-center gap-1.5 text-sm font-medium text-text-soft transition-colors hover:text-status-rejected"
-                    >
-                        <Trash2 className="size-4" />
-                        {translations.delete}
-                    </button>
-                </div>
+            <div className="flex flex-wrap items-center gap-5 lg:justify-end">
+                <Button
+                    variant="strong-link"
+                    href={search.url}
+                    className="text-sm"
+                    trailing={<span aria-hidden="true">→</span>}
+                >
+                    {translations.view_listings}
+                </Button>
+                {!renaming && (
+                    <Button variant="link" onClick={startRename}>
+                        {translations.rename}
+                    </Button>
+                )}
+                <Button variant="link" onClick={() => setConfirmingDelete(true)}>
+                    {translations.delete}
+                </Button>
             </div>
 
             <ConfirmDialog
@@ -167,6 +153,6 @@ export default function SavedSearchCard({ search, translations }: SavedSearchCar
                 onConfirm={confirmDelete}
                 onCancel={() => setConfirmingDelete(false)}
             />
-        </article>
+        </li>
     )
 }

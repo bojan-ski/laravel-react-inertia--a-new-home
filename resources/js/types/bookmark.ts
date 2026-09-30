@@ -21,12 +21,21 @@ export interface BookmarksTranslations {
     flash_added: string
     flash_removed: string
     saved_searches_link: string
+    remove: string
     empty: BookmarksEmptyTranslations
     closed: BookmarksClosedTranslations
 }
 
 export interface ClosedBookmarkCardData extends ListingCardData {
     status: ClosedListingStatusValue | 'approved'
+}
+
+export interface BookmarkCardProps {
+    listing: ListingCardData
+    variant: 'active' | 'closed'
+    closedLabel?: string
+    perMonth: string
+    removeLabel: string
 }
 
 export interface BookmarksIndexPageProps {
