@@ -4,7 +4,7 @@ All photos are from [Unsplash](https://unsplash.com) under the [Unsplash License
 
 | File | Photographer | Used for |
 |---|---|---|
-| `hero-modern-house-white.webp` | [Frames For Your Heart](https://unsplash.com/@framesforyourheart) | Landing hero (2000px) |
+| `hero-modern-house-white.webp` | [Frames For Your Heart](https://unsplash.com/@framesforyourheart) | Landing hero, About page (2000px) |
 | `family-house-white-brown.webp` | [Ярослав Алексеенко](https://unsplash.com/@webaliser) | Landing photo pair (1200px) |
 | `stone-house-hillside.webp` | [juan verdaguer aguerrebehere](https://unsplash.com/@urbanrival) | Landing photo pair (1200px), Create Account panel |
 | `family-house-white-brown-portrait.webp` | [Ярослав Алексеенко](https://unsplash.com/@webaliser) | Sign In panel (centred 1125×1500 crop) |

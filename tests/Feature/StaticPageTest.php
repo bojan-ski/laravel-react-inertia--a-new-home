@@ -34,7 +34,9 @@ class StaticPageTest extends TestCase
                 ->component('Static/Show')
                 ->where('page.title', __("pages.{$key}.title"))
                 ->where('page.lead', __("pages.{$key}.lead"))
-                ->has('page.sections'));
+                ->has('page.sections')
+                ->where('pageKey', $key)
+                ->where('translations.index_label', __('app.static_page.index_label')));
     }
 
     #[DataProvider('pages')]

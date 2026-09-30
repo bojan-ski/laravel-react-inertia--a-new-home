@@ -1,7 +1,10 @@
 import { Head, useForm, usePage } from '@inertiajs/react'
 import type { FormEvent } from 'react'
+import Button from '@/Components/UI/Button'
 import FlashBanner from '@/Components/UI/FlashBanner'
 import HoneypotField from '@/Components/UI/HoneypotField'
+import Kicker from '@/Components/UI/Kicker'
+import TextAreaField from '@/Components/UI/TextAreaField'
 import TextField from '@/Components/UI/TextField'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { ContactFormData, ContactPageProps } from '@/types/contact'
@@ -28,34 +31,26 @@ export default function Show({ defaultEmail, translations }: ContactPageProps) {
         <PublicLayout>
             <Head title={translations.title} />
 
-            <div className="border-b border-border bg-surface">
-                <div className="mx-auto max-w-6xl px-6 py-14 md:py-20">
-                    <p className="text-xs font-medium uppercase tracking-wider text-accent">{translations.eyebrow}</p>
-                    <h1 className="mt-3 font-display text-4xl font-semibold text-text sm:text-5xl">{translations.title}</h1>
-                    <p className="mt-4 max-w-2xl text-lg leading-relaxed text-text-soft">{translations.lead}</p>
+            <div className="mx-auto flex max-w-360 flex-col lg:grid lg:grid-cols-[minmax(0,6fr)_minmax(0,1fr)_minmax(0,5fr)] lg:grid-rows-[auto_1fr] lg:gap-y-14 lg:px-16 lg:pt-18 lg:pb-30">
+                <div className="flex flex-col gap-3.5 px-5 pt-9 pb-7 md:px-10 lg:col-start-1 lg:row-start-1 lg:gap-5 lg:p-0">
+                    <Kicker size="sm" className="lg:text-xs">
+                        {translations.eyebrow}
+                    </Kicker>
+                    <h1 className="text-[52px] leading-[0.92] font-extralight tracking-[-0.045em] wrap-break-word md:text-[80px] lg:text-[112px] lg:leading-[0.9]">
+                        {translations.title}
+                    </h1>
+                    <p className="text-base/normal font-light lg:max-w-[30em] lg:text-xl/normal">{translations.lead}</p>
                 </div>
-            </div>
 
-            <div className="mx-auto grid max-w-6xl grid-cols-1 gap-12 px-6 py-14 md:py-16 lg:grid-cols-[1fr_1.5fr]">
-                <aside>
-                    <h2 className="font-display text-2xl font-semibold text-text">{translations.details_heading}</h2>
-                    <div className="mt-4 flex flex-col gap-4">
-                        {translations.details.map((paragraph) => (
-                            <p key={paragraph} className="leading-relaxed text-text-soft">
-                                {paragraph}
-                            </p>
-                        ))}
-                    </div>
-                </aside>
+                <div className="bg-sand px-5 py-7 md:px-10 lg:col-start-3 lg:row-span-2 lg:row-start-1 lg:self-start lg:p-12">
+                    <form onSubmit={handleSubmit} className="flex flex-col gap-6 lg:gap-7">
+                        {flash.success && <FlashBanner message={flash.success} variant="success" className="" />}
 
-                <div className="rounded-2xl border border-border bg-surface p-6 shadow-sm sm:p-8">
-                    {flash.success && <FlashBanner message={flash.success} variant="success" />}
-
-                    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
                         <TextField
                             id="email"
                             type="email"
                             label={translations.fields.email}
+                            placeholder={translations.placeholders.email}
                             value={data.email}
                             onChange={(event) => setData('email', event.target.value)}
                             error={errors.email}
@@ -66,6 +61,7 @@ export default function Show({ defaultEmail, translations }: ContactPageProps) {
                         <TextField
                             id="subject"
                             label={translations.fields.subject}
+                            placeholder={translations.placeholders.subject}
                             value={data.subject}
                             onChange={(event) => setData('subject', event.target.value)}
                             error={errors.subject}
@@ -73,32 +69,41 @@ export default function Show({ defaultEmail, translations }: ContactPageProps) {
                             required
                         />
 
-                        <div className="flex flex-col gap-1.5">
-                            <label htmlFor="message" className="text-sm font-medium text-text-soft">
-                                {translations.fields.message}
-                            </label>
-                            <textarea
-                                id="message"
-                                rows={7}
-                                value={data.message}
-                                onChange={(event) => setData('message', event.target.value)}
-                                maxLength={5000}
-                                required
-                                className="w-full resize-y rounded-lg border border-border bg-surface px-4 py-3 text-text outline-none transition-colors focus:border-brand"
-                            />
-                            {errors.message && <p className="text-sm text-status-rejected">{errors.message}</p>}
-                        </div>
+                        <TextAreaField
+                            id="message"
+                            rows={6}
+                            label={translations.fields.message}
+                            placeholder={translations.placeholders.message}
+                            value={data.message}
+                            onChange={(event) => setData('message', event.target.value)}
+                            error={errors.message}
+                            maxLength={5000}
+                            required
+                        />
 
                         <HoneypotField value={data.website} error={errors.website} onChange={(value) => setData('website', value)} />
 
-                        <button
+                        <Button
                             type="submit"
+                            size="lg"
+                            fullWidth
                             disabled={processing}
-                            className="w-full rounded-full bg-brand px-6 py-3 text-sm font-semibold text-text-inverse transition-colors hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto sm:self-start"
+                            trailing={<span aria-hidden="true">→</span>}
                         >
                             {processing ? translations.sending : translations.submit}
-                        </button>
+                        </Button>
                     </form>
+                </div>
+
+                <div className="flex flex-col gap-2.5 px-5 pt-7 pb-10 md:px-10 lg:col-start-1 lg:row-start-2 lg:gap-3.5 lg:self-start lg:border-t lg:border-rule lg:p-0 lg:pt-7">
+                    <Kicker as="h2" size="sm" className="lg:text-xs">
+                        {translations.details_heading}
+                    </Kicker>
+                    {translations.details.map((paragraph) => (
+                        <p key={paragraph} className="text-sm/[1.6] font-book lg:max-w-[34em] lg:text-base/[1.7]">
+                            {paragraph}
+                        </p>
+                    ))}
                 </div>
             </div>
         </PublicLayout>

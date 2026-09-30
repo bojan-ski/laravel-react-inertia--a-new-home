@@ -44,6 +44,15 @@ class ContactMessageTest extends TestCase
             ->assertInertia(fn (Assert $page) => $page->where('defaultEmail', $user->email));
     }
 
+    public function test_contact_page_carries_field_placeholders(): void
+    {
+        $this->get('/contact')
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('translations.placeholders.email', __('app.contact.placeholders.email'))
+                ->where('translations.placeholders.subject', __('app.contact.placeholders.subject'))
+                ->where('translations.placeholders.message', __('app.contact.placeholders.message')));
+    }
+
     public function test_guest_can_submit_a_message(): void
     {
         $this->post('/contact', $this->validPayload())
