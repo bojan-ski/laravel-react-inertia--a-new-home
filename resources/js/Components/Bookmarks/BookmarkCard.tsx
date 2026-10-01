@@ -3,6 +3,7 @@ import { Link, router } from '@inertiajs/react'
 import { Heart } from 'lucide-react'
 import { formatPrice } from '@/Components/Listings/listingFormat'
 import ListingImagePlaceholder from '@/Components/Listings/ListingImagePlaceholder'
+import { LISTING_THUMB_SIZE } from '@/Components/Listings/listingImageSize'
 import StatusBadge from '@/Components/UI/StatusBadge'
 import { useActionLabel } from '@/Components/UI/useActionLabel'
 import type { BookmarkCardProps } from '@/types/bookmark'
@@ -31,6 +32,10 @@ export default function BookmarkCard({ listing, variant, closedLabel, perMonth, 
                     <img
                         src={listing.imageUrl}
                         alt=""
+                        width={LISTING_THUMB_SIZE.width}
+                        height={LISTING_THUMB_SIZE.height}
+                        loading="lazy"
+                        decoding="async"
                         className={`absolute inset-0 size-full object-cover ${isClosed ? 'opacity-45' : ''}`}
                     />
                 ) : (

@@ -3,6 +3,7 @@ import ListingReportActions from '@/Components/Admin/ListingReportActions'
 import ListingReportList from '@/Components/Admin/ListingReportList'
 import { notLiveNoticeId } from '@/Components/Admin/listingReportIds'
 import ListingImagePlaceholder from '@/Components/Listings/ListingImagePlaceholder'
+import { LISTING_THUMB_SIZE } from '@/Components/Listings/listingImageSize'
 import { countLabel, formatPrice } from '@/Components/Listings/listingFormat'
 import Button from '@/Components/UI/Button'
 import FlashBanner from '@/Components/UI/FlashBanner'
@@ -38,8 +39,11 @@ export default function ListingReportModerationRow({
                         <img
                             src={listing.imageUrl}
                             alt=""
+                            width={LISTING_THUMB_SIZE.width}
+                            height={LISTING_THUMB_SIZE.height}
                             className="absolute inset-0 size-full object-cover"
                             loading="lazy"
+                            decoding="async"
                         />
                     ) : (
                         <ListingImagePlaceholder className="absolute inset-0" />

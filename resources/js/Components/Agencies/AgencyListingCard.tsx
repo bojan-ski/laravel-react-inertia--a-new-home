@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react'
 import { Heart } from 'lucide-react'
 import ListingImagePlaceholder from '@/Components/Listings/ListingImagePlaceholder'
+import { LISTING_THUMB_SIZE } from '@/Components/Listings/listingImageSize'
 import { formatPrice } from '@/Components/Listings/listingFormat'
 import { useBookmarkToggle } from '@/Components/Listings/useListingActions'
 import Kicker from '@/Components/UI/Kicker'
@@ -21,7 +22,10 @@ export default function AgencyListingCard({ listing, translations, propertyTypeL
                     <img
                         src={listing.imageUrl}
                         alt=""
+                        width={LISTING_THUMB_SIZE.width}
+                        height={LISTING_THUMB_SIZE.height}
                         loading="lazy"
+                        decoding="async"
                         className="absolute inset-0 size-full object-cover"
                     />
                 ) : (

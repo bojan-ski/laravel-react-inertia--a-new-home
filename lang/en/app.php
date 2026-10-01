@@ -3,6 +3,19 @@
 return [
     'name' => config('app.name'),
 
+    'seo' => [
+        'site_name' => 'New Beginning',
+        'description' => 'New Beginning is a moderated property marketplace for homes for sale and rent across Europe, listed by verified owners and agencies.',
+        'image_alt' => 'A modern white house beside a pool, with the words “Find your home in Europe”',
+        'breadcrumb_home' => 'Home',
+        'agency_description' => ':name is a verified estate agency on New Beginning. Browse its homes for sale and rent.',
+        'pages' => [
+            'home' => 'Find homes for sale and rent across Europe. Every listing on New Beginning is reviewed before it goes live, from verified owners and agencies.',
+            'listings' => 'Browse houses, flats, villas and land for sale and rent across Europe. Filter by city, price, size and amenities.',
+            'agencies' => 'Browse verified estate agencies on New Beginning and see the homes each one has for sale and rent.',
+        ],
+    ],
+
     'nav' => [
         'brand' => 'New Beginning',
         'listings' => 'Listings',
@@ -124,7 +137,7 @@ return [
     ],
 
     'landing' => [
-        'title' => 'Home',
+        'title' => 'Homes for Sale and Rent in Europe',
 
         'hero' => [
             'headline' => 'Find your perfect new beginning.',

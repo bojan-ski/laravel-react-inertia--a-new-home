@@ -3,6 +3,7 @@ import type { AccountTabsTranslations, FooterTranslations, NavTranslations } fro
 
 export interface SharedProps {
     name: string
+    head: string[]
     nav: NavTranslations
     ui: UiTranslations
     accountTabs: AccountTabsTranslations | null

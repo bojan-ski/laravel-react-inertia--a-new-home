@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 
 use App\Services\AdminStatsService;
 use App\Services\ConversationService;
+use App\Services\Seo\PageSeo;
+use App\Services\Seo\SeoHead;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -59,6 +61,7 @@ class HandleInertiaRequests extends Middleware
                 'throttled' => fn () => $request->session()->get('throttled'),
             ],
             'name' => fn () => __('app.name'),
+            'head' => fn () => app(SeoHead::class)->render(PageSeo::defaults(), $request),
             'nav' => fn () => __('app.nav'),
             'ui' => fn () => __('app.ui'),
             'accountTabs' => fn () => $user ? __('app.account_tabs') : null,

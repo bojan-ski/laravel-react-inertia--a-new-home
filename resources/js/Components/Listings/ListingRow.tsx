@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react'
 import { countLabel, formatArea, formatPrice } from '@/Components/Listings/listingFormat'
 import ListingImagePlaceholder from '@/Components/Listings/ListingImagePlaceholder'
+import { LISTING_THUMB_SIZE } from '@/Components/Listings/listingImageSize'
 import ListingSaveButton from '@/Components/Listings/ListingSaveButton'
 import Kicker from '@/Components/UI/Kicker'
 import type { ListingRowProps } from '@/types/listing'
@@ -23,7 +24,15 @@ export default function ListingRow({ listing, translations, propertyTypeLabels }
         <article className="relative grid grid-cols-[240px_minmax(0,1fr)_180px_150px] items-center gap-8 border-b border-rule py-7 transition-colors duration-150 hover:bg-sand/60 xl:grid-cols-[320px_minmax(0,1fr)_220px_180px] xl:gap-12">
             <div className="aspect-3/2 overflow-hidden">
                 {listing.imageUrl ? (
-                    <img src={listing.imageUrl} alt={listing.title} loading="lazy" className="size-full object-cover" />
+                    <img
+                        src={listing.imageUrl}
+                        alt={listing.title}
+                        width={LISTING_THUMB_SIZE.width}
+                        height={LISTING_THUMB_SIZE.height}
+                        loading="lazy"
+                        decoding="async"
+                        className="size-full object-cover"
+                    />
                 ) : (
                     <ListingImagePlaceholder />
                 )}
