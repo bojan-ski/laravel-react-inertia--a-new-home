@@ -389,7 +389,6 @@ export interface AdminAgenciesTranslations {
     owner: string
     contact: string
     website: string
-    address: string
     legal: string
     registration: string
     registration_value: string

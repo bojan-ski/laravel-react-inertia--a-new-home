@@ -2,7 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { X } from 'lucide-react'
 import { useFocusTrap } from '@/Components/UI/useFocusTrap'
-import type { DialogActionsProps, DialogProps, SheetPanelProps } from '@/types/ui'
+import type { DialogActionsProps, DialogProps, ModalPanelProps, SheetPanelProps } from '@/types/ui'
 
 export function DialogActions({ children }: DialogActionsProps) {
     return <div className="flex flex-wrap justify-end gap-2.5">{children}</div>
@@ -57,41 +57,17 @@ function SheetPanel({ onClose, title, initialFocusRef, closeLabel, footer, child
     )
 }
 
-export default function Dialog({
-    open,
-    onClose,
-    title,
-    description,
-    size = 'form',
-    initialFocusRef,
-    closeLabel,
-    footer,
-    children,
-}: DialogProps) {
+function ModalPanel({ onClose, title, description, size, initialFocusRef, children }: ModalPanelProps) {
     const titleId = useId()
     const descriptionId = useId()
-    const panelRef = useFocusTrap(open && size !== 'sheet', onClose, initialFocusRef)
+    const [returnFocusTo] = useState(() =>
+        document.activeElement instanceof HTMLElement ? document.activeElement : null,
+    )
+    const panelRef = useFocusTrap(true, onClose, initialFocusRef)
 
-    if (!open) {
-        return null
-    }
+    useEffect(() => () => returnFocusTo?.focus(), [returnFocusTo])
 
-    if (size === 'sheet') {
-        return createPortal(
-            <SheetPanel
-                onClose={onClose}
-                title={title}
-                initialFocusRef={initialFocusRef}
-                closeLabel={closeLabel}
-                footer={footer}
-            >
-                {children}
-            </SheetPanel>,
-            document.body,
-        )
-    }
-
-    return createPortal(
+    return (
         <div className="fixed inset-0 z-60 flex items-center justify-center bg-[#141a16]/45 p-4" onClick={onClose}>
             <div
                 ref={panelRef}
@@ -117,7 +93,50 @@ export default function Dialog({
 
                 {children}
             </div>
-        </div>,
+        </div>
+    )
+}
+
+export default function Dialog({
+    open,
+    onClose,
+    title,
+    description,
+    size = 'form',
+    initialFocusRef,
+    closeLabel,
+    footer,
+    children,
+}: DialogProps) {
+    if (!open) {
+        return null
+    }
+
+    if (size === 'sheet') {
+        return createPortal(
+            <SheetPanel
+                onClose={onClose}
+                title={title}
+                initialFocusRef={initialFocusRef}
+                closeLabel={closeLabel}
+                footer={footer}
+            >
+                {children}
+            </SheetPanel>,
+            document.body,
+        )
+    }
+
+    return createPortal(
+        <ModalPanel
+            onClose={onClose}
+            title={title}
+            description={description}
+            size={size}
+            initialFocusRef={initialFocusRef}
+        >
+            {children}
+        </ModalPanel>,
         document.body,
     )
 }

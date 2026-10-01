@@ -64,6 +64,7 @@ export default function Register({ translations, layout }: RegisterPageProps) {
 
                         <TextField
                             id="name"
+                            aria-required
                             type="text"
                             label={translations.name}
                             placeholder={translations.name_placeholder}
@@ -75,6 +76,7 @@ export default function Register({ translations, layout }: RegisterPageProps) {
 
                         <TextField
                             id="email"
+                            aria-required
                             type="email"
                             label={translations.email}
                             placeholder={translations.email_placeholder}
@@ -87,6 +89,7 @@ export default function Register({ translations, layout }: RegisterPageProps) {
                         <div className="grid gap-5.5 sm:grid-cols-2 sm:gap-x-6">
                             <PasswordField
                                 id="password"
+                                aria-required
                                 label={translations.password}
                                 placeholder={translations.password_placeholder}
                                 autoComplete="new-password"
@@ -99,6 +102,7 @@ export default function Register({ translations, layout }: RegisterPageProps) {
 
                             <PasswordField
                                 id="password_confirmation"
+                                aria-required
                                 label={translations.confirm_password}
                                 placeholder={translations.password_placeholder}
                                 autoComplete="new-password"

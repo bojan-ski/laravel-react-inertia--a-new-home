@@ -98,6 +98,8 @@ export default function Show({ conversation, conversations, canReply, translatio
 
                     <div
                         ref={threadRef}
+                        role="log"
+                        aria-live="polite"
                         className="flex min-h-0 flex-1 flex-col gap-3.5 overflow-y-auto p-5 lg:gap-4.5 lg:pt-8 lg:pr-10 lg:pb-6 lg:pl-8 xl:pr-16 xl:pl-12"
                     >
                         {messages.length === 0 ? (

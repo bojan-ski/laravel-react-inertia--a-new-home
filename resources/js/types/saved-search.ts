@@ -31,7 +31,6 @@ export interface SavedSearchUnsubscribeTranslations {
 export interface SavedSearchesTranslations {
     title: string
     subtitle: string
-    back: string
     count: string
     created: string
     alerts_label: string

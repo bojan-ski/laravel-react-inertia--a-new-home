@@ -34,6 +34,13 @@ export interface DialogProps {
 
 export type SheetPanelProps = Omit<DialogProps, 'open' | 'size' | 'description'>
 
+export type ModalPanelProps = Omit<DialogProps, 'open' | 'closeLabel' | 'footer'>
+
+export interface SkipLinkProps {
+    label: string
+    targetId?: string
+}
+
 export interface PopoverProps {
     id: string
     label: ReactNode
@@ -117,6 +124,7 @@ export interface SegmentedToggleProps<T extends string = string> {
     size?: 'sm' | 'bar' | 'md' | 'wide' | 'spread'
     tone?: 'default' | 'on-photo'
     showLegend?: boolean
+    describedBy?: string
     className?: string
 }
 

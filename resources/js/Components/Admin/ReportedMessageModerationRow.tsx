@@ -4,6 +4,7 @@ import { formatDate } from '@/Components/Listings/listingFormat'
 import Button from '@/Components/UI/Button'
 import ConfirmDialog from '@/Components/UI/ConfirmDialog'
 import Kicker from '@/Components/UI/Kicker'
+import { useActionLabel } from '@/Components/UI/useActionLabel'
 import type { ReportedMessageModerationRowProps } from '@/types/reported-message'
 
 export default function ReportedMessageModerationRow({
@@ -12,6 +13,8 @@ export default function ReportedMessageModerationRow({
 }: ReportedMessageModerationRowProps) {
     const [suspendOpen, setSuspendOpen] = useState(false)
     const [processing, setProcessing] = useState(false)
+    const actionLabel = useActionLabel()
+    const subject = report.messageSenderName ?? report.listingTitle ?? ''
 
     function resolve() {
         router.post(`/admin/reported-messages/${report.id}/resolve`, {}, {
@@ -71,10 +74,23 @@ export default function ReportedMessageModerationRow({
             </div>
 
             <div className="grid grid-cols-2 gap-2.5 border-t border-ink pt-5 lg:sticky lg:top-8 lg:flex lg:flex-col lg:self-start">
-                <Button variant="secondary" size="sm" onClick={resolve} disabled={processing} className="w-full">
+                <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={resolve}
+                    disabled={processing}
+                    aria-label={actionLabel(translations.actions.resolve, subject)}
+                    className="w-full"
+                >
                     {translations.actions.resolve}
                 </Button>
-                <Button size="sm" onClick={() => setSuspendOpen(true)} disabled={processing} className="w-full">
+                <Button
+                    size="sm"
+                    onClick={() => setSuspendOpen(true)}
+                    disabled={processing}
+                    aria-label={actionLabel(translations.actions.suspend, subject)}
+                    className="w-full"
+                >
                     {translations.actions.suspend}
                 </Button>
             </div>

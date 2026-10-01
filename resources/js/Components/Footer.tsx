@@ -35,7 +35,10 @@ export default function Footer() {
     return (
         <footer className="border-t border-rule bg-paper text-ink">
             <div className="mx-auto flex max-w-360 flex-col gap-7 px-5 pt-10 pb-7 md:px-10 lg:gap-12 lg:px-16 lg:pt-16 lg:pb-8">
-                <div className="grid grid-cols-2 gap-x-4 gap-y-6 lg:grid-cols-[minmax(0,2fr)_repeat(3,minmax(0,1fr))] lg:gap-8">
+                <nav
+                    aria-label={footer.aria_label}
+                    className="grid grid-cols-2 gap-x-4 gap-y-6 lg:grid-cols-[minmax(0,2fr)_repeat(3,minmax(0,1fr))] lg:gap-8"
+                >
                     <div className="col-span-2 flex flex-col gap-2.5 lg:col-span-1">
                         <Link href="/" className="self-start text-[15px] font-medium tracking-[0.04em] text-ink lg:text-[17px]">
                             {footer.brand}
@@ -46,7 +49,7 @@ export default function Footer() {
                     <FooterLinkColumn heading={footer.company} links={company} />
                     <FooterLinkColumn heading={footer.legal} links={legal} />
                     <FooterLinkColumn heading={footer.connect} links={connect} />
-                </div>
+                </nav>
 
                 <div className="flex flex-col gap-4 border-t border-rule pt-4 text-xs text-ink-muted lg:flex-row lg:items-center lg:justify-between lg:border-t-0 lg:pt-0 lg:text-[13px]">
                     <p>{footer.copyright.replace(':year', String(year))}</p>

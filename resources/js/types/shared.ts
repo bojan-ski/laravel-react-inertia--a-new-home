@@ -30,6 +30,7 @@ export interface UiTranslations {
     dismiss: string
     show_password: string
     hide_password: string
+    action_for: string
 }
 
 export interface MessageNotificationTranslations {

@@ -50,6 +50,7 @@ export default function RejectListingDialog({
                     <TextAreaField
                         ref={textareaRef}
                         id="reject-reason"
+                        aria-required
                         label={dialog.reason_label}
                         value={data.reason}
                         onChange={(event) => setData('reason', event.target.value)}

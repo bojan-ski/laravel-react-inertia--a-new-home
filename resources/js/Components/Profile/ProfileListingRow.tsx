@@ -7,6 +7,7 @@ import ListingRenewButton from '@/Components/Listings/ListingRenewButton'
 import Button from '@/Components/UI/Button'
 import ConfirmDialog from '@/Components/UI/ConfirmDialog'
 import StatusBadge from '@/Components/UI/StatusBadge'
+import { useActionLabel } from '@/Components/UI/useActionLabel'
 import type { ListingStatusValue } from '@/types/listing'
 import type { ProfileListingRowProps } from '@/types/profile'
 
@@ -15,6 +16,7 @@ const editableStatuses: ListingStatusValue[] = ['pending_review', 'approved', 'h
 export default function ProfileListingRow({ listing, translations }: ProfileListingRowProps) {
     const [confirmOpen, setConfirmOpen] = useState(false)
     const [processing, setProcessing] = useState(false)
+    const actionLabel = useActionLabel()
 
     const isClosed = listing.status === 'sold' || listing.status === 'rented'
     const isRejected = listing.status === 'rejected'
@@ -69,12 +71,21 @@ export default function ProfileListingRow({ listing, translations }: ProfileList
     const actions = !isRejected && (
         <>
             {editableStatuses.includes(listing.status) && (
-                <Button variant="strong-link" href={`/my-listings/${listing.id}/edit`} className="text-sm">
+                <Button
+                    variant="strong-link"
+                    href={`/my-listings/${listing.id}/edit`}
+                    aria-label={actionLabel(translations.edit, listing.title)}
+                    className="text-sm"
+                >
                     {translations.edit}
                 </Button>
             )}
             <ListingCloseActions listing={listing} baseUrl="/my-listings" translations={translations} />
-            <Button variant="link" onClick={() => setConfirmOpen(true)}>
+            <Button
+                variant="link"
+                onClick={() => setConfirmOpen(true)}
+                aria-label={actionLabel(translations.delete, listing.title)}
+            >
                 {translations.delete}
             </Button>
         </>

@@ -30,12 +30,13 @@ export default function SegmentedToggle<T extends string>({
     size = 'md',
     tone = 'default',
     showLegend = false,
+    describedBy,
     className = '',
 }: SegmentedToggleProps<T>) {
     const palette = toneClasses[tone]
 
     return (
-        <fieldset className={`min-w-0 ${className}`}>
+        <fieldset aria-describedby={describedBy} className={`min-w-0 ${className}`}>
             <legend className={showLegend ? 'mb-2.5 text-xs tracking-[0.04em] text-ink-muted' : 'sr-only'}>
                 {legend}
             </legend>

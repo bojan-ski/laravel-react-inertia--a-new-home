@@ -17,7 +17,10 @@ export default function FlashBanner({
     const { palette, Icon } = variants[variant]
 
     return (
-        <div className={`${className} flex items-start gap-3 px-4.5 py-3.5 text-[15px] ${palette}`}>
+        <div
+            role={variant === 'error' ? 'alert' : 'status'}
+            className={`${className} flex items-start gap-3 px-4.5 py-3.5 text-[15px] ${palette}`}
+        >
             <Icon className="mt-0.5 size-4.5 shrink-0" strokeWidth={1.25} aria-hidden="true" />
             <span className="flex-1">{message}</span>
             {onDismiss && (

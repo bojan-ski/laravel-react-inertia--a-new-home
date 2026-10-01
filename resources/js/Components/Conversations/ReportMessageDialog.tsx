@@ -46,6 +46,7 @@ export default function ReportMessageDialog({
                 <TextAreaField
                     ref={textareaRef}
                     id="report-reason"
+                    aria-required
                     label={translations.prompt}
                     value={data.reason}
                     onChange={(event) => setData('reason', event.target.value)}

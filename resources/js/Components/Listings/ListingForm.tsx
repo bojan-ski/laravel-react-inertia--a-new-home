@@ -78,6 +78,7 @@ export default function ListingForm({
                             id="title"
                             type="text"
                             label={fields.title}
+                            aria-required
                             value={data.title}
                             onChange={(e) => setData('title', e.target.value)}
                             error={errors.title}
@@ -95,8 +96,9 @@ export default function ListingForm({
                             ]}
                             value={data.listing_type}
                             onChange={(value) => setData('listing_type', value)}
+                            describedBy={errors.listing_type ? 'listing_type-error' : undefined}
                         />
-                        <FieldError message={errors.listing_type} />
+                        <FieldError id="listing_type-error" message={errors.listing_type} />
                     </div>
 
                     <TextField
@@ -105,12 +107,16 @@ export default function ListingForm({
                         min={0}
                         step="0.01"
                         label={fields.price}
+                        aria-required
                         value={data.price}
                         onChange={(e) => setData('price', e.target.value)}
                         error={errors.price}
                     />
 
-                    <fieldset className="col-span-2 flex min-w-0 flex-col gap-1.5">
+                    <fieldset
+                        aria-describedby={errors.property_type ? 'property_type-error' : undefined}
+                        className="col-span-2 flex min-w-0 flex-col gap-1.5"
+                    >
                         <legend className="mb-2.5 text-xs tracking-[0.04em] text-ink-muted">
                             {fields.property_type}
                         </legend>
@@ -127,7 +133,7 @@ export default function ListingForm({
                                 />
                             ))}
                         </div>
-                        <FieldError message={errors.property_type} />
+                        <FieldError id="property_type-error" message={errors.property_type} />
                     </fieldset>
 
                     <div className="col-span-2">
@@ -135,6 +141,7 @@ export default function ListingForm({
                             id="description"
                             rows={6}
                             label={fields.description}
+                            aria-required
                             value={data.description}
                             onChange={(e) => setData('description', e.target.value)}
                             error={errors.description}
@@ -150,6 +157,7 @@ export default function ListingForm({
                     <SelectField
                         id="country"
                         label={fields.country}
+                        aria-required
                         value={data.country}
                         onChange={(e) => setData('country', e.target.value)}
                         error={errors.country}
@@ -167,6 +175,7 @@ export default function ListingForm({
                         id="city"
                         type="text"
                         label={fields.city}
+                        aria-required
                         value={data.city}
                         onChange={(e) => setData('city', e.target.value)}
                         error={errors.city}
@@ -239,13 +248,14 @@ export default function ListingForm({
                                     value={amenity}
                                     checked={data.amenities.includes(amenity)}
                                     onChange={(e) => toggleAmenity(amenity, e.target.checked)}
+                                    aria-describedby={amenitiesError ? 'amenities-error' : undefined}
                                     className="min-h-11 cursor-pointer border-b border-rule py-3 text-[15px] font-book"
                                 >
                                     {label}
                                 </Checkbox>
                             ))}
                         </div>
-                        <FieldError message={amenitiesError} />
+                        <FieldError id="amenities-error" message={amenitiesError} />
                     </div>
                 </FormSection>
 

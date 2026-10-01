@@ -31,6 +31,7 @@ export default function ForgotPassword({ translations, layout }: ForgotPasswordP
                 <form onSubmit={submit} className="flex flex-col gap-8 lg:gap-10">
                     <TextField
                         id="email"
+                        aria-required
                         type="email"
                         label={translations.email}
                         placeholder={translations.email_placeholder}

@@ -4,10 +4,12 @@ import ListingImagePlaceholder from '@/Components/Listings/ListingImagePlacehold
 import { formatPrice } from '@/Components/Listings/listingFormat'
 import { useBookmarkToggle } from '@/Components/Listings/useListingActions'
 import Kicker from '@/Components/UI/Kicker'
+import { useActionLabel } from '@/Components/UI/useActionLabel'
 import type { AgencyListingCardProps } from '@/types/agency'
 
 export default function AgencyListingCard({ listing, translations, propertyTypeLabels }: AgencyListingCardProps) {
     const bookmark = useBookmarkToggle(listing.id)
+    const actionLabel = useActionLabel()
     const isRental = listing.listingType === 'rent'
     const typeLabel = isRental ? translations.for_rent : translations.for_sale
     const propertyLabel = propertyTypeLabels[listing.propertyType] ?? listing.propertyType
@@ -32,7 +34,7 @@ export default function AgencyListingCard({ listing, translations, propertyTypeL
                         onClick={bookmark.toggle}
                         disabled={bookmark.processing}
                         aria-pressed={listing.isBookmarked}
-                        aria-label={listing.isBookmarked ? translations.saved : translations.save}
+                        aria-label={actionLabel(listing.isBookmarked ? translations.saved : translations.save, listing.title)}
                         className="absolute top-0 right-0 z-10 flex size-11 items-center justify-center bg-paper transition-colors duration-150 hover:bg-sand disabled:opacity-45"
                     >
                         <Heart

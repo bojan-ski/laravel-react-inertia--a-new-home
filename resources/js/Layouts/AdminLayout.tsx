@@ -5,6 +5,7 @@ import AdminMobileMenu from '@/Components/Admin/AdminMobileMenu'
 import AdminNavLink from '@/Components/Admin/AdminNavLink'
 import { buildAdminNavItems, isAdminNavItemActive } from '@/Components/Admin/adminNavItems'
 import Kicker from '@/Components/UI/Kicker'
+import SkipLink from '@/Components/UI/SkipLink'
 import type { AdminLayoutProps } from '@/types/layout'
 import type { SharedProps } from '@/types/shared'
 
@@ -36,6 +37,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
     return (
         <div className="min-h-screen bg-paper text-ink lg:grid lg:grid-cols-[272px_minmax(0,1fr)]">
+            <SkipLink label={nav.skip_to_content} />
             <aside className="sticky top-0 hidden h-dvh flex-col gap-10 overflow-y-auto border-r border-rule py-9 pl-10 lg:flex">
                 <div className="flex flex-col items-start gap-1.5">
                     <Link
@@ -119,7 +121,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 )}
             </header>
 
-            <main className="min-w-0 px-5 pt-7 pb-10 md:px-10 lg:px-16 lg:pt-14 lg:pb-16">
+            <main id="main" tabIndex={-1} className="min-w-0 px-5 pt-7 pb-10 focus-visible:outline-none md:px-10 lg:px-16 lg:pt-14 lg:pb-16">
                 <div className="flex max-w-292 flex-col gap-7 lg:gap-10">{children}</div>
             </main>
         </div>

@@ -4,11 +4,13 @@ import { formatDate, formatDateTime } from '@/Components/Listings/listingFormat'
 import Button from '@/Components/UI/Button'
 import ConfirmDialog from '@/Components/UI/ConfirmDialog'
 import StatusBadge from '@/Components/UI/StatusBadge'
+import { useActionLabel } from '@/Components/UI/useActionLabel'
 import type { ContactMessageRowProps } from '@/types/contact'
 
 export default function ContactMessageRow({ message, translations }: ContactMessageRowProps) {
     const [deleteOpen, setDeleteOpen] = useState(false)
     const [processing, setProcessing] = useState(false)
+    const actionLabel = useActionLabel()
 
     function markHandled() {
         router.post(`/admin/contact-messages/${message.id}/handled`, {}, {
@@ -63,6 +65,7 @@ export default function ContactMessageRow({ message, translations }: ContactMess
                 <Button
                     variant="link"
                     onClick={() => setDeleteOpen(true)}
+                    aria-label={actionLabel(translations.actions.delete, message.subject)}
                     disabled={processing}
                     className="min-h-11 px-2"
                 >
@@ -70,10 +73,21 @@ export default function ContactMessageRow({ message, translations }: ContactMess
                 </Button>
                 {!message.isHandled && (
                     <>
-                        <Button variant="secondary" size="sm" href={replyHref} external>
+                        <Button
+                            variant="secondary"
+                            size="sm"
+                            href={replyHref}
+                            external
+                            aria-label={actionLabel(translations.actions.reply, message.subject)}
+                        >
                             {translations.actions.reply}
                         </Button>
-                        <Button size="sm" onClick={markHandled} disabled={processing}>
+                        <Button
+                            size="sm"
+                            onClick={markHandled}
+                            disabled={processing}
+                            aria-label={actionLabel(translations.actions.mark_handled, message.subject)}
+                        >
                             {translations.actions.mark_handled}
                         </Button>
                     </>

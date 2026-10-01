@@ -33,7 +33,6 @@ export type ProfileConfirmTranslations = ConfirmActionTranslations
 export interface ProfileTranslations extends ListingCloseTranslations, ListingExpiryTranslations {
     title: string
     subtitle: string
-    account_settings: string
     new_listing: string
     created: string
     rejection_reason_label: string

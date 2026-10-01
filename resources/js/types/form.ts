@@ -63,6 +63,7 @@ export interface HoneypotFieldProps {
 }
 
 export interface FieldErrorProps {
+    id?: string
     message?: string
 }
 

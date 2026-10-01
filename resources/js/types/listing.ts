@@ -45,12 +45,6 @@ export interface ListingExpiryData {
     canRenew: boolean
 }
 
-export interface ListingExpiryNoteProps {
-    listing: ListingExpiryData
-    translations: ListingExpiryTranslations
-    className?: string
-}
-
 export interface ListingRenewButtonProps {
     listing: ListingExpiryData
     baseUrl: string
@@ -113,7 +107,6 @@ export interface ListingsFilterTranslations {
     clear_all: string
     close: string
     search: string
-    reset: string
     more_filters: string
     city_placeholder: string
     min_price: string
@@ -134,8 +127,6 @@ export interface ListingsCardTranslations {
     for_sale: string
     for_rent: string
     per_month: string
-    beds: string
-    baths: string
     bedroom: string
     bedrooms: string
     bathroom: string
@@ -337,7 +328,6 @@ export interface ListingImagePlaceholderProps {
 }
 
 export interface ImageManagementTranslations {
-    heading: string
     helper: string
     helper_empty: string
     delete: string
@@ -595,7 +585,6 @@ export interface ListingFormTranslations {
 }
 
 export interface NewListingImagesTranslations {
-    heading: string
     helper: string
     choose: string
     remove: string

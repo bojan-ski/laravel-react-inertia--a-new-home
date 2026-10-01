@@ -86,6 +86,7 @@ export default function Settings({ translations, backHref, passwordUrl, deleteUr
 
                             <PasswordField
                                 id="current_password"
+                                aria-required
                                 label={translations.password.current}
                                 autoComplete="current-password"
                                 value={passwordForm.data.current_password}
@@ -97,6 +98,7 @@ export default function Settings({ translations, backHref, passwordUrl, deleteUr
 
                             <PasswordField
                                 id="new_password"
+                                aria-required
                                 label={translations.password.new}
                                 autoComplete="new-password"
                                 value={passwordForm.data.password}
@@ -108,6 +110,7 @@ export default function Settings({ translations, backHref, passwordUrl, deleteUr
 
                             <PasswordField
                                 id="password_confirmation"
+                                aria-required
                                 label={translations.password.confirm}
                                 autoComplete="new-password"
                                 value={passwordForm.data.password_confirmation}

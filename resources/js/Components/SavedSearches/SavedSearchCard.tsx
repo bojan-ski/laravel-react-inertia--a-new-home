@@ -5,6 +5,7 @@ import { formatDate } from '@/Components/Listings/listingFormat'
 import Button from '@/Components/UI/Button'
 import ConfirmDialog from '@/Components/UI/ConfirmDialog'
 import TextField from '@/Components/UI/TextField'
+import { useActionLabel } from '@/Components/UI/useActionLabel'
 import type { SavedSearchCardProps } from '@/types/saved-search'
 
 export default function SavedSearchCard({ search, translations }: SavedSearchCardProps) {
@@ -12,6 +13,7 @@ export default function SavedSearchCard({ search, translations }: SavedSearchCar
     const [confirmingDelete, setConfirmingDelete] = useState(false)
     const [deleting, setDeleting] = useState(false)
     const [toggling, setToggling] = useState(false)
+    const actionLabel = useActionLabel()
     const { data, setData, patch, processing, errors, clearErrors } = useForm({ name: search.name })
 
     function startRename() {
@@ -106,6 +108,7 @@ export default function SavedSearchCard({ search, translations }: SavedSearchCar
                 type="button"
                 role="switch"
                 aria-checked={on}
+                aria-label={actionLabel(translations.alerts_label, search.name)}
                 onClick={toggleAlerts}
                 disabled={toggling}
                 className="flex min-h-11 items-center gap-3 self-start text-sm text-ink disabled:cursor-not-allowed disabled:opacity-45 lg:self-center"
@@ -128,17 +131,26 @@ export default function SavedSearchCard({ search, translations }: SavedSearchCar
                 <Button
                     variant="strong-link"
                     href={search.url}
+                    aria-label={actionLabel(translations.view_listings, search.name)}
                     className="text-sm"
                     trailing={<span aria-hidden="true">→</span>}
                 >
                     {translations.view_listings}
                 </Button>
                 {!renaming && (
-                    <Button variant="link" onClick={startRename}>
+                    <Button
+                        variant="link"
+                        onClick={startRename}
+                        aria-label={actionLabel(translations.rename, search.name)}
+                    >
                         {translations.rename}
                     </Button>
                 )}
-                <Button variant="link" onClick={() => setConfirmingDelete(true)}>
+                <Button
+                    variant="link"
+                    onClick={() => setConfirmingDelete(true)}
+                    aria-label={actionLabel(translations.delete, search.name)}
+                >
                     {translations.delete}
                 </Button>
             </div>
