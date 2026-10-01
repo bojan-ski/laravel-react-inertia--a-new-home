@@ -21,7 +21,7 @@ export function HomeFlashNotice() {
     }
 
     return (
-        <div role="status" className="fixed inset-x-4 top-4 z-50 mx-auto max-w-130 shadow-lg">
+        <div className="fixed inset-x-4 top-4 z-50 mx-auto max-w-130 shadow-lg">
             <FlashBanner
                 message={message}
                 variant="success"

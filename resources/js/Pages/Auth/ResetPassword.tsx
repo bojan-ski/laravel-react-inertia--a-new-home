@@ -36,6 +36,7 @@ export default function ResetPassword({ translations, layout, token, email }: Re
                     <div className="flex flex-col gap-6">
                         <TextField
                             id="email"
+                            aria-required
                             type="email"
                             label={translations.email}
                             autoComplete="email"
@@ -47,6 +48,7 @@ export default function ResetPassword({ translations, layout, token, email }: Re
 
                         <PasswordField
                             id="password"
+                            aria-required
                             label={translations.password}
                             placeholder={translations.password_placeholder}
                             autoComplete="new-password"
@@ -60,6 +62,7 @@ export default function ResetPassword({ translations, layout, token, email }: Re
 
                         <PasswordField
                             id="password_confirmation"
+                            aria-required
                             label={translations.confirm_password}
                             placeholder={translations.password_placeholder}
                             autoComplete="new-password"

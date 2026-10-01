@@ -2,11 +2,13 @@ import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import Button from '@/Components/UI/Button'
 import ConfirmDialog from '@/Components/UI/ConfirmDialog'
+import { useActionLabel } from '@/Components/UI/useActionLabel'
 import type { ListingCloseActionsProps } from '@/types/listing'
 
 export default function ListingCloseActions({ listing, baseUrl, translations }: ListingCloseActionsProps) {
     const [confirmOpen, setConfirmOpen] = useState(false)
     const [processing, setProcessing] = useState(false)
+    const actionLabel = useActionLabel()
 
     const isClosed = listing.status === 'sold' || listing.status === 'rented'
 
@@ -38,6 +40,7 @@ export default function ListingCloseActions({ listing, baseUrl, translations }: 
             <Button
                 variant={isClosed ? 'strong-link' : 'link'}
                 onClick={() => setConfirmOpen(true)}
+                aria-label={actionLabel(buttonLabel, listing.title)}
                 className={isClosed ? 'text-sm' : undefined}
             >
                 {buttonLabel}

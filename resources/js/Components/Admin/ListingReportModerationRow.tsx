@@ -6,6 +6,7 @@ import ListingImagePlaceholder from '@/Components/Listings/ListingImagePlacehold
 import { countLabel, formatPrice } from '@/Components/Listings/listingFormat'
 import Button from '@/Components/UI/Button'
 import FlashBanner from '@/Components/UI/FlashBanner'
+import { useActionLabel } from '@/Components/UI/useActionLabel'
 import type { ListingReportModerationRowProps } from '@/types/listing-report'
 
 export default function ListingReportModerationRow({
@@ -13,6 +14,7 @@ export default function ListingReportModerationRow({
     translations,
     reasonLabels,
 }: ListingReportModerationRowProps) {
+    const actionLabel = useActionLabel()
     const reviewUrl = `/admin/listings/${listing.id}`
     const price = `${formatPrice(listing.price, listing.currency)}${listing.listingType === 'rent' ? translations.per_month : ''}`
 
@@ -54,6 +56,7 @@ export default function ListingReportModerationRow({
                 <Button
                     variant="strong-link"
                     href={reviewUrl}
+                    aria-label={actionLabel(translations.view_listing, listing.title)}
                     className="self-start text-sm"
                     trailing={<span aria-hidden="true">→</span>}
                 >

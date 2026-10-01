@@ -8,6 +8,7 @@ export default function AcceptanceCheckbox({ id, checked, error, onChange, child
                 id={id}
                 checked={checked}
                 onChange={(e) => onChange(e.target.checked)}
+                aria-required
                 aria-invalid={error ? true : undefined}
                 aria-describedby={error ? `${id}-error` : undefined}
                 className="min-h-8 gap-3 text-sm leading-normal text-ink"

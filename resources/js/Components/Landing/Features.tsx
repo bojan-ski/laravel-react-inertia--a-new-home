@@ -13,7 +13,7 @@ export default function Features({ content }: FeaturesProps) {
                     <div key={item.title} className="grid grid-cols-[40px_minmax(0,1fr)] gap-4 lg:flex lg:flex-col lg:gap-3.5">
                         <Icon className="size-7 text-forest lg:size-8" strokeWidth={1} aria-hidden="true" />
                         <div className="flex flex-col gap-1.5 lg:gap-3.5">
-                            <h3 className="text-lg font-medium lg:mt-3 lg:text-[19px]">{item.title}</h3>
+                            <h2 className="text-lg font-medium lg:mt-3 lg:text-[19px]">{item.title}</h2>
                             <p className="text-[15px] leading-[1.55] font-book text-ink/72 lg:leading-[1.6]">
                                 {item.description}
                             </p>

@@ -62,7 +62,7 @@ export default function Navbar({ back, backAction, variant = 'default', ruled = 
             <div className="mx-auto hidden max-w-360 items-center justify-between px-16 py-9 lg:flex">
                 {wordmark('text-[17px]', desktopTone)}
 
-                <nav className="flex items-center gap-10 text-sm tracking-[0.03em]">
+                <nav aria-label={nav.aria_label} className="flex items-center gap-10 text-sm tracking-[0.03em]">
                     {items.map((item) => (
                         <NavbarLink
                             key={item.key}
@@ -105,6 +105,7 @@ export default function Navbar({ back, backAction, variant = 'default', ruled = 
             {open && !back && (
                 <NavbarMobilePanel
                     id={panelId}
+                    label={nav.aria_label}
                     items={items}
                     currentPath={currentPath}
                     user={user}

@@ -27,6 +27,7 @@ export default function AgencyForm({
                     <div className="col-span-2">
                         <TextField
                             id="name"
+                            aria-required
                             type="text"
                             label={fields.name}
                             placeholder={fields.name_placeholder}
@@ -58,6 +59,7 @@ export default function AgencyForm({
                     <div className="col-span-2">
                         <TextField
                             id="legal_name"
+                            aria-required
                             type="text"
                             label={fields.legal_name}
                             value={data.legal_name}
@@ -69,6 +71,7 @@ export default function AgencyForm({
                     <div className="col-span-2 lg:col-span-1">
                         <TextField
                             id="registration_number"
+                            aria-required
                             type="text"
                             label={fields.registration_number}
                             value={data.registration_number}
@@ -80,6 +83,7 @@ export default function AgencyForm({
                     <div className="col-span-2 lg:col-span-1">
                         <SelectField
                             id="registration_country"
+                            aria-required
                             label={fields.registration_country}
                             value={data.registration_country}
                             onChange={(e) => setData('registration_country', e.target.value)}
@@ -122,6 +126,7 @@ export default function AgencyForm({
                     <div className="col-span-2 flex flex-col gap-1.5 lg:col-span-1">
                         <TextField
                             id="email"
+                            aria-required
                             type="email"
                             label={fields.email}
                             placeholder={fields.email_placeholder}

@@ -5,11 +5,13 @@ import { formatRegistration, websiteHost } from '@/Components/Agencies/agencyFor
 import { formatDate } from '@/Components/Listings/listingFormat'
 import Button from '@/Components/UI/Button'
 import LogoTile from '@/Components/UI/LogoTile'
+import { useActionLabel } from '@/Components/UI/useActionLabel'
 import type { AdminAgencyModerationRowProps } from '@/types/admin'
 
 export default function AgencyModerationRow({ agency, translations }: AdminAgencyModerationRowProps) {
     const [rejectOpen, setRejectOpen] = useState(false)
     const [processing, setProcessing] = useState(false)
+    const actionLabel = useActionLabel()
 
     function approve() {
         router.post(`/admin/agencies/${agency.id}/approve`, {}, {
@@ -78,10 +80,21 @@ export default function AgencyModerationRow({ agency, translations }: AdminAgenc
             </div>
 
             <div className="col-span-2 mt-2.5 flex items-start gap-2.5 md:col-span-1 md:mt-0">
-                <Button variant="secondary" size="sm" onClick={() => setRejectOpen(true)} disabled={processing}>
+                <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => setRejectOpen(true)}
+                    disabled={processing}
+                    aria-label={actionLabel(translations.actions.reject, agency.name)}
+                >
                     {translations.actions.reject}
                 </Button>
-                <Button size="sm" onClick={approve} disabled={processing}>
+                <Button
+                    size="sm"
+                    onClick={approve}
+                    disabled={processing}
+                    aria-label={actionLabel(translations.actions.approve, agency.name)}
+                >
                     {translations.actions.approve}
                 </Button>
             </div>

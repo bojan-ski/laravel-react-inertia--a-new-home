@@ -30,6 +30,24 @@ class SharedNavigationTest extends TestCase
                 ->where('ui.dismiss', __('app.ui.dismiss')));
     }
 
+    public function test_landmark_and_skip_link_labels_are_shared_to_guests(): void
+    {
+        $this->get('/listings')
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('nav.aria_label', __('app.nav.aria_label'))
+                ->where('nav.skip_to_content', __('app.nav.skip_to_content'))
+                ->where('footer.aria_label', __('app.footer.aria_label')));
+    }
+
+    public function test_row_action_label_template_is_shared_to_guests(): void
+    {
+        $this->get('/listings')
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('ui.action_for', __('app.ui.action_for'))
+                ->where('ui.action_for', fn (string $template) => str_contains($template, ':action')
+                    && str_contains($template, ':item')));
+    }
+
     public function test_password_visibility_labels_are_shared_to_guests(): void
     {
         $this->get('/login')

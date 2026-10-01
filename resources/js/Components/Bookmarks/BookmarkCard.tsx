@@ -4,10 +4,12 @@ import { Heart } from 'lucide-react'
 import { formatPrice } from '@/Components/Listings/listingFormat'
 import ListingImagePlaceholder from '@/Components/Listings/ListingImagePlaceholder'
 import StatusBadge from '@/Components/UI/StatusBadge'
+import { useActionLabel } from '@/Components/UI/useActionLabel'
 import type { BookmarkCardProps } from '@/types/bookmark'
 
 export default function BookmarkCard({ listing, variant, closedLabel, perMonth, removeLabel }: BookmarkCardProps) {
     const [processing, setProcessing] = useState(false)
+    const actionLabel = useActionLabel()
     const isClosed = variant === 'closed'
 
     function handleRemove() {
@@ -46,7 +48,7 @@ export default function BookmarkCard({ listing, variant, closedLabel, perMonth, 
                         type="button"
                         onClick={handleRemove}
                         disabled={processing}
-                        aria-label={removeLabel}
+                        aria-label={actionLabel(removeLabel, listing.title)}
                         className="absolute top-0 right-0 z-10 flex size-11 items-center justify-center bg-paper transition-colors duration-150 hover:bg-sand"
                     >
                         <Heart className="size-4.5 fill-forest stroke-forest" strokeWidth={1.25} aria-hidden="true" />
@@ -59,14 +61,14 @@ export default function BookmarkCard({ listing, variant, closedLabel, perMonth, 
                     <h3 className="font-medium text-ink-muted">{listing.title}</h3>
                 ) : (
                     <>
-                        <h3 className="font-medium">
+                        <h2 className="font-medium">
                             <Link
                                 href={`/listings/${listing.slug}`}
                                 className="after:absolute after:inset-0 hover:text-forest"
                             >
                                 {listing.title}
                             </Link>
-                        </h3>
+                        </h2>
                         <span className="shrink-0">
                             {formatPrice(listing.price, listing.currency)}
                             {listing.listingType === 'rent' && ` ${perMonth}`}

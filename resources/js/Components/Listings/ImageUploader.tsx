@@ -7,11 +7,13 @@ import ListingCoverTag from '@/Components/Listings/ListingCoverTag'
 import Button from '@/Components/UI/Button'
 import FlashBanner from '@/Components/UI/FlashBanner'
 import TextField from '@/Components/UI/TextField'
+import { useActionLabel } from '@/Components/UI/useActionLabel'
 import type { ImageUploaderProps, ImageUploadFormData } from '@/types/listing'
 import type { SharedProps } from '@/types/shared'
 
 export default function ImageUploader({ baseUrl, images, listingTitle, translations }: ImageUploaderProps) {
     const { flash } = usePage<SharedProps>().props
+    const actionLabel = useActionLabel()
     const [deletingId, setDeletingId] = useState<number | null>(null)
     const [fileInputKey, setFileInputKey] = useState(0)
 
@@ -78,6 +80,10 @@ export default function ImageUploader({ baseUrl, images, listingTitle, translati
                                     type="button"
                                     onClick={() => deleteImage(image.id)}
                                     disabled={deletingId === image.id}
+                                    aria-label={actionLabel(
+                                        translations.delete,
+                                        image.altText ?? `${translations.image_label} ${index + 1}`,
+                                    )}
                                     className="inline-flex shrink-0 items-center gap-1.5 text-ink-muted transition-colors duration-150 hover:text-forest disabled:opacity-45"
                                 >
                                     {deletingId === image.id && (
@@ -103,6 +109,8 @@ export default function ImageUploader({ baseUrl, images, listingTitle, translati
                                     type="file"
                                     accept="image/jpeg,image/png,image/webp"
                                     onChange={handleFileChange}
+                                    aria-invalid={errors.image ? true : undefined}
+                                    aria-describedby={errors.image ? 'image-upload-error' : undefined}
                                     className="sr-only"
                                 />
                             </label>
@@ -110,7 +118,7 @@ export default function ImageUploader({ baseUrl, images, listingTitle, translati
                                 {data.image?.name ?? translations.no_file}
                             </span>
                         </div>
-                        <FieldError message={errors.image} />
+                        <FieldError id="image-upload-error" message={errors.image} />
                     </div>
 
                     <TextField

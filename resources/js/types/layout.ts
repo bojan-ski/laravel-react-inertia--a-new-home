@@ -24,7 +24,3 @@ export interface AuthLayoutProps {
 export interface AdminLayoutProps {
     children: ReactNode
 }
-
-export interface SectionDividerProps {
-    className?: string
-}

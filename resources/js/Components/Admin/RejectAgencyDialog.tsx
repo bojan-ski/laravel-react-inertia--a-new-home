@@ -43,6 +43,7 @@ export default function RejectAgencyDialog({ open, onClose, actionUrl, subjectNa
                     <TextAreaField
                         ref={textareaRef}
                         id="reject-agency-reason"
+                        aria-required
                         label={dialog.reason_label}
                         value={data.reason}
                         onChange={(event) => setData('reason', event.target.value)}

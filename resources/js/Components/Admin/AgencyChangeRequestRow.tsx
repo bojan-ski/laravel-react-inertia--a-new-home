@@ -3,6 +3,7 @@ import { Link, router } from '@inertiajs/react'
 import RejectAgencyDialog from '@/Components/Admin/RejectAgencyDialog'
 import { formatDate } from '@/Components/Listings/listingFormat'
 import Button from '@/Components/UI/Button'
+import { useActionLabel } from '@/Components/UI/useActionLabel'
 import type { AgencyChangeRequestRowProps } from '@/types/admin'
 
 const cellClasses = 'border-b border-rule py-3 align-top whitespace-pre-line wrap-break-word max-md:block'
@@ -16,6 +17,7 @@ export default function AgencyChangeRequestRow({
 }: AgencyChangeRequestRowProps) {
     const [rejectOpen, setRejectOpen] = useState(false)
     const [processing, setProcessing] = useState(false)
+    const actionLabel = useActionLabel()
     const agencyName = change.agencyName ?? ''
 
     function approve() {
@@ -55,10 +57,21 @@ export default function AgencyChangeRequestRow({
                 </div>
 
                 <div className="flex shrink-0 items-start gap-2.5">
-                    <Button variant="secondary" size="sm" onClick={() => setRejectOpen(true)} disabled={processing}>
+                    <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => setRejectOpen(true)}
+                        disabled={processing}
+                        aria-label={actionLabel(translations.actions.reject, agencyName)}
+                    >
                         {translations.actions.reject}
                     </Button>
-                    <Button size="sm" onClick={approve} disabled={processing}>
+                    <Button
+                        size="sm"
+                        onClick={approve}
+                        disabled={processing}
+                        aria-label={actionLabel(translations.actions.approve, agencyName)}
+                    >
                         {translations.actions.approve}
                     </Button>
                 </div>

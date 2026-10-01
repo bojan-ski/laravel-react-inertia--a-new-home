@@ -31,11 +31,11 @@ export default function ListingRow({ listing, translations, propertyTypeLabels }
 
             <div className="flex min-w-0 flex-col gap-2.5">
                 <Kicker>{kicker}</Kicker>
-                <h3 className="text-[28px]/[1.1] font-light tracking-[-0.02em] xl:text-[32px]/[1.1]">
+                <h2 className="text-[28px]/[1.1] font-light tracking-[-0.02em] xl:text-[32px]/[1.1]">
                     <Link href={`/listings/${listing.slug}`} className="after:absolute after:inset-0">
                         {listing.title}
                     </Link>
-                </h3>
+                </h2>
                 <p className="text-[15px] text-ink-muted">
                     {listing.city}, {listing.country}
                 </p>

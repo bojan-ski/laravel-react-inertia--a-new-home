@@ -40,7 +40,10 @@ export default function ReportListingDialog({ open, onClose, listingId, translat
     return (
         <Dialog open={open} onClose={handleClose} title={dialog.title} initialFocusRef={firstReasonRef}>
             <form onSubmit={handleSubmit} className="flex flex-col gap-5.5">
-                <fieldset className="flex flex-col gap-1.5">
+                <fieldset
+                    aria-describedby={errors.reason ? 'report-listing-reason-error' : undefined}
+                    className="flex flex-col gap-1.5"
+                >
                     <legend className="mb-1.5 text-xs tracking-[0.04em] text-ink-muted">{dialog.reason_label}</legend>
                     <div className="flex flex-col">
                         {reasons.map(([value, label], index) => (
@@ -57,7 +60,11 @@ export default function ReportListingDialog({ open, onClose, listingId, translat
                             </Radio>
                         ))}
                     </div>
-                    {errors.reason && <p className="text-[13px] text-ink">{errors.reason}</p>}
+                    {errors.reason && (
+                        <p id="report-listing-reason-error" className="text-[13px] text-ink">
+                            {errors.reason}
+                        </p>
+                    )}
                 </fieldset>
 
                 <TextAreaField

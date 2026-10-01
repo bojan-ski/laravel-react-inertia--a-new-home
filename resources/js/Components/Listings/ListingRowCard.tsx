@@ -31,11 +31,11 @@ export default function ListingRowCard({ listing, translations, propertyTypeLabe
             <Kicker size="sm" className="mt-2">
                 {kicker}
             </Kicker>
-            <h3 className="text-[26px]/[1.12] font-light tracking-[-0.02em]">
+            <h2 className="text-[26px]/[1.12] font-light tracking-[-0.02em]">
                 <Link href={`/listings/${listing.slug}`} className="after:absolute after:inset-0">
                     {listing.title}
                 </Link>
-            </h3>
+            </h2>
             <p className="text-sm text-ink-muted">
                 {listing.city}, {listing.country}
             </p>

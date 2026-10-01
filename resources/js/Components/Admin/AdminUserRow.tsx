@@ -3,6 +3,7 @@ import { router } from '@inertiajs/react'
 import ConfirmDeleteUserDialog from '@/Components/Admin/ConfirmDeleteUserDialog'
 import { formatDate } from '@/Components/Listings/listingFormat'
 import StatusBadge from '@/Components/UI/StatusBadge'
+import { useActionLabel } from '@/Components/UI/useActionLabel'
 import type { AdminUserRowProps } from '@/types/admin'
 
 const cellClasses = 'max-xl:block xl:py-4.5 xl:pr-6 xl:align-middle'
@@ -12,6 +13,7 @@ const textActionClasses =
 export default function AdminUserRow({ user, translations }: AdminUserRowProps) {
     const [confirmOpen, setConfirmOpen] = useState(false)
     const [processing, setProcessing] = useState(false)
+    const actionLabel = useActionLabel()
 
     function act(action: 'suspend' | 'reactivate') {
         router.post(`/admin/users/${user.id}/${action}`, {}, {
@@ -55,6 +57,7 @@ export default function AdminUserRow({ user, translations }: AdminUserRowProps) 
                         <button
                             type="button"
                             onClick={() => act('suspend')}
+                            aria-label={actionLabel(translations.actions.suspend, user.name)}
                             disabled={processing}
                             className={`${textActionClasses} hover:text-forest`}
                         >
@@ -65,6 +68,7 @@ export default function AdminUserRow({ user, translations }: AdminUserRowProps) 
                         <button
                             type="button"
                             onClick={() => act('reactivate')}
+                            aria-label={actionLabel(translations.actions.reactivate, user.name)}
                             disabled={processing}
                             className={`${textActionClasses} hover:text-forest`}
                         >
@@ -75,6 +79,7 @@ export default function AdminUserRow({ user, translations }: AdminUserRowProps) 
                         <button
                             type="button"
                             onClick={() => setConfirmOpen(true)}
+                            aria-label={actionLabel(translations.actions.delete, user.name)}
                             disabled={processing}
                             className={`${textActionClasses} text-ink-muted hover:text-ink`}
                         >

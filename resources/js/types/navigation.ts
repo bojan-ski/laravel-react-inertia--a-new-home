@@ -20,6 +20,8 @@ export interface NavTranslations {
     unread: string
     open_menu: string
     close_menu: string
+    aria_label: string
+    skip_to_content: string
 }
 
 export type NavItemKey = 'listings' | 'agencies' | 'favorites' | 'messages' | 'dashboard' | 'login'
@@ -69,6 +71,7 @@ export interface NavbarAuthActionsProps {
 
 export interface NavbarMobilePanelProps {
     id: string
+    label: string
     items: NavItem[]
     currentPath: string
     user: AuthUser | null
@@ -118,6 +121,7 @@ export interface FooterTranslations {
     privacy: string
     terms: string
     cookies: string
+    aria_label: string
 }
 
 export interface FooterLink {

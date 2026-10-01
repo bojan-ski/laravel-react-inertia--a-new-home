@@ -3,6 +3,7 @@ import type { ChangeEvent } from 'react'
 import { X } from 'lucide-react'
 import FieldError from '@/Components/Forms/FieldError'
 import ListingCoverTag from '@/Components/Listings/ListingCoverTag'
+import { useActionLabel } from '@/Components/UI/useActionLabel'
 import type { NewListingImagePickerProps } from '@/types/listing'
 
 export default function NewListingImagePicker({
@@ -13,6 +14,7 @@ export default function NewListingImagePicker({
     translations,
 }: NewListingImagePickerProps) {
     const [inputKey, setInputKey] = useState(0)
+    const actionLabel = useActionLabel()
     const error = errors.images ?? Object.entries(errors).find(([key]) => key.startsWith('images.'))?.[1]
     const previews = useMemo(() => files.map((file) => URL.createObjectURL(file)), [files])
 
@@ -42,7 +44,7 @@ export default function NewListingImagePicker({
                         <button
                             type="button"
                             onClick={() => removeFile(index)}
-                            aria-label={translations.remove}
+                            aria-label={actionLabel(translations.remove, files[index]?.name ?? String(index + 1))}
                             className="absolute top-0 right-0 flex size-8 items-center justify-center bg-paper text-ink transition-colors duration-150 hover:bg-sand"
                         >
                             <X className="size-3.5" strokeWidth={1.5} aria-hidden="true" />
@@ -62,6 +64,8 @@ export default function NewListingImagePicker({
                             accept="image/jpeg,image/png,image/webp"
                             multiple
                             onChange={addFiles}
+                            aria-invalid={error ? true : undefined}
+                            aria-describedby={error ? 'new-images-error' : undefined}
                             className="sr-only"
                         />
                     </label>
@@ -75,7 +79,7 @@ export default function NewListingImagePicker({
                     </span>
                     <span className="text-right">{translations.format_note}</span>
                 </div>
-                <FieldError message={error} />
+                <FieldError id="new-images-error" message={error} />
             </div>
         </>
     )

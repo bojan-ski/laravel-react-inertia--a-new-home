@@ -3,6 +3,7 @@ import ListingModerationActions from '@/Components/Admin/ListingModerationAction
 import ListingImagePlaceholder from '@/Components/Listings/ListingImagePlaceholder'
 import { formatDate, formatPrice } from '@/Components/Listings/listingFormat'
 import Button from '@/Components/UI/Button'
+import { useActionLabel } from '@/Components/UI/useActionLabel'
 import type { AdminListingModerationRowProps } from '@/types/admin'
 
 export default function ListingModerationRow({
@@ -10,6 +11,7 @@ export default function ListingModerationRow({
     translations,
     propertyTypeLabels,
 }: AdminListingModerationRowProps) {
+    const actionLabel = useActionLabel()
     const reviewUrl = `/admin/listings/${listing.id}`
     const price = `${formatPrice(listing.price, listing.currency)}${listing.listingType === 'rent' ? translations.per_month : ''}`
 
@@ -53,7 +55,12 @@ export default function ListingModerationRow({
             </div>
 
             <div className="col-span-2 mt-1.5 flex flex-wrap items-center gap-2.5 md:col-span-1 md:mt-0">
-                <Button variant="link" href={reviewUrl} className="mr-3">
+                <Button
+                    variant="link"
+                    href={reviewUrl}
+                    aria-label={actionLabel(translations.view_listing, listing.title)}
+                    className="mr-3"
+                >
                     {translations.view_listing}
                 </Button>
                 <ListingModerationActions

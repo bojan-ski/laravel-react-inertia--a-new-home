@@ -6,7 +6,6 @@
 @theme {
     --font-sans: 'Archivo', 'Archivo fallback', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
         'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-    --font-body: var(--font-sans);
 
     --color-paper: #f6f3ec;
     --color-sand: #ece7dc;
@@ -49,38 +48,6 @@
     --font-weight-book: 350;
 
     --tracking-kicker: 0.14em;
-}
-
-@theme {
-    --font-display: var(--font-sans);
-
-    --color-background: var(--color-paper);
-    --color-surface: var(--color-paper);
-    --color-surface-muted: var(--color-sand);
-    --color-surface-dark: var(--color-ink);
-
-    --color-text: var(--color-ink);
-    --color-text-soft: var(--color-ink-muted);
-    --color-text-muted: var(--color-ink-muted);
-    --color-text-inverse: var(--color-paper);
-
-    --color-brand: var(--color-forest);
-    --color-brand-dark: var(--color-forest-600);
-    --color-brand-soft: var(--color-forest-50);
-    --color-accent: var(--color-forest-700);
-    --color-accent-soft: var(--color-sand);
-
-    --color-border: var(--color-rule);
-    --color-border-strong: var(--color-ink-faint);
-
-    --color-status-pending-review: var(--color-ink);
-    --color-status-approved: var(--color-forest);
-    --color-status-rejected: var(--color-ink);
-    --color-status-suspended: var(--color-ink);
-    --color-status-hidden: var(--color-ink-muted);
-    --color-status-pending-verification: var(--color-ink);
-    --color-status-sold: var(--color-ink);
-    --color-status-rented: var(--color-ink);
 }
 
 @layer base {

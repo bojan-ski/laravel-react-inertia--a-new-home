@@ -16,12 +16,15 @@ return [
         'unread' => ':count unread',
         'open_menu' => 'Open menu',
         'close_menu' => 'Close menu',
+        'aria_label' => 'Main navigation',
+        'skip_to_content' => 'Skip to content',
     ],
 
     'ui' => [
         'dismiss' => 'Dismiss',
         'show_password' => 'Show password',
         'hide_password' => 'Hide password',
+        'action_for' => ':action, :item',
     ],
 
     'account_tabs' => [
@@ -54,6 +57,7 @@ return [
         'privacy' => 'Privacy',
         'terms' => 'Terms',
         'cookies' => 'Cookies',
+        'aria_label' => 'Footer',
     ],
 
     'auth' => [
@@ -192,7 +196,6 @@ return [
             'clear_all' => 'Clear all',
             'close' => 'Close filters',
             'search' => 'Search',
-            'reset' => 'Reset',
             'more_filters' => 'More filters',
             'city_placeholder' => 'City',
             'min_price' => 'Min price (€)',
@@ -233,8 +236,6 @@ return [
             'for_sale' => 'For Sale',
             'for_rent' => 'For Rent',
             'per_month' => '/mo',
-            'beds' => 'beds',
-            'baths' => 'baths',
             'bedroom' => ':count bedroom',
             'bedrooms' => ':count bedrooms',
             'bathroom' => ':count bathroom',
@@ -387,7 +388,6 @@ return [
     'profile' => [
         'title' => 'My Listings',
         'subtitle' => 'Manage your personal property listings.',
-        'account_settings' => 'Account Settings',
         'new_listing' => 'New Listing',
         'created' => 'Created :date',
         'rejection_reason_label' => 'Rejection reason:',
@@ -530,7 +530,6 @@ return [
     'saved_searches' => [
         'title' => 'Saved Searches',
         'subtitle' => 'Run your favourite searches again, and get a daily email when new listings match.',
-        'back' => 'Back to Favorites',
         'count' => ':count of :max saved searches',
         'created' => 'Saved :date',
         'alerts_label' => 'Daily email',
@@ -688,7 +687,6 @@ return [
         'flash' => 'Listing submitted for review.',
         'contact_note' => 'Optional. If left blank, your account contact details will be used.',
         'new_images' => [
-            'heading' => 'Listing Images',
             'helper' => 'Add up to :max photos. The first photo is used as the cover image.',
             'choose' => 'Choose Images',
             'remove' => 'Remove image',
@@ -776,7 +774,6 @@ return [
             'contact_phone' => 'Contact Phone',
         ],
         'images' => [
-            'heading' => 'Listing Images',
             'helper' => 'Upload images for your listing. Images are processed automatically.',
             'helper_empty' => 'Upload your first image to get started.',
             'delete' => 'Delete image',
@@ -809,7 +806,6 @@ return [
         'contact_inheritance_note' => 'Your agency profile contact details will be used for this listing. To update them, edit your agency profile.',
         'contact_note' => '',
         'new_images' => [
-            'heading' => 'Listing Images',
             'helper' => 'Add up to :max photos. The first photo is used as the cover image.',
             'choose' => 'Choose Images',
             'remove' => 'Remove image',
@@ -866,7 +862,6 @@ return [
         'contact_inheritance_note' => 'Your agency profile contact details will be used for this listing. To update them, edit your agency profile.',
         'contact_note' => '',
         'images' => [
-            'heading' => 'Listing Images',
             'helper' => 'Upload images for your listing. Images are processed automatically.',
             'helper_empty' => 'Upload your first image to get started.',
             'delete' => 'Delete image',
@@ -1268,7 +1263,6 @@ return [
             'owner' => 'Owner: :name • :email',
             'contact' => 'Contact: :contact',
             'website' => 'Website: :website',
-            'address' => 'Address: :address',
             'legal' => 'Legal entity: :name • VAT ID: :vat',
             'registration' => 'Registration: :registration',
             'registration_value' => ':number (:country)',

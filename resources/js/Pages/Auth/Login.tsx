@@ -36,6 +36,7 @@ export default function Login({ translations, layout }: LoginPageProps) {
                     <div className="flex flex-col gap-6">
                         <TextField
                             id="email"
+                            aria-required
                             type="email"
                             label={translations.email}
                             placeholder={translations.email_placeholder}
@@ -48,6 +49,7 @@ export default function Login({ translations, layout }: LoginPageProps) {
 
                         <PasswordField
                             id="password"
+                            aria-required
                             label={translations.password}
                             placeholder={translations.password_placeholder}
                             autoComplete="current-password"
