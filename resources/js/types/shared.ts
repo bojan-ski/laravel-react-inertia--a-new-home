@@ -1,4 +1,4 @@
-import type { AdminNavTranslations } from '@/types/admin'
+import type { AdminCounts, AdminNavTranslations } from '@/types/admin'
 import type { AccountTabsTranslations, FooterTranslations, NavTranslations } from '@/types/navigation'
 
 export interface SharedProps {
@@ -8,6 +8,7 @@ export interface SharedProps {
     accountTabs: AccountTabsTranslations | null
     footer: FooterTranslations
     adminNav: AdminNavTranslations
+    adminCounts: AdminCounts | null
     auth: {
         user: AuthUser | null
     }

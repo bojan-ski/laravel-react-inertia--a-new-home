@@ -1,6 +1,8 @@
 import { Link } from '@inertiajs/react'
 import ListingModerationActions from '@/Components/Admin/ListingModerationActions'
-import { formatDateTime, formatPrice } from '@/Components/Listings/listingFormat'
+import ListingImagePlaceholder from '@/Components/Listings/ListingImagePlaceholder'
+import { formatDate, formatPrice } from '@/Components/Listings/listingFormat'
+import Button from '@/Components/UI/Button'
 import type { AdminListingModerationRowProps } from '@/types/admin'
 
 export default function ListingModerationRow({
@@ -9,59 +11,57 @@ export default function ListingModerationRow({
     propertyTypeLabels,
 }: AdminListingModerationRowProps) {
     const reviewUrl = `/admin/listings/${listing.id}`
+    const price = `${formatPrice(listing.price, listing.currency)}${listing.listingType === 'rent' ? translations.per_month : ''}`
 
-    const metaLine = [
+    const summary = [
         translations.listing_types[listing.listingType],
         propertyTypeLabels[listing.propertyType] ?? listing.propertyType,
-        `${listing.city}, ${listing.country}`,
-    ].join(' • ')
+        price,
+    ].join(' · ')
 
-    const [ownerBefore, ownerAfter] = translations.owner
+    const owner = translations.owner
+        .replace(':name', listing.ownerName ?? '')
         .replace(':email', listing.ownerEmail ?? '')
-        .split(':name')
 
     return (
-        <div className="rounded-xl border border-border bg-surface p-4 sm:p-5">
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div className="min-w-0">
-                    <Link href={reviewUrl} className="font-semibold text-text transition-colors hover:text-brand">
-                        {listing.title}
-                    </Link>
-                    <p className="mt-0.5 text-sm text-text-muted">{metaLine}</p>
-
-                    <p className="mt-2 font-bold text-text">
-                        {formatPrice(listing.price, listing.currency)}
-                        {listing.listingType === 'rent' && (
-                            <span className="text-sm font-normal text-text-muted">
-                                {translations.per_month}
-                            </span>
-                        )}
-                    </p>
-
-                    <p className="mt-2 text-sm text-text-muted">
-                        {ownerBefore}
-                        <span className="font-semibold text-text">{listing.ownerName ?? ''}</span>
-                        {ownerAfter}
-                    </p>
-                    <p className="mt-0.5 text-sm text-text-muted">
-                        {translations.submitted.replace(':date', formatDateTime(listing.createdAt))}
-                    </p>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-3 md:shrink-0">
-                    <Link
-                        href={reviewUrl}
-                        className="rounded-lg border border-border-strong px-4 py-2 text-sm font-semibold text-text transition-colors hover:border-text"
-                    >
-                        {translations.view_listing}
-                    </Link>
-                    <ListingModerationActions
-                        listingId={listing.id}
-                        listingTitle={listing.title}
-                        translations={translations}
+        <li className="grid grid-cols-[96px_minmax(0,1fr)] items-start gap-x-3.5 gap-y-1.5 border-b border-rule py-5 transition-colors duration-150 hover:bg-sand/55 md:grid-cols-[160px_minmax(0,1fr)_auto] md:items-center md:gap-8 md:py-6">
+            <div className="relative aspect-3/2 overflow-hidden bg-sand">
+                {listing.imageUrl ? (
+                    <img
+                        src={listing.imageUrl}
+                        alt=""
+                        className="absolute inset-0 size-full object-cover"
+                        loading="lazy"
                     />
-                </div>
+                ) : (
+                    <ListingImagePlaceholder className="absolute inset-0" />
+                )}
             </div>
-        </div>
+
+            <div className="contents md:flex md:min-w-0 md:flex-col md:gap-1.5">
+                <Link
+                    href={reviewUrl}
+                    className="text-xl leading-tight font-light tracking-[-0.015em] wrap-break-word transition-colors duration-150 hover:text-forest md:text-2xl"
+                >
+                    {listing.title}
+                </Link>
+                <p className="col-span-2 mt-1.5 text-sm md:mt-0">{summary}</p>
+                <p className="col-span-2 text-[13px] wrap-break-word text-ink-muted">{owner}</p>
+                <p className="col-span-2 text-[13px] text-ink-muted">
+                    {translations.submitted.replace(':date', formatDate(listing.createdAt))}
+                </p>
+            </div>
+
+            <div className="col-span-2 mt-1.5 flex flex-wrap items-center gap-2.5 md:col-span-1 md:mt-0">
+                <Button variant="link" href={reviewUrl} className="mr-3">
+                    {translations.view_listing}
+                </Button>
+                <ListingModerationActions
+                    listingId={listing.id}
+                    listingTitle={listing.title}
+                    translations={translations}
+                />
+            </div>
+        </li>
     )
 }

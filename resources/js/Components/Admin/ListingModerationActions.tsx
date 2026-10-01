@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import RejectListingDialog from '@/Components/Admin/RejectListingDialog'
+import Button from '@/Components/UI/Button'
 import type { ListingModerationActionsProps } from '@/types/admin'
 
 export default function ListingModerationActions({
     listingId,
     listingTitle,
     translations,
+    layout = 'inline',
 }: ListingModerationActionsProps) {
     const [rejectOpen, setRejectOpen] = useState(false)
     const [processing, setProcessing] = useState(false)
@@ -20,23 +22,13 @@ export default function ListingModerationActions({
     }
 
     return (
-        <>
-            <button
-                type="button"
-                onClick={approve}
-                disabled={processing}
-                className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-text-inverse transition-colors hover:bg-brand-dark disabled:opacity-50"
-            >
-                {translations.actions.approve}
-            </button>
-            <button
-                type="button"
-                onClick={() => setRejectOpen(true)}
-                disabled={processing}
-                className="rounded-lg border border-status-rejected px-4 py-2 text-sm font-semibold text-status-rejected transition-colors hover:bg-status-rejected/10 disabled:opacity-50"
-            >
+        <div className={layout === 'stacked' ? 'grid grid-cols-2 gap-2.5' : 'flex items-center gap-2.5'}>
+            <Button variant="secondary" size="sm" onClick={() => setRejectOpen(true)} disabled={processing}>
                 {translations.actions.reject}
-            </button>
+            </Button>
+            <Button size="sm" onClick={approve} disabled={processing}>
+                {translations.actions.approve}
+            </Button>
 
             <RejectListingDialog
                 open={rejectOpen}
@@ -45,6 +37,6 @@ export default function ListingModerationActions({
                 listingTitle={listingTitle}
                 translations={translations}
             />
-        </>
+        </div>
     )
 }

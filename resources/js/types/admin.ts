@@ -34,6 +34,47 @@ export interface AdminNavTranslations {
     reported_listings: string
     reported_messages: string
     contact_messages: string
+    view_site: string
+    aria_label: string
+    pending_count: string
+}
+
+export interface AdminCounts {
+    pendingListings: number
+    pendingAgencies: number
+    pendingAgencyChanges: number
+    reportedListings: number
+    reportedMessages: number
+    newContactMessages: number
+}
+
+export interface AdminNavItem {
+    key: string
+    label: string
+    href: string
+    count?: number
+}
+
+export interface AdminNavLinkProps {
+    item: AdminNavItem
+    active: boolean
+    pendingTemplate: string
+    className?: string
+    onNavigate?: () => void
+}
+
+export interface AdminMobileMenuProps {
+    id: string
+    items: AdminNavItem[]
+    currentPath: string
+    nav: AdminNavTranslations
+    signOutLabel: string
+    onClose: () => void
+}
+
+export interface AdminPageHeaderProps {
+    title: string
+    subtitle?: string
 }
 
 export interface AdminStatLabel {
@@ -75,11 +116,19 @@ export interface StatCardProps {
     label: string
     value: number
     description?: string
+    attention?: boolean
+    href?: string
 }
 
 export interface AdminStatSectionProps {
     heading: string
     cards: StatCardProps[]
+}
+
+export interface AdminMobileStatsProps {
+    heading: string
+    moderationCards: StatCardProps[]
+    otherCards: StatCardProps[]
 }
 
 export type UserStatusValue = 'active' | 'suspended'
@@ -197,6 +246,7 @@ export interface AdminListingModerationItem {
     ownerName: string | null
     ownerEmail: string | null
     createdAt: string | null
+    imageUrl: string | null
 }
 
 export interface AdminListingsTranslations {
@@ -262,6 +312,20 @@ export interface ListingModerationActionsProps {
     listingId: number
     listingTitle: string
     translations: AdminListingsTranslations
+    layout?: 'inline' | 'stacked'
+}
+
+export interface ListingModerationPanelProps {
+    listing: AdminListingReviewData
+    canModerate: boolean
+    translations: AdminListingsTranslations
+    className?: string
+}
+
+export interface ListingReportPanelProps {
+    report: ListingReportModerationItem
+    translations: AdminListingReportsTranslations
+    reasonLabels: Record<ListingReportReasonValue, string>
 }
 
 export interface AdminListingsPageProps {

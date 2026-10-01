@@ -1,12 +1,15 @@
 import { Head, usePage } from '@inertiajs/react'
-import { CheckCircle2 } from 'lucide-react'
+import AdminPageHeader from '@/Components/Admin/AdminPageHeader'
 import AgencyChangeRequestRow from '@/Components/Admin/AgencyChangeRequestRow'
 import AgencyModerationRow from '@/Components/Admin/AgencyModerationRow'
+import EmptyState from '@/Components/UI/EmptyState'
 import FlashBanner from '@/Components/UI/FlashBanner'
 import Pagination from '@/Components/UI/Pagination'
 import AdminLayout from '@/Layouts/AdminLayout'
 import type { AdminAgenciesPageProps } from '@/types/admin'
 import type { SharedProps } from '@/types/shared'
+
+const sectionHeading = 'text-[26px] leading-tight font-airy tracking-[-0.02em] lg:text-[32px]'
 
 export default function Index({ agencies, profileChanges, translations, fieldLabels }: AdminAgenciesPageProps) {
     const { flash } = usePage<SharedProps>().props
@@ -15,58 +18,49 @@ export default function Index({ agencies, profileChanges, translations, fieldLab
         <AdminLayout>
             <Head title={translations.title} />
 
-            {flash.success && <FlashBanner message={flash.success} variant="success" />}
-            {flash.error && <FlashBanner message={flash.error} variant="error" />}
+            <AdminPageHeader title={translations.title} subtitle={translations.subtitle} />
 
-            <header>
-                <h1 className="font-display text-3xl font-semibold text-text sm:text-4xl">
-                    {translations.title}
-                </h1>
-                <p className="mt-2 text-text-soft">{translations.subtitle}</p>
-            </header>
+            {flash.success && <FlashBanner message={flash.success} variant="success" className="" />}
+            {flash.error && <FlashBanner message={flash.error} variant="error" className="" />}
 
-            {profileChanges.length > 0 && (
-                <section className="mt-10">
-                    <h2 className="border-b border-border pb-3 font-display text-xl font-semibold text-text">
-                        {translations.changes.heading}
-                    </h2>
-                    <p className="mt-3 text-sm text-text-soft">{translations.changes.subtitle}</p>
+            <div className="flex flex-col gap-12 lg:gap-16">
+                <section>
+                    <h2 className={`mb-4 ${sectionHeading}`}>{translations.verification_heading}</h2>
 
-                    <div className="mt-6 flex flex-col gap-4">
-                        {profileChanges.map((change) => (
-                            <AgencyChangeRequestRow
-                                key={change.agencyId}
-                                change={change}
-                                translations={translations.changes}
-                                ownerTemplate={translations.owner}
-                                fieldLabels={fieldLabels}
-                            />
-                        ))}
-                    </div>
+                    {agencies.data.length > 0 ? (
+                        <ul className="border-t border-rule">
+                            {agencies.data.map((agency) => (
+                                <AgencyModerationRow key={agency.id} agency={agency} translations={translations} />
+                            ))}
+                        </ul>
+                    ) : (
+                        <EmptyState title={translations.empty.title} hint={translations.empty.subtitle} />
+                    )}
+
+                    <Pagination paginator={agencies} labels={translations.pagination} className="mt-8" />
                 </section>
-            )}
 
-            <section className="mt-10">
-                <h2 className="border-b border-border pb-3 font-display text-xl font-semibold text-text">
-                    {translations.verification_heading}
-                </h2>
+                {profileChanges.length > 0 && (
+                    <section id="profile-changes" className="flex scroll-mt-8 flex-col gap-4">
+                        <div className="flex flex-col gap-1.5">
+                            <h2 className={sectionHeading}>{translations.changes.heading}</h2>
+                            <p className="text-sm text-ink-muted">{translations.changes.subtitle}</p>
+                        </div>
 
-                {agencies.data.length > 0 ? (
-                    <div className="mt-6 flex flex-col gap-4">
-                        {agencies.data.map((agency) => (
-                            <AgencyModerationRow key={agency.id} agency={agency} translations={translations} />
-                        ))}
-                    </div>
-                ) : (
-                    <div className="mt-6 flex flex-col items-center gap-3 py-16 text-center">
-                        <CheckCircle2 className="size-10 text-text-muted" />
-                        <p className="font-display text-2xl font-semibold text-text">{translations.empty.title}</p>
-                        <p className="text-text-soft">{translations.empty.subtitle}</p>
-                    </div>
+                        <div className="flex flex-col gap-4">
+                            {profileChanges.map((change) => (
+                                <AgencyChangeRequestRow
+                                    key={change.agencyId}
+                                    change={change}
+                                    translations={translations.changes}
+                                    ownerTemplate={translations.owner}
+                                    fieldLabels={fieldLabels}
+                                />
+                            ))}
+                        </div>
+                    </section>
                 )}
-
-                <Pagination paginator={agencies} labels={translations.pagination} />
-            </section>
+            </div>
         </AdminLayout>
     )
 }

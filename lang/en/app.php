@@ -1141,6 +1141,9 @@ return [
             'reported_listings' => 'Reported Listings',
             'reported_messages' => 'Reported Messages',
             'contact_messages' => 'Contact Messages',
+            'view_site' => 'View site',
+            'aria_label' => 'Admin',
+            'pending_count' => ':count pending',
         ],
         'dashboard' => [
             'title' => 'Admin Dashboard',
