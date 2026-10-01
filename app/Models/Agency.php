@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Enums\AgencyStatus;
 use App\Enums\EuropeanCountry;
 use App\Enums\UserStatus;
+use App\Services\Seo\CanonicalUrl;
+use App\Services\Seo\MetaDescription;
 use BackedEnum;
 use Database\Factories\AgencyFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -237,6 +239,44 @@ class Agency extends Model
             ...$this->businessDetails(),
             'status' => $this->status->value,
         ];
+    }
+
+    public function metaDescription(): string
+    {
+        return filled($this->description)
+            ? MetaDescription::excerpt($this->description)
+            : __('app.seo.agency_description', ['name' => $this->name]);
+    }
+
+    /**
+     * @return array{loc: string, lastmod: ?string}
+     */
+    public function toSitemapArray(): array
+    {
+        return [
+            'loc' => CanonicalUrl::route('agencies.show', $this->slug),
+            'lastmod' => $this->updated_at?->toAtomString(),
+        ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function toStructuredDataArray(): array
+    {
+        $url = CanonicalUrl::route('agencies.show', $this->slug);
+
+        return array_filter([
+            '@type' => 'RealEstateAgent',
+            '@id' => $url.'#agency',
+            'name' => $this->name,
+            'url' => $url,
+            'description' => $this->metaDescription(),
+            'telephone' => $this->phone,
+            'email' => $this->email,
+            'address' => $this->address,
+            'sameAs' => $this->website,
+        ], filled(...));
     }
 
     /**

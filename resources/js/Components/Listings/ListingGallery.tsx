@@ -35,7 +35,13 @@ export default function ListingGallery({ images, title, translations }: ListingG
             aria-label={label(index)}
             className="block size-full cursor-zoom-in overflow-hidden bg-sand"
         >
-            <img src={image.url} alt={image.altText || title} className="size-full object-cover" />
+            <img
+                src={image.url}
+                alt={image.altText || title}
+                fetchPriority={index === 0 ? 'high' : 'auto'}
+                decoding={index === 0 ? 'auto' : 'async'}
+                className="size-full object-cover"
+            />
         </button>
     )
 
@@ -51,6 +57,7 @@ export default function ListingGallery({ images, title, translations }: ListingG
                     <img
                         src={slide.url}
                         alt={slide.altText || title}
+                        fetchPriority={slideIndex === 0 ? 'high' : 'auto'}
                         draggable={false}
                         className="size-full object-cover select-none"
                     />

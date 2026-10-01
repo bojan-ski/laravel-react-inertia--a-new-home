@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { X } from 'lucide-react'
+import { LISTING_THUMB_SIZE } from '@/Components/Listings/listingImageSize'
 import { useSwipe } from '@/Components/Listings/useSwipe'
 import { useFocusTrap } from '@/Components/UI/useFocusTrap'
 import type { ListingGalleryTranslations, ListingImageData } from '@/types/listing'
@@ -112,6 +113,7 @@ export default function ListingLightbox({ images, title, initialIndex, onClose, 
                     <img
                         src={image.url}
                         alt={image.altText || title}
+                        decoding="async"
                         draggable={false}
                         className="absolute inset-0 size-full object-contain select-none"
                     />
@@ -148,7 +150,10 @@ export default function ListingLightbox({ images, title, initialIndex, onClose, 
                                 <img
                                     src={thumb.thumbUrl}
                                     alt=""
+                                    width={LISTING_THUMB_SIZE.width}
+                                    height={LISTING_THUMB_SIZE.height}
                                     loading="lazy"
+                                    decoding="async"
                                     draggable={false}
                                     className="size-full object-cover"
                                 />

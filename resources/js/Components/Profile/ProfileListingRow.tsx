@@ -3,6 +3,7 @@ import { router } from '@inertiajs/react'
 import ListingCloseActions from '@/Components/Listings/ListingCloseActions'
 import { formatDate, formatPrice, listingExpiryText } from '@/Components/Listings/listingFormat'
 import ListingImagePlaceholder from '@/Components/Listings/ListingImagePlaceholder'
+import { LISTING_THUMB_SIZE } from '@/Components/Listings/listingImageSize'
 import ListingRenewButton from '@/Components/Listings/ListingRenewButton'
 import Button from '@/Components/UI/Button'
 import ConfirmDialog from '@/Components/UI/ConfirmDialog'
@@ -48,6 +49,10 @@ export default function ProfileListingRow({ listing, translations }: ProfileList
                 <img
                     src={listing.imageUrl}
                     alt=""
+                    width={LISTING_THUMB_SIZE.width}
+                    height={LISTING_THUMB_SIZE.height}
+                    loading="lazy"
+                    decoding="async"
                     className={`absolute inset-0 size-full object-cover ${isClosed ? 'opacity-50' : ''}`}
                 />
             ) : (

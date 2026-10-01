@@ -18,7 +18,13 @@ export default function ListingTeaserCard({ listing, perMonth, aspect, mobileWid
         >
             <div className={`${aspectClasses[aspect]} overflow-hidden`}>
                 {listing.imageUrl ? (
-                    <img src={listing.imageUrl} alt={listing.title} loading="lazy" className="size-full object-cover" />
+                    <img
+                        src={listing.imageUrl}
+                        alt={listing.title}
+                        loading="lazy"
+                        decoding="async"
+                        className="size-full object-cover"
+                    />
                 ) : (
                     <ListingImagePlaceholder />
                 )}
