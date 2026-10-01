@@ -8,6 +8,7 @@ const closed = 'bg-ink px-2.25 py-1.25 text-paper'
 const statusStyles: Record<BadgeStatusValue, string> = {
     approved: positive,
     active: positive,
+    handled: positive,
     pending_review: pending,
     pending_verification: pending,
     rejected: outlined,

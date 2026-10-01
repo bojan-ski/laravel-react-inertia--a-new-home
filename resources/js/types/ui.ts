@@ -4,7 +4,7 @@ import type { UserStatusValue } from '@/types/admin'
 import type { AgencyStatusValue } from '@/types/agency'
 import type { ListingStatusValue } from '@/types/listing'
 
-export type BadgeStatusValue = ListingStatusValue | UserStatusValue | AgencyStatusValue | 'expired'
+export type BadgeStatusValue = ListingStatusValue | UserStatusValue | AgencyStatusValue | 'expired' | 'handled'
 
 export interface StatusBadgeProps {
     status: BadgeStatusValue

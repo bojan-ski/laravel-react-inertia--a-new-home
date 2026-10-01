@@ -1,3 +1,4 @@
+import type { ListingTypeValue } from '@/types/admin'
 import type { RejectDialogTranslations } from '@/types/moderation'
 import type { Paginator, PaginationLabels } from '@/types/pagination'
 
@@ -47,6 +48,11 @@ export interface ListingReportModerationItem {
     id: number
     title: string
     status: string
+    listingType: ListingTypeValue
+    price: string
+    currency: string
+    city: string
+    country: string
     imageUrl: string | null
     ownerName: string | null
     ownerEmail: string | null
@@ -60,6 +66,9 @@ export interface AdminListingReportsTranslations {
     subtitle: string
     panel_heading: string
     owner: string
+    listing_types: Record<ListingTypeValue, string>
+    per_month: string
+    view_listing: string
     reports_count_one: string
     reports_count_other: string
     reported_by: string

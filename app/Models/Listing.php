@@ -586,6 +586,11 @@ class Listing extends Model
             'id' => $this->id,
             'title' => $this->title,
             'status' => $this->status->value,
+            'listingType' => $this->listing_type,
+            'price' => $this->price,
+            'currency' => $this->currency,
+            'city' => $this->city,
+            'country' => $this->country,
             'imageUrl' => $image?->small_path
                 ? Storage::disk($image->disk)->url($image->small_path)
                 : null,

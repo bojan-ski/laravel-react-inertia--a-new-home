@@ -1,4 +1,4 @@
-import type { AgencyBusinessDetails } from '@/types/agency'
+import type { AgencyBusinessDetails, AgencyStatusValue } from '@/types/agency'
 import type { ListingShowData, ListingsShowTranslations } from '@/types/listing'
 import type {
     AdminListingReportsTranslations,
@@ -138,7 +138,7 @@ export type AdminUserRole = 'regular_user' | 'agency'
 export interface AdminUserAgency {
     id: number
     name: string
-    status: string
+    status: AgencyStatusValue
 }
 
 export interface AdminUserCan {
@@ -174,13 +174,25 @@ export interface AdminUsersTranslations {
         all_statuses: string
         reset: string
         search: string
+        search_label: string
+        role_label: string
+        status_label: string
+    }
+    columns: {
+        user: string
+        role: string
+        status: string
+        details: string
+        actions: string
     }
     roles: Record<AdminUserRole, string>
     statuses: Record<UserStatusValue, string>
     count: string
+    count_one: string
     joined: string
     suspended_on: string
     agency_line: string
+    agency_statuses: Record<AgencyStatusValue, string>
     actions: {
         suspend: string
         reactivate: string
@@ -215,6 +227,15 @@ export interface AdminUserFilterForm {
 export interface AdminUserFilterBarProps {
     filters: AdminUsersFilters
     translations: AdminUsersTranslations
+}
+
+export interface AdminUserFilterSelectProps {
+    id: string
+    label: string
+    value: string
+    onChange: (value: string) => void
+    allLabel: string
+    options: Record<string, string>
 }
 
 export interface AdminUserRowProps {

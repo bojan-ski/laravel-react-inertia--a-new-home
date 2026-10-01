@@ -1,5 +1,6 @@
 import ListingReportActions from '@/Components/Admin/ListingReportActions'
 import ListingReportList from '@/Components/Admin/ListingReportList'
+import { notLiveNoticeId } from '@/Components/Admin/listingReportIds'
 import { countLabel } from '@/Components/Listings/listingFormat'
 import FlashBanner from '@/Components/UI/FlashBanner'
 import type { ListingReportPanelProps } from '@/types/admin'
@@ -22,7 +23,11 @@ export default function ListingReportPanel({ report, translations, reasonLabels 
 
             <ListingReportList reports={report.reports} translations={translations} reasonLabels={reasonLabels} />
 
-            {!report.canTakeDown && <FlashBanner message={translations.not_approved} variant="info" className="" />}
+            {!report.canTakeDown && (
+                <div id={notLiveNoticeId(report.id)}>
+                    <FlashBanner message={translations.not_approved} variant="info" className="" />
+                </div>
+            )}
 
             <div className="flex flex-wrap items-center gap-2.5">
                 <ListingReportActions listing={report} translations={translations} />

@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { router } from '@inertiajs/react'
-import { formatDateTime } from '@/Components/Listings/listingFormat'
+import { formatDate, formatDateTime } from '@/Components/Listings/listingFormat'
+import Button from '@/Components/UI/Button'
 import ConfirmDialog from '@/Components/UI/ConfirmDialog'
+import StatusBadge from '@/Components/UI/StatusBadge'
 import type { ContactMessageRowProps } from '@/types/contact'
 
 export default function ContactMessageRow({ message, translations }: ContactMessageRowProps) {
@@ -29,68 +31,53 @@ export default function ContactMessageRow({ message, translations }: ContactMess
 
     const replyHref = `mailto:${message.email}?subject=${encodeURIComponent(translations.reply_subject.replace(':subject', message.subject))}`
 
+    const meta = [
+        translations.from.replace(':email', message.email),
+        message.senderName ? translations.account.replace(':name', message.senderName) : translations.guest,
+        translations.received.replace(':date', formatDateTime(message.createdAt)),
+    ].join(' · ')
+
     return (
-        <div className="rounded-xl border border-border bg-surface p-4 sm:p-5">
-            <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
-                <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                        <p className="font-semibold text-text">{message.subject}</p>
-                        {message.isHandled && (
-                            <span className="rounded-full bg-status-approved/10 px-2.5 py-0.5 text-xs font-medium uppercase tracking-wide text-status-approved">
-                                {translations.handled_badge}
-                            </span>
-                        )}
-                    </div>
-
-                    <p className="mt-1 text-sm text-text-muted">
-                        {translations.from.replace(':email', message.email)}
-                        {' • '}
-                        {message.senderName ? translations.account.replace(':name', message.senderName) : translations.guest}
-                    </p>
-
-                    <p className="mt-4 whitespace-pre-line rounded-lg bg-surface-muted px-4 py-3 text-sm leading-relaxed text-text">
-                        {message.message}
-                    </p>
-
-                    <p className="mt-1.5 text-sm text-text-muted">
-                        {translations.received.replace(':date', formatDateTime(message.createdAt))}
-                    </p>
-
-                    {message.isHandled && message.handledAt && (
-                        <p className="mt-0.5 text-sm text-text-muted">
-                            {translations.handled_by
-                                .replace(':name', message.handledByName ?? '—')
-                                .replace(':date', formatDateTime(message.handledAt))}
-                        </p>
-                    )}
+        <li className="flex flex-col gap-4 border-b border-rule py-7 transition-colors duration-150 hover:bg-sand/55 md:grid md:grid-cols-[minmax(0,1fr)_auto] md:gap-8">
+            <div className="flex min-w-0 flex-col gap-2">
+                <div className="flex flex-wrap items-center gap-3">
+                    <h2 className="text-xl leading-tight font-light tracking-[-0.015em] wrap-break-word md:text-2xl">
+                        {message.subject}
+                    </h2>
+                    {message.isHandled && <StatusBadge status="handled" label={translations.handled_badge} />}
                 </div>
+                <p className="text-[13px] wrap-break-word text-ink-muted">{meta}</p>
+                {message.isHandled && message.handledAt && (
+                    <p className="text-[13px] text-ink-muted">
+                        {translations.handled_by
+                            .replace(':name', message.handledByName ?? '—')
+                            .replace(':date', formatDate(message.handledAt))}
+                    </p>
+                )}
+                <p className="mt-1.5 max-w-180 text-[15px] leading-[1.6] font-book whitespace-pre-line wrap-break-word">
+                    {message.message}
+                </p>
+            </div>
 
-                <div className="flex flex-wrap items-center gap-3 md:shrink-0 md:flex-col md:items-stretch">
-                    <a
-                        href={replyHref}
-                        className="rounded-lg bg-brand px-4 py-2 text-center text-sm font-semibold text-text-inverse transition-colors hover:bg-brand-dark"
-                    >
-                        {translations.actions.reply}
-                    </a>
-                    {!message.isHandled && (
-                        <button
-                            type="button"
-                            onClick={markHandled}
-                            disabled={processing}
-                            className="rounded-lg border border-border-strong px-4 py-2 text-sm font-semibold text-text transition-colors hover:border-text disabled:opacity-50"
-                        >
+            <div className="flex flex-wrap items-start gap-2.5">
+                <Button
+                    variant="link"
+                    onClick={() => setDeleteOpen(true)}
+                    disabled={processing}
+                    className="min-h-11 px-2"
+                >
+                    {translations.actions.delete}
+                </Button>
+                {!message.isHandled && (
+                    <>
+                        <Button variant="secondary" size="sm" href={replyHref} external>
+                            {translations.actions.reply}
+                        </Button>
+                        <Button size="sm" onClick={markHandled} disabled={processing}>
                             {translations.actions.mark_handled}
-                        </button>
-                    )}
-                    <button
-                        type="button"
-                        onClick={() => setDeleteOpen(true)}
-                        disabled={processing}
-                        className="rounded-lg border border-status-rejected px-4 py-2 text-sm font-semibold text-status-rejected transition-colors hover:bg-status-rejected/10 disabled:opacity-50"
-                    >
-                        {translations.actions.delete}
-                    </button>
-                </div>
+                        </Button>
+                    </>
+                )}
             </div>
 
             <ConfirmDialog
@@ -103,6 +90,6 @@ export default function ContactMessageRow({ message, translations }: ContactMess
                 onConfirm={destroy}
                 onCancel={() => setDeleteOpen(false)}
             />
-        </div>
+        </li>
     )
 }

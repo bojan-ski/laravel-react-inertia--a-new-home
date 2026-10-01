@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Enums\AgencyStatus;
 use App\Enums\UserStatus;
+use App\Models\Agency;
 use App\Models\Bookmark;
 use App\Models\Listing;
 use App\Models\User;
@@ -363,5 +365,74 @@ class AdminUserManagementTest extends TestCase
                     ->etc()
                 )
             );
+    }
+
+    public function test_agency_user_row_carries_their_agency(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $owner = User::factory()->agency()->create(['name' => 'Agency Owner']);
+        $agency = Agency::factory()->pendingVerification()->create([
+            'user_id' => $owner->id,
+            'name' => 'Adriatic Homes',
+        ]);
+
+        $this->actingAs($admin)
+            ->get('/admin/users?search=Agency+Owner')
+            ->assertInertia(fn (Assert $page) => $page
+                ->has('users.data', 1)
+                ->where('users.data.0.agency', [
+                    'id' => $agency->id,
+                    'name' => 'Adriatic Homes',
+                    'status' => 'pending_verification',
+                ])
+            );
+    }
+
+    public function test_users_without_an_agency_have_a_null_agency(): void
+    {
+        $admin = User::factory()->admin()->create();
+        User::factory()->regularUser()->create(['name' => 'Regular Person']);
+        User::factory()->agency()->create(['name' => 'Agencyless Owner']);
+
+        $this->actingAs($admin)
+            ->get('/admin/users?search=Regular+Person')
+            ->assertInertia(fn (Assert $page) => $page
+                ->has('users.data', 1)
+                ->where('users.data.0.agency', null)
+            );
+
+        $this->actingAs($admin)
+            ->get('/admin/users?search=Agencyless+Owner')
+            ->assertInertia(fn (Assert $page) => $page
+                ->has('users.data', 1)
+                ->where('users.data.0.agency', null)
+            );
+    }
+
+    public function test_users_page_receives_agency_status_labels_and_table_copy(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)
+            ->get('/admin/users')
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('translations.agency_statuses', [
+                    'pending_verification' => __('app.admin.users.agency_statuses.pending_verification'),
+                    'approved' => __('app.admin.users.agency_statuses.approved'),
+                    'rejected' => __('app.admin.users.agency_statuses.rejected'),
+                    'hidden' => __('app.admin.users.agency_statuses.hidden'),
+                ])
+                ->where('translations.columns.user', __('app.admin.users.columns.user'))
+                ->where('translations.columns.actions', __('app.admin.users.columns.actions'))
+                ->where('translations.filters.search_label', __('app.admin.users.filters.search_label'))
+                ->where('translations.filters.role_label', __('app.admin.users.filters.role_label'))
+                ->where('translations.filters.status_label', __('app.admin.users.filters.status_label'))
+                ->where('translations.count_one', __('app.admin.users.count_one'))
+            );
+
+        $this->assertSame(
+            array_map(fn (AgencyStatus $status): string => $status->value, AgencyStatus::cases()),
+            array_keys(__('app.admin.users.agency_statuses')),
+        );
     }
 }

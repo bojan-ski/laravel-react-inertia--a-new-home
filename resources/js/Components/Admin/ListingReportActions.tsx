@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { router } from '@inertiajs/react'
+import { notLiveNoticeId } from '@/Components/Admin/listingReportIds'
 import RejectAgencyDialog from '@/Components/Admin/RejectAgencyDialog'
 import Button from '@/Components/UI/Button'
 import type { ListingReportActionsProps } from '@/types/listing-report'
@@ -21,11 +22,14 @@ export default function ListingReportActions({ listing, translations }: ListingR
             <Button variant="secondary" size="sm" onClick={dismiss} disabled={processing}>
                 {translations.actions.dismiss}
             </Button>
-            {listing.canTakeDown && (
-                <Button size="sm" onClick={() => setTakeDownOpen(true)} disabled={processing}>
-                    {translations.actions.take_down}
-                </Button>
-            )}
+            <Button
+                size="sm"
+                onClick={() => setTakeDownOpen(true)}
+                disabled={processing || !listing.canTakeDown}
+                aria-describedby={listing.canTakeDown ? undefined : notLiveNoticeId(listing.id)}
+            >
+                {translations.actions.take_down}
+            </Button>
 
             <RejectAgencyDialog
                 open={takeDownOpen}

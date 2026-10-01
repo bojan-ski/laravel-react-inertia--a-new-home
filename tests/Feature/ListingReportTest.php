@@ -402,11 +402,59 @@ class ListingReportTest extends TestCase
             ->get('/admin/listing-reports')
             ->assertInertia(fn (Assert $page) => $page
                 ->has('listings.data.0', fn (Assert $row) => $row
-                    ->hasAll(['id', 'title', 'status', 'imageUrl', 'ownerName', 'ownerEmail', 'openReportsCount', 'reports', 'canTakeDown'])
+                    ->hasAll(['id', 'title', 'status', 'listingType', 'price', 'currency', 'city', 'country', 'imageUrl', 'ownerName', 'ownerEmail', 'openReportsCount', 'reports', 'canTakeDown'])
                     ->has('reports.0', fn (Assert $report) => $report
                         ->hasAll(['id', 'reason', 'details', 'reportedByName', 'createdAt'])
                     )
                 )
+            );
+    }
+
+    public function test_queue_payload_carries_the_listing_summary_fields(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $sale = Listing::factory()->approved()->create([
+            'listing_type' => 'sale',
+            'price' => 1290000,
+            'city' => 'Split',
+            'country' => 'Croatia',
+        ]);
+        $this->reportFor($sale);
+
+        $this->actingAs($admin)
+            ->get('/admin/listing-reports')
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('listings.data.0.id', $sale->id)
+                ->where('listings.data.0.listingType', 'sale')
+                ->where('listings.data.0.price', '1290000.00')
+                ->where('listings.data.0.currency', Listing::CURRENCY)
+                ->where('listings.data.0.city', 'Split')
+                ->where('listings.data.0.country', 'Croatia')
+                ->where('translations.listing_types.sale', __('app.admin.listing_reports.listing_types.sale'))
+                ->where('translations.listing_types.rent', __('app.admin.listing_reports.listing_types.rent'))
+                ->where('translations.per_month', __('app.admin.listing_reports.per_month'))
+                ->where('translations.view_listing', __('app.admin.listing_reports.view_listing'))
+            );
+    }
+
+    public function test_review_page_report_payload_carries_the_listing_summary_fields(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $rent = Listing::factory()->approved()->create([
+            'listing_type' => 'rent',
+            'price' => 2400,
+            'city' => 'Berlin',
+            'country' => 'Germany',
+        ]);
+        $this->reportFor($rent);
+
+        $this->actingAs($admin)
+            ->get("/admin/listings/{$rent->id}")
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('reportModeration.listingType', 'rent')
+                ->where('reportModeration.price', '2400.00')
+                ->where('reportModeration.city', 'Berlin')
+                ->where('reportModeration.country', 'Germany')
             );
     }
 
