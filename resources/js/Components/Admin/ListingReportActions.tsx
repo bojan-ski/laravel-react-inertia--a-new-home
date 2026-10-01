@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import RejectAgencyDialog from '@/Components/Admin/RejectAgencyDialog'
+import Button from '@/Components/UI/Button'
 import type { ListingReportActionsProps } from '@/types/listing-report'
 
 export default function ListingReportActions({ listing, translations }: ListingReportActionsProps) {
@@ -17,23 +18,13 @@ export default function ListingReportActions({ listing, translations }: ListingR
 
     return (
         <>
-            <button
-                type="button"
-                onClick={dismiss}
-                disabled={processing}
-                className="rounded-lg border border-border-strong px-4 py-2 text-sm font-semibold text-text transition-colors hover:border-text disabled:opacity-50"
-            >
+            <Button variant="secondary" size="sm" onClick={dismiss} disabled={processing}>
                 {translations.actions.dismiss}
-            </button>
+            </Button>
             {listing.canTakeDown && (
-                <button
-                    type="button"
-                    onClick={() => setTakeDownOpen(true)}
-                    disabled={processing}
-                    className="rounded-lg border border-status-rejected px-4 py-2 text-sm font-semibold text-status-rejected transition-colors hover:bg-status-rejected/10 disabled:opacity-50"
-                >
+                <Button size="sm" onClick={() => setTakeDownOpen(true)} disabled={processing}>
                     {translations.actions.take_down}
-                </button>
+                </Button>
             )}
 
             <RejectAgencyDialog

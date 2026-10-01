@@ -553,6 +553,8 @@ class Listing extends Model
      */
     public function toModerationArray(): array
     {
+        $image = $this->relationLoaded('images') ? $this->images->first() : null;
+
         return [
             'id' => $this->id,
             'title' => $this->title,
@@ -566,6 +568,9 @@ class Listing extends Model
             'ownerName' => $this->owner?->name ?? $this->agency?->name,
             'ownerEmail' => $this->owner?->email ?? $this->agency?->email,
             'createdAt' => $this->created_at?->toIso8601String(),
+            'imageUrl' => $image?->small_path
+                ? Storage::disk($image->disk)->url($image->small_path)
+                : null,
         ];
     }
 

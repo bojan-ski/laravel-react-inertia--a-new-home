@@ -1,73 +1,127 @@
+import { useEffect, useId, useRef, useState } from 'react'
 import { Link, usePage } from '@inertiajs/react'
-import Footer from '@/Components/Footer'
-import Navbar from '@/Components/Navbar'
+import { Equal, X } from 'lucide-react'
+import AdminMobileMenu from '@/Components/Admin/AdminMobileMenu'
+import AdminNavLink from '@/Components/Admin/AdminNavLink'
+import { buildAdminNavItems, isAdminNavItemActive } from '@/Components/Admin/adminNavItems'
+import Kicker from '@/Components/UI/Kicker'
 import type { AdminLayoutProps } from '@/types/layout'
 import type { SharedProps } from '@/types/shared'
 
-function isLinkActive(href: string, currentPath: string): boolean {
-    if (href === '/admin') {
-        return currentPath === '/admin'
-    }
-
-    return currentPath === href || currentPath.startsWith(`${href}/`)
-}
-
 export default function AdminLayout({ children }: AdminLayoutProps) {
     const page = usePage<SharedProps>()
-    const { adminNav } = page.props
+    const { adminNav, adminCounts, nav } = page.props
     const currentPath = page.url
+    const items = buildAdminNavItems(adminNav, adminCounts)
+    const [open, setOpen] = useState(false)
+    const menuButtonRef = useRef<HTMLButtonElement>(null)
+    const menuId = useId()
 
-    const links = [
-        { label: adminNav.dashboard, href: '/admin' },
-        { label: adminNav.listings, href: '/admin/listings' },
-        { label: adminNav.agencies, href: '/admin/agencies' },
-        { label: adminNav.users, href: '/admin/users' },
-        { label: adminNav.reported_listings, href: '/admin/listing-reports' },
-        { label: adminNav.reported_messages, href: '/admin/reported-messages' },
-        { label: adminNav.contact_messages, href: '/admin/contact-messages' },
-    ]
+    useEffect(() => {
+        if (!open) {
+            return
+        }
+
+        function handleKeyDown(event: KeyboardEvent) {
+            if (event.key === 'Escape') {
+                setOpen(false)
+                menuButtonRef.current?.focus()
+            }
+        }
+
+        document.addEventListener('keydown', handleKeyDown)
+
+        return () => document.removeEventListener('keydown', handleKeyDown)
+    }, [open])
 
     return (
-        <div className="flex min-h-screen flex-col bg-background text-text">
-            <Navbar />
-
-            <main className="flex-1">
-                <div className="mx-auto max-w-7xl px-6 py-10 md:py-14">
-                    <div className="grid grid-cols-1 gap-8 lg:grid-cols-[240px_1fr]">
-                        <aside className="lg:sticky lg:top-8 lg:self-start">
-                            <nav className="rounded-2xl border border-border bg-surface p-4">
-                                <p className="px-3 pb-3 text-xs font-medium uppercase tracking-wider text-text-muted">
-                                    {adminNav.eyebrow}
-                                </p>
-                                <ul className="flex flex-col gap-1">
-                                    {links.map((link) => {
-                                        const active = isLinkActive(link.href, currentPath)
-
-                                        return (
-                                            <li key={link.href}>
-                                                <Link
-                                                    href={link.href}
-                                                    className={`block border-l-2 px-3 py-2 text-sm transition-colors ${
-                                                        active
-                                                            ? 'border-brand font-semibold text-text'
-                                                            : 'border-transparent text-text-soft hover:text-text'
-                                                    }`}
-                                                >
-                                                    {link.label}
-                                                </Link>
-                                            </li>
-                                        )
-                                    })}
-                                </ul>
-                            </nav>
-                        </aside>
-
-                        <div>{children}</div>
-                    </div>
+        <div className="min-h-screen bg-paper text-ink lg:grid lg:grid-cols-[272px_minmax(0,1fr)]">
+            <aside className="sticky top-0 hidden h-dvh flex-col gap-10 overflow-y-auto border-r border-rule py-9 pl-10 lg:flex">
+                <div className="flex flex-col items-start gap-1.5">
+                    <Link
+                        href="/admin"
+                        className="text-[17px] font-medium tracking-[0.04em] transition-colors duration-150 hover:text-forest"
+                    >
+                        {nav.brand}
+                    </Link>
+                    <Kicker size="sm" className="tracking-[0.16em]">
+                        {adminNav.eyebrow}
+                    </Kicker>
                 </div>
-            </main>
 
-            <Footer />
+                <nav aria-label={adminNav.aria_label} className="flex flex-col">
+                    {items.map((item) => {
+                        const active = isAdminNavItemActive(item.href, currentPath)
+
+                        return (
+                            <AdminNavLink
+                                key={item.key}
+                                item={item}
+                                active={active}
+                                pendingTemplate={adminNav.pending_count}
+                                className={`py-2.75 pr-6 text-[15px] ${active ? 'border-r-2 border-forest' : ''}`}
+                            />
+                        )
+                    })}
+                </nav>
+
+                <div className="mt-auto flex flex-col items-start gap-2.5 pr-6 text-[13px] text-ink-muted">
+                    <Link href="/" className="transition-colors duration-150 hover:text-forest">
+                        {adminNav.view_site}
+                        <span aria-hidden="true"> ↗</span>
+                    </Link>
+                    <Link
+                        href="/logout"
+                        method="post"
+                        as="button"
+                        className="transition-colors duration-150 hover:text-forest"
+                    >
+                        {nav.sign_out}
+                    </Link>
+                </div>
+            </aside>
+
+            <header className="lg:hidden">
+                <div className="flex items-center justify-between border-b border-rule py-2 pr-3 pl-5 md:pl-10">
+                    <div className="flex items-baseline gap-2.5">
+                        <Link href="/admin" className="text-[15px] font-medium tracking-[0.04em]">
+                            {nav.brand}
+                        </Link>
+                        <Kicker className="text-[10px]! tracking-[0.16em]">{adminNav.eyebrow}</Kicker>
+                    </div>
+
+                    <button
+                        ref={menuButtonRef}
+                        type="button"
+                        onClick={() => setOpen((value) => !value)}
+                        className="flex size-11 items-center justify-center text-ink"
+                        aria-label={open ? nav.close_menu : nav.open_menu}
+                        aria-expanded={open}
+                        aria-controls={menuId}
+                    >
+                        {open ? (
+                            <X className="size-5.5" strokeWidth={1.25} aria-hidden="true" />
+                        ) : (
+                            <Equal className="size-5.5" strokeWidth={1.25} aria-hidden="true" />
+                        )}
+                    </button>
+                </div>
+
+                {open && (
+                    <AdminMobileMenu
+                        id={menuId}
+                        items={items}
+                        currentPath={currentPath}
+                        nav={adminNav}
+                        signOutLabel={nav.sign_out}
+                        onClose={() => setOpen(false)}
+                    />
+                )}
+            </header>
+
+            <main className="min-w-0 px-5 pt-7 pb-10 md:px-10 lg:px-16 lg:pt-14 lg:pb-16">
+                <div className="flex max-w-292 flex-col gap-7 lg:gap-10">{children}</div>
+            </main>
         </div>
     )
 }

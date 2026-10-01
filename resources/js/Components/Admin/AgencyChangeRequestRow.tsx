@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import { Link, router } from '@inertiajs/react'
-import { Building2, ExternalLink } from 'lucide-react'
 import RejectAgencyDialog from '@/Components/Admin/RejectAgencyDialog'
-import { formatDateTime } from '@/Components/Listings/listingFormat'
+import { formatDate } from '@/Components/Listings/listingFormat'
+import Button from '@/Components/UI/Button'
 import type { AgencyChangeRequestRowProps } from '@/types/admin'
+
+const cellClasses = 'border-b border-rule py-3 align-top whitespace-pre-line wrap-break-word max-md:block'
+const mobileLabelClasses = 'mb-1 block text-[11px] tracking-widest text-ink-muted uppercase md:hidden'
 
 export default function AgencyChangeRequestRow({
     change,
@@ -24,75 +27,87 @@ export default function AgencyChangeRequestRow({
     }
 
     return (
-        <div className="rounded-xl border border-border bg-surface p-4 sm:p-5">
-            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                <div className="min-w-0">
-                    <p className="flex items-center gap-2 font-semibold text-text">
-                        <Building2 className="size-4 shrink-0 text-text-muted" />
+        <article className="flex flex-col gap-5 border border-rule p-5 md:p-7">
+            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between md:gap-6">
+                <div className="flex min-w-0 flex-col gap-1">
+                    <h3 className="text-2xl leading-tight font-light tracking-[-0.015em] wrap-break-word">
                         {agencyName}
+                    </h3>
+                    <p className="text-[13px] wrap-break-word text-ink-muted">
+                        {ownerTemplate
+                            .replace(':name', change.ownerName ?? '')
+                            .replace(':email', change.ownerEmail ?? '')}
+                    </p>
+                    <p className="text-[13px] text-ink-muted">
+                        {translations.submitted.replace(':date', formatDate(change.submittedAt))}
                         {change.agencySlug && (
-                            <Link
-                                href={`/agencies/${change.agencySlug}`}
-                                className="text-text-muted transition-colors hover:text-brand"
-                                title={translations.view_public}
-                                aria-label={translations.view_public}
-                            >
-                                <ExternalLink className="size-4" />
-                            </Link>
+                            <>
+                                <span aria-hidden="true"> · </span>
+                                <Link
+                                    href={`/agencies/${change.agencySlug}`}
+                                    className="border-b border-current transition-colors duration-150 hover:text-forest"
+                                >
+                                    {translations.view_public}
+                                </Link>
+                            </>
                         )}
                     </p>
-                    <p className="mt-1 text-sm text-text-muted">
-                        {ownerTemplate.replace(':name', change.ownerName ?? '').replace(':email', change.ownerEmail ?? '')}
-                    </p>
-                    <p className="mt-0.5 text-sm text-text-muted">
-                        {translations.submitted.replace(':date', formatDateTime(change.submittedAt))}
-                    </p>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3 md:shrink-0">
-                    <button
-                        type="button"
-                        onClick={approve}
-                        disabled={processing}
-                        className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-text-inverse transition-colors hover:bg-brand-dark disabled:opacity-50"
-                    >
-                        {translations.actions.approve}
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => setRejectOpen(true)}
-                        disabled={processing}
-                        className="rounded-lg border border-status-rejected px-4 py-2 text-sm font-semibold text-status-rejected transition-colors hover:bg-status-rejected/10 disabled:opacity-50"
-                    >
+                <div className="flex shrink-0 items-start gap-2.5">
+                    <Button variant="secondary" size="sm" onClick={() => setRejectOpen(true)} disabled={processing}>
                         {translations.actions.reject}
-                    </button>
+                    </Button>
+                    <Button size="sm" onClick={approve} disabled={processing}>
+                        {translations.actions.approve}
+                    </Button>
                 </div>
             </div>
 
-            <div className="mt-4 overflow-x-auto">
-                <table className="w-full text-left text-sm">
-                    <thead>
-                        <tr className="border-b border-border text-xs uppercase tracking-wide text-text-muted">
-                            <th className="py-2 pr-4 font-medium">{translations.field}</th>
-                            <th className="py-2 pr-4 font-medium">{translations.current}</th>
-                            <th className="py-2 font-medium">{translations.proposed}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {change.changes.map((diff) => (
-                            <tr key={diff.field} className="border-b border-border last:border-b-0 align-top">
-                                <td className="py-2 pr-4 font-medium text-text">{fieldLabels[diff.field] ?? diff.field}</td>
-                                <td className="whitespace-pre-line py-2 pr-4 text-text-muted line-through decoration-status-rejected/50">
-                                    {diff.current ?? translations.empty_value}
-                                </td>
-                                <td className="whitespace-pre-line py-2 text-text">
-                                    {diff.proposed ?? translations.empty_value}
-                                </td>
-                            </tr>
+            <table className="w-full table-fixed text-left text-sm max-md:block">
+                <colgroup>
+                    <col className="w-55" />
+                    <col />
+                    <col />
+                </colgroup>
+                <thead className="max-md:sr-only">
+                    <tr>
+                        {[translations.field, translations.current, translations.proposed].map((heading, index) => (
+                            <th
+                                key={heading}
+                                scope="col"
+                                className={`border-b border-ink py-2.5 text-xs font-normal tracking-widest text-ink-muted uppercase ${
+                                    index === 2 ? 'px-3' : 'pr-4'
+                                }`}
+                            >
+                                {heading}
+                            </th>
                         ))}
-                    </tbody>
-                </table>
-            </div>
+                    </tr>
+                </thead>
+                <tbody className="max-md:block">
+                    {change.changes.map((diff) => (
+                        <tr key={diff.field} className="max-md:block max-md:border-b max-md:border-rule max-md:py-3">
+                            <th
+                                scope="row"
+                                className={`${cellClasses} pr-4 font-normal text-ink-muted max-md:border-0 max-md:py-0 max-md:pb-2`}
+                            >
+                                {fieldLabels[diff.field] ?? diff.field}
+                            </th>
+                            <td className={`${cellClasses} pr-4 max-md:border-0 max-md:py-0 max-md:pb-2`}>
+                                <span className={mobileLabelClasses}>{translations.current}</span>
+                                {diff.current ?? translations.empty_value}
+                            </td>
+                            <td
+                                className={`${cellClasses} bg-forest-50 px-3 text-forest-900 max-md:border-0 max-md:py-2.5`}
+                            >
+                                <span className={mobileLabelClasses}>{translations.proposed}</span>
+                                {diff.proposed ?? translations.empty_value}
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
 
             <RejectAgencyDialog
                 open={rejectOpen}
@@ -101,6 +116,6 @@ export default function AgencyChangeRequestRow({
                 subjectName={agencyName}
                 dialog={translations.dialog}
             />
-        </div>
+        </article>
     )
 }

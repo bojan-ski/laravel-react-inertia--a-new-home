@@ -1,14 +1,11 @@
 import { useState } from 'react'
 import { router } from '@inertiajs/react'
-import { Building2 } from 'lucide-react'
 import RejectAgencyDialog from '@/Components/Admin/RejectAgencyDialog'
-import { formatRegistration } from '@/Components/Agencies/agencyFormat'
-import { formatDateTime } from '@/Components/Listings/listingFormat'
+import { formatRegistration, websiteHost } from '@/Components/Agencies/agencyFormat'
+import { formatDate } from '@/Components/Listings/listingFormat'
+import Button from '@/Components/UI/Button'
+import LogoTile from '@/Components/UI/LogoTile'
 import type { AdminAgencyModerationRowProps } from '@/types/admin'
-
-function truncate(value: string, length: number): string {
-    return value.length > length ? `${value.slice(0, length)}…` : value
-}
 
 export default function AgencyModerationRow({ agency, translations }: AdminAgencyModerationRowProps) {
     const [rejectOpen, setRejectOpen] = useState(false)
@@ -22,98 +19,71 @@ export default function AgencyModerationRow({ agency, translations }: AdminAgenc
         })
     }
 
-    const [ownerBefore, ownerAfter] = translations.owner
+    const notProvided = translations.not_provided
+    const owner = translations.owner
+        .replace(':name', agency.ownerName ?? '')
         .replace(':email', agency.ownerEmail ?? '')
-        .split(':name')
-
-    const contactValue = [agency.email, agency.phone].filter(Boolean).join(' • ') || '—'
+    const contact = translations.contact.replace(
+        ':contact',
+        [agency.email, agency.phone].filter(Boolean).join(' • ') || '—',
+    )
+    const legal = translations.legal
+        .replace(':name', agency.legalName ?? notProvided)
+        .replace(':vat', agency.vatId ?? notProvided)
+    const registration = translations.registration.replace(
+        ':registration',
+        formatRegistration(translations.registration_value, agency.registrationNumber, agency.registrationCountry) ??
+            notProvided,
+    )
+    const broker = translations.broker_register.replace(':number', agency.brokerRegisterNumber ?? notProvided)
+    const [websitePrefix] = translations.website.split(':website')
 
     return (
-        <div className="rounded-xl border border-border bg-surface p-4 sm:p-5">
-            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                <div className="min-w-0">
-                    <p className="flex items-center gap-2 font-semibold text-text">
-                        <Building2 className="size-4 shrink-0 text-text-muted" />
-                        {agency.name}
-                    </p>
+        <li className="grid grid-cols-[56px_minmax(0,1fr)] items-center gap-x-3.5 gap-y-1.25 border-b border-rule py-6 transition-colors duration-150 hover:bg-sand/55 md:grid-cols-[72px_minmax(0,1fr)_auto] md:items-start md:gap-x-7">
+            <LogoTile name={agency.name} size="queue" />
 
-                    <p className="mt-2 text-sm text-text-muted">
-                        {ownerBefore}
-                        <span className="font-semibold text-text">{agency.ownerName ?? ''}</span>
-                        {ownerAfter}
-                    </p>
-                    <p className="mt-0.5 text-sm text-text-muted">
-                        {translations.contact.replace(':contact', contactValue)}
-                    </p>
+            <div className="contents md:flex md:min-w-0 md:flex-col md:gap-1.25">
+                <p className="text-xl leading-tight font-light tracking-[-0.015em] wrap-break-word md:text-2xl">
+                    {agency.name}
+                </p>
 
-                    {agency.description && (
-                        <p className="mt-2 text-sm text-text-soft">{truncate(agency.description, 100)}</p>
-                    )}
+                <div className="col-span-2 mt-2.5 flex flex-col gap-1.25 md:mt-0">
+                    {agency.address && <p className="text-sm wrap-break-word">{agency.address}</p>}
 
-                    {agency.website && (
-                        <p className="mt-0.5 text-sm text-text-muted">
-                            {translations.website.split(':website')[0]}
-                            <a
-                                href={agency.website}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-brand underline hover:text-brand-dark"
-                            >
-                                {agency.website}
-                            </a>
-                        </p>
-                    )}
-
-                    {agency.address && (
-                        <p className="mt-0.5 text-sm text-text-muted">
-                            {translations.address.replace(':address', agency.address)}
-                        </p>
-                    )}
-
-                    <p className="mt-2 text-sm text-text-muted">
-                        {translations.legal
-                            .replace(':name', agency.legalName ?? translations.not_provided)
-                            .replace(':vat', agency.vatId ?? translations.not_provided)}
-                    </p>
-                    <p className="mt-0.5 text-sm text-text-muted">
-                        {translations.registration.replace(
-                            ':registration',
-                            formatRegistration(
-                                translations.registration_value,
-                                agency.registrationNumber,
-                                agency.registrationCountry,
-                            ) ?? translations.not_provided,
+                    <div className="flex flex-col gap-1.25 text-[13px] wrap-break-word text-ink-muted">
+                        <p>{owner}</p>
+                        <p>{contact}</p>
+                        <p>{legal}</p>
+                        <p>{registration}</p>
+                        <p>{broker}</p>
+                        {agency.website && (
+                            <p>
+                                {websitePrefix}
+                                <a
+                                    href={agency.website}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="border-b border-current text-ink transition-colors duration-150 hover:text-forest"
+                                >
+                                    {websiteHost(agency.website)}
+                                </a>
+                            </p>
                         )}
-                    </p>
-                    {agency.brokerRegisterNumber && (
-                        <p className="mt-0.5 text-sm text-text-muted">
-                            {translations.broker_register.replace(':number', agency.brokerRegisterNumber)}
-                        </p>
-                    )}
-
-                    <p className="mt-2 text-sm text-text-muted">
-                        {translations.submitted.replace(':date', formatDateTime(agency.createdAt))}
-                    </p>
+                        {agency.description && (
+                            <p className="line-clamp-2 whitespace-pre-line">{agency.description}</p>
+                        )}
+                        <p>{translations.submitted.replace(':date', formatDate(agency.createdAt))}</p>
+                    </div>
                 </div>
+            </div>
 
-                <div className="flex flex-wrap items-center gap-3 md:shrink-0">
-                    <button
-                        type="button"
-                        onClick={approve}
-                        disabled={processing}
-                        className="rounded-lg bg-brand px-4 py-2 text-sm font-semibold text-text-inverse transition-colors hover:bg-brand-dark disabled:opacity-50"
-                    >
-                        {translations.actions.approve}
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => setRejectOpen(true)}
-                        disabled={processing}
-                        className="rounded-lg border border-status-rejected px-4 py-2 text-sm font-semibold text-status-rejected transition-colors hover:bg-status-rejected/10 disabled:opacity-50"
-                    >
-                        {translations.actions.reject}
-                    </button>
-                </div>
+            <div className="col-span-2 mt-2.5 flex items-start gap-2.5 md:col-span-1 md:mt-0">
+                <Button variant="secondary" size="sm" onClick={() => setRejectOpen(true)} disabled={processing}>
+                    {translations.actions.reject}
+                </Button>
+                <Button size="sm" onClick={approve} disabled={processing}>
+                    {translations.actions.approve}
+                </Button>
             </div>
 
             <RejectAgencyDialog
@@ -123,6 +93,6 @@ export default function AgencyModerationRow({ agency, translations }: AdminAgenc
                 subjectName={agency.name}
                 dialog={translations.dialog}
             />
-        </div>
+        </li>
     )
 }

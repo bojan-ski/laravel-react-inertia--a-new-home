@@ -5,6 +5,7 @@ const sizeClasses = {
     lg: 'size-30 p-4 text-[44px] font-airy tracking-[-0.02em]',
     xl: 'size-40 p-5 text-[56px] font-airy tracking-[-0.02em]',
     row: 'size-14 p-2 text-xl font-airy lg:size-22 lg:p-3 lg:text-[32px] lg:tracking-[-0.02em]',
+    queue: 'size-14 p-2 text-xl font-airy md:size-18 md:p-2.5 md:text-[26px]',
     hero: 'size-20 p-2.5 text-[32px] font-extralight lg:size-40 lg:p-4.5 lg:text-[64px] lg:tracking-[-0.03em]',
 }
 

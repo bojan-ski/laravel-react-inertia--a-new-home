@@ -27,7 +27,7 @@ class ListingModerationController extends Controller
         Gate::authorize('viewAny', Listing::class);
 
         $listings = Listing::byStatus(ListingStatus::PendingReview)
-            ->with(['owner:id,name,email', 'agency:id,name,email'])
+            ->with(['images', 'owner:id,name,email', 'agency:id,name,email'])
             ->latest()
             ->paginate(20)
             ->withQueryString()

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\AdminStatsService;
 use App\Services\ConversationService;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -63,6 +64,9 @@ class HandleInertiaRequests extends Middleware
             'accountTabs' => fn () => $user ? __('app.account_tabs') : null,
             'footer' => fn () => __('app.footer'),
             'adminNav' => fn () => __('app.admin.nav'),
+            'adminCounts' => fn () => $user?->isAdmin() && $request->routeIs('admin.*')
+                ? app(AdminStatsService::class)->pendingCounts()
+                : null,
             'unreadMessages' => fn () => $user ? app(ConversationService::class)->unreadCountFor($user) : 0,
             'messageNotifications' => fn () => $user ? __('app.message_notifications') : null,
             'cookieConsent' => fn () => $this->cookieConsent($request),
