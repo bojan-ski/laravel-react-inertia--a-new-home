@@ -238,4 +238,27 @@ class ContactMessageTest extends TestCase
 
         $this->assertNull($message->fresh()->user_id);
     }
+
+    public function test_new_tab_count_matches_the_shared_admin_count(): void
+    {
+        $admin = User::factory()->admin()->create();
+        ContactMessage::factory()->count(3)->create();
+        ContactMessage::factory()->handled()->create();
+
+        $this->actingAs($admin)
+            ->get('/admin/contact-messages')
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('messages.total', 3)
+                ->where('adminCounts.newContactMessages', 3)
+                ->where('translations.tabs.new_count', __('app.admin.contact_messages.tabs.new_count'))
+                ->where('translations.tabs.aria_label', __('app.admin.contact_messages.tabs.aria_label'))
+            );
+
+        $this->actingAs($admin)
+            ->get('/admin/contact-messages?status=handled')
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('messages.total', 1)
+                ->where('adminCounts.newContactMessages', 3)
+            );
+    }
 }

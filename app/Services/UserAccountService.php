@@ -92,6 +92,7 @@ class UserAccountService
     public function getPaginatedUsers(array $filters): LengthAwarePaginator
     {
         $query = User::query()
+            ->with('agency:id,user_id,name,status')
             ->whereIn('role', [UserRole::RegularUser, UserRole::Agency]);
 
         if (! empty($filters['role'])) {

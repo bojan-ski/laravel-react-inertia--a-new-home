@@ -62,11 +62,12 @@ export function formatDateTime(iso: string | null): string {
         return ''
     }
 
-    return new Date(iso).toLocaleString('en-US', {
+    return new Date(iso).toLocaleString('en-GB', {
         month: 'short',
         day: 'numeric',
         year: 'numeric',
-        hour: 'numeric',
+        hour: '2-digit',
         minute: '2-digit',
+        hourCycle: 'h23',
     })
 }

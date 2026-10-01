@@ -1,6 +1,7 @@
 import { Head, usePage } from '@inertiajs/react'
-import { CheckCircle2 } from 'lucide-react'
+import AdminPageHeader from '@/Components/Admin/AdminPageHeader'
 import ReportedMessageModerationRow from '@/Components/Admin/ReportedMessageModerationRow'
+import EmptyState from '@/Components/UI/EmptyState'
 import FlashBanner from '@/Components/UI/FlashBanner'
 import Pagination from '@/Components/UI/Pagination'
 import AdminLayout from '@/Layouts/AdminLayout'
@@ -14,37 +15,28 @@ export default function Index({ reports, translations }: AdminReportedMessagesPa
         <AdminLayout>
             <Head title={translations.title} />
 
-            {flash.success && <FlashBanner message={flash.success} variant="success" />}
-            {flash.error && <FlashBanner message={flash.error} variant="error" />}
+            <AdminPageHeader title={translations.title} subtitle={translations.subtitle} />
 
-            <header>
-                <h1 className="font-display text-3xl font-semibold text-text sm:text-4xl">
-                    {translations.title}
-                </h1>
-                <p className="mt-2 text-text-soft">{translations.subtitle}</p>
-            </header>
+            {flash.success && <FlashBanner message={flash.success} variant="success" className="" />}
+            {flash.error && <FlashBanner message={flash.error} variant="error" className="" />}
 
-            {reports.data.length > 0 ? (
-                <div className="mt-8 flex flex-col gap-4">
-                    {reports.data.map((report) => (
-                        <ReportedMessageModerationRow
-                            key={report.id}
-                            report={report}
-                            translations={translations}
-                        />
-                    ))}
-                </div>
-            ) : (
-                <div className="mt-10 flex flex-col items-center gap-3 py-20 text-center">
-                    <CheckCircle2 className="size-10 text-text-muted" />
-                    <p className="font-display text-2xl font-semibold text-text">
-                        {translations.empty.title}
-                    </p>
-                    <p className="text-text-soft">{translations.empty.subtitle}</p>
-                </div>
-            )}
+            <div>
+                {reports.data.length > 0 ? (
+                    <ul className="flex flex-col gap-12">
+                        {reports.data.map((report) => (
+                            <ReportedMessageModerationRow
+                                key={report.id}
+                                report={report}
+                                translations={translations}
+                            />
+                        ))}
+                    </ul>
+                ) : (
+                    <EmptyState title={translations.empty.title} hint={translations.empty.subtitle} />
+                )}
 
-            <Pagination paginator={reports} labels={translations.pagination} />
+                <Pagination paginator={reports} labels={translations.pagination} className="mt-12" />
+            </div>
         </AdminLayout>
     )
 }

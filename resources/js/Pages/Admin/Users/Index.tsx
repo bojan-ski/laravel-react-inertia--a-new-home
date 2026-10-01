@@ -1,56 +1,91 @@
-import { Head, Link } from '@inertiajs/react'
+import { Head, usePage } from '@inertiajs/react'
+import AdminPageHeader from '@/Components/Admin/AdminPageHeader'
 import AdminUserFilterBar from '@/Components/Admin/AdminUserFilterBar'
 import AdminUserRow from '@/Components/Admin/AdminUserRow'
+import { countLabel } from '@/Components/Listings/listingFormat'
+import Button from '@/Components/UI/Button'
+import EmptyState from '@/Components/UI/EmptyState'
+import FlashBanner from '@/Components/UI/FlashBanner'
 import Pagination from '@/Components/UI/Pagination'
 import AdminLayout from '@/Layouts/AdminLayout'
 import type { AdminUsersPageProps } from '@/types/admin'
+import type { SharedProps } from '@/types/shared'
+
+const headingClasses = 'py-2.5 pr-6 text-left text-xs font-normal tracking-widest text-ink-muted uppercase'
 
 export default function Index({ users, filters, translations }: AdminUsersPageProps) {
+    const { flash } = usePage<SharedProps>().props
     const hasFilters = Boolean(filters.role || filters.status || filters.search)
+    const { columns } = translations
 
     return (
         <AdminLayout>
             <Head title={translations.title} />
 
-            <header>
-                <h1 className="font-display text-3xl font-semibold text-text sm:text-4xl">
-                    {translations.title}
-                </h1>
-                <p className="mt-2 text-text-soft">{translations.subtitle}</p>
-            </header>
+            <AdminPageHeader title={translations.title} subtitle={translations.subtitle} />
 
-            <div className="mt-8">
-                <AdminUserFilterBar filters={filters} translations={translations} />
+            {flash.success && <FlashBanner message={flash.success} variant="success" className="" />}
+            {flash.error && <FlashBanner message={flash.error} variant="error" className="" />}
+
+            <AdminUserFilterBar filters={filters} translations={translations} />
+
+            <div>
+                {users.data.length > 0 ? (
+                    <>
+                        <p className="mb-3 text-sm text-ink-muted">
+                            {countLabel(users.total, translations.count_one, translations.count)}
+                        </p>
+
+                        <table className="w-full max-xl:block xl:table-fixed">
+                            <colgroup className="max-xl:hidden">
+                                <col />
+                                <col className="w-37.5" />
+                                <col className="w-32.5" />
+                                <col className="w-[28%]" />
+                                <col className="w-50" />
+                            </colgroup>
+                            <thead className="max-xl:sr-only">
+                                <tr className="border-b border-ink">
+                                    <th scope="col" className={headingClasses}>
+                                        {columns.user}
+                                    </th>
+                                    <th scope="col" className={headingClasses}>
+                                        {columns.role}
+                                    </th>
+                                    <th scope="col" className={headingClasses}>
+                                        {columns.status}
+                                    </th>
+                                    <th scope="col" className={headingClasses}>
+                                        {columns.details}
+                                    </th>
+                                    <th scope="col" className="py-2.5">
+                                        <span className="sr-only">{columns.actions}</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody className="max-xl:block max-xl:border-t max-xl:border-rule">
+                                {users.data.map((user) => (
+                                    <AdminUserRow key={user.id} user={user} translations={translations} />
+                                ))}
+                            </tbody>
+                        </table>
+                    </>
+                ) : (
+                    <EmptyState
+                        title={translations.empty.title}
+                        hint={hasFilters ? translations.empty.filtered : undefined}
+                        action={
+                            hasFilters ? (
+                                <Button variant="strong-link" href="/admin/users" className="text-sm">
+                                    {translations.empty.reset}
+                                </Button>
+                            ) : undefined
+                        }
+                    />
+                )}
+
+                <Pagination paginator={users} labels={translations.pagination} className="mt-8" />
             </div>
-
-            <p className="mt-4 text-sm text-text-muted">
-                {translations.count.replace(':count', String(users.total))}
-            </p>
-
-            {users.data.length > 0 ? (
-                <div className="mt-4 flex flex-col gap-4">
-                    {users.data.map((user) => (
-                        <AdminUserRow key={user.id} user={user} translations={translations} />
-                    ))}
-                </div>
-            ) : (
-                <div className="mt-10 flex flex-col items-center gap-3 py-16 text-center">
-                    <p className="text-lg font-medium text-text-soft">{translations.empty.title}</p>
-                    {hasFilters && (
-                        <>
-                            <p className="text-sm text-text-muted">{translations.empty.filtered}</p>
-                            <Link
-                                href="/admin/users"
-                                className="text-sm font-medium text-brand transition-colors hover:text-brand-dark"
-                            >
-                                {translations.empty.reset}
-                            </Link>
-                        </>
-                    )}
-                </div>
-            )}
-
-            <Pagination paginator={users} labels={translations.pagination} />
         </AdminLayout>
     )
 }

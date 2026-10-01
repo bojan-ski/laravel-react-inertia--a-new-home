@@ -57,7 +57,10 @@ export interface ContactMessagesEmptyTranslations {
 export interface ContactMessagesTranslations {
     title: string
     subtitle: string
-    tabs: Record<ContactMessageStatus, string>
+    tabs: Record<ContactMessageStatus, string> & {
+        new_count: string
+        aria_label: string
+    }
     from: string
     account: string
     guest: string

@@ -100,7 +100,13 @@ class User extends Authenticatable
             'status' => $this->status->value,
             'suspendedAt' => $this->suspended_at?->toIso8601String(),
             'createdAt' => $this->created_at->toIso8601String(),
-            'agency' => null,
+            'agency' => $this->relationLoaded('agency') && $this->agency !== null
+                ? [
+                    'id' => $this->agency->id,
+                    'name' => $this->agency->name,
+                    'status' => $this->agency->status->value,
+                ]
+                : null,
             'can' => [
                 'canSuspend' => $actor->can('suspend', $this),
                 'canReactivate' => $actor->can('reactivate', $this),
