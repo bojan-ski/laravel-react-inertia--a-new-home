@@ -64,6 +64,10 @@ class StoreListingImageRequest extends FormRequest
     {
         return [
             'image.dimensions' => __('app.listing_images.validation.dimensions'),
+            'image.image' => __('app.listing_images.validation.type'),
+            'image.mimes' => __('app.listing_images.validation.type'),
+            'image.max' => __('app.listing_images.validation.size'),
+            'image.uploaded' => __('app.listing_images.validation.upload_failed'),
         ];
     }
 }

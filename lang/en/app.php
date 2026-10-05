@@ -812,6 +812,9 @@ return [
         'validation' => [
             'dimensions' => 'Photos can be at most :max_width × :max_height pixels.',
             'limit' => 'A listing can have at most :max photos. Delete one to add another.',
+            'type' => 'Photos must be JPG, PNG or WebP images.',
+            'size' => 'Each photo can be at most 10 MB.',
+            'upload_failed' => 'This photo could not be uploaded. Try a smaller file.',
         ],
     ],
 
