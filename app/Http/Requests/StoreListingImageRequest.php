@@ -3,9 +3,11 @@
 namespace App\Http\Requests;
 
 use App\Models\Listing;
+use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
 
 class StoreListingImageRequest extends FormRequest
 {
@@ -36,6 +38,22 @@ class StoreListingImageRequest extends FormRequest
                 Rule::dimensions()->maxWidth(Listing::MAX_IMAGE_SIDE)->maxHeight(Listing::MAX_IMAGE_SIDE),
             ],
             'alt_text' => ['nullable', 'string', 'max:255'],
+        ];
+    }
+
+    /**
+     * @return array<int, Closure(Validator): void>
+     */
+    public function after(): array
+    {
+        return [
+            function (Validator $validator): void {
+                $listing = $this->route('listing');
+
+                if ($listing instanceof Listing && $listing->images()->count() >= Listing::MAX_IMAGES) {
+                    $validator->errors()->add('image', __('app.listing_images.validation.limit', ['max' => Listing::MAX_IMAGES]));
+                }
+            },
         ];
     }
 

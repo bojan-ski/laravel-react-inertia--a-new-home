@@ -15,6 +15,7 @@ export default function Edit({
     propertyTypeLabels,
     amenityLabels,
     countryOptions,
+    maxImages,
 }: EditAgencyListingPageProps) {
     const { flash } = usePage<SharedProps>().props
     const isApproved = listing.status === 'approved'
@@ -81,6 +82,7 @@ export default function Edit({
                         baseUrl={`/agency/listings/${listing.id}/images`}
                         images={listing.images}
                         listingTitle={listing.title}
+                        maxImages={maxImages}
                         translations={translations.images}
                     />
                 }

@@ -195,6 +195,23 @@ class ListingImageFrontendTest extends TestCase
             );
     }
 
+    public function test_edit_page_receives_the_photo_limit_and_its_copy(): void
+    {
+        $owner = User::factory()->regularUser()->create();
+        $listing = Listing::factory()->approved()->for($owner, 'owner')->create();
+
+        $this->actingAs($owner)
+            ->get("/my-listings/{$listing->id}/edit")
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('maxImages', 10)
+                ->where('translations.images.limit_reached', __('app.edit_listing.images.limit_reached'))
+                ->where('translations.approved_notice', __('app.edit_listing.approved_notice'))
+            );
+
+        $this->assertStringContainsString('photo', __('app.edit_listing.approved_notice'));
+        $this->assertStringContainsString('photo', __('app.edit_agency_listing.approved_notice'));
+    }
+
     public function test_edit_page_images_is_empty_when_no_images(): void
     {
         $owner = User::factory()->regularUser()->create();

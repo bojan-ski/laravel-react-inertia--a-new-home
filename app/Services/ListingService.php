@@ -154,6 +154,18 @@ class ListingService
         $listing->delete();
     }
 
+    public function returnToReviewAfterPhotoChange(Listing $listing): bool
+    {
+        if (! $listing->shouldReturnToPendingReviewOnEdit()) {
+            return false;
+        }
+
+        $this->revertToPendingReview($listing);
+        $listing->save();
+
+        return true;
+    }
+
     public function close(Listing $listing): Listing
     {
         if (! $listing->canBeClosedByOwner()) {

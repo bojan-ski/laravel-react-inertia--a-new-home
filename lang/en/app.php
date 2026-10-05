@@ -752,7 +752,7 @@ return [
         'flash_updated' => 'Listing updated.',
         'flash_resubmitted' => 'Listing updated and resubmitted for review.',
         'blocked' => 'This listing can no longer be edited.',
-        'approved_notice' => 'This listing is currently approved. Saving changes will send it back for admin review before it becomes publicly visible again.',
+        'approved_notice' => 'This listing is currently approved. Saving changes, or adding or deleting a photo, will send it back for admin review before it becomes publicly visible again.',
         'contact_note' => 'Optional. If left blank, your account contact details will be used.',
         'sections_label' => 'Form sections',
         'sections' => [
@@ -800,14 +800,18 @@ return [
             'cover' => 'Cover',
             'no_alt' => 'No alt text',
             'image_label' => 'Image',
+            'limit_reached' => 'This listing has :max photos, the maximum. Delete one to add another.',
         ],
     ],
 
     'listing_images' => [
         'uploaded' => 'Image uploaded.',
         'deleted' => 'Image deleted.',
+        'uploaded_resubmitted' => 'Image uploaded. Your listing went back for review and will show again once it is approved.',
+        'deleted_resubmitted' => 'Image deleted. Your listing went back for review and will show again once it is approved.',
         'validation' => [
             'dimensions' => 'Photos can be at most :max_width × :max_height pixels.',
+            'limit' => 'A listing can have at most :max photos. Delete one to add another.',
         ],
     ],
 
@@ -874,7 +878,7 @@ return [
         'flash_updated' => 'Listing updated.',
         'flash_resubmitted' => 'Listing updated and resubmitted for review.',
         'blocked' => 'This listing can no longer be edited.',
-        'approved_notice' => 'Editing this listing will send it back to pending review before becoming publicly visible again.',
+        'approved_notice' => 'Editing this listing, or adding or deleting a photo, will send it back to pending review before it becomes publicly visible again.',
         'contact_inheritance_note' => 'Your agency profile contact details will be used for this listing. To update them, edit your agency profile.',
         'contact_note' => '',
         'images' => [
@@ -891,6 +895,7 @@ return [
             'cover' => 'Cover',
             'no_alt' => 'No alt text',
             'image_label' => 'Image',
+            'limit_reached' => 'This listing has :max photos, the maximum. Delete one to add another.',
         ],
         'sections_label' => 'Form sections',
         'sections' => [

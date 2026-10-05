@@ -14,6 +14,7 @@ use App\Models\ChatMessage;
 use App\Models\ContactMessage;
 use App\Models\Conversation;
 use App\Models\Listing;
+use App\Models\ListingImage;
 use App\Models\ListingReport;
 use App\Models\ReportedChatMessage;
 use App\Models\SavedSearch;
@@ -574,6 +575,9 @@ class MarketplaceIntegrationTest extends TestCase
         Storage::disk('public')->assertMissing($image->large_path);
         $this->assertDatabaseMissing('listing_images', ['id' => $image->id]);
 
+        $this->assertSame(ListingStatus::PendingReview, $listing->fresh()->status);
+        $this->actingAs($admin)->post("/admin/listings/{$listing->id}/approve")->assertRedirect();
+
         $this->actingAs($owner)
             ->get("/listings/{$listing->slug}")
             ->assertInertia(fn (Assert $page) => $page->has('listing.images', 0));
@@ -932,11 +936,9 @@ class MarketplaceIntegrationTest extends TestCase
         $listing = $isAgency ? $this->agencyListing($agency) : $this->liveListing(['user_id' => $subject->id]);
         $email = $subject->email;
 
-        $imageRoute = $isAgency ? "/agency/listings/{$listing->id}/images" : "/my-listings/{$listing->id}/images";
-        $this->actingAs($subject)
-            ->post($imageRoute, ['image' => UploadedFile::fake()->image('photo.jpg', 800, 600)])
-            ->assertRedirect();
-        $image = $listing->images()->firstOrFail();
+        $image = ListingImage::factory()->for($listing)->create();
+        Storage::disk('public')->put($image->small_path, 'small');
+        Storage::disk('public')->put($image->large_path, 'large');
 
         $buyer = User::factory()->regularUser()->create();
         $bookmarker = User::factory()->regularUser()->create();

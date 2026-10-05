@@ -52,6 +52,7 @@ class AgencyListingController extends Controller
             'propertyTypeLabels' => __('app.listings.filters.property_types'),
             'amenityLabels' => __('app.listings.amenities'),
             'countryOptions' => Listing::countryOptions(),
+            'maxImages' => Listing::MAX_IMAGES,
         ]);
     }
 
