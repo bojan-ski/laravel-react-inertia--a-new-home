@@ -341,6 +341,7 @@ export interface ImageManagementTranslations {
     cover: string
     no_alt: string
     image_label: string
+    limit_reached: string
 }
 
 export interface ListingFormImageData {
@@ -355,6 +356,7 @@ export interface ImageUploaderProps {
     baseUrl: string
     images: ListingFormImageData[]
     listingTitle: string
+    maxImages: number
     translations: ImageManagementTranslations
 }
 
@@ -663,6 +665,7 @@ export interface EditListingPageProps {
     propertyTypeLabels: Record<string, string>
     amenityLabels: Record<string, string>
     countryOptions: string[]
+    maxImages: number
     [key: string]: unknown
 }
 
@@ -736,5 +739,6 @@ export interface EditAgencyListingPageProps {
     propertyTypeLabels: Record<string, string>
     amenityLabels: Record<string, string>
     countryOptions: string[]
+    maxImages: number
     [key: string]: unknown
 }

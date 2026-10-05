@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ListingStatus;
 use App\Models\Agency;
 use App\Models\Listing;
 use App\Models\ListingImage;
@@ -192,6 +193,21 @@ class ListingImagesOnCreateTest extends TestCase
         $this->assertModelMissing($image);
     }
 
+    public function test_agency_photo_changes_send_an_approved_listing_back_to_review(): void
+    {
+        [$user, $agency] = $this->approvedAgencyOwner();
+        $listing = Listing::factory()->approved()->create(['user_id' => null, 'agency_id' => $agency->id]);
+
+        $this->actingAs($user)
+            ->post("/agency/listings/{$listing->id}/images", ['image' => UploadedFile::fake()->image('front.jpg', 800, 600)])
+            ->assertSessionHas('success', __('app.listing_images.uploaded_resubmitted'));
+
+        $listing->refresh();
+        $this->assertSame(ListingStatus::PendingReview, $listing->status);
+        $this->assertNull($listing->approved_at);
+        $this->assertNull($listing->expires_at);
+    }
+
     public function test_agency_edit_page_receives_image_manager_data(): void
     {
         [$user, $agency] = $this->approvedAgencyOwner();
@@ -201,6 +217,7 @@ class ListingImagesOnCreateTest extends TestCase
             ->get("/agency/listings/{$listing->id}/edit")
             ->assertInertia(fn (Assert $page) => $page
                 ->has('listing.images')
+                ->where('maxImages', 10)
                 ->where('translations.images', __('app.edit_agency_listing.images')));
     }
 

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ListingStatus;
 use App\Models\Agency;
 use App\Models\Listing;
 use App\Models\ListingImage;
@@ -32,13 +33,117 @@ class ListingImageBackendTest extends TestCase
                 'alt_text' => 'Front view',
             ])
             ->assertRedirect()
-            ->assertSessionHas('success', __('app.listing_images.uploaded'));
+            ->assertSessionHas('success', __('app.listing_images.uploaded_resubmitted'));
 
         $image = $listing->images()->first();
         $this->assertNotNull($image);
         $this->assertSame('Front view', $image->alt_text);
         Storage::disk('public')->assertExists($image->small_path);
         Storage::disk('public')->assertExists($image->large_path);
+    }
+
+    public function test_uploading_a_photo_sends_an_approved_listing_back_to_review(): void
+    {
+        Storage::fake('public');
+        $user = User::factory()->regularUser()->create();
+        $listing = $this->ownedListing($user);
+        $listing->forceFill(['expiry_reminder_sent_at' => now()])->save();
+
+        $this->actingAs($user)
+            ->post("/my-listings/{$listing->id}/images", ['image' => UploadedFile::fake()->image('photo.jpg', 800, 600)])
+            ->assertRedirect()
+            ->assertSessionHas('success', __('app.listing_images.uploaded_resubmitted'));
+
+        $listing->refresh();
+        $this->assertSame(ListingStatus::PendingReview, $listing->status);
+        $this->assertNull($listing->approved_at);
+        $this->assertNull($listing->expires_at);
+        $this->assertNull($listing->expiry_reminder_sent_at);
+        $this->assertSame(1, $listing->images()->count());
+    }
+
+    public function test_deleting_a_photo_sends_an_approved_listing_back_to_review(): void
+    {
+        Storage::fake('public');
+        $user = User::factory()->regularUser()->create();
+        $listing = $this->ownedListing($user);
+        $image = ListingImage::factory()->for($listing)->create();
+
+        $this->actingAs($user)
+            ->delete("/my-listings/{$listing->id}/images/{$image->id}")
+            ->assertSessionHas('success', __('app.listing_images.deleted_resubmitted'));
+
+        $listing->refresh();
+        $this->assertSame(ListingStatus::PendingReview, $listing->status);
+        $this->assertNull($listing->approved_at);
+        $this->assertNull($listing->expires_at);
+        $this->assertModelMissing($image);
+    }
+
+    public function test_photo_changes_keep_a_pending_listing_pending_with_the_plain_flash(): void
+    {
+        Storage::fake('public');
+        $user = User::factory()->regularUser()->create();
+        $listing = Listing::factory()->pendingReview()->for($user, 'owner')->create();
+
+        $this->actingAs($user)
+            ->post("/my-listings/{$listing->id}/images", ['image' => UploadedFile::fake()->image('photo.jpg', 800, 600)])
+            ->assertSessionHas('success', __('app.listing_images.uploaded'));
+
+        $image = $listing->images()->sole();
+
+        $this->actingAs($user)
+            ->delete("/my-listings/{$listing->id}/images/{$image->id}")
+            ->assertSessionHas('success', __('app.listing_images.deleted'));
+
+        $this->assertSame(ListingStatus::PendingReview, $listing->fresh()->status);
+    }
+
+    public function test_a_hidden_listing_stays_hidden_after_a_photo_change(): void
+    {
+        Storage::fake('public');
+        $user = User::factory()->regularUser()->create();
+        $listing = Listing::factory()->hidden()->for($user, 'owner')->create();
+
+        $this->actingAs($user)
+            ->post("/my-listings/{$listing->id}/images", ['image' => UploadedFile::fake()->image('photo.jpg', 800, 600)])
+            ->assertSessionHas('success', __('app.listing_images.uploaded'));
+
+        $this->assertSame(ListingStatus::Hidden, $listing->fresh()->status);
+    }
+
+    public function test_a_failed_upload_leaves_an_approved_listing_approved(): void
+    {
+        Storage::fake('public');
+        $user = User::factory()->regularUser()->create();
+        $listing = $this->ownedListing($user);
+
+        $this->actingAs($user)
+            ->post("/my-listings/{$listing->id}/images", ['image' => UploadedFile::fake()->create('notes.pdf', 10, 'application/pdf')])
+            ->assertSessionHasErrors('image');
+
+        $this->assertSame(ListingStatus::Approved, $listing->fresh()->status);
+    }
+
+    public function test_a_tenth_photo_is_accepted_and_an_eleventh_is_refused(): void
+    {
+        Storage::fake('public');
+        $user = User::factory()->regularUser()->create();
+        $listing = Listing::factory()->pendingReview()->for($user, 'owner')->create();
+        ListingImage::factory()->count(9)->for($listing)->create();
+
+        $this->actingAs($user)
+            ->post("/my-listings/{$listing->id}/images", ['image' => UploadedFile::fake()->image('tenth.jpg', 800, 600)])
+            ->assertSessionHasNoErrors();
+        $this->assertSame(10, $listing->images()->count());
+        $stored = Storage::disk('public')->allFiles();
+
+        $this->actingAs($user)
+            ->post("/my-listings/{$listing->id}/images", ['image' => UploadedFile::fake()->image('eleventh.jpg', 800, 600)])
+            ->assertSessionHasErrors(['image' => __('app.listing_images.validation.limit', ['max' => 10])]);
+
+        $this->assertSame(10, $listing->images()->count());
+        $this->assertSame($stored, Storage::disk('public')->allFiles());
     }
 
     public function test_upload_creates_listing_image_record(): void

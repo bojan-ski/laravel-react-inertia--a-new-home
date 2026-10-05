@@ -45,7 +45,9 @@ class Listing extends Model
 
     public const AREA_UNIT = 'm²';
 
-    public const MAX_NEW_IMAGES = 10;
+    public const MAX_IMAGES = 10;
+
+    public const MAX_NEW_IMAGES = self::MAX_IMAGES;
 
     public const MAX_IMAGE_SIDE = 6000;
 
