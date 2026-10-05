@@ -39,6 +39,7 @@ export interface ListingExpiryTranslations {
 
 export interface ListingExpiryData {
     id: number
+    title: string
     status: ListingStatusValue
     expiresAt: string | null
     isExpired: boolean
