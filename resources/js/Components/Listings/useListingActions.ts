@@ -5,6 +5,10 @@ export function useBookmarkToggle(listingId: number) {
     const [processing, setProcessing] = useState(false)
 
     function toggle() {
+        if (processing) {
+            return
+        }
+
         router.post(
             `/listings/${listingId}/bookmark`,
             {},

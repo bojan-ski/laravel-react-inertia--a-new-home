@@ -37,7 +37,7 @@ export default function ListingDetailActions({
                     fullWidth
                     className="min-h-13"
                     onClick={bookmark.toggle}
-                    disabled={bookmark.processing}
+                    aria-disabled={bookmark.processing || undefined}
                     aria-pressed={isBookmarked}
                     trailing={
                         <Heart

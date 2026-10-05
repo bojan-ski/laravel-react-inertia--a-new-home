@@ -36,10 +36,10 @@ export default function AgencyListingCard({ listing, translations, propertyTypeL
                     <button
                         type="button"
                         onClick={bookmark.toggle}
-                        disabled={bookmark.processing}
+                        aria-disabled={bookmark.processing || undefined}
                         aria-pressed={listing.isBookmarked}
                         aria-label={actionLabel(listing.isBookmarked ? translations.saved : translations.save, listing.title)}
-                        className="absolute top-0 right-0 z-10 flex size-11 items-center justify-center bg-paper transition-colors duration-150 hover:bg-sand disabled:opacity-45"
+                        className="absolute top-0 right-0 z-10 flex size-11 items-center justify-center bg-paper transition-colors duration-150 hover:bg-sand aria-disabled:opacity-45"
                     >
                         <Heart
                             className={`size-4.5 ${listing.isBookmarked ? 'fill-forest stroke-forest' : 'stroke-ink'}`}
