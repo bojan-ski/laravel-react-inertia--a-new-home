@@ -10,16 +10,16 @@ import AuthLayout from '@/Layouts/AuthLayout'
 import type { LoginPageProps } from '@/types/auth'
 import type { SharedProps } from '@/types/shared'
 
-export default function Login({ translations, layout }: LoginPageProps) {
+export default function Login({ translations, layout, email }: LoginPageProps) {
     const { flash, ui } = usePage<SharedProps>().props
-    const { data, setData, post, processing, errors, reset } = useForm({
-        email: '',
+    const { data, setData, post, processing, errors } = useForm({
+        email,
         password: '',
     })
 
     function submit(e: FormEvent) {
         e.preventDefault()
-        post('/login', { onError: () => reset('password') })
+        post('/login', { onFinish: () => setData('password', '') })
     }
 
     return (

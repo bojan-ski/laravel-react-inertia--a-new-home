@@ -75,6 +75,7 @@ export interface AuthSwitchPromptProps {
 export interface LoginPageProps {
     translations: LoginTranslations
     layout: AuthLayoutTranslations
+    email: string
 }
 
 export interface RegisterPageProps {
