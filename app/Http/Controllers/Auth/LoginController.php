@@ -13,11 +13,12 @@ use Inertia\Response;
 
 class LoginController extends Controller
 {
-    public function show(): Response
+    public function show(Request $request): Response
     {
         return Inertia::render('Auth/Login', [
             'translations' => __('app.auth.login'),
             'layout' => __('app.auth.layout'),
+            'email' => (string) $request->old('email', ''),
         ]);
     }
 
@@ -36,7 +37,9 @@ class LoginController extends Controller
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            return back()->with('error', __('auth.suspended'));
+            return back()
+                ->with('error', __('auth.suspended'))
+                ->onlyInput('email');
         }
 
         $request->session()->regenerate();

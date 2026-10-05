@@ -66,6 +66,33 @@ class LoginTest extends TestCase
         $this->assertGuest();
     }
 
+    public function test_suspended_user_refusal_keeps_the_email_for_the_login_form(): void
+    {
+        $user = User::factory()->regularUser()->suspended()->create([
+            'email' => 'kept@example.test',
+            'password' => 'password',
+        ]);
+
+        $this->from('/login')->post('/login', [
+            'email' => $user->email,
+            'password' => 'password',
+        ])
+            ->assertRedirect('/login')
+            ->assertSessionHasInput('email', 'kept@example.test')
+            ->assertSessionMissing('_old_input.password');
+
+        $this->get('/login')
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('Auth/Login')
+                ->where('email', 'kept@example.test'));
+    }
+
+    public function test_login_page_starts_with_an_empty_email(): void
+    {
+        $this->get('/login')
+            ->assertInertia(fn (Assert $page) => $page->where('email', ''));
+    }
+
     public function test_regular_user_is_redirected_to_profile(): void
     {
         $user = User::factory()->regularUser()->create(['password' => 'password']);
