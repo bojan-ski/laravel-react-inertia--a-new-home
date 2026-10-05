@@ -402,7 +402,7 @@ class ReviewScenarioSeeder extends Seeder
             [$noisyBuyer, 'Nobody would buy this dump anyway.'],
         ], 100);
 
-        $message = $conversation->messages()->where('sender_id', $noisyBuyer->id)->latest('id')->firstOrFail();
+        $message = $conversation->messages()->where('sender_id', $noisyBuyer->id)->reorder()->latest('id')->firstOrFail();
 
         $this->messageReports->report($message, $owner, 'Insults about my property.');
     }

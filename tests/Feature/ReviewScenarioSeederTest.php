@@ -326,6 +326,7 @@ class ReviewScenarioSeederTest extends TestCase
     {
         $openMessageReport = ReportedChatMessage::whereNull('resolved_at')->sole();
         $this->assertSame('noisy-buyer@newbeginning.test', $openMessageReport->offendingUser->email);
+        $this->assertSame('Nobody would buy this dump anyway.', $openMessageReport->message->body);
         $this->assertSame(0, ReportedChatMessage::whereNotNull('resolved_at')->count());
 
         $resolved = ListingReport::whereNotNull('resolved_at')->with('listing')->sole();
