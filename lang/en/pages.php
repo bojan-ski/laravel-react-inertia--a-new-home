@@ -4,7 +4,7 @@ return [
     'about' => [
         'eyebrow' => 'Company',
         'title' => 'About Us',
-        'lead' => 'New Beginning is a moderated property marketplace built to make finding a home feel calm, clear, and trustworthy.',
+        'lead' => 'A New Home is a moderated property marketplace built to make finding a home feel calm, clear, and trustworthy.',
         'updated' => null,
         'sections' => [
             [
@@ -81,7 +81,7 @@ return [
     'terms' => [
         'eyebrow' => 'Legal',
         'title' => 'Terms of Service',
-        'lead' => 'These terms govern your use of New Beginning. By creating an account you agree to them.',
+        'lead' => 'These terms govern your use of A New Home. By creating an account you agree to them.',
         'updated' => 'Last updated: September 25, 2026',
         'sections' => [
             [
@@ -112,7 +112,7 @@ return [
             [
                 'heading' => '5. Liability',
                 'paragraphs' => [
-                    'Nullam id dolor id nibh ultricies vehicula ut id elit. New Beginning connects buyers, renters, owners, and agencies but is not a party to any property transaction.',
+                    'Nullam id dolor id nibh ultricies vehicula ut id elit. A New Home connects buyers, renters, owners, and agencies but is not a party to any property transaction.',
                 ],
             ],
             [

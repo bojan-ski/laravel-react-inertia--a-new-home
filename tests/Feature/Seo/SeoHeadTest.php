@@ -33,14 +33,14 @@ class SeoHeadTest extends TestCase
     {
         $response = $this->get('/')->assertOk();
         $title = 'Homes for Sale and Rent in Europe — Acme Homes';
-        $description = 'Find homes for sale and rent across Europe. Every listing on New Beginning is reviewed before it goes live, from verified owners and agencies.';
+        $description = 'Find homes for sale and rent across Europe. Every listing on A New Home is reviewed before it goes live, from verified owners and agencies.';
 
         foreach ([
             '<meta name="theme-color" content="#22523a">',
             '<title data-inertia="title">'.$title.'</title>',
             '<meta name="description" content="'.$description.'" data-inertia="description">',
             '<link rel="canonical" href="'.self::HOST.'/" data-inertia="canonical">',
-            '<meta property="og:site_name" content="New Beginning" data-inertia="og:site_name">',
+            '<meta property="og:site_name" content="A New Home" data-inertia="og:site_name">',
             '<meta property="og:type" content="website" data-inertia="og:type">',
             '<meta property="og:locale" content="en_GB" data-inertia="og:locale">',
             '<meta property="og:url" content="'.self::HOST.'/" data-inertia="og:url">',
@@ -68,7 +68,7 @@ class SeoHeadTest extends TestCase
         $graph = $this->structuredData($response);
 
         $this->assertSame(['Organization', 'WebSite'], array_column($graph, '@type'));
-        $this->assertSame('New Beginning', $graph[0]['name']);
+        $this->assertSame('A New Home', $graph[0]['name']);
         $this->assertSame(self::HOST.'/', $graph[0]['url']);
         $this->assertSame(self::HOST.'/icon-512.png', $graph[0]['logo']);
         $this->assertSame(self::HOST.'/#organization', $graph[1]['publisher']['@id']);
@@ -149,7 +149,7 @@ class SeoHeadTest extends TestCase
         $response = $this->get('/agencies?search=harbor')->assertOk();
 
         $response->assertSee('<title data-inertia="title">Agencies — Acme Homes</title>', false);
-        $response->assertSee('<meta name="description" content="Browse verified estate agencies on New Beginning and see the homes each one has for sale and rent." data-inertia="description">', false);
+        $response->assertSee('<meta name="description" content="Browse verified estate agencies on A New Home and see the homes each one has for sale and rent." data-inertia="description">', false);
         $response->assertSee('<link rel="canonical" href="'.self::HOST.'/agencies" data-inertia="canonical">', false);
 
         $this->assertSame(['Home', 'Agencies'], array_column($this->breadcrumb($response), 'name'));
@@ -210,7 +210,7 @@ class SeoHeadTest extends TestCase
 
         $response = $this->get("/agencies/{$agency->slug}")->assertOk();
 
-        $response->assertSee('<meta name="description" content="Harbor Homes is a verified estate agency on New Beginning. Browse its homes for sale and rent." data-inertia="description">', false);
+        $response->assertSee('<meta name="description" content="Harbor Homes is a verified estate agency on A New Home. Browse its homes for sale and rent." data-inertia="description">', false);
 
         $agent = collect($this->structuredData($response))->firstWhere('@type', 'RealEstateAgent');
 
@@ -240,9 +240,9 @@ class SeoHeadTest extends TestCase
     public static function publicPages(): array
     {
         return [
-            'about' => ['/about', 'About Us', 'New Beginning is a moderated property marketplace built to make finding a home feel calm, clear, and trustworthy.'],
+            'about' => ['/about', 'About Us', 'A New Home is a moderated property marketplace built to make finding a home feel calm, clear, and trustworthy.'],
             'privacy policy' => ['/privacy-policy', 'Privacy Policy', 'This policy explains what personal data we collect, why we collect it, and the choices you have.'],
-            'terms' => ['/terms', 'Terms of Service', 'These terms govern your use of New Beginning. By creating an account you agree to them.'],
+            'terms' => ['/terms', 'Terms of Service', 'These terms govern your use of A New Home. By creating an account you agree to them.'],
             'cookie policy' => ['/cookie-policy', 'Cookie Policy', 'This policy explains what cookies are, which ones we use, and how you can control them.'],
             'contact' => ['/contact', 'Contact Us', 'Questions about a listing, your account, or partnering with us? Send us a message and our team will get back to you.'],
         ];
@@ -269,7 +269,7 @@ class SeoHeadTest extends TestCase
         $response->assertSee('<title data-inertia="title">Acme Homes</title>', false);
         $response->assertSee('<meta name="robots" content="noindex" data-inertia="robots">', false);
         $response->assertSee('<link rel="canonical" href="'.self::HOST.'/login" data-inertia="canonical">', false);
-        $response->assertSee('<meta name="description" content="New Beginning is a moderated property marketplace for homes for sale and rent across Europe, listed by verified owners and agencies." data-inertia="description">', false);
+        $response->assertSee('<meta name="description" content="A New Home is a moderated property marketplace for homes for sale and rent across Europe, listed by verified owners and agencies." data-inertia="description">', false);
         $response->assertDontSee('application/ld+json', false);
     }
 
@@ -336,7 +336,7 @@ class SeoHeadTest extends TestCase
 
         $manifest = json_decode((string) file_get_contents(public_path('site.webmanifest')), true, flags: JSON_THROW_ON_ERROR);
 
-        $this->assertSame('New Beginning', $manifest['name']);
+        $this->assertSame('A New Home', $manifest['name']);
         $this->assertSame('#22523a', $manifest['theme_color']);
 
         foreach ($manifest['icons'] as $icon) {
