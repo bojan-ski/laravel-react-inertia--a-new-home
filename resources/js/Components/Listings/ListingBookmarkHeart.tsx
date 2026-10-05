@@ -9,10 +9,10 @@ export default function ListingBookmarkHeart({ listingId, isBookmarked, translat
         <button
             type="button"
             onClick={bookmark.toggle}
-            disabled={bookmark.processing}
+            aria-disabled={bookmark.processing || undefined}
             aria-pressed={isBookmarked}
             aria-label={isBookmarked ? translations.saved : translations.save_listing}
-            className="flex size-11 items-center justify-center text-forest disabled:opacity-45"
+            className="flex size-11 items-center justify-center text-forest aria-disabled:opacity-45"
         >
             <Heart className={`size-5 ${isBookmarked ? 'fill-forest' : ''}`} strokeWidth={1.25} aria-hidden="true" />
         </button>
