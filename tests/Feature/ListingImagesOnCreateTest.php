@@ -133,6 +133,28 @@ class ListingImagesOnCreateTest extends TestCase
         $this->assertSame(0, Listing::count());
     }
 
+    public function test_photo_errors_on_create_are_readable(): void
+    {
+        $path = tempnam(sys_get_temp_dir(), 'photo');
+        file_put_contents($path, 'This is a plain text file with a .jpg name.');
+
+        $this->actingAs(User::factory()->regularUser()->create())
+            ->post('/my-listings', $this->validPayload([
+                'images' => [new UploadedFile($path, 'not-an-image.jpg', 'image/jpeg', null, true)],
+            ]))
+            ->assertSessionHasErrors(['images.0' => 'Photos must be JPG, PNG or WebP images.']);
+
+        [$agencyUser] = $this->approvedAgencyOwner();
+
+        $this->actingAs($agencyUser)
+            ->post('/agency/listings', $this->validPayload([
+                'images' => [UploadedFile::fake()->image('huge.jpg', 800, 600)->size(10241)],
+            ]))
+            ->assertSessionHasErrors(['images.0' => 'Each photo can be at most 10 MB.']);
+
+        $this->assertSame(0, Listing::count());
+    }
+
     public function test_non_image_files_are_rejected(): void
     {
         [$user] = $this->approvedAgencyOwner();

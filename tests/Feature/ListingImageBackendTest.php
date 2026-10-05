@@ -125,6 +125,23 @@ class ListingImageBackendTest extends TestCase
         $this->assertSame(ListingStatus::Approved, $listing->fresh()->status);
     }
 
+    public function test_single_photo_upload_errors_are_readable(): void
+    {
+        Storage::fake('public');
+        $user = User::factory()->regularUser()->create();
+        $listing = Listing::factory()->pendingReview()->for($user, 'owner')->create();
+
+        $this->actingAs($user)
+            ->post("/my-listings/{$listing->id}/images", ['image' => UploadedFile::fake()->create('notes.pdf', 10, 'application/pdf')])
+            ->assertSessionHasErrors(['image' => 'Photos must be JPG, PNG or WebP images.']);
+
+        $this->actingAs($user)
+            ->post("/my-listings/{$listing->id}/images", ['image' => UploadedFile::fake()->image('huge.jpg', 800, 600)->size(10241)])
+            ->assertSessionHasErrors(['image' => 'Each photo can be at most 10 MB.']);
+
+        $this->assertSame(0, $listing->images()->count());
+    }
+
     public function test_a_tenth_photo_is_accepted_and_an_eleventh_is_refused(): void
     {
         Storage::fake('public');

@@ -57,6 +57,10 @@ trait ValidatesListingFields
     {
         return [
             'images.*.dimensions' => __('app.listing_images.validation.dimensions'),
+            'images.*.image' => __('app.listing_images.validation.type'),
+            'images.*.mimes' => __('app.listing_images.validation.type'),
+            'images.*.max' => __('app.listing_images.validation.size'),
+            'images.*.uploaded' => __('app.listing_images.validation.upload_failed'),
         ];
     }
 
