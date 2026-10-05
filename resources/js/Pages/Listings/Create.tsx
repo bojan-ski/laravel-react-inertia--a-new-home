@@ -2,7 +2,7 @@ import { Head, useForm } from '@inertiajs/react'
 import type { FormEvent } from 'react'
 import ListingForm from '@/Components/Listings/ListingForm'
 import ListingFormHeader from '@/Components/Listings/ListingFormHeader'
-import NewListingImagePicker from '@/Components/Listings/NewListingImagePicker'
+import NewListingImagePicker, { photoErrorKeys } from '@/Components/Listings/NewListingImagePicker'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { CreateListingFormData, CreateListingPageProps } from '@/types/listing'
 
@@ -13,7 +13,7 @@ export default function Create({
     countryOptions,
     maxImages,
 }: CreateListingPageProps) {
-    const { data, setData, post, processing, errors } = useForm<CreateListingFormData>({
+    const { data, setData, post, processing, errors, clearErrors } = useForm<CreateListingFormData>({
         title: '',
         listing_type: 'sale',
         property_type: 'apartment',
@@ -65,7 +65,13 @@ export default function Create({
                 imagesSection={
                     <NewListingImagePicker
                         files={data.images}
-                        onChange={(files) => setData('images', files)}
+                        onChange={(files) => {
+                            setData('images', files)
+                            const staleErrors = photoErrorKeys(errors)
+                            if (staleErrors.length > 0) {
+                                clearErrors(...staleErrors)
+                            }
+                        }}
                         errors={errors}
                         maxImages={maxImages}
                         translations={translations.new_images}

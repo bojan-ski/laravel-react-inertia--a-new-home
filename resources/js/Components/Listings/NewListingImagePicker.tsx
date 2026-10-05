@@ -6,6 +6,12 @@ import ListingCoverTag from '@/Components/Listings/ListingCoverTag'
 import { useActionLabel } from '@/Components/UI/useActionLabel'
 import type { NewListingImagePickerProps } from '@/types/listing'
 
+type PhotoErrorKey = 'images' | `images.${number}`
+
+export function photoErrorKeys(errors: Partial<Record<string, string>>): PhotoErrorKey[] {
+    return Object.keys(errors).filter((key): key is PhotoErrorKey => key === 'images' || key.startsWith('images.'))
+}
+
 export default function NewListingImagePicker({
     files,
     onChange,
