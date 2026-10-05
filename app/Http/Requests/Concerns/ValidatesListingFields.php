@@ -6,6 +6,7 @@ use App\Enums\Amenity;
 use App\Models\Listing;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Dimensions;
 
 trait ValidatesListingFields
 {
@@ -45,7 +46,22 @@ trait ValidatesListingFields
     {
         return [
             'images' => ['nullable', 'array', 'max:'.Listing::MAX_NEW_IMAGES],
-            'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
+            'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:10240', self::imageDimensionsRule()],
         ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    protected function newImageMessages(): array
+    {
+        return [
+            'images.*.dimensions' => __('app.listing_images.validation.dimensions'),
+        ];
+    }
+
+    protected static function imageDimensionsRule(): Dimensions
+    {
+        return Rule::dimensions()->maxWidth(Listing::MAX_IMAGE_SIDE)->maxHeight(Listing::MAX_IMAGE_SIDE);
     }
 }

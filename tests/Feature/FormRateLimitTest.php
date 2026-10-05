@@ -8,6 +8,8 @@ use App\Models\ChatMessage;
 use App\Models\ContactMessage;
 use App\Models\Conversation;
 use App\Models\Listing;
+use App\Models\ListingImage;
+use App\Models\SavedSearch;
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -175,6 +177,71 @@ class FormRateLimitTest extends TestCase
         $this->repeat(10, fn () => $this->post('/agency/listings', [])->assertRedirect());
 
         $this->post('/agency/listings', [])->assertStatus(429);
+    }
+
+    public function test_listing_deletes_share_the_listing_write_limit(): void
+    {
+        $owner = User::factory()->regularUser()->create();
+        $listing = Listing::factory()->for($owner, 'owner')->create();
+        $agency = Agency::factory()->approved()->create();
+        $agencyListing = Listing::factory()->create(['user_id' => null, 'agency_id' => $agency->id]);
+
+        $this->actingAs($owner);
+        $this->repeat(10, fn () => $this->post('/my-listings', [])->assertRedirect());
+        $this->delete("/my-listings/{$listing->id}")->assertStatus(429);
+
+        $this->actingAs($agency->user);
+        $this->repeat(10, fn () => $this->post('/agency/listings', [])->assertRedirect());
+        $this->delete("/agency/listings/{$agencyListing->id}")->assertStatus(429);
+
+        $this->assertNotSoftDeleted($listing);
+        $this->assertNotSoftDeleted($agencyListing);
+    }
+
+    public function test_image_deletes_share_the_image_limit(): void
+    {
+        $owner = User::factory()->regularUser()->create();
+        $listing = Listing::factory()->for($owner, 'owner')->create();
+        $image = ListingImage::factory()->for($listing)->create();
+        $agency = Agency::factory()->approved()->create();
+        $agencyListing = Listing::factory()->create(['user_id' => null, 'agency_id' => $agency->id]);
+        $agencyImage = ListingImage::factory()->for($agencyListing)->create();
+
+        $this->actingAs($owner);
+        $this->repeat(20, fn () => $this->post("/my-listings/{$listing->id}/images", [])->assertRedirect());
+        $this->delete("/my-listings/{$listing->id}/images/{$image->id}")->assertStatus(429);
+
+        $this->actingAs($agency->user);
+        $this->repeat(20, fn () => $this->post("/agency/listings/{$agencyListing->id}/images", [])->assertRedirect());
+        $this->delete("/agency/listings/{$agencyListing->id}/images/{$agencyImage->id}")->assertStatus(429);
+
+        $this->assertModelExists($image);
+        $this->assertModelExists($agencyImage);
+    }
+
+    public function test_saved_search_deletes_share_the_saved_search_limit(): void
+    {
+        $user = User::factory()->regularUser()->create();
+        $search = SavedSearch::factory()->for($user)->create();
+
+        $this->actingAs($user);
+        $this->repeat(20, fn () => $this->post('/saved-searches', [])->assertRedirect());
+
+        $this->delete("/saved-searches/{$search->id}")->assertStatus(429);
+        $this->assertModelExists($search);
+    }
+
+    public function test_agency_profile_writes_are_limited(): void
+    {
+        $agency = Agency::factory()->approved()->create();
+
+        $this->actingAs($agency->user);
+        $this->repeat(10, fn () => $this->put('/agency', [])->assertRedirect());
+        $this->put('/agency', [])->assertStatus(429);
+
+        $this->actingAs(User::factory()->agency()->create());
+        $this->repeat(10, fn () => $this->post('/agency/setup', [])->assertRedirect());
+        $this->post('/agency/setup', [])->assertStatus(429);
     }
 
     public function test_password_confirmed_actions_are_limited_for_regular_users(): void

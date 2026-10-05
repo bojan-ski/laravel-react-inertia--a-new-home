@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Enums\ListingStatus;
 use App\Models\Agency;
+use App\Models\Bookmark;
 use App\Models\Conversation;
 use App\Models\Listing;
 use App\Models\User;
@@ -104,7 +105,7 @@ class SuspensionVisibilityEnforcementTest extends TestCase
         $owner = User::factory()->regularUser()->create();
         $listing = Listing::factory()->approved()->for($owner, 'owner')->create();
         $bookmarker = User::factory()->regularUser()->create();
-        $bookmarker->bookmarks()->create(['listing_id' => $listing->id]);
+        Bookmark::factory()->create(['user_id' => $bookmarker->id, 'listing_id' => $listing->id]);
 
         $this->actingAs($bookmarker)->get('/bookmarks')
             ->assertInertia(fn (Assert $page) => $page->has('listings', 1));
@@ -206,7 +207,7 @@ class SuspensionVisibilityEnforcementTest extends TestCase
         ]);
 
         $bookmarker = User::factory()->regularUser()->create();
-        $bookmarker->bookmarks()->create(['listing_id' => $listing->id]);
+        Bookmark::factory()->create(['user_id' => $bookmarker->id, 'listing_id' => $listing->id]);
 
         $buyer = User::factory()->regularUser()->create();
         $conversation = Conversation::factory()->create([

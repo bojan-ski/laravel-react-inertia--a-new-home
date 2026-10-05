@@ -47,6 +47,8 @@ class Listing extends Model
 
     public const MAX_NEW_IMAGES = 10;
 
+    public const MAX_IMAGE_SIDE = 6000;
+
     public const LIFETIME_DAYS = 90;
 
     public const EXPIRY_REMINDER_DAYS = 7;

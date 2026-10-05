@@ -30,6 +30,29 @@ class ConversationChatTest extends TestCase
         $user->save();
     }
 
+    public function test_a_thread_whose_listing_was_deleted_opens_read_only(): void
+    {
+        Event::fake([ChatMessageSent::class]);
+        $owner = User::factory()->regularUser()->create();
+        $buyer = User::factory()->regularUser()->create();
+        $listing = $this->ownedListing($owner);
+
+        $this->actingAs($buyer)->post("/listings/{$listing->id}/conversations", ['message' => 'Is it available?']);
+        $conversation = Conversation::firstOrFail();
+
+        $this->actingAs($owner)->delete("/my-listings/{$listing->id}")->assertRedirect();
+
+        $this->actingAs($buyer)
+            ->post("/conversations/{$conversation->id}/messages", ['body' => 'Still there?'])
+            ->assertForbidden();
+        $this->assertSame(1, $conversation->messages()->count());
+
+        $this->actingAs($buyer)
+            ->get("/conversations/{$conversation->id}")
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page->where('canReply', false));
+    }
+
     // ---- Starting a conversation ----------------------------------------
 
     public function test_user_can_start_conversation_on_regular_user_owned_listing(): void

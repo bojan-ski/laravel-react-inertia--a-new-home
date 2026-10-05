@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Bookmark;
 use App\Models\Listing;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -21,7 +22,13 @@ class BookmarkService
 
     public function add(User $user, Listing $listing): void
     {
-        $user->bookmarks()->firstOrCreate(['listing_id' => $listing->id]);
+        if ($user->bookmarks()->where('listing_id', $listing->id)->exists()) {
+            return;
+        }
+
+        $bookmark = new Bookmark;
+        $bookmark->listing_id = $listing->id;
+        $user->bookmarks()->save($bookmark);
     }
 
     /**

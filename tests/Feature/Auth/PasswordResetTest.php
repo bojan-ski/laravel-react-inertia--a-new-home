@@ -128,6 +128,25 @@ class PasswordResetTest extends TestCase
         $this->assertTrue(Hash::check('password', $user->fresh()->password));
     }
 
+    public function test_expired_token_returns_the_generic_error_flash(): void
+    {
+        $user = User::factory()->regularUser()->create();
+        $token = Password::createToken($user);
+
+        $this->travel(config('auth.passwords.users.expire') + 1)->minutes();
+
+        $this->from("/reset-password/{$token}")
+            ->post('/reset-password', [
+                'token' => $token,
+                'email' => $user->email,
+                'password' => 'new-password',
+                'password_confirmation' => 'new-password',
+            ])
+            ->assertSessionHas('error', __('auth.reset_failed'));
+
+        $this->assertTrue(Hash::check('password', $user->fresh()->password));
+    }
+
     public function test_mismatched_passwords_fail_validation(): void
     {
         $user = User::factory()->regularUser()->create();

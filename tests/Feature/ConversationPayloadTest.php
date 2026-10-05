@@ -239,4 +239,47 @@ class ConversationPayloadTest extends TestCase
 
         $this->assertSame($withTwo, $countQueries());
     }
+
+    public function test_the_thread_query_count_does_not_grow_with_messages_and_conversations(): void
+    {
+        $buyer = User::factory()->regularUser()->create();
+        $listing = Listing::factory()->approved()->create();
+        ListingImage::factory()->for($listing)->create();
+        $conversation = $this->conversationOn($listing, $buyer);
+
+        $countQueries = function () use ($buyer, $conversation): int {
+            $actor = $buyer->fresh();
+            Conversation::whereKey($conversation->id)->update(['buyer_last_read_at' => null]);
+            DB::flushQueryLog();
+            DB::enableQueryLog();
+
+            $this->actingAs($actor)->get("/conversations/{$conversation->id}")->assertOk();
+
+            $count = count(DB::getQueryLog());
+            DB::disableQueryLog();
+
+            return $count;
+        };
+
+        $seed = function () use ($buyer, $conversation): void {
+            ChatMessage::factory()->create(['conversation_id' => $conversation->id, 'sender_id' => $conversation->owner_id]);
+            ChatMessage::factory()->create(['conversation_id' => $conversation->id, 'sender_id' => $buyer->id]);
+
+            $other = Listing::factory()->approved()->create();
+            ListingImage::factory()->for($other)->create();
+            $otherConversation = $this->conversationOn($other, $buyer);
+            ChatMessage::factory()->create(['conversation_id' => $otherConversation->id, 'sender_id' => $otherConversation->owner_id]);
+        };
+
+        $seed();
+        $seed();
+        $withTwo = $countQueries();
+
+        foreach (range(1, 2) as $index) {
+            $seed();
+        }
+
+        $this->assertSame(8, $conversation->messages()->count());
+        $this->assertSame($withTwo, $countQueries());
+    }
 }

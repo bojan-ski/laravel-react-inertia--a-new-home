@@ -5,8 +5,10 @@ namespace Tests\Feature;
 use App\Models\Agency;
 use App\Models\Bookmark;
 use App\Models\Listing;
+use App\Models\ListingImage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
@@ -157,5 +159,41 @@ class AgencyPublicPageTest extends TestCase
             ->assertInertia(fn (Assert $page) => $page
                 ->where('agencies.data.0.slug', $agency->slug)
                 ->where('translations.view_agency', __('app.agencies.view_agency')));
+    }
+
+    public function test_the_agency_page_query_count_does_not_grow_with_listings(): void
+    {
+        $agency = Agency::factory()->approved()->create();
+        $viewer = User::factory()->regularUser()->create();
+
+        $countQueries = function () use ($viewer, $agency): int {
+            $actor = $viewer->fresh();
+            DB::flushQueryLog();
+            DB::enableQueryLog();
+
+            $this->actingAs($actor)->get("/agencies/{$agency->slug}")->assertOk();
+
+            $count = count(DB::getQueryLog());
+            DB::disableQueryLog();
+
+            return $count;
+        };
+
+        $seed = function () use ($agency, $viewer): void {
+            $listing = Listing::factory()->approved()->create(['user_id' => null, 'agency_id' => $agency->id]);
+            ListingImage::factory()->for($listing)->create();
+            Bookmark::factory()->create(['user_id' => $viewer->id, 'listing_id' => $listing->id]);
+        };
+
+        $seed();
+        $seed();
+        $withTwo = $countQueries();
+
+        foreach (range(1, 4) as $index) {
+            $seed();
+        }
+
+        $this->assertSame(6, $agency->listings()->count());
+        $this->assertSame($withTwo, $countQueries());
     }
 }

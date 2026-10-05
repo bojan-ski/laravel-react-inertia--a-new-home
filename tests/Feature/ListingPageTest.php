@@ -2,9 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Models\Agency;
+use App\Models\Bookmark;
 use App\Models\Listing;
+use App\Models\ListingImage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
@@ -332,5 +336,46 @@ class ListingPageTest extends TestCase
     public function test_invalid_min_price_fails_validation(): void
     {
         $this->get('/listings?minPrice=abc')->assertSessionHasErrors('minPrice');
+    }
+
+    public function test_the_listings_query_count_does_not_grow_with_listings(): void
+    {
+        $viewer = User::factory()->regularUser()->create();
+
+        $countQueries = function () use ($viewer): int {
+            $actor = $viewer->fresh();
+            DB::flushQueryLog();
+            DB::enableQueryLog();
+
+            $this->actingAs($actor)->get('/listings')->assertOk();
+
+            $count = count(DB::getQueryLog());
+            DB::disableQueryLog();
+
+            return $count;
+        };
+
+        $seed = function () use ($viewer): void {
+            $listings = [
+                Listing::factory()->approved()->create(),
+                Listing::factory()->approved()->create(['user_id' => null, 'agency_id' => Agency::factory()->approved()->create()->id]),
+            ];
+
+            foreach ($listings as $listing) {
+                ListingImage::factory()->for($listing)->create();
+                Bookmark::factory()->create(['user_id' => $viewer->id, 'listing_id' => $listing->id]);
+            }
+        };
+
+        $seed();
+        $seed();
+        $withTwo = $countQueries();
+
+        foreach (range(1, 2) as $index) {
+            $seed();
+        }
+
+        $this->assertSame(8, Listing::count());
+        $this->assertSame($withTwo, $countQueries());
     }
 }

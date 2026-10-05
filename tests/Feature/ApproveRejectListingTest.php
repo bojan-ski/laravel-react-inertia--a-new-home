@@ -4,12 +4,15 @@ namespace Tests\Feature;
 
 use App\Enums\ListingStatus;
 use App\Exceptions\InvalidListingStatusTransitionException;
+use App\Models\Agency;
 use App\Models\Listing;
+use App\Models\ListingImage;
 use App\Models\User;
 use App\Notifications\ListingApprovedNotification;
 use App\Notifications\ListingRejectedNotification;
 use App\Services\ListingService;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
@@ -266,5 +269,45 @@ class ApproveRejectListingTest extends TestCase
             ->post("/admin/listings/{$listing->id}/approve")
             ->assertRedirect('/admin/listings')
             ->assertSessionHas('error');
+    }
+
+    public function test_the_moderation_queue_query_count_does_not_grow_with_listings(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $countQueries = function () use ($admin): int {
+            $actor = $admin->fresh();
+            DB::flushQueryLog();
+            DB::enableQueryLog();
+
+            $this->actingAs($actor)->get('/admin/listings')->assertOk();
+
+            $count = count(DB::getQueryLog());
+            DB::disableQueryLog();
+
+            return $count;
+        };
+
+        $seed = function (): void {
+            $listings = [
+                Listing::factory()->pendingReview()->create(),
+                Listing::factory()->pendingReview()->create(['user_id' => null, 'agency_id' => Agency::factory()->approved()->create()->id]),
+            ];
+
+            foreach ($listings as $listing) {
+                ListingImage::factory()->for($listing)->create();
+            }
+        };
+
+        $seed();
+        $seed();
+        $withTwo = $countQueries();
+
+        foreach (range(1, 2) as $index) {
+            $seed();
+        }
+
+        $this->assertSame(8, Listing::count());
+        $this->assertSame($withTwo, $countQueries());
     }
 }

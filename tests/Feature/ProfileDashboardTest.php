@@ -3,9 +3,11 @@
 namespace Tests\Feature;
 
 use App\Models\Listing;
+use App\Models\ListingImage;
 use App\Models\User;
 use App\Services\ListingService;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
@@ -194,5 +196,41 @@ class ProfileDashboardTest extends TestCase
                 ->where('listings.0.id', $newer->id)
                 ->where('listings.1.id', $older->id)
             );
+    }
+
+    public function test_the_profile_query_count_does_not_grow_with_listings(): void
+    {
+        $owner = User::factory()->regularUser()->create();
+
+        $countQueries = function () use ($owner): int {
+            $actor = $owner->fresh();
+            DB::flushQueryLog();
+            DB::enableQueryLog();
+
+            $this->actingAs($actor)->get('/profile')->assertOk();
+
+            $count = count(DB::getQueryLog());
+            DB::disableQueryLog();
+
+            return $count;
+        };
+
+        $seed = function () use ($owner): void {
+            foreach (['approved', 'sold', 'pendingReview', 'expired'] as $state) {
+                $listing = Listing::factory()->{$state}()->create(['user_id' => $owner->id]);
+                ListingImage::factory()->for($listing)->create();
+            }
+        };
+
+        $seed();
+        $seed();
+        $withTwo = $countQueries();
+
+        foreach (range(1, 2) as $index) {
+            $seed();
+        }
+
+        $this->assertSame(16, $owner->listings()->count());
+        $this->assertSame($withTwo, $countQueries());
     }
 }

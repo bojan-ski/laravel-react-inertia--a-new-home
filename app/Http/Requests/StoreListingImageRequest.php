@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\Listing;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreListingImageRequest extends FormRequest
 {
@@ -27,8 +28,24 @@ class StoreListingImageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'image' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
+            'image' => [
+                'required',
+                'image',
+                'mimes:jpg,jpeg,png,webp',
+                'max:10240',
+                Rule::dimensions()->maxWidth(Listing::MAX_IMAGE_SIDE)->maxHeight(Listing::MAX_IMAGE_SIDE),
+            ],
             'alt_text' => ['nullable', 'string', 'max:255'],
+        ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'image.dimensions' => __('app.listing_images.validation.dimensions'),
         ];
     }
 }

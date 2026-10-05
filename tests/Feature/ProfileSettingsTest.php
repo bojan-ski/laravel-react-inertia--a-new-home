@@ -79,6 +79,35 @@ class ProfileSettingsTest extends TestCase
         $this->assertTrue(Hash::check('new-secret-password', $user->fresh()->password));
     }
 
+    public function test_a_password_change_elsewhere_signs_this_session_out(): void
+    {
+        $user = User::factory()->regularUser()->create();
+
+        $this->post('/login', ['email' => $user->email, 'password' => 'password'])->assertRedirect();
+        $this->get('/profile')->assertOk();
+
+        User::whereKey($user->id)->update(['password' => Hash::make('changed-elsewhere')]);
+        $this->app['auth']->forgetGuards();
+
+        $this->get('/profile')->assertRedirect('/login');
+        $this->assertGuest();
+    }
+
+    public function test_the_session_that_changes_the_password_stays_signed_in(): void
+    {
+        $user = User::factory()->regularUser()->create();
+
+        $this->actingAs($user)->get('/profile/settings')->assertOk();
+        $this->put('/profile/settings/password', [
+            'current_password' => 'password',
+            'password' => 'new-password-123',
+            'password_confirmation' => 'new-password-123',
+        ])->assertSessionHasNoErrors();
+
+        $this->get('/profile')->assertOk();
+        $this->assertAuthenticatedAs($user);
+    }
+
     public function test_password_change_fails_with_wrong_current_password(): void
     {
         $user = User::factory()->regularUser()->create(['password' => 'password']);

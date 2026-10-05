@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['chat_message_id', 'reported_by_user_id', 'offending_user_id', 'reason', 'resolved_at', 'resolved_by_user_id'])]
+#[Fillable(['reason'])]
 class ReportedChatMessage extends Model
 {
     /** @use HasFactory<ReportedChatMessageFactory> */

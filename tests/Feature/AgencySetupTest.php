@@ -4,10 +4,13 @@ namespace Tests\Feature;
 
 use App\Enums\AgencyStatus;
 use App\Models\Agency;
+use App\Models\Listing;
+use App\Models\ListingImage;
 use App\Models\User;
 use App\Services\AgencyService;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class AgencySetupTest extends TestCase
@@ -185,6 +188,41 @@ class AgencySetupTest extends TestCase
         $this->actingAs(User::factory()->agency()->create())
             ->get('/agency/edit')
             ->assertRedirect('/agency/setup');
+    }
+
+    /**
+     * @return array<string, array{0: string, 1: string}>
+     */
+    public static function profileGatedRoutes(): array
+    {
+        return [
+            'update' => ['put', '/agency'],
+            'listings.create' => ['get', '/agency/listings/create'],
+            'listings.store' => ['post', '/agency/listings'],
+            'listings.edit' => ['get', '/agency/listings/{listing}/edit'],
+            'listings.update' => ['put', '/agency/listings/{listing}'],
+            'listings.destroy' => ['delete', '/agency/listings/{listing}'],
+            'listings.close' => ['post', '/agency/listings/{listing}/close'],
+            'listings.reopen' => ['post', '/agency/listings/{listing}/reopen'],
+            'listings.renew' => ['post', '/agency/listings/{listing}/renew'],
+            'listings.images.store' => ['post', '/agency/listings/{listing}/images'],
+            'listings.images.destroy' => ['delete', '/agency/listings/{listing}/images/{image}'],
+        ];
+    }
+
+    #[DataProvider('profileGatedRoutes')]
+    public function test_every_profile_gated_route_redirects_an_agency_without_a_record_to_setup(string $method, string $uri): void
+    {
+        $listing = Listing::factory()->approved()->create();
+        $image = ListingImage::factory()->for($listing)->create();
+        $uri = str_replace(['{listing}', '{image}'], [$listing->id, $image->id], $uri);
+
+        $this->actingAs(User::factory()->agency()->create())
+            ->{$method}($uri)
+            ->assertRedirect('/agency/setup');
+
+        $this->assertModelExists($listing);
+        $this->assertModelExists($image);
     }
 
     public function test_optional_fields_can_be_omitted(): void

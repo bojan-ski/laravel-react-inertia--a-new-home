@@ -32,10 +32,18 @@ class ConversationService
      */
     public function startOrGet(Listing $listing, User $buyer, ?string $message = null): Conversation
     {
-        $conversation = Conversation::firstOrCreate(
-            ['listing_id' => $listing->id, 'buyer_id' => $buyer->id],
-            ['owner_id' => $listing->ownerAccount()?->id, 'listing_title' => $listing->title],
-        );
+        $conversation = Conversation::query()
+            ->where('listing_id', $listing->id)
+            ->where('buyer_id', $buyer->id)
+            ->first();
+
+        if ($conversation === null) {
+            $conversation = new Conversation(['listing_title' => $listing->title]);
+            $conversation->listing_id = $listing->id;
+            $conversation->buyer_id = $buyer->id;
+            $conversation->owner_id = $listing->ownerAccount()?->id;
+            $conversation->save();
+        }
 
         if ($conversation->wasRecentlyCreated && filled($message)) {
             $this->sendMessage($conversation, $buyer, $message);
@@ -46,10 +54,9 @@ class ConversationService
 
     public function sendMessage(Conversation $conversation, User $sender, string $body): ChatMessage
     {
-        $message = $conversation->messages()->create([
-            'sender_id' => $sender->id,
-            'body' => $body,
-        ]);
+        $message = new ChatMessage(['body' => $body]);
+        $message->sender_id = $sender->id;
+        $conversation->messages()->save($message);
 
         $conversation->touch();
 

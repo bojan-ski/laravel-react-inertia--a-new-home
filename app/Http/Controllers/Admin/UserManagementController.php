@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AdminUserIndexRequest;
 use App\Models\User;
 use App\Services\UserAccountService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -15,17 +15,13 @@ class UserManagementController extends Controller
 {
     public function __construct(private UserAccountService $service) {}
 
-    public function index(Request $request): Response
+    public function index(AdminUserIndexRequest $request): Response
     {
         Gate::authorize('viewAny', User::class);
 
         $actor = $request->user();
 
-        $filters = [
-            'role' => $request->string('role')->toString() ?: null,
-            'status' => $request->string('status')->toString() ?: null,
-            'search' => $request->string('search')->toString() ?: null,
-        ];
+        $filters = $request->filters();
 
         $users = $this->service->getPaginatedUsers($filters)
             ->through(fn (User $user): array => $user->toAdminListArray($actor));

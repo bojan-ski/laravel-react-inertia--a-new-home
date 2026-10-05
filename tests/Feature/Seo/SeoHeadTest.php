@@ -7,6 +7,7 @@ use App\Models\Listing;
 use App\Models\ListingImage;
 use App\Models\User;
 use App\Services\Seo\MetaDescription;
+use App\Services\Seo\SearchIndexing;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -103,6 +104,44 @@ class SeoHeadTest extends TestCase
 
         $this->assertSame(['Home', 'Listings'], array_column($crumbs, 'name'));
         $this->assertSame([self::HOST.'/', self::HOST.'/listings'], array_column($crumbs, 'item'));
+    }
+
+    /**
+     * @return array<string, array{0: string, 1: string}>
+     */
+    public static function excerpts(): array
+    {
+        return [
+            'exactly the limit' => [str_repeat('a', 160), str_repeat('a', 160)],
+            'no space is hard-cut' => [str_repeat('b', 200), str_repeat('b', 160)],
+            'multibyte is cut by character' => [str_repeat('é', 200), str_repeat('é', 160)],
+            'whitespace collapses' => ["  Calm \n\t homes  ", 'Calm homes'],
+            'cut at the last word' => [str_repeat('word ', 40), rtrim(str_repeat('word ', 32))],
+        ];
+    }
+
+    #[DataProvider('excerpts')]
+    public function test_the_meta_description_excerpt_handles_edge_cases(string $text, string $expected): void
+    {
+        $this->assertSame($expected, MetaDescription::excerpt($text));
+    }
+
+    public function test_a_route_without_a_name_is_noindex_while_indexing_is_enabled(): void
+    {
+        $indexing = new SearchIndexing;
+
+        $this->assertFalse($indexing->isIndexable(null));
+        $this->assertSame('noindex', $indexing->robots(null));
+        $this->assertNull($indexing->robots('listings.index'));
+    }
+
+    public function test_an_agency_page_canonical_drops_the_query_and_the_request_host(): void
+    {
+        $agency = Agency::factory()->approved()->create();
+
+        $this->get("http://www.other.test/agencies/{$agency->slug}?utm_source=mail")
+            ->assertOk()
+            ->assertSee('<link rel="canonical" href="'.self::HOST."/agencies/{$agency->slug}\" data-inertia=\"canonical\">", false);
     }
 
     public function test_the_agencies_index_has_its_own_description_and_breadcrumb(): void

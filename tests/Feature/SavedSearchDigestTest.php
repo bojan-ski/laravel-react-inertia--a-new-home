@@ -482,4 +482,13 @@ class SavedSearchDigestTest extends TestCase
         $this->assertSame('0 7 * * *', $event->expression);
         $this->assertSame('Europe/Belgrade', $event->timezone);
     }
+
+    public function test_digest_schedule_does_not_overlap(): void
+    {
+        $event = collect(app(Schedule::class)->events())
+            ->first(fn (Event $event) => str_contains((string) $event->command, 'saved-searches:send-digest'));
+
+        $this->assertTrue($event->withoutOverlapping);
+        $this->assertSame(60, $event->expiresAt);
+    }
 }

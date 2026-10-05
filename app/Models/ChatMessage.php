@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['conversation_id', 'sender_id', 'body'])]
+#[Fillable(['body'])]
 class ChatMessage extends Model
 {
     /** @use HasFactory<ChatMessageFactory> */

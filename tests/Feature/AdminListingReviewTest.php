@@ -5,8 +5,10 @@ namespace Tests\Feature;
 use App\Models\Agency;
 use App\Models\Listing;
 use App\Models\ListingImage;
+use App\Models\ListingReport;
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
@@ -201,5 +203,40 @@ class AdminListingReviewTest extends TestCase
         $this->actingAs(User::factory()->admin()->create())
             ->get("/listings/{$listing->slug}")
             ->assertNotFound();
+    }
+
+    public function test_the_review_page_query_count_does_not_grow_with_images_and_reports(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $listing = Listing::factory()->approved()->create();
+
+        $countQueries = function () use ($admin, $listing): int {
+            $actor = $admin->fresh();
+            DB::flushQueryLog();
+            DB::enableQueryLog();
+
+            $this->actingAs($actor)->get("/admin/listings/{$listing->id}")->assertOk();
+
+            $count = count(DB::getQueryLog());
+            DB::disableQueryLog();
+
+            return $count;
+        };
+
+        $seed = function () use ($listing): void {
+            ListingImage::factory()->for($listing)->create();
+            ListingReport::factory()->create(['listing_id' => $listing->id]);
+        };
+
+        $seed();
+        $seed();
+        $withTwo = $countQueries();
+
+        foreach (range(1, 4) as $index) {
+            $seed();
+        }
+
+        $this->assertSame(6, $listing->openReports()->count());
+        $this->assertSame($withTwo, $countQueries());
     }
 }

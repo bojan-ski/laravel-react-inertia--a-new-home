@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Agency;
 use App\Models\Listing;
 use App\Models\ListingImage;
 use App\Models\User;
@@ -178,6 +179,56 @@ class ListingImageBackendTest extends TestCase
         $this->assertDatabaseMissing('listing_images', ['id' => $image->id]);
         Storage::disk('public')->assertMissing($image->small_path);
         Storage::disk('public')->assertMissing($image->large_path);
+    }
+
+    public function test_an_image_over_the_pixel_cap_is_rejected_before_it_is_decoded(): void
+    {
+        Storage::fake('public');
+        $user = User::factory()->regularUser()->create();
+        $listing = $this->ownedListing($user);
+
+        $this->actingAs($user)
+            ->post("/my-listings/{$listing->id}/images", [
+                'image' => UploadedFile::fake()->image('panorama.jpg', 6001, 10),
+            ])
+            ->assertSessionHasErrors(['image' => __('app.listing_images.validation.dimensions', ['max_width' => 6000, 'max_height' => 6000])]);
+
+        $this->assertSame(0, $listing->images()->count());
+        $this->assertSame([], Storage::disk('public')->allFiles());
+    }
+
+    public function test_another_regular_user_cannot_delete_an_image(): void
+    {
+        Storage::fake('public');
+        $listing = $this->ownedListing(User::factory()->regularUser()->create());
+        $image = ListingImage::factory()->for($listing)->create();
+        Storage::disk('public')->put($image->small_path, 'small');
+        Storage::disk('public')->put($image->large_path, 'large');
+
+        $this->actingAs(User::factory()->regularUser()->create())
+            ->delete("/my-listings/{$listing->id}/images/{$image->id}")
+            ->assertForbidden();
+
+        $this->assertModelExists($image);
+        Storage::disk('public')->assertExists([$image->small_path, $image->large_path]);
+    }
+
+    public function test_another_agency_cannot_delete_an_image_of_a_foreign_agency_listing(): void
+    {
+        Storage::fake('public');
+        $agency = Agency::factory()->approved()->create();
+        $listing = Listing::factory()->approved()->create(['user_id' => null, 'agency_id' => $agency->id]);
+        $image = ListingImage::factory()->for($listing)->create();
+        Storage::disk('public')->put($image->small_path, 'small');
+        Storage::disk('public')->put($image->large_path, 'large');
+        $otherAgency = Agency::factory()->approved()->create();
+
+        $this->actingAs($otherAgency->user)
+            ->delete("/agency/listings/{$listing->id}/images/{$image->id}")
+            ->assertForbidden();
+
+        $this->assertModelExists($image);
+        Storage::disk('public')->assertExists([$image->small_path, $image->large_path]);
     }
 
     public function test_cross_listing_tampering_returns_404_and_does_not_delete(): void

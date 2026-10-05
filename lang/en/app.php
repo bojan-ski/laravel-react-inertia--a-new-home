@@ -806,6 +806,9 @@ return [
     'listing_images' => [
         'uploaded' => 'Image uploaded.',
         'deleted' => 'Image deleted.',
+        'validation' => [
+            'dimensions' => 'Photos can be at most :max_width × :max_height pixels.',
+        ],
     ],
 
     'create_agency_listing' => [

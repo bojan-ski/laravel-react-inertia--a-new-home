@@ -34,4 +34,12 @@ class StoreListingRequest extends FormRequest
             'contact_phone' => ['nullable', 'string', 'max:50'],
         ];
     }
+
+    /**
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return $this->newImageMessages();
+    }
 }

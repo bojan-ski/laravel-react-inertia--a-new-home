@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Services\ListingCleanupService;
 use App\Services\ListingImageService;
 use App\Services\ListingService;
+use Illuminate\Console\Scheduling\Event;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
@@ -146,7 +148,7 @@ class RejectedListingCleanupTest extends TestCase
     {
         $listing = $this->trashedRejectedListing();
         $bookmarker = User::factory()->regularUser()->create();
-        $bookmark = Bookmark::create(['user_id' => $bookmarker->id, 'listing_id' => $listing->id]);
+        $bookmark = Bookmark::factory()->create(['user_id' => $bookmarker->id, 'listing_id' => $listing->id]);
 
         $this->artisan('listings:purge-rejected')->assertExitCode(0);
 
@@ -209,5 +211,14 @@ class RejectedListingCleanupTest extends TestCase
         app(ListingCleanupService::class)->forceDeleteRejectedListing($listing);
 
         $this->assertNotNull(Listing::find($listing->id));
+    }
+
+    public function test_purge_command_is_scheduled_daily(): void
+    {
+        $event = collect(app(Schedule::class)->events())
+            ->first(fn (Event $event) => str_contains((string) $event->command, 'listings:purge-rejected'));
+
+        $this->assertNotNull($event);
+        $this->assertSame('0 0 * * *', $event->expression);
     }
 }
