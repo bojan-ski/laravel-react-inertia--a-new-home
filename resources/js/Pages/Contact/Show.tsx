@@ -12,7 +12,7 @@ import type { SharedProps } from '@/types/shared'
 
 export default function Show({ defaultEmail, translations }: ContactPageProps) {
     const { flash } = usePage<SharedProps>().props
-    const { data, setData, post, processing, errors, reset } = useForm<ContactFormData>({
+    const { data, setData, post, processing, errors } = useForm<ContactFormData>({
         email: defaultEmail,
         subject: '',
         message: '',
@@ -23,7 +23,11 @@ export default function Show({ defaultEmail, translations }: ContactPageProps) {
         event.preventDefault()
         post('/contact', {
             preserveScroll: true,
-            onSuccess: () => reset('subject', 'message'),
+            onSuccess: (page) => {
+                if ((page.props.flash as SharedProps['flash']).success) {
+                    setData((current) => ({ ...current, subject: '', message: '' }))
+                }
+            },
         })
     }
 
