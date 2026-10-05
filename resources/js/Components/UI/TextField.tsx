@@ -13,7 +13,7 @@ export default function TextField({ id, label, error, trailing, ...props }: Text
                     id={id}
                     aria-invalid={error ? true : undefined}
                     aria-describedby={error ? `${id}-error` : undefined}
-                    className="min-h-12 w-full min-w-0 bg-transparent px-0 text-[17px] font-light text-ink placeholder:text-ink-faint"
+                    className="min-h-12 w-full min-w-0 bg-transparent px-2 text-[17px] font-light text-ink placeholder:text-ink-faint"
                     {...props}
                 />
                 {trailing}
