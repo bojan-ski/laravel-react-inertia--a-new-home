@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Notifications\AccountDeletedNotification;
 use App\Notifications\UserSuspendedNotification;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
@@ -110,6 +111,20 @@ class AdminUserManagementTest extends TestCase
                 ->has('users.data', 1)
                 ->where('users.data.0.email', 'findme@example.com')
             );
+    }
+
+    public function test_malformed_filters_are_rejected_instead_of_failing(): void
+    {
+        $this->actingAs(User::factory()->admin()->create())
+            ->get('/admin/users?role[]=agency&status[]=active&search[]=alice')
+            ->assertSessionHasErrors(['role', 'status', 'search']);
+    }
+
+    public function test_unknown_role_and_status_filters_are_rejected(): void
+    {
+        $this->actingAs(User::factory()->admin()->create())
+            ->get('/admin/users?role=admin&status=banana')
+            ->assertSessionHasErrors(['role', 'status']);
     }
 
     public function test_combined_filters_work(): void
@@ -434,5 +449,39 @@ class AdminUserManagementTest extends TestCase
             array_map(fn (AgencyStatus $status): string => $status->value, AgencyStatus::cases()),
             array_keys(__('app.admin.users.agency_statuses')),
         );
+    }
+
+    public function test_the_users_query_count_does_not_grow_with_accounts(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $countQueries = function () use ($admin): int {
+            $actor = $admin->fresh();
+            DB::flushQueryLog();
+            DB::enableQueryLog();
+
+            $this->actingAs($actor)->get('/admin/users')->assertOk();
+
+            $count = count(DB::getQueryLog());
+            DB::disableQueryLog();
+
+            return $count;
+        };
+
+        $seed = function (): void {
+            User::factory()->regularUser()->create();
+            Agency::factory()->approved()->create();
+        };
+
+        $seed();
+        $seed();
+        $withTwo = $countQueries();
+
+        foreach (range(1, 4) as $index) {
+            $seed();
+        }
+
+        $this->assertSame(13, User::count());
+        $this->assertSame($withTwo, $countQueries());
     }
 }

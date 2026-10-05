@@ -113,6 +113,25 @@ class ListingImagesOnCreateTest extends TestCase
         $this->assertSame(0, Listing::count());
     }
 
+    public function test_images_over_the_pixel_cap_are_rejected_on_create(): void
+    {
+        $this->actingAs(User::factory()->regularUser()->create())
+            ->post('/my-listings', $this->validPayload([
+                'images' => [UploadedFile::fake()->image('panorama.jpg', 6001, 10)],
+            ]))
+            ->assertSessionHasErrors(['images.0' => __('app.listing_images.validation.dimensions', ['max_width' => 6000, 'max_height' => 6000])]);
+
+        [$agencyUser] = $this->approvedAgencyOwner();
+
+        $this->actingAs($agencyUser)
+            ->post('/agency/listings', $this->validPayload([
+                'images' => [UploadedFile::fake()->image('tower.jpg', 10, 6001)],
+            ]))
+            ->assertSessionHasErrors(['images.0' => __('app.listing_images.validation.dimensions', ['max_width' => 6000, 'max_height' => 6000])]);
+
+        $this->assertSame(0, Listing::count());
+    }
+
     public function test_non_image_files_are_rejected(): void
     {
         [$user] = $this->approvedAgencyOwner();

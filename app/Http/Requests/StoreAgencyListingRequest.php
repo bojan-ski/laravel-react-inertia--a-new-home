@@ -26,4 +26,12 @@ class StoreAgencyListingRequest extends FormRequest
             ...$this->newImageRules(),
         ];
     }
+
+    /**
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return $this->newImageMessages();
+    }
 }

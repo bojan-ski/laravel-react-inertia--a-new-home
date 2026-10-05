@@ -19,6 +19,7 @@ use App\Policies\ReportedChatMessagePolicy;
 use App\Policies\SavedSearchPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
@@ -48,6 +49,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(ContactMessage::class, ContactMessagePolicy::class);
         Gate::policy(ListingReport::class, ListingReportPolicy::class);
         Gate::policy(SavedSearch::class, SavedSearchPolicy::class);
+
+        Model::preventLazyLoading(! $this->app->isProduction());
 
         $this->configureRateLimiters();
     }

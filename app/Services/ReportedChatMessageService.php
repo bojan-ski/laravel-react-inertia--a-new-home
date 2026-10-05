@@ -40,12 +40,13 @@ class ReportedChatMessageService
             throw new InvalidMessageReportException(__('app.reports.errors.duplicate'));
         }
 
-        return ReportedChatMessage::create([
-            'chat_message_id' => $message->id,
-            'reported_by_user_id' => $reporter->id,
-            'offending_user_id' => $message->sender_id,
-            'reason' => $reason,
-        ]);
+        $report = new ReportedChatMessage(['reason' => $reason]);
+        $report->chat_message_id = $message->id;
+        $report->reported_by_user_id = $reporter->id;
+        $report->offending_user_id = $message->sender_id;
+        $report->save();
+
+        return $report;
     }
 
     public function resolve(ReportedChatMessage $report, User $admin): ReportedChatMessage

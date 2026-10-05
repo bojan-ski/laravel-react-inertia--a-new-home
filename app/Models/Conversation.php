@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Storage;
 
-#[Fillable(['listing_id', 'listing_title', 'buyer_id', 'owner_id'])]
+#[Fillable(['listing_title'])]
 class Conversation extends Model
 {
     /** @use HasFactory<ConversationFactory> */

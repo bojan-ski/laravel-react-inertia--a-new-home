@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Enums\ListingStatus;
 use App\Exceptions\InvalidListingStatusTransitionException;
 use App\Models\Agency;
+use App\Models\Bookmark;
 use App\Models\Listing;
 use App\Models\User;
 use App\Notifications\ListingExpiringNotification;
@@ -125,7 +126,7 @@ class ListingExpiryTest extends TestCase
     {
         $viewer = User::factory()->regularUser()->create();
         $listing = Listing::factory()->expired()->create();
-        $viewer->bookmarks()->create(['listing_id' => $listing->id]);
+        Bookmark::factory()->create(['user_id' => $viewer->id, 'listing_id' => $listing->id]);
 
         $this->actingAs($viewer)
             ->get('/bookmarks')
@@ -149,7 +150,7 @@ class ListingExpiryTest extends TestCase
     {
         $viewer = User::factory()->regularUser()->create();
         $listing = Listing::factory()->expired()->create();
-        $viewer->bookmarks()->create(['listing_id' => $listing->id]);
+        Bookmark::factory()->create(['user_id' => $viewer->id, 'listing_id' => $listing->id]);
 
         $this->service()->renew($listing);
 
@@ -532,6 +533,15 @@ class ListingExpiryTest extends TestCase
 
         $this->assertNotNull($event);
         $this->assertSame('0 8 * * *', $event->expression);
+    }
+
+    public function test_reminder_schedule_does_not_overlap(): void
+    {
+        $event = collect(app(Schedule::class)->events())
+            ->first(fn (Event $event) => str_contains((string) $event->command, 'listings:send-expiry-reminders'));
+
+        $this->assertTrue($event->withoutOverlapping);
+        $this->assertSame(60, $event->expiresAt);
     }
 
     public function test_expiring_email_links_to_the_dashboard(): void

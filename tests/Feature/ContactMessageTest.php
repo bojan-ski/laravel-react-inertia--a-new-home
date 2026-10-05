@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\ContactMessage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
@@ -260,5 +261,39 @@ class ContactMessageTest extends TestCase
                 ->where('messages.total', 1)
                 ->where('adminCounts.newContactMessages', 3)
             );
+    }
+
+    public function test_the_contact_messages_query_count_does_not_grow_with_messages(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $countQueries = function () use ($admin): int {
+            $actor = $admin->fresh();
+            DB::flushQueryLog();
+            DB::enableQueryLog();
+
+            $this->actingAs($actor)->get('/admin/contact-messages')->assertOk();
+
+            $count = count(DB::getQueryLog());
+            DB::disableQueryLog();
+
+            return $count;
+        };
+
+        $seed = function (): void {
+            ContactMessage::factory()->create(['user_id' => User::factory()->regularUser()->create()->id]);
+            ContactMessage::factory()->create();
+        };
+
+        $seed();
+        $seed();
+        $withTwo = $countQueries();
+
+        foreach (range(1, 2) as $index) {
+            $seed();
+        }
+
+        $this->assertSame(8, ContactMessage::count());
+        $this->assertSame($withTwo, $countQueries());
     }
 }

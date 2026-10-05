@@ -7,9 +7,11 @@ use App\Enums\UserStatus;
 use App\Exceptions\InvalidListingStatusTransitionException;
 use App\Models\Agency;
 use App\Models\Listing;
+use App\Models\ListingImage;
 use App\Models\User;
 use App\Services\ListingService;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
@@ -426,5 +428,42 @@ class AgencyListingManagementTest extends TestCase
         $this->actingAs($user)
             ->get('/agency')
             ->assertInertia(fn (Assert $page) => $page->where('agency.status', 'pending_verification'));
+    }
+
+    public function test_the_agency_dashboard_query_count_does_not_grow_with_listings(): void
+    {
+        $user = User::factory()->agency()->create();
+        $agency = Agency::factory()->approved()->create(['user_id' => $user->id]);
+
+        $countQueries = function () use ($user): int {
+            $actor = $user->fresh();
+            DB::flushQueryLog();
+            DB::enableQueryLog();
+
+            $this->actingAs($actor)->get('/agency')->assertOk();
+
+            $count = count(DB::getQueryLog());
+            DB::disableQueryLog();
+
+            return $count;
+        };
+
+        $seed = function () use ($agency): void {
+            foreach (['approved', 'sold', 'pendingReview', 'expired'] as $state) {
+                $listing = Listing::factory()->{$state}()->create(['user_id' => null, 'agency_id' => $agency->id]);
+                ListingImage::factory()->for($listing)->create();
+            }
+        };
+
+        $seed();
+        $seed();
+        $withTwo = $countQueries();
+
+        foreach (range(1, 2) as $index) {
+            $seed();
+        }
+
+        $this->assertSame(16, $agency->listings()->count());
+        $this->assertSame($withTwo, $countQueries());
     }
 }

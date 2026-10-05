@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Enums\AgencyStatus;
 use App\Exceptions\InvalidAgencyStatusTransitionException;
 use App\Models\Agency;
+use App\Models\AgencyProfileChange;
 use App\Models\Bookmark;
 use App\Models\Listing;
 use App\Models\User;
@@ -12,6 +13,7 @@ use App\Notifications\AgencyApprovedNotification;
 use App\Notifications\AgencyRejectedNotification;
 use App\Services\AgencyService;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
@@ -252,5 +254,39 @@ class ApproveRejectAgencyTest extends TestCase
             ->post("/admin/agencies/{$agency->id}/approve")
             ->assertRedirect('/admin/agencies')
             ->assertSessionHas('error');
+    }
+
+    public function test_the_agency_queue_query_count_does_not_grow_with_agencies_and_changes(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $countQueries = function () use ($admin): int {
+            $actor = $admin->fresh();
+            DB::flushQueryLog();
+            DB::enableQueryLog();
+
+            $this->actingAs($actor)->get('/admin/agencies')->assertOk();
+
+            $count = count(DB::getQueryLog());
+            DB::disableQueryLog();
+
+            return $count;
+        };
+
+        $seed = function (): void {
+            Agency::factory()->pendingVerification()->create();
+            AgencyProfileChange::factory()->create();
+        };
+
+        $seed();
+        $seed();
+        $withTwo = $countQueries();
+
+        foreach (range(1, 4) as $index) {
+            $seed();
+        }
+
+        $this->assertSame(6, AgencyProfileChange::count());
+        $this->assertSame($withTwo, $countQueries());
     }
 }

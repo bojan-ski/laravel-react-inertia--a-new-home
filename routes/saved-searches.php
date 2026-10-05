@@ -16,6 +16,7 @@ Route::middleware(['auth', 'not-suspended'])->group(function () {
         ->name('saved-searches.update');
 
     Route::delete('/saved-searches/{savedSearch}', [SavedSearchController::class, 'destroy'])
+        ->middleware('throttle:saved-search')
         ->name('saved-searches.destroy');
 });
 

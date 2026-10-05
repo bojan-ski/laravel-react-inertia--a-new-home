@@ -7,6 +7,7 @@ use App\Enums\ListingStatus;
 use App\Exceptions\InvalidListingStatusTransitionException;
 use App\Models\Agency;
 use App\Models\Listing;
+use App\Models\ListingImage;
 use App\Models\ListingReport;
 use App\Models\User;
 use App\Notifications\ListingRejectedNotification;
@@ -15,6 +16,7 @@ use App\Services\ListingReportService;
 use App\Services\ListingService;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
@@ -410,6 +412,18 @@ class ListingReportTest extends TestCase
             );
     }
 
+    public function test_queue_payload_names_the_reporter(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $listing = Listing::factory()->approved()->create();
+        $this->reportFor($listing, User::factory()->regularUser()->create(['name' => 'Rhea Reporter']));
+
+        $this->actingAs($admin)
+            ->get('/admin/listing-reports')
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('listings.data.0.reports.0.reportedByName', 'Rhea Reporter'));
+    }
+
     public function test_queue_payload_carries_the_listing_summary_fields(): void
     {
         $admin = User::factory()->admin()->create();
@@ -745,5 +759,46 @@ class ListingReportTest extends TestCase
         $this->actingAs($admin)
             ->get("/admin/listings/{$clean->id}")
             ->assertInertia(fn (Assert $page) => $page->where('reportModeration', null));
+    }
+
+    public function test_the_report_queue_query_count_does_not_grow_with_reported_listings(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $countQueries = function () use ($admin): int {
+            $actor = $admin->fresh();
+            DB::flushQueryLog();
+            DB::enableQueryLog();
+
+            $this->actingAs($actor)->get('/admin/listing-reports')->assertOk();
+
+            $count = count(DB::getQueryLog());
+            DB::disableQueryLog();
+
+            return $count;
+        };
+
+        $seed = function (): void {
+            $listings = [
+                Listing::factory()->approved()->create(),
+                Listing::factory()->approved()->create(['user_id' => null, 'agency_id' => Agency::factory()->approved()->create()->id]),
+            ];
+
+            foreach ($listings as $listing) {
+                ListingImage::factory()->for($listing)->create();
+                ListingReport::factory()->count(2)->create(['listing_id' => $listing->id]);
+            }
+        };
+
+        $seed();
+        $seed();
+        $withTwo = $countQueries();
+
+        foreach (range(1, 2) as $index) {
+            $seed();
+        }
+
+        $this->assertSame(16, ListingReport::count());
+        $this->assertSame($withTwo, $countQueries());
     }
 }

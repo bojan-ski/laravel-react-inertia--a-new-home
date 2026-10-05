@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Notifications\UserSuspendedNotification;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
@@ -118,7 +119,7 @@ class ReportedMessageModerationTest extends TestCase
         $conversation = $this->conversationBetween($buyer, $owner);
         $message = $this->messageFrom($conversation, $owner);
 
-        ReportedChatMessage::create([
+        ReportedChatMessage::factory()->create([
             'chat_message_id' => $message->id,
             'reported_by_user_id' => $buyer->id,
             'offending_user_id' => $owner->id,
@@ -127,7 +128,7 @@ class ReportedMessageModerationTest extends TestCase
 
         $this->expectException(QueryException::class);
 
-        ReportedChatMessage::create([
+        ReportedChatMessage::factory()->create([
             'chat_message_id' => $message->id,
             'reported_by_user_id' => $buyer->id,
             'offending_user_id' => $owner->id,
@@ -237,7 +238,7 @@ class ReportedMessageModerationTest extends TestCase
         $conversation = $this->conversationBetween($buyer, $owner);
         $message = $this->messageFrom($conversation, $owner, 'The reported body');
 
-        $report = ReportedChatMessage::create([
+        $report = ReportedChatMessage::factory()->create([
             'chat_message_id' => $message->id,
             'reported_by_user_id' => $buyer->id,
             'offending_user_id' => $owner->id,
@@ -362,5 +363,38 @@ class ReportedMessageModerationTest extends TestCase
         $this->actingAs($user)
             ->post("/admin/reported-messages/{$report->id}/suspend")
             ->assertForbidden();
+    }
+
+    public function test_the_reported_messages_query_count_does_not_grow_with_reports(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $countQueries = function () use ($admin): int {
+            $actor = $admin->fresh();
+            DB::flushQueryLog();
+            DB::enableQueryLog();
+
+            $this->actingAs($actor)->get('/admin/reported-messages')->assertOk();
+
+            $count = count(DB::getQueryLog());
+            DB::disableQueryLog();
+
+            return $count;
+        };
+
+        $seed = function (): void {
+            ReportedChatMessage::factory()->create();
+        };
+
+        $seed();
+        $seed();
+        $withTwo = $countQueries();
+
+        foreach (range(1, 4) as $index) {
+            $seed();
+        }
+
+        $this->assertSame(6, ReportedChatMessage::count());
+        $this->assertSame($withTwo, $countQueries());
     }
 }
