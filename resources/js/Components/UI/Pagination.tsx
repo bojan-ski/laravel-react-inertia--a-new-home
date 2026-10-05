@@ -15,7 +15,7 @@ function PageLink({ url, label }: PageLinkProps) {
     }
 
     return (
-        <Link href={url} preserveScroll className={`${itemClasses} transition-colors duration-150 hover:text-forest`}>
+        <Link href={url} className={`${itemClasses} transition-colors duration-150 hover:text-forest`}>
             {text}
         </Link>
     )
