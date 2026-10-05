@@ -4,20 +4,20 @@ return [
     'name' => config('app.name'),
 
     'seo' => [
-        'site_name' => 'New Beginning',
-        'description' => 'New Beginning is a moderated property marketplace for homes for sale and rent across Europe, listed by verified owners and agencies.',
+        'site_name' => 'A New Home',
+        'description' => 'A New Home is a moderated property marketplace for homes for sale and rent across Europe, listed by verified owners and agencies.',
         'image_alt' => 'A modern white house beside a pool, with the words “Find your home in Europe”',
         'breadcrumb_home' => 'Home',
-        'agency_description' => ':name is a verified estate agency on New Beginning. Browse its homes for sale and rent.',
+        'agency_description' => ':name is a verified estate agency on A New Home. Browse its homes for sale and rent.',
         'pages' => [
-            'home' => 'Find homes for sale and rent across Europe. Every listing on New Beginning is reviewed before it goes live, from verified owners and agencies.',
+            'home' => 'Find homes for sale and rent across Europe. Every listing on A New Home is reviewed before it goes live, from verified owners and agencies.',
             'listings' => 'Browse houses, flats, villas and land for sale and rent across Europe. Filter by city, price, size and amenities.',
-            'agencies' => 'Browse verified estate agencies on New Beginning and see the homes each one has for sale and rent.',
+            'agencies' => 'Browse verified estate agencies on A New Home and see the homes each one has for sale and rent.',
         ],
     ],
 
     'nav' => [
-        'brand' => 'New Beginning',
+        'brand' => 'A New Home',
         'listings' => 'Listings',
         'agencies' => 'Agencies',
         'favorites' => 'Favorites',
@@ -51,7 +51,7 @@ return [
     ],
 
     'footer' => [
-        'brand' => 'New Beginning',
+        'brand' => 'A New Home',
         'tagline' => 'Your trusted property marketplace for buying, selling, and renting.',
         'company' => 'Company',
         'legal' => 'Legal',
@@ -66,7 +66,7 @@ return [
         'linkedin' => 'LinkedIn',
         'facebook' => 'Facebook',
         'instagram' => 'Instagram',
-        'copyright' => '© :year New Beginning. All rights reserved.',
+        'copyright' => '© :year A New Home. All rights reserved.',
         'privacy' => 'Privacy',
         'terms' => 'Terms',
         'cookies' => 'Cookies',
@@ -75,8 +75,8 @@ return [
 
     'auth' => [
         'layout' => [
-            'back_home' => 'Back to New Beginning',
-            'copyright' => '© :year New Beginning',
+            'back_home' => 'Back to A New Home',
+            'copyright' => '© :year A New Home',
         ],
 
         'login' => [
@@ -150,7 +150,7 @@ return [
         ],
 
         'intro' => [
-            'kicker' => 'New Beginning',
+            'kicker' => 'A New Home',
             'lead' => 'Discover verified properties for sale and rent. Connect directly with trusted owners on a moderated, premium marketplace.',
             'stats' => [
                 ['value' => '10K+', 'label' => 'Listings'],
@@ -1593,19 +1593,19 @@ return [
         'user_suspended' => [
             'subject' => 'Your account has been suspended',
             'greeting' => 'Account suspended',
-            'intro' => 'Your account on New Beginning has been suspended by an administrator.',
+            'intro' => 'Your account on A New Home has been suspended by an administrator.',
             'outro' => 'If you believe this was a mistake, please contact our support team.',
         ],
         'account_deleted' => [
             'subject' => 'Your account has been deleted',
             'greeting' => 'Hello :name,',
-            'intro' => 'Your account on New Beginning has been permanently deleted, along with your listings and saved properties.',
+            'intro' => 'Your account on A New Home has been permanently deleted, along with your listings and saved properties.',
             'outro' => 'Thank you for being part of our community.',
         ],
         'listing_approved' => [
             'subject' => 'Your listing has been approved',
             'greeting' => 'Good news!',
-            'intro' => 'Your listing ":title" has been approved and is now publicly visible on New Beginning.',
+            'intro' => 'Your listing ":title" has been approved and is now publicly visible on A New Home.',
             'outro' => 'Thank you for listing with us.',
         ],
         'listing_rejected' => [
@@ -1618,7 +1618,7 @@ return [
         'listing_taken_down' => [
             'subject' => 'Your listing has been removed',
             'greeting' => 'Listing update',
-            'intro' => 'Your listing ":title" was removed from New Beginning after review by our team.',
+            'intro' => 'Your listing ":title" was removed from A New Home after review by our team.',
             'reason' => 'Reason: :reason',
             'outro' => 'The listing is no longer visible and will be permanently deleted in 7 days. If you believe this was a mistake, please contact our support team.',
         ],
@@ -1643,7 +1643,7 @@ return [
         'agency_approved' => [
             'subject' => 'Your agency has been approved',
             'greeting' => 'Good news!',
-            'intro' => 'Your agency ":name" has been approved and is now publicly visible on New Beginning.',
+            'intro' => 'Your agency ":name" has been approved and is now publicly visible on A New Home.',
             'outro' => 'You can now manage your agency profile and create listings.',
         ],
         'agency_rejected' => [
@@ -1656,7 +1656,7 @@ return [
         'agency_changes_approved' => [
             'subject' => 'Your agency profile changes were approved',
             'greeting' => 'Good news!',
-            'intro' => 'The profile changes for ":name" have been approved and are now live on New Beginning.',
+            'intro' => 'The profile changes for ":name" have been approved and are now live on A New Home.',
             'outro' => 'Thank you for keeping your agency details up to date.',
         ],
         'agency_changes_rejected' => [
