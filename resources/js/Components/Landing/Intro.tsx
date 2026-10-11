@@ -1,3 +1,4 @@
+import CountUp from '@/Components/UI/CountUp'
 import Kicker from '@/Components/UI/Kicker'
 import type { IntroProps } from '@/types/home'
 
@@ -20,7 +21,7 @@ export default function Intro({ content }: IntroProps) {
                                 {stat.label}
                             </dt>
                             <dd className="text-[34px] leading-[normal] font-extralight tracking-[-0.03em] lg:text-[56px]">
-                                {stat.value}
+                                <CountUp value={stat.value} />
                             </dd>
                         </div>
                     ))}

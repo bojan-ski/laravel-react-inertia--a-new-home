@@ -6,6 +6,7 @@ import ListingsEmptyState from '@/Components/Listings/ListingsEmptyState'
 import { countLabel } from '@/Components/Listings/listingFormat'
 import SaveSearchButton from '@/Components/SavedSearches/SaveSearchButton'
 import Pagination from '@/Components/UI/Pagination'
+import useReveal from '@/Components/UI/useReveal'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { ListingsIndexPageProps } from '@/types/listing'
 import type { SharedProps } from '@/types/shared'
@@ -20,6 +21,8 @@ export default function Index({
     translations,
 }: ListingsIndexPageProps) {
     const { errors } = usePage<SharedProps>().props
+    const rowsReveal = useReveal<HTMLDivElement>('left', listings.data)
+    const cardsReveal = useReveal<HTMLDivElement>('left', listings.data)
     const errorMessages = Object.values(errors)
     const hasActiveFilters = Boolean(
         filters.search ||
@@ -84,7 +87,7 @@ export default function Index({
                         <ListingsEmptyState translations={translations.empty} hasActiveFilters={hasActiveFilters} />
                     ) : (
                         <>
-                            <div className="hidden lg:mt-3 lg:block xl:mt-10">
+                            <div {...rowsReveal} className="hidden lg:mt-3 lg:block xl:mt-10">
                                 {listings.data.map((listing) => (
                                     <ListingRow
                                         key={listing.id}
@@ -95,7 +98,7 @@ export default function Index({
                                 ))}
                             </div>
 
-                            <div className="grid md:grid-cols-2 md:gap-x-8 lg:hidden">
+                            <div {...cardsReveal} className="grid md:grid-cols-2 md:gap-x-8 lg:hidden">
                                 {listings.data.map((listing) => (
                                     <ListingRowCard
                                         key={listing.id}

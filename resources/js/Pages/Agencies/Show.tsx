@@ -7,6 +7,7 @@ import EmptyState from '@/Components/UI/EmptyState'
 import Kicker from '@/Components/UI/Kicker'
 import LogoTile from '@/Components/UI/LogoTile'
 import Pagination from '@/Components/UI/Pagination'
+import useReveal from '@/Components/UI/useReveal'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { AgencyPublicPageProps } from '@/types/agency'
 
@@ -19,6 +20,7 @@ export default function Show({ agency, listings, translations, listingTranslatio
     const registration = agencyRegistrationLines(agency, translations)
     const [lead, ...paragraphs] = descriptionParagraphs(agency.description)
     const hasAbout = lead !== undefined || registration.length > 0
+    const listingsReveal = useReveal<HTMLDivElement>('up', listings.data)
 
     return (
         <PublicLayout back={{ href: '/agencies', label: show.back }}>
@@ -105,7 +107,10 @@ export default function Show({ agency, listings, translations, listingTranslatio
                         <EmptyState title={show.empty} className="mt-6 lg:mt-10" />
                     ) : (
                         <>
-                            <div className="mt-1 grid grid-cols-1 md:mt-8 md:grid-cols-2 md:gap-x-8 md:gap-y-12 lg:mt-10 lg:grid-cols-3">
+                            <div
+                                {...listingsReveal}
+                                className="mt-1 grid grid-cols-1 md:mt-8 md:grid-cols-2 md:gap-x-8 md:gap-y-12 lg:mt-10 lg:grid-cols-3"
+                            >
                                 {listings.data.map((listing) => (
                                     <AgencyListingCard
                                         key={listing.id}

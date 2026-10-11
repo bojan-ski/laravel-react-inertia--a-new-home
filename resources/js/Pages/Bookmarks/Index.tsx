@@ -3,6 +3,7 @@ import AccountPageHeader from '@/Components/Account/AccountPageHeader'
 import BookmarkCard from '@/Components/Bookmarks/BookmarkCard'
 import Button from '@/Components/UI/Button'
 import EmptyState from '@/Components/UI/EmptyState'
+import useReveal from '@/Components/UI/useReveal'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { BookmarksIndexPageProps } from '@/types/bookmark'
 
@@ -17,6 +18,8 @@ export default function Index({
 }: BookmarksIndexPageProps) {
     const countNoun = listings.length === 1 ? translations.count_one : translations.count_other
     const perMonth = listingTranslations.card.per_month
+    const activeReveal = useReveal<HTMLDivElement>('up', listings)
+    const closedReveal = useReveal<HTMLDivElement>('up', closedListings)
 
     return (
         <PublicLayout contained>
@@ -53,7 +56,7 @@ export default function Index({
                             {translations.count_prefix} {listings.length} {countNoun}
                         </p>
 
-                        <div className={`${gridClasses} sm:gap-y-12`}>
+                        <div {...activeReveal} className={`${gridClasses} sm:gap-y-12`}>
                             {listings.map((listing) => (
                                 <BookmarkCard
                                     key={listing.id}
@@ -81,7 +84,7 @@ export default function Index({
                             </p>
                         </div>
 
-                        <div className={`${gridClasses} sm:gap-y-6`}>
+                        <div {...closedReveal} className={`${gridClasses} sm:gap-y-6`}>
                             {closedListings.map((listing) => (
                                 <BookmarkCard
                                     key={listing.id}

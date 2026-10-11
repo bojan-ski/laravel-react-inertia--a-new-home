@@ -6,6 +6,7 @@ import { formatPrice } from '@/Components/Listings/listingFormat'
 import { useBookmarkToggle } from '@/Components/Listings/useListingActions'
 import Kicker from '@/Components/UI/Kicker'
 import { useActionLabel } from '@/Components/UI/useActionLabel'
+import { photoFadeProps } from '@/Components/UI/photoFade'
 import type { AgencyListingCardProps } from '@/types/agency'
 
 export default function AgencyListingCard({ listing, translations, propertyTypeLabels }: AgencyListingCardProps) {
@@ -26,6 +27,7 @@ export default function AgencyListingCard({ listing, translations, propertyTypeL
                         height={LISTING_THUMB_SIZE.height}
                         loading="lazy"
                         decoding="async"
+                        {...photoFadeProps}
                         className="absolute inset-0 size-full object-cover"
                     />
                 ) : (
