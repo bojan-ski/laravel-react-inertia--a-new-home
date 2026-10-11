@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { Head, usePage } from '@inertiajs/react'
+import { Head } from '@inertiajs/react'
 import ListingBookmarkHeart from '@/Components/Listings/ListingBookmarkHeart'
 import ListingContactBlock from '@/Components/Listings/ListingContactBlock'
 import ListingDetailActions from '@/Components/Listings/ListingDetailActions'
@@ -15,10 +14,8 @@ import MortgageCalculator from '@/Components/Listings/MortgageCalculator'
 import { useMortgageEstimate } from '@/Components/Listings/mortgage'
 import ReportListingButton from '@/Components/Listings/ReportListingButton'
 import SimilarListings from '@/Components/Listings/SimilarListings'
-import FlashBanner from '@/Components/UI/FlashBanner'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { ListingShowPageProps } from '@/types/listing'
-import type { SharedProps } from '@/types/shared'
 
 const gutterClass = 'px-5 md:px-10 lg:px-16'
 
@@ -33,24 +30,11 @@ export default function Show({
     translations,
     reportTranslations,
 }: ListingShowPageProps) {
-    const { flash, ui } = usePage<SharedProps>().props
-    const [dismissedFlash, setDismissedFlash] = useState<string | null>(null)
     const mortgage = useMortgageEstimate(listing.price, mortgageDefaults)
     const show = translations.show
     const isSale = listing.listingType === 'sale'
     const propertyLabel = translations.filters.property_types[listing.propertyType] ?? listing.propertyType
-    const flashMessage = flash.success ?? flash.error
     const browseHref = `/listings?listingType=${listing.listingType}&propertyType=${listing.propertyType}`
-
-    const flashBanner = flashMessage && dismissedFlash !== flashMessage && (
-        <FlashBanner
-            message={flashMessage}
-            variant={flash.success ? 'success' : 'error'}
-            className=""
-            onDismiss={() => setDismissedFlash(flashMessage)}
-            dismissLabel={ui.dismiss}
-        />
-    )
 
     const reportButton = canReport && <ReportListingButton listingId={listing.id} translations={reportTranslations} />
 
@@ -75,8 +59,6 @@ export default function Show({
                         <ListingGallery images={listing.images} title={listing.title} translations={show.gallery} />
                     </div>
                 </div>
-
-                {flashBanner && <div className={`${gutterClass} pb-6 lg:hidden`}>{flashBanner}</div>}
 
                 <div className={`${gutterClass} lg:pt-14`}>
                     <ListingFacts listing={listing} translations={show} />
@@ -124,16 +106,13 @@ export default function Show({
                                 translations={show}
                                 className="hidden lg:flex"
                                 actions={
-                                    <>
-                                        <ListingDetailActions
-                                            listingId={listing.id}
-                                            isBookmarked={isBookmarked}
-                                            canBookmark={canBookmark}
-                                            canStartChat={canStartChat}
-                                            translations={show}
-                                        />
-                                        {flashBanner}
-                                    </>
+                                    <ListingDetailActions
+                                        listingId={listing.id}
+                                        isBookmarked={isBookmarked}
+                                        canBookmark={canBookmark}
+                                        canStartChat={canStartChat}
+                                        translations={show}
+                                    />
                                 }
                                 footer={reportButton}
                             />

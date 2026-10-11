@@ -14,6 +14,7 @@ export function useBookmarkToggle(listingId: number) {
             {},
             {
                 preserveScroll: true,
+                except: ['similarListings'],
                 onStart: () => setProcessing(true),
                 onFinish: () => setProcessing(false),
             },

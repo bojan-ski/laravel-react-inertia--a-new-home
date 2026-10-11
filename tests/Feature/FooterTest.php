@@ -19,6 +19,15 @@ class FooterTest extends TestCase
                 ->missing('footer.careers'));
     }
 
+    public function test_footer_shares_no_duplicate_cookies_link(): void
+    {
+        $this->get('/')
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('footer.cookie_policy', __('app.footer.cookie_policy'))
+                ->missing('footer.cookies'));
+    }
+
     public function test_footer_copyright_carries_the_copyright_sign(): void
     {
         $this->get('/')

@@ -1,4 +1,4 @@
-import { Head, usePage } from '@inertiajs/react'
+import { Head } from '@inertiajs/react'
 import ListingModerationPanel from '@/Components/Admin/ListingModerationPanel'
 import ListingReportPanel from '@/Components/Admin/ListingReportPanel'
 import ListingDetailHeader from '@/Components/Listings/ListingDetailHeader'
@@ -7,10 +7,8 @@ import ListingFacts from '@/Components/Listings/ListingFacts'
 import ListingGallery from '@/Components/Listings/ListingGallery'
 import ListingSidebar from '@/Components/Listings/ListingSidebar'
 import Button from '@/Components/UI/Button'
-import FlashBanner from '@/Components/UI/FlashBanner'
 import AdminLayout from '@/Layouts/AdminLayout'
 import type { AdminListingReviewPageProps } from '@/types/admin'
-import type { SharedProps } from '@/types/shared'
 
 export default function Show({
     listing,
@@ -23,7 +21,6 @@ export default function Show({
     reportTranslations,
     reasonLabels,
 }: AdminListingReviewPageProps) {
-    const { flash } = usePage<SharedProps>().props
     const show = listingTranslations
     const propertyLabel = propertyTypeLabels[listing.propertyType] ?? listing.propertyType
 
@@ -35,9 +32,6 @@ export default function Show({
                 <span aria-hidden="true">← </span>
                 {translations.review.back}
             </Button>
-
-            {flash.success && <FlashBanner message={flash.success} variant="success" className="" />}
-            {flash.error && <FlashBanner message={flash.error} variant="error" className="" />}
 
             <div className="@container/review">
                 <div className="flex flex-col gap-8">

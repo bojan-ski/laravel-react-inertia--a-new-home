@@ -66,10 +66,9 @@ return [
         'linkedin' => 'LinkedIn',
         'facebook' => 'Facebook',
         'instagram' => 'Instagram',
-        'copyright' => '© :year A New Home. All rights reserved.',
+        'copyright' => '© :year A New Home. All rights reserved. code BPdevelopment',
         'privacy' => 'Privacy',
         'terms' => 'Terms',
-        'cookies' => 'Cookies',
         'aria_label' => 'Footer',
     ],
 
@@ -975,7 +974,6 @@ return [
         'title' => 'Agency Profile',
         'subtitle' => 'Manage your agency details and public contact information.',
         'edit' => 'Edit Profile',
-        'settings' => 'Account Settings',
         'pending_changes' => 'Profile changes submitted on :date are awaiting admin review. Your current details stay live until they are approved.',
         'status' => [
             'pending_verification' => [

@@ -1,20 +1,17 @@
-import { Head, usePage } from '@inertiajs/react'
+import { Head } from '@inertiajs/react'
 import AdminPageHeader from '@/Components/Admin/AdminPageHeader'
 import AdminUserFilterBar from '@/Components/Admin/AdminUserFilterBar'
 import AdminUserRow from '@/Components/Admin/AdminUserRow'
 import { countLabel } from '@/Components/Listings/listingFormat'
 import Button from '@/Components/UI/Button'
 import EmptyState from '@/Components/UI/EmptyState'
-import FlashBanner from '@/Components/UI/FlashBanner'
 import Pagination from '@/Components/UI/Pagination'
 import AdminLayout from '@/Layouts/AdminLayout'
 import type { AdminUsersPageProps } from '@/types/admin'
-import type { SharedProps } from '@/types/shared'
 
 const headingClasses = 'py-2.5 pr-6 text-left text-xs font-normal tracking-widest text-ink-muted uppercase'
 
 export default function Index({ users, filters, translations }: AdminUsersPageProps) {
-    const { flash } = usePage<SharedProps>().props
     const hasFilters = Boolean(filters.role || filters.status || filters.search)
     const { columns } = translations
 
@@ -23,9 +20,6 @@ export default function Index({ users, filters, translations }: AdminUsersPagePr
             <Head title={translations.title} />
 
             <AdminPageHeader title={translations.title} subtitle={translations.subtitle} />
-
-            {flash.success && <FlashBanner message={flash.success} variant="success" className="" />}
-            {flash.error && <FlashBanner message={flash.error} variant="error" className="" />}
 
             <AdminUserFilterBar filters={filters} translations={translations} />
 

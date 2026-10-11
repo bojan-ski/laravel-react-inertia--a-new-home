@@ -3,7 +3,6 @@ import type { FormEvent } from 'react'
 import AuthHeader from '@/Components/Auth/AuthHeader'
 import AuthSwitchPrompt from '@/Components/Auth/AuthSwitchPrompt'
 import Button from '@/Components/UI/Button'
-import FlashBanner from '@/Components/UI/FlashBanner'
 import PasswordField from '@/Components/UI/PasswordField'
 import TextField from '@/Components/UI/TextField'
 import AuthLayout from '@/Layouts/AuthLayout'
@@ -11,7 +10,7 @@ import type { LoginPageProps } from '@/types/auth'
 import type { SharedProps } from '@/types/shared'
 
 export default function Login({ translations, layout, email }: LoginPageProps) {
-    const { flash, ui } = usePage<SharedProps>().props
+    const { ui } = usePage<SharedProps>().props
     const { data, setData, post, processing, errors } = useForm({
         email,
         password: '',
@@ -27,9 +26,6 @@ export default function Login({ translations, layout, email }: LoginPageProps) {
             <Head title={translations.title} />
 
             <div className="flex flex-col gap-8 lg:gap-10">
-                {flash.success && <FlashBanner message={flash.success} variant="success" className="" />}
-                {flash.error && <FlashBanner message={flash.error} variant="error" className="" />}
-
                 <AuthHeader title={translations.title} subtitle={translations.subtitle} />
 
                 <form onSubmit={submit} className="flex flex-col gap-8 lg:gap-10">

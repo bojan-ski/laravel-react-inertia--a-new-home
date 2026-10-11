@@ -1,22 +1,26 @@
-import { Head, Link, useForm, usePage } from '@inertiajs/react'
+import { Head, Link, useForm } from '@inertiajs/react'
 import type { FormEvent } from 'react'
 import AuthHeader from '@/Components/Auth/AuthHeader'
 import Button from '@/Components/UI/Button'
-import FlashBanner from '@/Components/UI/FlashBanner'
 import TextField from '@/Components/UI/TextField'
 import AuthLayout from '@/Layouts/AuthLayout'
 import type { ForgotPasswordPageProps } from '@/types/auth'
-import type { SharedProps } from '@/types/shared'
+import type { FlashData } from '@/types/shared'
 
 export default function ForgotPassword({ translations, layout }: ForgotPasswordPageProps) {
-    const { flash } = usePage<SharedProps>().props
     const { data, setData, post, processing, errors } = useForm({
         email: '',
     })
 
     function submit(e: FormEvent) {
         e.preventDefault()
-        post('/forgot-password')
+        post('/forgot-password', {
+            onSuccess: (page) => {
+                if ((page.props.flash as FlashData).success) {
+                    setData('email', '')
+                }
+            },
+        })
     }
 
     return (
@@ -24,8 +28,6 @@ export default function ForgotPassword({ translations, layout }: ForgotPasswordP
             <Head title={translations.title} />
 
             <div className="flex flex-col gap-8 lg:gap-10">
-                {flash.success && <FlashBanner message={flash.success} variant="success" className="" />}
-
                 <AuthHeader title={translations.title} subtitle={translations.subtitle} />
 
                 <form onSubmit={submit} className="flex flex-col gap-8 lg:gap-10">

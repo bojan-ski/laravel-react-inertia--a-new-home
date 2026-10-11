@@ -17,6 +17,7 @@ export default function PublicLayout({
     footer = true,
     navVariant = 'default',
     fill,
+    contained = false,
 }: PublicLayoutProps) {
     const { nav } = usePage<SharedProps>().props
 
@@ -28,7 +29,7 @@ export default function PublicLayout({
             <main
                 id="main"
                 tabIndex={-1}
-                className={`focus-visible:outline-none ${fill ? 'flex min-h-0 flex-1 flex-col' : 'flex-1'}`}
+                className={`focus-visible:outline-none ${fill ? 'flex min-h-0 flex-1 flex-col' : 'flex-1'} ${contained ? 'mx-auto w-full max-w-360' : ''}`}
             >
                 {children}
             </main>

@@ -120,7 +120,6 @@ export interface FooterTranslations {
     copyright: string
     privacy: string
     terms: string
-    cookies: string
     aria_label: string
 }
 

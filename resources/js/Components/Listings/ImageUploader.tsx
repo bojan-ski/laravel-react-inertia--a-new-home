@@ -1,18 +1,15 @@
 import { useState } from 'react'
 import type { ChangeEvent, KeyboardEvent } from 'react'
-import { router, useForm, usePage } from '@inertiajs/react'
+import { router, useForm } from '@inertiajs/react'
 import { Loader2 } from 'lucide-react'
 import FieldError from '@/Components/Forms/FieldError'
 import ListingCoverTag from '@/Components/Listings/ListingCoverTag'
 import Button from '@/Components/UI/Button'
-import FlashBanner from '@/Components/UI/FlashBanner'
 import TextField from '@/Components/UI/TextField'
 import { useActionLabel } from '@/Components/UI/useActionLabel'
 import type { ImageUploaderProps, ImageUploadFormData } from '@/types/listing'
-import type { SharedProps } from '@/types/shared'
 
 export default function ImageUploader({ baseUrl, images, listingTitle, maxImages, translations }: ImageUploaderProps) {
-    const { flash } = usePage<SharedProps>().props
     const actionLabel = useActionLabel()
     const atLimit = images.length >= maxImages
     const [deletingId, setDeletingId] = useState<number | null>(null)
@@ -59,8 +56,6 @@ export default function ImageUploader({ baseUrl, images, listingTitle, maxImages
 
     return (
         <>
-            {flash.success && <FlashBanner message={flash.success} variant="success" className="col-span-2" />}
-
             {images.length > 0 && (
                 <ul className="col-span-2 grid grid-cols-2 gap-4 md:grid-cols-3">
                     {images.map((image, index) => (

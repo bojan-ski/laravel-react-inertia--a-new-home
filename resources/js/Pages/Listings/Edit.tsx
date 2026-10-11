@@ -49,12 +49,11 @@ export default function Edit({
         isApproved || flash.error ? (
             <>
                 {isApproved && <ListingApprovedNotice message={translations.approved_notice} />}
-                {flash.error && <FlashBanner message={flash.error} variant="error" className="" />}
             </>
         ) : null
 
     return (
-        <PublicLayout back={{ href: '/profile', label: translations.back }} footer={false}>
+        <PublicLayout back={{ href: '/profile', label: translations.back }} footer={false} contained>
             <Head title={translations.title} />
 
             <ListingFormHeader

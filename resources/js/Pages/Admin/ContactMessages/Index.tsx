@@ -2,7 +2,6 @@ import { Head, Link, usePage } from '@inertiajs/react'
 import AdminPageHeader from '@/Components/Admin/AdminPageHeader'
 import ContactMessageRow from '@/Components/Admin/ContactMessageRow'
 import EmptyState from '@/Components/UI/EmptyState'
-import FlashBanner from '@/Components/UI/FlashBanner'
 import Pagination from '@/Components/UI/Pagination'
 import AdminLayout from '@/Layouts/AdminLayout'
 import type { AdminContactMessagesPageProps, ContactMessageStatus } from '@/types/contact'
@@ -11,7 +10,7 @@ import type { SharedProps } from '@/types/shared'
 const STATUSES: ContactMessageStatus[] = ['new', 'handled']
 
 export default function Index({ messages, status, translations }: AdminContactMessagesPageProps) {
-    const { flash, adminCounts } = usePage<SharedProps>().props
+    const { adminCounts } = usePage<SharedProps>().props
     const empty = translations.empty[status]
     const newCount = adminCounts?.newContactMessages ?? 0
     const { tabs } = translations
@@ -29,9 +28,6 @@ export default function Index({ messages, status, translations }: AdminContactMe
             <Head title={translations.title} />
 
             <AdminPageHeader title={translations.title} subtitle={translations.subtitle} />
-
-            {flash.success && <FlashBanner message={flash.success} variant="success" className="" />}
-            {flash.error && <FlashBanner message={flash.error} variant="error" className="" />}
 
             <nav aria-label={tabs.aria_label}>
                 <ul className="flex gap-8 border-b border-rule text-sm md:text-[15px]">

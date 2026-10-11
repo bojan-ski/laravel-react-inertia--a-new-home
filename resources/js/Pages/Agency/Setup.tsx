@@ -27,7 +27,7 @@ export default function Setup({ translations, countries }: AgencySetupPageProps)
     }
 
     return (
-        <PublicLayout back={{ href: '/', label: translations.back }} footer={false}>
+        <PublicLayout back={{ href: '/', label: translations.back }} footer={false} contained>
             <Head title={translations.title} />
 
             <ListingFormHeader

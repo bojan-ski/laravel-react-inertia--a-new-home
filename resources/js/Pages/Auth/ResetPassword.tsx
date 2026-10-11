@@ -2,7 +2,6 @@ import { Head, useForm, usePage } from '@inertiajs/react'
 import type { FormEvent } from 'react'
 import AuthHeader from '@/Components/Auth/AuthHeader'
 import Button from '@/Components/UI/Button'
-import FlashBanner from '@/Components/UI/FlashBanner'
 import PasswordField from '@/Components/UI/PasswordField'
 import TextField from '@/Components/UI/TextField'
 import AuthLayout from '@/Layouts/AuthLayout'
@@ -10,7 +9,7 @@ import type { ResetPasswordPageProps } from '@/types/auth'
 import type { SharedProps } from '@/types/shared'
 
 export default function ResetPassword({ translations, layout, token, email }: ResetPasswordPageProps) {
-    const { flash, ui } = usePage<SharedProps>().props
+    const { ui } = usePage<SharedProps>().props
     const { data, setData, post, processing, errors, reset } = useForm({
         token,
         email,
@@ -28,8 +27,6 @@ export default function ResetPassword({ translations, layout, token, email }: Re
             <Head title={translations.title} />
 
             <div className="flex flex-col gap-8 lg:gap-10">
-                {flash.error && <FlashBanner message={flash.error} variant="error" className="" />}
-
                 <AuthHeader title={translations.title} subtitle={translations.subtitle} />
 
                 <form onSubmit={submit} className="flex flex-col gap-8 lg:gap-10">

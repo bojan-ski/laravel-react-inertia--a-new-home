@@ -13,6 +13,7 @@ export interface PublicLayoutProps {
     footer?: boolean
     navVariant?: NavbarVariant
     fill?: 'always' | 'desktop'
+    contained?: boolean
 }
 
 export interface AuthLayoutProps {

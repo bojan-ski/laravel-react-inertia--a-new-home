@@ -26,12 +26,6 @@ export default function Footer() {
         { label: footer.instagram, href: 'https://www.instagram.com', external: true },
     ]
 
-    const bottomLinks: FooterLink[] = [
-        { label: footer.privacy, href: '/privacy-policy', external: false },
-        { label: footer.terms, href: '/terms', external: false },
-        { label: footer.cookies, href: '/cookie-policy', external: false },
-    ]
-
     return (
         <footer className="border-t border-rule bg-paper text-ink">
             <div className="mx-auto flex max-w-360 flex-col gap-7 px-5 pt-10 pb-7 md:px-10 lg:gap-12 lg:px-16 lg:pt-16 lg:pb-8">
@@ -51,20 +45,10 @@ export default function Footer() {
                     <FooterLinkColumn heading={footer.connect} links={connect} />
                 </nav>
 
-                <div className="flex flex-col gap-4 border-t border-rule pt-4 text-xs text-ink-muted lg:flex-row lg:items-center lg:justify-between lg:border-t-0 lg:pt-0 lg:text-[13px]">
-                    <p>{footer.copyright.replace(':year', String(year))}</p>
-
-                    <div className="hidden items-center gap-6 lg:flex">
-                        {bottomLinks.map((link) => (
-                            <Link
-                                key={link.label}
-                                href={link.href}
-                                className="text-ink-muted transition-colors duration-150 hover:text-forest"
-                            >
-                                {link.label}
-                            </Link>
-                        ))}
-                    </div>
+                <div className="flex flex-col gap-1.5 border-t border-rule pt-4 text-xs text-ink-muted sm:flex-row sm:items-center sm:justify-between sm:gap-4 lg:border-t-0 lg:pt-0 lg:text-[13px]">
+                    <p>
+                        {footer.copyright.replace(':year', String(year))}
+                    </p>
                 </div>
             </div>
         </footer>

@@ -7,20 +7,17 @@ import MessageBubble from '@/Components/Conversations/MessageBubble'
 import MessageComposer from '@/Components/Conversations/MessageComposer'
 import ReportMessageDialog from '@/Components/Conversations/ReportMessageDialog'
 import ThreadHeader from '@/Components/Conversations/ThreadHeader'
-import FlashBanner from '@/Components/UI/FlashBanner'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { ChatMessageBroadcast, ChatMessageData, ConversationShowPageProps } from '@/types/conversation'
 import type { SharedProps } from '@/types/shared'
 
 export default function Show({ conversation, conversations, canReply, translations }: ConversationShowPageProps) {
-    const { auth, flash, ui } = usePage<SharedProps>().props
+    const { auth } = usePage<SharedProps>().props
     const currentUserId = auth.user?.id ?? null
     const thread = translations.thread
 
     const [liveMessages, setLiveMessages] = useState<ChatMessageData[]>([])
     const [reportMessage, setReportMessage] = useState<ChatMessageData | null>(null)
-    const [dismissedFlash, setDismissedFlash] = useState<SharedProps['flash'] | null>(null)
-    const flashMessage = flash.success ?? flash.error
 
     const messages = useMemo(() => {
         const seen = new Set(conversation.messages.map((message) => message.id))
@@ -85,16 +82,6 @@ export default function Show({ conversation, conversations, canReply, translatio
 
                 <section className="flex min-h-0 flex-col">
                     <ThreadHeader conversation={conversation} translations={translations} />
-
-                    {flashMessage && dismissedFlash !== flash && (
-                        <FlashBanner
-                            message={flashMessage}
-                            variant={flash.success ? 'success' : 'error'}
-                            className="mx-5 mt-4 lg:mt-6 lg:mr-10 lg:ml-8 xl:mr-16 xl:ml-12"
-                            onDismiss={() => setDismissedFlash(flash)}
-                            dismissLabel={ui.dismiss}
-                        />
-                    )}
 
                     <div
                         ref={threadRef}

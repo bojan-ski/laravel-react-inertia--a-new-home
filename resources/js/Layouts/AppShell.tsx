@@ -1,7 +1,7 @@
 import { usePage } from '@inertiajs/react'
 import MessageNotifier from '@/Components/Conversations/MessageNotifier'
 import CookieBanner from '@/Components/CookieBanner'
-import ThrottleNotice from '@/Components/UI/ThrottleNotice'
+import FlashToast from '@/Components/UI/FlashToast'
 import type { AppShellProps } from '@/types/layout'
 import type { SharedProps } from '@/types/shared'
 
@@ -11,7 +11,7 @@ export default function AppShell({ children }: AppShellProps) {
     return (
         <>
             {children}
-            <ThrottleNotice />
+            <FlashToast />
             <CookieBanner />
             {user && <MessageNotifier key={user.id} userId={user.id} />}
         </>

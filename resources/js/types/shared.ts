@@ -13,16 +13,18 @@ export interface SharedProps {
     auth: {
         user: AuthUser | null
     }
-    flash: {
-        success: string | null
-        error: string | null
-        throttled: string | null
-    }
+    flash: FlashData
     unreadMessages: number
     messageNotifications: MessageNotificationTranslations | null
     cookieConsent: CookieConsent | null
     cookieBanner: CookieBannerTranslations
     [key: string]: unknown
+}
+
+export interface FlashData {
+    success: string | null
+    error: string | null
+    throttled: string | null
 }
 
 export type CookieConsent = 'accepted' | 'rejected'

@@ -20,6 +20,12 @@ interface FlashBannerBaseProps {
 export type FlashBannerProps = FlashBannerBaseProps &
     ({ onDismiss?: undefined; dismissLabel?: undefined } | { onDismiss: () => void; dismissLabel: string })
 
+export interface FlashToastMessage {
+    id: number
+    message: string
+    variant: FlashBannerBaseProps['variant']
+}
+
 export interface DialogProps {
     open: boolean
     onClose: () => void

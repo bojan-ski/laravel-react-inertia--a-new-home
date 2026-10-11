@@ -132,12 +132,14 @@ class AgencyAccountSettingsTest extends TestCase
         }
     }
 
-    public function test_agency_dashboard_links_to_settings(): void
+    public function test_agency_dashboard_links_to_settings_only_through_the_account_tabs(): void
     {
         [$user] = $this->agencyOwner();
 
         $this->actingAs($user)
             ->get('/agency')
-            ->assertInertia(fn (Assert $page) => $page->where('translations.settings', __('app.agency_show.settings')));
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('accountTabs.account_settings', __('app.account_tabs.account_settings'))
+                ->missing('translations.settings'));
     }
 }
