@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react'
 import ListingImagePlaceholder from '@/Components/Listings/ListingImagePlaceholder'
 import { formatPrice } from '@/Components/Listings/listingFormat'
+import { photoFadeProps } from '@/Components/UI/photoFade'
 import type { ListingTeaserCardProps } from '@/types/listing'
 
 const aspectClasses = {
@@ -23,6 +24,7 @@ export default function ListingTeaserCard({ listing, perMonth, aspect, mobileWid
                         alt={listing.title}
                         loading="lazy"
                         decoding="async"
+                        {...photoFadeProps}
                         className="size-full object-cover"
                     />
                 ) : (

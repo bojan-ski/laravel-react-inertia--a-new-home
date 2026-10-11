@@ -4,6 +4,7 @@ import ListingImagePlaceholder from '@/Components/Listings/ListingImagePlacehold
 import { LISTING_THUMB_SIZE } from '@/Components/Listings/listingImageSize'
 import ListingSaveButton from '@/Components/Listings/ListingSaveButton'
 import Kicker from '@/Components/UI/Kicker'
+import { photoFadeProps } from '@/Components/UI/photoFade'
 import type { ListingRowProps } from '@/types/listing'
 
 export default function ListingRowCard({ listing, translations, propertyTypeLabels }: ListingRowProps) {
@@ -30,6 +31,7 @@ export default function ListingRowCard({ listing, translations, propertyTypeLabe
                         height={LISTING_THUMB_SIZE.height}
                         loading="lazy"
                         decoding="async"
+                        {...photoFadeProps}
                         className="size-full object-cover"
                     />
                 ) : (

@@ -4,11 +4,13 @@ import AgencyCard from '@/Components/Agencies/AgencyCard'
 import AgencyDirectorySearchBar from '@/Components/Agencies/AgencyDirectorySearchBar'
 import { countLabel } from '@/Components/Listings/listingFormat'
 import Pagination from '@/Components/UI/Pagination'
+import useReveal from '@/Components/UI/useReveal'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { AgenciesIndexPageProps } from '@/types/agency'
 
 export default function Index({ agencies, filters, translations }: AgenciesIndexPageProps) {
     const hasActiveSearch = Boolean(filters.search)
+    const reveal = useReveal<HTMLUListElement>('left', agencies.data)
 
     return (
         <PublicLayout>
@@ -36,7 +38,7 @@ export default function Index({ agencies, filters, translations }: AgenciesIndex
                     <AgenciesEmptyState translations={translations.empty} hasActiveSearch={hasActiveSearch} />
                 ) : (
                     <>
-                        <ul>
+                        <ul {...reveal}>
                             {agencies.data.map((agency) => (
                                 <AgencyCard key={agency.id} agency={agency} translations={translations} />
                             ))}

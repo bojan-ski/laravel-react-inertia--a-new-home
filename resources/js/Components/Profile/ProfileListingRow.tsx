@@ -9,6 +9,7 @@ import Button from '@/Components/UI/Button'
 import ConfirmDialog from '@/Components/UI/ConfirmDialog'
 import StatusBadge from '@/Components/UI/StatusBadge'
 import { useActionLabel } from '@/Components/UI/useActionLabel'
+import { photoFadeProps } from '@/Components/UI/photoFade'
 import type { ListingStatusValue } from '@/types/listing'
 import type { ProfileListingRowProps } from '@/types/profile'
 
@@ -53,6 +54,7 @@ export default function ProfileListingRow({ listing, translations }: ProfileList
                     height={LISTING_THUMB_SIZE.height}
                     loading="lazy"
                     decoding="async"
+                    {...photoFadeProps}
                     className={`absolute inset-0 size-full object-cover ${isClosed ? 'opacity-50' : ''}`}
                 />
             ) : (

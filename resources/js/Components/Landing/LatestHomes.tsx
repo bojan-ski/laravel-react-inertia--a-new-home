@@ -1,8 +1,11 @@
 import { Link } from '@inertiajs/react'
 import ListingTeaserCard from '@/Components/Listings/ListingTeaserCard'
+import useReveal from '@/Components/UI/useReveal'
 import type { LatestHomesProps } from '@/types/home'
 
 export default function LatestHomes({ content, listings }: LatestHomesProps) {
+    const reveal = useReveal<HTMLDivElement>('up', listings)
+
     if (listings.length === 0) {
         return null
     }
@@ -18,7 +21,10 @@ export default function LatestHomes({ content, listings }: LatestHomesProps) {
                 </Link>
             </div>
 
-            <div className="flex snap-x snap-mandatory gap-3.5 overflow-x-auto pr-5 md:pr-10 lg:grid lg:grid-cols-3 lg:gap-8 lg:overflow-visible lg:pr-0">
+            <div
+                {...reveal}
+                className="flex snap-x snap-mandatory gap-3.5 overflow-x-auto overflow-y-hidden pr-5 md:pr-10 lg:grid lg:grid-cols-3 lg:gap-8 lg:overflow-visible lg:pr-0"
+            >
                 {listings.map((listing) => (
                     <ListingTeaserCard
                         key={listing.id}

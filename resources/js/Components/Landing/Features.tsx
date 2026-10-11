@@ -1,11 +1,17 @@
 import { BadgeCheck, Heart, MessageCircle, Search } from 'lucide-react'
+import useReveal from '@/Components/UI/useReveal'
 import type { FeaturesProps } from '@/types/home'
 
 const icons = [Search, BadgeCheck, MessageCircle, Heart]
 
 export default function Features({ content }: FeaturesProps) {
+    const reveal = useReveal<HTMLElement>('up', content.items)
+
     return (
-        <section className="mx-auto grid max-w-360 grid-cols-1 gap-9 px-5 pb-18 md:grid-cols-2 md:gap-x-12 md:px-10 lg:grid-cols-4 lg:gap-12 lg:px-16 lg:pb-40">
+        <section
+            {...reveal}
+            className="mx-auto grid max-w-360 grid-cols-1 gap-9 px-5 pb-18 md:grid-cols-2 md:gap-x-12 md:px-10 lg:grid-cols-4 lg:gap-12 lg:px-16 lg:pb-40"
+        >
             {content.items.map((item, index) => {
                 const Icon = icons[index] ?? Search
 

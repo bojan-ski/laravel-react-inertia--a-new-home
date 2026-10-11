@@ -3,10 +3,12 @@ import AccountPageHeader from '@/Components/Account/AccountPageHeader'
 import ProfileListingRow from '@/Components/Profile/ProfileListingRow'
 import Button from '@/Components/UI/Button'
 import EmptyState from '@/Components/UI/EmptyState'
+import useReveal from '@/Components/UI/useReveal'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { ProfileIndexPageProps } from '@/types/profile'
 
 export default function Index({ listings, translations }: ProfileIndexPageProps) {
+    const reveal = useReveal<HTMLUListElement>('left', listings)
     const newListing = (fullWidth: boolean) => (
         <Button
             href="/my-listings/create"
@@ -42,7 +44,7 @@ export default function Index({ listings, translations }: ProfileIndexPageProps)
                         }
                     />
                 ) : (
-                    <ul>
+                    <ul {...reveal}>
                         {listings.map((listing) => (
                             <ProfileListingRow key={listing.id} listing={listing} translations={translations} />
                         ))}
