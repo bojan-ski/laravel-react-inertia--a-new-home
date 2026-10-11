@@ -1,10 +1,11 @@
-import { router } from '@inertiajs/react'
 import { Heart } from 'lucide-react'
+import { useBookmarkToggle } from '@/Components/Listings/useListingActions'
 import { useActionLabel } from '@/Components/UI/useActionLabel'
 import type { ListingSaveButtonProps } from '@/types/listing'
 
 export default function ListingSaveButton({ listing, translations, className = '' }: ListingSaveButtonProps) {
     const actionLabel = useActionLabel()
+    const bookmark = useBookmarkToggle(listing.id)
 
     if (!listing.canBookmark) {
         return null
@@ -14,8 +15,9 @@ export default function ListingSaveButton({ listing, translations, className = '
         <button
             type="button"
             aria-pressed={listing.isBookmarked}
+            aria-disabled={bookmark.processing || undefined}
             aria-label={actionLabel(listing.isBookmarked ? translations.saved : translations.save, listing.title)}
-            onClick={() => router.post(`/listings/${listing.id}/bookmark`, {}, { preserveScroll: true })}
+            onClick={bookmark.toggle}
             className={`relative z-10 inline-flex min-h-11 items-center gap-1.5 text-[13px] text-ink/60 transition-colors duration-150 hover:text-forest ${className}`}
         >
             {listing.isBookmarked ? (

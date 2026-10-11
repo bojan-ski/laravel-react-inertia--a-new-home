@@ -1,16 +1,12 @@
-import { Head, usePage } from '@inertiajs/react'
+import { Head } from '@inertiajs/react'
 import AccountPageHeader from '@/Components/Account/AccountPageHeader'
 import ProfileListingRow from '@/Components/Profile/ProfileListingRow'
 import Button from '@/Components/UI/Button'
 import EmptyState from '@/Components/UI/EmptyState'
-import FlashBanner from '@/Components/UI/FlashBanner'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { ProfileIndexPageProps } from '@/types/profile'
-import type { SharedProps } from '@/types/shared'
 
 export default function Index({ listings, translations }: ProfileIndexPageProps) {
-    const { flash } = usePage<SharedProps>().props
-
     const newListing = (fullWidth: boolean) => (
         <Button
             href="/my-listings/create"
@@ -23,7 +19,7 @@ export default function Index({ listings, translations }: ProfileIndexPageProps)
     )
 
     return (
-        <PublicLayout>
+        <PublicLayout contained>
             <Head title={translations.title} />
 
             <AccountPageHeader
@@ -34,13 +30,6 @@ export default function Index({ listings, translations }: ProfileIndexPageProps)
             />
 
             <div className="px-5 pt-2 pb-20 md:px-10 xl:px-16">
-                {(flash.success || flash.error) && (
-                    <div className="pt-6">
-                        {flash.success && <FlashBanner message={flash.success} variant="success" />}
-                        {flash.error && <FlashBanner message={flash.error} variant="error" />}
-                    </div>
-                )}
-
                 {listings.length === 0 ? (
                     <EmptyState
                         className="mt-8"

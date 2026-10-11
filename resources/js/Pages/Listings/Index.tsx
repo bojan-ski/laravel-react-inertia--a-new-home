@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Head, usePage } from '@inertiajs/react'
 import ListingFilterBar from '@/Components/Listings/ListingFilterBar'
 import ListingRow from '@/Components/Listings/ListingRow'
@@ -6,7 +5,6 @@ import ListingRowCard from '@/Components/Listings/ListingRowCard'
 import ListingsEmptyState from '@/Components/Listings/ListingsEmptyState'
 import { countLabel } from '@/Components/Listings/listingFormat'
 import SaveSearchButton from '@/Components/SavedSearches/SaveSearchButton'
-import FlashBanner from '@/Components/UI/FlashBanner'
 import Pagination from '@/Components/UI/Pagination'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { ListingsIndexPageProps } from '@/types/listing'
@@ -21,9 +19,7 @@ export default function Index({
     saveSearchTranslations,
     translations,
 }: ListingsIndexPageProps) {
-    const { flash, ui, errors } = usePage<SharedProps>().props
-    const [dismissedFlash, setDismissedFlash] = useState<string | null>(null)
-    const flashMessage = flash.success ?? flash.error
+    const { errors } = usePage<SharedProps>().props
     const errorMessages = Object.values(errors)
     const hasActiveFilters = Boolean(
         filters.search ||
@@ -75,16 +71,6 @@ export default function Index({
                             )
                         }
                     />
-
-                    {flashMessage && dismissedFlash !== flashMessage && (
-                        <FlashBanner
-                            message={flashMessage}
-                            variant={flash.success ? 'success' : 'error'}
-                            className="mt-6"
-                            onDismiss={() => setDismissedFlash(flashMessage)}
-                            dismissLabel={ui.dismiss}
-                        />
-                    )}
 
                     {errorMessages.length > 0 && (
                         <div role="alert" className="mt-4 flex flex-col gap-1 text-[13px] text-ink">

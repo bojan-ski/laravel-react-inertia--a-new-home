@@ -1,23 +1,17 @@
 import { Head, Link, useForm, usePage } from '@inertiajs/react'
-import { type FormEvent, useEffect, useState } from 'react'
+import { type FormEvent, useState } from 'react'
 import AccountPageHeader from '@/Components/Account/AccountPageHeader'
 import FormSection from '@/Components/Forms/FormSection'
 import Button from '@/Components/UI/Button'
 import ConfirmDialog from '@/Components/UI/ConfirmDialog'
-import FlashBanner from '@/Components/UI/FlashBanner'
 import PasswordField from '@/Components/UI/PasswordField'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { ProfileSettingsPageProps } from '@/types/profile'
 import type { SharedProps } from '@/types/shared'
 
 export default function Settings({ translations, backHref, passwordUrl, deleteUrl }: ProfileSettingsPageProps) {
-    const { flash, ui } = usePage<SharedProps>().props
-    const [banner, setBanner] = useState<string | null>(null)
+    const { ui } = usePage<SharedProps>().props
     const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false)
-
-    useEffect(() => {
-        setBanner(flash.success)
-    }, [flash.success])
 
     const passwordForm = useForm({
         current_password: '',
@@ -51,7 +45,7 @@ export default function Settings({ translations, backHref, passwordUrl, deleteUr
     }
 
     return (
-        <PublicLayout>
+        <PublicLayout contained>
             <Head title={translations.title} />
 
             <AccountPageHeader
@@ -74,16 +68,6 @@ export default function Settings({ translations, backHref, passwordUrl, deleteUr
                         note={translations.password.note}
                     >
                         <form onSubmit={submitPassword} className="col-span-2 flex max-w-140 flex-col gap-6.5">
-                            {banner && (
-                                <FlashBanner
-                                    message={banner}
-                                    variant="success"
-                                    className=""
-                                    onDismiss={() => setBanner(null)}
-                                    dismissLabel={ui.dismiss}
-                                />
-                            )}
-
                             <PasswordField
                                 id="current_password"
                                 aria-required

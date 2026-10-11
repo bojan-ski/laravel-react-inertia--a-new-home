@@ -1,4 +1,4 @@
-import { Head, usePage } from '@inertiajs/react'
+import { Head } from '@inertiajs/react'
 import AccountPageHeader from '@/Components/Account/AccountPageHeader'
 import AgencyListingsSection from '@/Components/Agency/AgencyListingsSection'
 import AgencyProfileSection from '@/Components/Agency/AgencyProfileSection'
@@ -9,16 +9,8 @@ import FlashBanner from '@/Components/UI/FlashBanner'
 import LogoTile from '@/Components/UI/LogoTile'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { AgencyShowPageProps } from '@/types/agency'
-import type { SharedProps } from '@/types/shared'
 
 export default function Show({ agency, pendingChange, listings, translations }: AgencyShowPageProps) {
-    const { flash } = usePage<SharedProps>().props
-
-    const settingsButton = (className: string) => (
-        <Button href="/agency/settings" variant="secondary" className={className}>
-            {translations.settings}
-        </Button>
-    )
 
     const editButton = (className: string) => (
         <Button href="/agency/edit" variant="secondary" className={className}>
@@ -27,31 +19,18 @@ export default function Show({ agency, pendingChange, listings, translations }: 
     )
 
     return (
-        <PublicLayout>
+        <PublicLayout contained>
             <Head title={agency.name} />
 
             <AccountPageHeader
                 title={translations.title}
                 subtitle={translations.subtitle}
                 leading={<LogoTile name={agency.name} size="lg" />}
-                action={
-                    <div className="flex gap-2.5">
-                        {settingsButton('min-h-12')}
-                        {editButton('min-h-12')}
-                    </div>
-                }
-                mobileAction={
-                    <div className="mt-2 grid grid-cols-2 gap-2">
-                        {editButton('min-h-11 w-full')}
-                        {settingsButton('min-h-11 w-full')}
-                    </div>
-                }
+                action={editButton('min-h-12')}
+                mobileAction={<div className="mt-2">{editButton('min-h-11 w-full')}</div>}
             />
 
             <div className="flex flex-col gap-3 px-5 pt-6 md:px-10 lg:pt-10 xl:px-16">
-                {flash.success && <FlashBanner message={flash.success} variant="success" className="" />}
-                {flash.error && <FlashBanner message={flash.error} variant="error" className="" />}
-
                 <AgencyStatusPanel agency={agency} translations={translations} />
 
                 {pendingChange && (

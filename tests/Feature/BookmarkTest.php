@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Middleware\HandleInertiaRequests;
 use App\Models\Bookmark;
 use App\Models\Listing;
 use App\Models\User;
@@ -165,5 +166,31 @@ class BookmarkTest extends TestCase
         $this->actingAs(User::factory()->regularUser()->create())
             ->get("/listings/{$listing->slug}")
             ->assertInertia(fn (Assert $page) => $page->where('canBookmark', true));
+    }
+
+    public function test_bookmark_toggle_on_the_detail_page_reloads_without_the_similar_listings(): void
+    {
+        $user = User::factory()->regularUser()->create();
+        $listing = Listing::factory()->approved()->create();
+        $detailUrl = url("/listings/{$listing->slug}");
+
+        $this->actingAs($user)
+            ->from($detailUrl)
+            ->post("/listings/{$listing->id}/bookmark")
+            ->assertRedirect($detailUrl);
+
+        $this->withHeaders([
+            'X-Inertia' => 'true',
+            'X-Inertia-Version' => (string) app(HandleInertiaRequests::class)->version(request()),
+            'X-Inertia-Partial-Component' => 'Listings/Show',
+            'X-Inertia-Partial-Except' => 'similarListings',
+        ])
+            ->get($detailUrl)
+            ->assertOk()
+            ->assertJsonPath('component', 'Listings/Show')
+            ->assertJsonPath('props.isBookmarked', true)
+            ->assertJsonPath('props.flash.success', __('app.bookmarks.flash_added'))
+            ->assertJsonMissingPath('props.similarListings')
+            ->assertJsonMissingPath('deferredProps');
     }
 }

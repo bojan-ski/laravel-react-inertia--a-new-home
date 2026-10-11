@@ -1,17 +1,15 @@
-import { Head, useForm, usePage } from '@inertiajs/react'
+import { Head, useForm } from '@inertiajs/react'
 import type { FormEvent } from 'react'
 import Button from '@/Components/UI/Button'
-import FlashBanner from '@/Components/UI/FlashBanner'
 import HoneypotField from '@/Components/UI/HoneypotField'
 import Kicker from '@/Components/UI/Kicker'
 import TextAreaField from '@/Components/UI/TextAreaField'
 import TextField from '@/Components/UI/TextField'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { ContactFormData, ContactPageProps } from '@/types/contact'
-import type { SharedProps } from '@/types/shared'
+import type { FlashData } from '@/types/shared'
 
 export default function Show({ defaultEmail, translations }: ContactPageProps) {
-    const { flash } = usePage<SharedProps>().props
     const { data, setData, post, processing, errors } = useForm<ContactFormData>({
         email: defaultEmail,
         subject: '',
@@ -24,8 +22,8 @@ export default function Show({ defaultEmail, translations }: ContactPageProps) {
         post('/contact', {
             preserveScroll: true,
             onSuccess: (page) => {
-                if ((page.props.flash as SharedProps['flash']).success) {
-                    setData((current) => ({ ...current, subject: '', message: '' }))
+                if ((page.props.flash as FlashData).success) {
+                    setData((current) => ({ ...current, email: defaultEmail, subject: '', message: '' }))
                 }
             },
         })
@@ -48,8 +46,6 @@ export default function Show({ defaultEmail, translations }: ContactPageProps) {
 
                 <div className="bg-sand px-5 py-7 md:px-10 lg:col-start-3 lg:row-span-2 lg:row-start-1 lg:self-start lg:p-12">
                     <form onSubmit={handleSubmit} className="flex flex-col gap-6 lg:gap-7">
-                        {flash.success && <FlashBanner message={flash.success} variant="success" className="" />}
-
                         <TextField
                             id="email"
                             type="email"

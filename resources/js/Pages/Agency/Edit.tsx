@@ -36,7 +36,7 @@ export default function Edit({ agency, pendingChange, translations, countries }:
     }
 
     return (
-        <PublicLayout back={{ href: '/agency', label: translations.back }} footer={false}>
+        <PublicLayout back={{ href: '/agency', label: translations.back }} footer={false} contained>
             <Head title={translations.title} />
 
             <ListingFormHeader

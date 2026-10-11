@@ -40,7 +40,7 @@ export default function Create({
     }
 
     return (
-        <PublicLayout back={{ href: '/profile', label: translations.back }} footer={false}>
+        <PublicLayout back={{ href: '/profile', label: translations.back }} footer={false} contained>
             <Head title={translations.title} />
 
             <ListingFormHeader

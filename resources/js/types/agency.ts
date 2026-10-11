@@ -195,7 +195,6 @@ export interface AgencyShowTranslations {
     title: string
     subtitle: string
     edit: string
-    settings: string
     pending_changes: string
     status: Record<AgencyStatusValue, AgencyStatusCopy>
     profile: AgencyShowProfileTranslations

@@ -1,18 +1,15 @@
-import { Head, usePage } from '@inertiajs/react'
+import { Head } from '@inertiajs/react'
 import AdminPageHeader from '@/Components/Admin/AdminPageHeader'
 import AgencyChangeRequestRow from '@/Components/Admin/AgencyChangeRequestRow'
 import AgencyModerationRow from '@/Components/Admin/AgencyModerationRow'
 import EmptyState from '@/Components/UI/EmptyState'
-import FlashBanner from '@/Components/UI/FlashBanner'
 import Pagination from '@/Components/UI/Pagination'
 import AdminLayout from '@/Layouts/AdminLayout'
 import type { AdminAgenciesPageProps } from '@/types/admin'
-import type { SharedProps } from '@/types/shared'
 
 const sectionHeading = 'text-[26px] leading-tight font-airy tracking-[-0.02em] lg:text-[32px]'
 
 export default function Index({ agencies, profileChanges, translations, fieldLabels }: AdminAgenciesPageProps) {
-    const { flash } = usePage<SharedProps>().props
 
     return (
         <AdminLayout>
@@ -20,13 +17,9 @@ export default function Index({ agencies, profileChanges, translations, fieldLab
 
             <AdminPageHeader title={translations.title} subtitle={translations.subtitle} />
 
-            {flash.success && <FlashBanner message={flash.success} variant="success" className="" />}
-            {flash.error && <FlashBanner message={flash.error} variant="error" className="" />}
-
             <div className="flex flex-col gap-12 lg:gap-16">
                 <section>
                     <h2 className={`mb-4 ${sectionHeading}`}>{translations.verification_heading}</h2>
-
                     {agencies.data.length > 0 ? (
                         <ul className="border-t border-rule">
                             {agencies.data.map((agency) => (

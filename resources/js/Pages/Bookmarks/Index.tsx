@@ -1,12 +1,10 @@
-import { Head, Link, usePage } from '@inertiajs/react'
+import { Head, Link } from '@inertiajs/react'
 import AccountPageHeader from '@/Components/Account/AccountPageHeader'
 import BookmarkCard from '@/Components/Bookmarks/BookmarkCard'
 import Button from '@/Components/UI/Button'
 import EmptyState from '@/Components/UI/EmptyState'
-import FlashBanner from '@/Components/UI/FlashBanner'
 import PublicLayout from '@/Layouts/PublicLayout'
 import type { BookmarksIndexPageProps } from '@/types/bookmark'
-import type { SharedProps } from '@/types/shared'
 
 const gridClasses = 'grid grid-cols-1 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4'
 
@@ -17,12 +15,11 @@ export default function Index({
     translations,
     listingTranslations,
 }: BookmarksIndexPageProps) {
-    const { flash } = usePage<SharedProps>().props
     const countNoun = listings.length === 1 ? translations.count_one : translations.count_other
     const perMonth = listingTranslations.card.per_month
 
     return (
-        <PublicLayout>
+        <PublicLayout contained>
             <Head title={translations.title} />
 
             <AccountPageHeader
@@ -41,8 +38,6 @@ export default function Index({
             />
 
             <div className="flex flex-col gap-8 px-5 pt-8 pb-20 md:px-10 xl:px-16">
-                {flash.success && <FlashBanner message={flash.success} variant="success" className="" />}
-
                 {listings.length === 0 ? (
                     <EmptyState
                         title={translations.empty.headline}

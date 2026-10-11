@@ -1,12 +1,10 @@
-import { Head, usePage } from '@inertiajs/react'
+import { Head } from '@inertiajs/react'
 import AdminMobileStats from '@/Components/Admin/AdminMobileStats'
 import AdminPageHeader from '@/Components/Admin/AdminPageHeader'
 import StatCard from '@/Components/Admin/StatCard'
-import FlashBanner from '@/Components/UI/FlashBanner'
 import Kicker from '@/Components/UI/Kicker'
 import AdminLayout from '@/Layouts/AdminLayout'
 import type { AdminDashboardPageProps, AdminStatSectionProps, StatCardProps } from '@/types/admin'
-import type { SharedProps } from '@/types/shared'
 
 function StatSection({ heading, cards }: AdminStatSectionProps) {
     return (
@@ -22,7 +20,6 @@ function StatSection({ heading, cards }: AdminStatSectionProps) {
 }
 
 export default function Dashboard({ stats, translations }: AdminDashboardPageProps) {
-    const { flash } = usePage<SharedProps>().props
     const labels = translations.stats
 
     const pendingListings: StatCardProps = {
@@ -81,9 +78,6 @@ export default function Dashboard({ stats, translations }: AdminDashboardPagePro
             <Head title={translations.title} />
 
             <AdminPageHeader title={translations.title} subtitle={translations.subtitle} />
-
-            {flash.success && <FlashBanner message={flash.success} variant="success" className="" />}
-            {flash.error && <FlashBanner message={flash.error} variant="error" className="" />}
 
             <div className="hidden flex-col gap-10 md:flex">
                 <StatSection heading={translations.sections.listings} cards={listingCards} />

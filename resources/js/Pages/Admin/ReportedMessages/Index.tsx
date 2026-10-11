@@ -1,24 +1,18 @@
-import { Head, usePage } from '@inertiajs/react'
+import { Head } from '@inertiajs/react'
 import AdminPageHeader from '@/Components/Admin/AdminPageHeader'
 import ReportedMessageModerationRow from '@/Components/Admin/ReportedMessageModerationRow'
 import EmptyState from '@/Components/UI/EmptyState'
-import FlashBanner from '@/Components/UI/FlashBanner'
 import Pagination from '@/Components/UI/Pagination'
 import AdminLayout from '@/Layouts/AdminLayout'
 import type { AdminReportedMessagesPageProps } from '@/types/reported-message'
-import type { SharedProps } from '@/types/shared'
 
 export default function Index({ reports, translations }: AdminReportedMessagesPageProps) {
-    const { flash } = usePage<SharedProps>().props
 
     return (
         <AdminLayout>
             <Head title={translations.title} />
 
             <AdminPageHeader title={translations.title} subtitle={translations.subtitle} />
-
-            {flash.success && <FlashBanner message={flash.success} variant="success" className="" />}
-            {flash.error && <FlashBanner message={flash.error} variant="error" className="" />}
 
             <div>
                 {reports.data.length > 0 ? (

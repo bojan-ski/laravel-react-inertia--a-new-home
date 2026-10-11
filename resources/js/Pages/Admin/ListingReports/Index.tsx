@@ -1,24 +1,18 @@
-import { Head, usePage } from '@inertiajs/react'
+import { Head } from '@inertiajs/react'
 import AdminPageHeader from '@/Components/Admin/AdminPageHeader'
 import ListingReportModerationRow from '@/Components/Admin/ListingReportModerationRow'
 import EmptyState from '@/Components/UI/EmptyState'
-import FlashBanner from '@/Components/UI/FlashBanner'
 import Pagination from '@/Components/UI/Pagination'
 import AdminLayout from '@/Layouts/AdminLayout'
 import type { AdminListingReportsPageProps } from '@/types/listing-report'
-import type { SharedProps } from '@/types/shared'
 
 export default function Index({ listings, translations, reasonLabels }: AdminListingReportsPageProps) {
-    const { flash } = usePage<SharedProps>().props
 
     return (
         <AdminLayout>
             <Head title={translations.title} />
 
             <AdminPageHeader title={translations.title} subtitle={translations.subtitle} />
-
-            {flash.success && <FlashBanner message={flash.success} variant="success" className="" />}
-            {flash.error && <FlashBanner message={flash.error} variant="error" className="" />}
 
             <div>
                 {listings.data.length > 0 ? (
