@@ -1,66 +1,159 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🏡 A New Home
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**A New Home** is a moderated property marketplace for homes for sale and rent across Europe, built with Laravel, Inertia.js and React.
+Guests browse listings and agencies freely; signed-in users unlock listing details, bookmarks, saved searches and real-time chat with owners. Owners and agencies submit listings, and every new or edited listing is reviewed by an admin before it goes public.
 
-## About Laravel
+🌐 **Live demo:** [mintcream-koala-283697.hostingersite.com](https://mintcream-koala-283697.hostingersite.com/)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🔑 Demo Accounts
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+All demo accounts use the password **`password`**.
 
-## Learning Laravel
+| Role | Email |
+|---|---|
+| 🛡️ Admin | `admin@newbeginning.test` |
+| 🏢 Agency | `agency@newbeginning.test` |
+| 👤 Regular User | `seller@newbeginning.test` |
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+> The demo is shared, so other visitors may have changed its data.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## ✨ Features
 
-## Agentic Development
+### 👀 Guest
+- 🏠 Landing page with search, latest listings and highlights
+- 📜 Browse listings with search, sort, filters (type, property type, price, beds, baths, area, amenities, city) and pagination
+- 🏢 Agencies directory and agency pages
+- ✉️ Contact form and static pages (About, Privacy, Terms, Cookies)
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### 👤 Regular User
+- 🔐 Authentication: Sign up, Sign in, Forgot/Reset password
+- 🖼️ Full listing details with photo gallery, similar listings and a mortgage helper
+- ⭐ Bookmark listings, with a "No longer available" group for sold, rented and expired ones
+- 🔔 Saved searches with a daily email digest
+- 💬 Real-time chat with listing owners, with unread counts
+- 🚩 Report listings and chat messages
+- 📝 Create, edit and delete listings with optimized image processing using **Intervention Image**
+- ✅ Mark listings sold / rented, reopen and renew them
+- ⚙️ Account settings: change password, delete own account
 
+### 🏢 Agency
+- 🧾 Agency registration and profile setup, verified by an admin
+- ✏️ Profile changes on an approved agency go through admin review
+- 🏘️ Agency listings that inherit the agency's contact details
+- 💬 Inquiries through listing-tied chat, bookmarks and saved searches
+
+### 🛡️ Admin
+- 📊 Dashboard with moderation and platform stats
+- ✅ Approve / reject listings, agencies and agency profile changes
+- 🚩 Review reported listings (dismiss / take down) and reported messages (resolve / suspend)
+- 👥 Manage users: suspend, reactivate, delete
+- 📥 Contact messages inbox
+
+### ⚙️ Platform
+- 🔄 Every new or edited listing returns to `pending_review`
+- ⌛ Approved listings expire after 90 days, with a reminder email 7 days before
+- 🗑️ Rejected and taken-down listings are soft deleted and purged after 7 days
+- 🙈 Suspending an account hides its listings, agency and chat without changing any data
+- 📧 Twelve email events (approvals, rejections, expiry, digest, suspension, account deletion, …)
+- 🔎 Server-rendered SEO head, `robots.txt` and `sitemap.xml`
+
+---
+
+## 🛠️ Tech Stack
+- **Framework**: [Laravel 13](https://laravel.com/)
+- **Frontend**: [Inertia.js 3](https://inertiajs.com/) + [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/)
+- **Database**: [MySQL](https://www.mysql.com/)
+- **Real-time**: [Pusher Channels](https://pusher.com/channels) + [Laravel Echo](https://laravel.com/docs/broadcasting) ([Reverb](https://reverb.laravel.com/) also supported)
+- **Image Handling**: [Intervention Image](https://image.intervention.io/) (resize, compression, `.webp` conversion)
+- **Testing**: [PHPUnit](https://phpunit.de/)
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the Repository
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/bojan-ski/laravel-react-inertia-cc-no-code--a-new-home.git
+cd laravel-react-inertia-cc-no-code--a-new-home
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### 2. Install Dependencies
+```bash
+composer install
+npm install
+```
 
-## Quality Assurance
+### 3. Environment Setup - .env
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-Cross-feature integration tests and sanity checks live under `tests/Feature/System`.
-Run them with `php artisan test tests/Feature/System`.
+```env
+DB_CONNECTION=mysql
+DB_HOST=
+DB_PORT=
+DB_DATABASE=
+DB_USERNAME=
+DB_PASSWORD=
 
-Before deploying a release, also walk the manual regression pass in
-[`docs/qa/marketplace-regression-checklist.md`](docs/qa/marketplace-regression-checklist.md).
+BROADCAST_CONNECTION=pusher
+PUSHER_APP_ID=
+PUSHER_APP_KEY=
+PUSHER_APP_SECRET=
+PUSHER_APP_CLUSTER=
+```
 
-## Contributing
+### 4. Run Migrations & Seed Database
+```bash
+php artisan migrate --seed
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+For the full demo data set (the accounts above, listings in every state, chats and reports), seed the review scenario instead. It runs in the `local`, `staging` and `testing` environments only:
+```bash
+php artisan migrate:fresh
+php artisan db:seed --class=ReviewScenarioSeeder
+```
 
-## Code of Conduct
+### 5. Link Storage
+```bash
+php artisan storage:link
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 6. Start Servers
+```bash
+composer run dev
+```
 
-## Security Vulnerabilities
+### 7. Scheduled Tasks
+Expiry reminders, the saved-search digest and the purge of rejected listings run through the scheduler:
+```bash
+php artisan schedule:work
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 🧪 Testing
+```bash
+php artisan test
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Cross-feature integration tests and sanity checks live under `tests/Feature/System`:
+```bash
+php artisan test tests/Feature/System
+```
+
+---
+
+## 📸 Photo Credits
+All photos are from [Unsplash](https://unsplash.com), used under the [Unsplash License](https://unsplash.com/license). The photographers are credited in [`public/images/CREDITS.md`](public/images/CREDITS.md).
+
+---
+
+## 👨‍💻 Author
+Developed with ❤️ by BPdevelopment (bojan-ski)
