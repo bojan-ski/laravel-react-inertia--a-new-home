@@ -1,6 +1,13 @@
+import useReveal from '@/Components/UI/useReveal'
+
 export default function PhotoPair() {
+    const reveal = useReveal<HTMLElement>('sides', null)
+
     return (
-        <section className="mx-auto flex max-w-360 flex-col gap-4 px-5 pb-18 md:px-10 lg:grid lg:grid-cols-12 lg:gap-8 lg:px-16 lg:pb-40">
+        <section
+            {...reveal}
+            className="mx-auto flex max-w-360 flex-col gap-4 overflow-x-clip px-5 pb-18 md:px-10 lg:grid lg:grid-cols-12 lg:gap-8 lg:px-16 lg:pb-40"
+        >
             <img
                 src="/images/family-house-white-brown.webp"
                 alt=""
