@@ -1,5 +1,5 @@
 import { configureEcho } from '@laravel/echo-react'
 
 configureEcho({
-    broadcaster: 'reverb',
+    broadcaster: import.meta.env.VITE_BROADCAST_CONNECTION || 'reverb',
 })

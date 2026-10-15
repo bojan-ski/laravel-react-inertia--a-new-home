@@ -46,7 +46,18 @@ class ReviewScenarioSeederTest extends TestCase
         $this->assertReportsAndTheRest();
     }
 
-    public function test_it_refuses_to_run_outside_local_and_testing(): void
+    public function test_it_runs_in_staging(): void
+    {
+        Storage::fake('public');
+        $this->app['env'] = 'staging';
+
+        $this->app->make(ReviewScenarioSeeder::class)->run();
+
+        $this->assertDatabaseHas('users', ['email' => 'admin@newbeginning.test']);
+        $this->assertGreaterThan(0, Listing::count());
+    }
+
+    public function test_it_refuses_to_run_outside_local_staging_and_testing(): void
     {
         $this->app['env'] = 'production';
 
@@ -54,7 +65,7 @@ class ReviewScenarioSeederTest extends TestCase
             $this->app->make(ReviewScenarioSeeder::class)->run();
             $this->fail('The seeder ran in production.');
         } catch (RuntimeException $exception) {
-            $this->assertSame('ReviewScenarioSeeder only runs in the local and testing environments.', $exception->getMessage());
+            $this->assertSame('ReviewScenarioSeeder only runs in the local, staging and testing environments.', $exception->getMessage());
         }
 
         $this->assertDatabaseCount('users', 0);

@@ -132,8 +132,8 @@ class ReviewScenarioSeeder extends Seeder
 
     public function run(): void
     {
-        if (! app()->environment('local', 'testing')) {
-            throw new RuntimeException('ReviewScenarioSeeder only runs in the local and testing environments.');
+        if (! app()->environment('local', 'staging', 'testing')) {
+            throw new RuntimeException('ReviewScenarioSeeder only runs in the local, staging and testing environments.');
         }
 
         $admin = $this->account('admin@newbeginning.test', 'Admin', UserRole::Admin);
