@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-export type RevealDirection = 'up' | 'left'
+export type RevealDirection = 'up' | 'left' | 'sides'
 
 const STAGGER_MS = 70
 const MAX_STAGGER_STEPS = 6
